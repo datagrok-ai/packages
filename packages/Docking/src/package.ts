@@ -357,3 +357,22 @@ export async function autodockPanel(smiles: DG.SemanticValue): Promise<DG.Widget
 
   return DG.Widget.fromRoot(panels);
 }
+
+async function getContainer() {
+  const adcpContainer = await grok.dapi.docker.dockerContainers.filter('adcp').first();
+  if (adcpContainer.status !== 'started' && adcpContainer.status !== 'checking')
+    await grok.dapi.docker.dockerContainers.run(adcpContainer.id, true);
+  return adcpContainer;
+}
+
+//name: testAdcp
+export async function testAdcp(): Promise<object> {
+  const container = await getContainer();
+  const response = await grok.dapi.docker.dockerContainers.fetchProxy(container.id, '/dock');
+  if (response.status !== 200)
+    throw new Error(response.statusText);
+  const result = await response.json();
+  console.log('result')
+  console.log(result)
+  return result;
+}
