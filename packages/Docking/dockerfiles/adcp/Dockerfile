@@ -33,15 +33,15 @@ ENV PATH="/usr/local/miniforge/bin:$PATH"
 RUN conda install -c conda-forge mamba
 
 # Create Conda environment with Python 2.7
-RUN mamba create -n autodock python=2.7
+RUN mamba create -n adcp python=2.7
 
 # Activate the Conda environment and install necessary packages
-RUN echo "source activate autodock" > ~/.bashrc
-ENV PATH="/usr/local/miniforge/envs/autodock/bin:$PATH"
+RUN echo "source activate adcp" > ~/.bashrc
+ENV PATH="/usr/local/miniforge/envs/adcp/bin:$PATH"
 
 # Install Flask and Open Babel in the Conda environment
-RUN /usr/local/miniforge/envs/autodock/bin/pip install Flask
-RUN conda install -n autodock -c conda-forge openbabel
+RUN /usr/local/miniforge/envs/adcp/bin/pip install Flask
+RUN conda install -n adcp -c conda-forge openbabel
 
 # Create app directory
 RUN mkdir -p /app
@@ -69,4 +69,4 @@ COPY . /app
 EXPOSE 8000
 
 # Use a script to activate the conda environment and run the Flask app
-ENTRYPOINT ["/bin/bash", "-c", "source activate autodock && python adcp.py --host 0.0.0.0 --port 8000"]
+ENTRYPOINT ["/bin/bash", "-c", "source activate adcp && python adcp.py --host 0.0.0.0 --port 8000"]

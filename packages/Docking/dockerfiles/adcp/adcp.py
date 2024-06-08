@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify
 import subprocess
 import logging
 import os
-import json
 import base64
 import zipfile
 
@@ -11,80 +10,98 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# May be needed in case we decide users won't generate target files on its own
-def prepare_target_file(receptor_file_name, ligand_file_name):
+# Configuration
+TARGET_FILE_PATH = 'temp_target.trg'
+LIGAND_FILE_PREFIX = 'temp_ligand'
+RECEPTOR_FILE_PREFIX = 'temp_receptor'
+DOCKING_OUTPUT = 'temp_redocking'
+
+def save_base64_file(encoded_content, file_path):
+    decoded_content = base64.b64decode(encoded_content)
+    with open(file_path, 'wb') as file:
+        file.write(decoded_content)
+    return file_path
+
+def run_subprocess(command):
     process = subprocess.Popen(
-        ['agfr', '-r', receptor_file_name, '-l', ligand_file_name, '-o', '5GRD'],
+        command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
     stdout, stderr = process.communicate()
     logger.debug('stdout: %s', stdout)
     logger.debug('stderr: %s', stderr)
-
     if process.returncode != 0:
         error_message = stderr.decode('utf-8')
-        logger.debug('Making target file failed: %s', error_message)
-        return jsonify({'error': 'Docking process failed', 'details': error_message}), 500
+        logger.error('Subprocess failed: %s', error_message)
+        raise Exception('Error during subprocess execution: {}'.format(error_message))
+    return stdout, stderr
+
+def prepare_ligand(ligand_file_name, ligand_format):
+    if ligand_format == 'pdb':
+        command = ['prepare_ligand', '-l', ligand_file_name]
+        run_subprocess(command)
+        return ligand_file_name.replace('.pdb', '.pdbqt')
+    return ligand_file_name
+
+def prepare_receptor(receptor_file_name, receptor_format):
+    if receptor_format == 'pdb':
+        command = ['prepare_receptor', '-r', receptor_file_name]
+        run_subprocess(command)
+        return receptor_file_name.replace('.pdb', '.pdbqt')
+    return receptor_file_name
+
+def dock(receptor_file_name, target_file_path):
+    command = [
+        'adcp', '-t', target_file_path, '-s', 'npisdvd', '-N', '20', 
+        '-n', '1000000', '-o', DOCKING_OUTPUT, '-ref', receptor_file_name
+    ]
+    run_subprocess(command)
 
 @app.route('/adcp/dock', methods=['POST'])
-def dock():
+def dock_endpoint():
     try:
         logger.info('Received request for docking process')
         
         data = request.get_json()
 
-        if 'ligand' not in data or 'receptor' not in data:
-            logger.debug('Ligand or receptor data missing from request')
-            return jsonify({'error': 'Ligand and receptor data must be provided'}), 400
+        if not all(k in data for k in ('ligand', 'receptor', 'target')):
+            logger.debug('Ligand, receptor, or target data missing from request')
+            return jsonify({'error': 'Ligand, receptor, and target data must be provided'}), 400
 
         ligand_content = data['ligand']
         receptor_content = data['receptor']
         ligand_format = data.get('ligand_format', 'pdb')
         receptor_format = data.get('receptor_format', 'pdb')
-        target = base64.b64decode(data['target'])
+        target = data['target']
 
-        target_file_path = 'temp_target.trg'
-        with open(target_file_path, 'wb') as target_file:
-            target_file.write(target)
+        # Save target file
+        save_base64_file(target, TARGET_FILE_PATH)
 
-        ligand_file_name = 'temp_ligand.' + ligand_format
-        receptor_file_name = 'temp_receptor.' + receptor_format
-
+        # Save ligand and receptor files
+        ligand_file_name = "{}.{}".format(LIGAND_FILE_PREFIX, ligand_format)
+        receptor_file_name = "{}.{}".format(RECEPTOR_FILE_PREFIX, receptor_format)
         with open(ligand_file_name, 'w') as ligand_file:
             ligand_file.write(ligand_content)
         with open(receptor_file_name, 'w') as receptor_file:
             receptor_file.write(receptor_content)
 
-        if ligand_format == 'pdb':
-            ligand_preparation_command = ['prepare_ligand', '-l', ligand_file_name]
-            subprocess.check_call(ligand_preparation_command)
-            ligand_file_name = 'temp_ligand.pdbqt'  # Update to the new file name if needed
+        # Prepare ligand and receptor
+        ligand_file_name = prepare_ligand(ligand_file_name, ligand_format)
+        receptor_file_name = prepare_receptor(receptor_file_name, receptor_format)
 
-        if receptor_format == 'pdb':
-            receptor_preparation_command = ['prepare_receptor', '-r', receptor_file_name]
-            subprocess.check_call(receptor_preparation_command)
-            receptor_file_name = 'temp_receptor.pdbqt'  # Update to the new file name if needed
- 
-        docking_process = subprocess.Popen(
-            ['adcp', '-t', , '-s', 'npisdvd', '-N', '20', '-n', '1000000', '-o', '3Q47_redocking', '-ref', receptor_file_name],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-        )
+        # Perform docking
+        dock(receptor_file_name, TARGET_FILE_PATH)
 
-        stdout, stderr = docking_process.communicate()
-        logger.debug('stdout: %s', stdout)
-        logger.debug('stderr: %s', stderr)
-
-        logger.debug('Docking process completed successfully')
-
+        # Cleanup
         os.remove(ligand_file_name)
         os.remove(receptor_file_name)
+        os.remove(TARGET_FILE_PATH)
 
-        return jsonify({'result': 'everything is fine'}), 200
+        return jsonify({'result': 'Docking process completed successfully'}), 200
 
     except Exception as e:
-        logger.debug('An error occurred: %s', str(e))
+        logger.error('An error occurred: %s', str(e))
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
