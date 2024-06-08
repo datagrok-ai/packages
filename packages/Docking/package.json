@@ -11,8 +11,9 @@
   "dependencies": {
     "@datagrok-libraries/bio": "^5.39.13",
     "@datagrok-libraries/utils": "^4.1.36",
-    "datagrok-api": "../../js-api",
+    "base64-js": "^1.5.1",
     "cash-dom": "latest",
+    "datagrok-api": "../../js-api",
     "dayjs": "^1.11.4",
     "rxjs": "^6.5.5",
     "wu": "latest"
@@ -20,10 +21,10 @@
   "devDependencies": {
     "@datagrok/biostructure-viewer": "^1.0.26",
     "@types/wu": "latest",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4",
     "ts-loader": "9.4.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   },
   "scripts": {
     "link-all": "npm link datagrok-api @datagrok-libraries/utils @datagrok-libraries/bio",

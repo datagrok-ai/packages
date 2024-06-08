@@ -12,7 +12,6 @@ class BiostructureViewerPackageDetectors extends DG.Package {
   //meta.skipTest: #2596, Fix for test data in the utils library
   detectPdb(col) {
     if (DG.Detector.sampleCategories(col,
-      // (s) => s.includes('COMPND') && s.includes('ATOM') && s.includes('END'), 1)
       (s) => s.match(/^COMPND/m) && s.match(/^END/m) &&
         (s.match(/^ATOM/m) || s.match(/^HETATM/m)),
     )) {
@@ -25,10 +24,17 @@ class BiostructureViewerPackageDetectors extends DG.Package {
     ) {
       col.setTag(DG.TAGS.UNITS, 'pdbqt');
       return 'Molecule3D';
+    } else if (DG.Detector.sampleCategories(col,
+      (s) => s.match(/^REMARK  30/m) && s.match(/active torsions:/m) &&
+        (s.match(/status: \('A' for Active; 'I' for Inactive\)/m)),
+      1)
+    ) {
+      col.setTag(DG.TAGS.UNITS, 'pdbqt');
+      return 'Molecule3D';
     }
-
+  
     return null;
-  }
+  }  
 
   //tags: semTypeDetector
   //input: column col

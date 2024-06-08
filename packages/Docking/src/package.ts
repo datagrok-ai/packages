@@ -3,6 +3,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import $ from 'cash-dom';
+import { fromByteArray } from 'base64-js';
 
 import '@datagrok-libraries/bio/src/types/ngl'; // To enable import from the NGL module declared in bio lib
 import {GridSize, IAutoDockService} from '@datagrok-libraries/bio/src/pdb/auto-dock-service';
@@ -365,14 +366,39 @@ async function getContainer() {
   return adcpContainer;
 }
 
-//name: testAdcp
-export async function testAdcp(): Promise<object> {
+async function prepareAdcpData(target: string, ligand: DG.Column) {
+  const isTrgFile = (file: DG.FileInfo): boolean => file.extension === 'trg';
+  const targetFile = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`, true)).find(isTrgFile)!;
+  const receptor = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`)).find((file) => file.extension === 'pdbqt' || file.extension === 'pdb')!;
+  const targetData = await grok.dapi.files.readAsBytes(targetFile.fullPath);
+  const binaryDataBase64 = fromByteArray(targetData);
+
+  return {
+    'ligand': ligand.get(0),
+    'receptor': await grok.dapi.files.readAsText(receptor.fullPath),
+    'ligand_format': ligand.getTag(DG.TAGS.UNITS),
+    'receptor_format': receptor.extension,
+    'target': binaryDataBase64
+  };
+}
+
+//top-menu: Chem | ADCP...
+//name: ADCP
+//input: dataframe table [Input data table]
+//input: column ligands {type:categorical; semType: Molecule} [Small molecules to dock]
+//input: string target {choices: Docking: getConfigFiles} [Folder with config and macromolecule]
+export async function testAdcp(table: DG.DataFrame, ligands: DG.Column, target: string): Promise<object> {
   const container = await getContainer();
-  const response = await grok.dapi.docker.dockerContainers.fetchProxy(container.id, '/dock');
+  const params: RequestInit = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(await prepareAdcpData(target, ligands))
+  };
+  const response = await grok.dapi.docker.dockerContainers.fetchProxy(container.id, 'adcp/dock', params);
   if (response.status !== 200)
     throw new Error(response.statusText);
   const result = await response.json();
-  console.log('result')
-  console.log(result)
   return result;
 }
