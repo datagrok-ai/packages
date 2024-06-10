@@ -366,7 +366,7 @@ async function getContainer() {
   return adcpContainer;
 }
 
-async function prepareAdcpData(target: string, ligand: DG.Column) {
+async function prepareAdcpData(target: string, ligand: DG.Column, searches: number, evaluations: number) {
   const isTrgFile = (file: DG.FileInfo): boolean => file.extension === 'trg';
   const targetFile = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`, true)).find(isTrgFile)!;
   const receptor = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`)).find((file) => file.extension === 'pdbqt' || file.extension === 'pdb')!;
@@ -378,23 +378,27 @@ async function prepareAdcpData(target: string, ligand: DG.Column) {
     'receptor': await grok.dapi.files.readAsText(receptor.fullPath),
     'ligand_format': ligand.getTag(DG.TAGS.UNITS),
     'receptor_format': receptor.extension,
-    'target': binaryDataBase64
+    'target': binaryDataBase64,
+    'searches': searches,
+    'evaluations': evaluations
   };
 }
 
 //top-menu: Chem | ADCP...
 //name: ADCP
 //input: dataframe table [Input data table]
-//input: column ligands {type:categorical; semType: Molecule} [Small molecules to dock]
+//input: column ligands {type:categorical; semType: Molecule3D} [Small molecules to dock]
 //input: string target {choices: Docking: getConfigFiles} [Folder with config and macromolecule]
-export async function testAdcp(table: DG.DataFrame, ligands: DG.Column, target: string): Promise<object> {
+//input: int searches = 20 [Number of independent searches]
+//input: int evaluations = 1000000 [Number of evaluations of the scoring function]
+export async function testAdcp(table: DG.DataFrame, ligands: DG.Column, target: string, searches: number, evaluations: number): Promise<object> {
   const container = await getContainer();
   const params: RequestInit = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(await prepareAdcpData(target, ligands))
+    body: JSON.stringify(await prepareAdcpData(target, ligands, searches, evaluations))
   };
   const response = await grok.dapi.docker.dockerContainers.fetchProxy(container.id, 'adcp/dock', params);
   if (response.status !== 200)
