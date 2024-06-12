@@ -12,8 +12,11 @@ import {BiostructureData, BiostructureDataJson} from '@datagrok-libraries/bio/sr
 import {AutoDockApp, AutoDockDataType} from './apps/auto-dock-app';
 import {_runAutodock, AutoDockService, _runAutodock2} from './utils/auto-dock-service';
 import {_package, TARGET_PATH, CACHED_DOCKING, BINDING_ENERGY_COL, POSE_COL, 
-  PROPERTY_DESCRIPTIONS, BINDING_ENERGY_COL_UNUSED, POSE_COL_UNUSED, setPose, setAffinity, ERROR_COL_NAME, ERROR_MESSAGE} from './utils/constants';
+  PROPERTY_DESCRIPTIONS, BINDING_ENERGY_COL_UNUSED, POSE_COL_UNUSED, setPose, setAffinity, ERROR_COL_NAME, ERROR_MESSAGE,
+  ADCP_PROPERTY_DESCRIPTIONS,
+  CACHED_ADCP} from './utils/constants';
 import { _demoDocking } from './demo/demo-docking';
+import { AdcpApp, AdcpDataType } from './apps/adcp-app';
 
 //name: info
 export function info() {
@@ -210,6 +213,7 @@ function formatColumns(autodockResults: DG.DataFrame) {
 }
 
 export function addColorCoding(column: DG.GridColumn) {
+  if (!column) return;
   column.isTextColorCoded = true;
   column.column!.tags[DG.TAGS.COLOR_CODING_TYPE] = 'Linear';
   column.column!.tags[DG.TAGS.COLOR_CODING_LINEAR] = `[${DG.Color.green}, ${DG.Color.red}]`;
@@ -234,20 +238,20 @@ function processAutodockResults(autodockResults: DG.DataFrame, table: DG.DataFra
 //input: semantic_value molecule { semType: Molecule3D }
 //output: widget result
 export async function autodockWidget(molecule: DG.SemanticValue): Promise<DG.Widget<any> | null> {
-  return await getAutodockSingle(molecule);
+  const type = molecule.cell.column.getTag('docking.type');
+  if (type === 'adcp')
+    return await getDockingResults(molecule, CACHED_ADCP);
+  return await getDockingResults(molecule, CACHED_DOCKING);
 }
 
-//name: getAutodockSingle
-export async function getAutodockSingle(
-  molecule: DG.SemanticValue, showProperties: boolean = true, 
-  table?: DG.DataFrame, colName?: string): Promise<DG.Widget<any> | null> {
+async function getDockingResults(molecule: DG.SemanticValue, cachedDocking: DG.LruCache, showProperties: boolean = true, table?: DG.DataFrame): Promise<DG.Widget<any> | null> {
   const value = molecule.value;
   if (value.toLowerCase().includes(ERROR_COL_NAME))
     return new DG.Widget(ui.divText(value));
 
   const currentTable = table ?? grok.shell.tv.dataFrame;
   //@ts-ignore
-  const index = CACHED_DOCKING.V.findIndex((cachedData: DG.DataFrame) => {
+  const index = cachedDocking.V.findIndex((cachedData: DG.DataFrame) => {
     if (cachedData) {
       const names = currentTable?.columns.names();
       const indexPoses = names!.findIndex(name => name.includes(molecule.cell.column.name));
@@ -258,13 +262,13 @@ export async function getAutodockSingle(
   });
 
   //@ts-ignore
-  const key = CACHED_DOCKING.K[index];
+  const key = cachedDocking.K[index];
   //@ts-ignore
-  const matchingValue = CACHED_DOCKING.V[index];
+  const matchingValue = cachedDocking.V[index];
   if (!matchingValue)
     return new DG.Widget(ui.divText('Docking has not been run'));
 
-  const autodockResults: DG.DataFrame = matchingValue.clone();
+  const resultsDf: DG.DataFrame = matchingValue.clone();
   const widget = new DG.Widget(ui.div([]));
   const targetViewer = await currentTable!.plot.fromType('Biostructure', {
     dataJson: BiostructureDataJson.fromData(key.receptor),
@@ -277,10 +281,10 @@ export async function getAutodockSingle(
 
   const result = ui.div();
   const map: { [_: string]: any } = {};
-  for (let i = 3; i < autodockResults!.columns.length; ++i) {
-    const columnName = autodockResults!.columns.names()[i];
-    const propertyCol = autodockResults!.col(columnName);
-    map[columnName] = prop(molecule, propertyCol!, result);
+  for (let i = 1; i < resultsDf!.columns.length; ++i) {
+    const columnName = resultsDf!.columns.names()[i];
+    const propertyCol = resultsDf!.col(columnName);
+    map[columnName] = prop(molecule, propertyCol!, result, PROPERTY_DESCRIPTIONS);
   }
   result.appendChild(ui.tableFromMap(map));
   widget.root.append(result);
@@ -288,11 +292,12 @@ export async function getAutodockSingle(
   return widget;
 }
 
-function prop(molecule: DG.SemanticValue, propertyCol: DG.Column, host: HTMLElement) : HTMLElement {
+function prop(molecule: DG.SemanticValue, propertyCol: DG.Column, host: HTMLElement, description: any) : HTMLElement {
   const addColumnIcon = ui.iconFA('plus', () => {
     const df = molecule.cell.dataFrame;
     propertyCol.name = df.columns.getUnusedName(propertyCol.name);
-    propertyCol.setTag(DG.TAGS.DESCRIPTION, PROPERTY_DESCRIPTIONS[propertyCol.name]);
+    const propDescription = Object.keys(description).find(key => key.includes(propertyCol.name));
+    propertyCol.setTag(DG.TAGS.DESCRIPTION, propDescription!);
     df.columns.add(propertyCol);
   }, `Calculate ${propertyCol.name} for the whole table`);
 
@@ -347,7 +352,7 @@ export async function autodockPanel(smiles: DG.SemanticValue): Promise<DG.Widget
         table.columns.add(col);
       
       const pose = table.cell(0, POSE_COL);
-      widget = await getAutodockSingle(DG.SemanticValue.fromTableCell(pose!), false, table);
+      widget = await getDockingResults(DG.SemanticValue.fromTableCell(pose!), CACHED_DOCKING, false, table);
       resultsContainer.removeChild(loader);
       resultsContainer.appendChild(widget!.root);
     }
@@ -359,31 +364,6 @@ export async function autodockPanel(smiles: DG.SemanticValue): Promise<DG.Widget
   return DG.Widget.fromRoot(panels);
 }
 
-async function getContainer() {
-  const adcpContainer = await grok.dapi.docker.dockerContainers.filter('adcp').first();
-  if (adcpContainer.status !== 'started' && adcpContainer.status !== 'checking')
-    await grok.dapi.docker.dockerContainers.run(adcpContainer.id, true);
-  return adcpContainer;
-}
-
-async function prepareAdcpData(target: string, ligand: DG.Column, searches: number, evaluations: number) {
-  const isTrgFile = (file: DG.FileInfo): boolean => file.extension === 'trg';
-  const targetFile = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`, true)).find(isTrgFile)!;
-  const receptor = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`)).find((file) => file.extension === 'pdbqt' || file.extension === 'pdb')!;
-  const targetData = await grok.dapi.files.readAsBytes(targetFile.fullPath);
-  const binaryDataBase64 = fromByteArray(targetData);
-
-  return {
-    'ligand': ligand.get(0),
-    'receptor': await grok.dapi.files.readAsText(receptor.fullPath),
-    'ligand_format': ligand.getTag(DG.TAGS.UNITS),
-    'receptor_format': receptor.extension,
-    'target': binaryDataBase64,
-    'searches': searches,
-    'evaluations': evaluations
-  };
-}
-
 //top-menu: Chem | ADCP...
 //name: ADCP
 //input: dataframe table [Input data table]
@@ -391,18 +371,82 @@ async function prepareAdcpData(target: string, ligand: DG.Column, searches: numb
 //input: string target {choices: Docking: getConfigFiles} [Folder with config and macromolecule]
 //input: int searches = 20 [Number of independent searches]
 //input: int evaluations = 1000000 [Number of evaluations of the scoring function]
-export async function testAdcp(table: DG.DataFrame, ligands: DG.Column, target: string, searches: number, evaluations: number): Promise<object> {
-  const container = await getContainer();
-  const params: RequestInit = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(await prepareAdcpData(target, ligands, searches, evaluations))
+export async function runAdcp(table: DG.DataFrame, ligands: DG.Column, target: string, searches: number, evaluations: number) {
+  const adcpApp = new AdcpApp();
+  const data = await prepareAdcpData(target, table, ligands.name, searches, evaluations);
+
+  const resultDf = await adcpApp.init(data);
+  if (resultDf !== undefined) {
+    const energyCol = resultDf.col(BINDING_ENERGY_COL);
+    const clusterCol = resultDf.col('cluster size');
+    const columns = [energyCol, clusterCol];
+    for (const col of columns) {
+      if (col)
+        table.columns.add(col);
+    }
+
+    const poseCol = resultDf.getCol(POSE_COL);
+    poseCol.semType = DG.SEMTYPE.MOLECULE3D;
+    poseCol.setTag('docking.role', 'ligand');
+    poseCol.setTag('units', 'pdbqt');
+    poseCol.setTag('docking.type', 'adcp');
+    table.columns.add(poseCol!);
+    await grok.data.detectSemanticTypes(table);
+
+    const grid = grok.shell.getTableView(table.name).grid;
+
+    addColorCoding(grid.col(BINDING_ENERGY_COL)!);
+    grid.sort([BINDING_ENERGY_COL]);
+
+
+    grid.onCellRender.subscribe((args: any) => {
+      grid.setOptions({ 'rowHeight': 100 });
+      grid.col('pose')!.width = 100;
+      //grid.col('binding energy')!.width = 100 + 50;
+
+      const { cell, g, bounds } = args;
+      const value = cell.cell.value;
+      const isPoseCell = cell.isTableCell && cell.cell.column.name === POSE_COL;
+      const isErrorValue = typeof value === 'string' && value.toLowerCase().includes(ERROR_COL_NAME);
+
+      if (isPoseCell && isErrorValue) {
+        g.fillStyle = 'black';
+        g.fillText(ERROR_MESSAGE, bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+        args.preventDefault();
+      }
+    });
+  }
+}
+
+async function prepareAdcpData(
+  target: string, 
+  table: DG.DataFrame, 
+  ligandColumn: string, 
+  searches: number,
+  evaluations: number
+): Promise<AdcpDataType> {
+  const isTrgFile = (file: DG.FileInfo): boolean => file.extension === 'trg';
+  const targetFiles = await grok.dapi.files.list(`${TARGET_PATH}/${target}`, true);
+  const targetFile = targetFiles.find(isTrgFile)!;
+  const targetData = await grok.dapi.files.readAsBytes(targetFile.fullPath);
+  const binaryDataBase64 = fromByteArray(targetData);
+
+  const receptorFiles = await grok.dapi.files.list(`${TARGET_PATH}/${target}`);
+  const receptor = receptorFiles.find(file => file.extension === 'pdbqt' || file.extension === 'pdb')!;
+
+  const receptorData: BiostructureData = {
+    binary: false,
+    data: await grok.dapi.files.readAsText(receptor.fullPath),
+    ext: receptor.extension,
+    options: { name: receptor.name },
   };
-  const response = await grok.dapi.docker.dockerContainers.fetchProxy(container.id, 'adcp/dock', params);
-  if (response.status !== 200)
-    throw new Error(response.statusText);
-  const result = await response.json();
-  return result;
+
+  return {
+    ligandDf: table,
+    ligandMolColName: ligandColumn,
+    receptor: receptorData,
+    target: binaryDataBase64,
+    searches: searches,
+    evaluations: evaluations
+  };
 }

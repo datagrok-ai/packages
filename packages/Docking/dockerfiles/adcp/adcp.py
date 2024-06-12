@@ -61,7 +61,7 @@ def parse_stdout_to_csv(stdout):
         
         csv_output = io.BytesIO()
         writer = csv.writer(csv_output)
-        writer.writerow(['mode', 'affinity', 'ref.', 'clust.', 'rmsd', 'energy', 'best'])
+        writer.writerow(['mode', 'binding energy', 'reference funcion', 'cluster size', 'rmsd', 'energy', 'best run'])
         writer.writerows(data)
         csv_output.seek(0)
         return csv_output.read().decode('utf-8')
@@ -146,22 +146,21 @@ def dock_endpoint():
         # Perform docking
         stdout, stderr = dock(receptor_file_name, target_folder, searches, evaluations)
 
+        if 'ERROR:' in stdout:
+            error_message = 'error: {}'.format(stdout.split('ERROR:', 1)[1].strip())
+            return jsonify({'error': error_message}), 200
+
         # Parse stdout to CSV
         csv_output = parse_stdout_to_csv(stdout)
 
-        logger.debug('csv output')
-        logger.debug(csv_output)
-
         # Find and read best docking result file
-        best_file_content = find_and_read_file(DOCKING_OUTPUT_PREFIX + '_best')
-        logger.debug('best file content')
-        logger.debug(best_file_content)
+        pose = find_and_read_file(DOCKING_OUTPUT_PREFIX + '_best')
 
         # Cleanup
         os.remove(ligand_file_name)
         os.remove(receptor_file_name)
 
-        return jsonify({'csv_output': csv_output, 'best_file_content': best_file_content}), 200
+        return jsonify({'csv_output': csv_output, 'pose': pose}), 200
 
     except Exception as e:
         logger.error('An error occurred: %s', str(e))

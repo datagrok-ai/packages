@@ -15,6 +15,7 @@
     "cash-dom": "latest",
     "datagrok-api": "../../js-api",
     "dayjs": "^1.11.4",
+    "jszip": "^3.10.1",
     "rxjs": "^6.5.5",
     "wu": "latest"
   },
