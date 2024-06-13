@@ -1,5 +1,9 @@
 # utils changelog
 
+## 4.2.9 (2023-06-13)
+
+Fixed viewer testing.
+
 ## 4.2.8 (2023-06-05)
 
 Fix the infinite loading of tests.

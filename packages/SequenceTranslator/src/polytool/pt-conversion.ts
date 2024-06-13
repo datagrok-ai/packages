@@ -268,8 +268,12 @@ export class Chain {
 function getHelms(sequences: string[], rules: Rules): string[] {
   const helms = new Array<string>(sequences.length);
   for (let i = 0; i < sequences.length; i++) {
-    const chain = Chain.fromNotation(sequences[i], rules);
-    helms[i] = chain.getHelm();
+    if (sequences[i] === undefined)
+      helms[i] = '';
+    else {
+      const chain = Chain.fromNotation(sequences[i], rules);
+      helms[i] = chain.getHelm();
+    }
   }
 
   return helms;
@@ -288,20 +292,20 @@ export async function addTransformedColumn(
   addCommonTags(targetHelmCol);
   targetHelmCol.setTag('units', NOTATION.HELM);
 
+  if (addHelm) {
+    targetHelmCol.setTag('cell.renderer', 'helm');
+    df.columns.add(targetHelmCol);
+  }
+
   const molCol = await grok.functions.call('Bio:getMolFromHelm', {
     'df': df,
     'helmCol': targetHelmCol,
     'chiralityEngine': chiralityEngine
   });
 
-
   molCol.name = df.columns.getUnusedName('molfile(' + sequencesCol.name + ')');
   molCol.semType = DG.SEMTYPE.MOLECULE;
 
-  if (addHelm) {
-    targetHelmCol.setTag('cell.renderer', 'helm');
-    df.columns.add(targetHelmCol);
-  }
   df.columns.add(molCol, true);
   await grok.data.detectSemanticTypes(df);
 }

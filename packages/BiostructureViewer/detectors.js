@@ -60,7 +60,10 @@ class BiostructureViewerPackageDetectors extends DG.Package {
   }
 
   autostartContextMenu() {
+    const logPrefix = 'BsV: detectors.js: autostartContextMenu()';
+    this.logger.debug(`${logPrefix}, start`);
     grok.events.onContextMenu.subscribe((event) => {
+      this.logger.debug(`${logPrefix}, onContextMenu, start`);
       if (event.args.item) {
         const item = event.args.item;
         // TODO: TreeViewNode.value is not real DG.FileInfo (no extension property)
@@ -78,6 +81,7 @@ class BiostructureViewerPackageDetectors extends DG.Package {
             });
         }
       }
+      this.logger.debug(`${logPrefix}, onContextMenu, end`);
     });
   }
 }

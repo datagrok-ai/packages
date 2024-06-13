@@ -1,0 +1,32 @@
+# Developer keys
+upload.keys.json
+
+# Dependency directories
+node_modules/
+
+# Webpack outputs
+dist/
+
+# IDEs
+# VS Code (https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# Intellij IDEA/WebStorm (https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore)
+.idea/inspectionProfiles/
+.idea/**/compiler.xml
+.idea/**/encodings.xml
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/codeStyles/
+
+# Emitted *.js files
+src/**/*.js

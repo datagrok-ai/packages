@@ -1,5 +1,11 @@
 # Bio changelog
 
+## 2.12.24 (WIP)
+
+### Bug fixes
+
+* PolyTool: files moved to SequenceTranslator
+
 ## 2.12.23 (2024-05-30)
 
 ### Bug fixes

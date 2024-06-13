@@ -160,7 +160,7 @@ export function previewMolstarUI(file: DG.FileInfo): { view: DG.View, loadingPro
       viewer = await createRcsbViewer(view.root, castProps(defaults), 'previewMolstarUI()');
       const {binary} = molecule3dFileExtensions[file.extension];
       const dataValue: string | Uint8Array = binary ? await file.readAsBytes() : await file.readAsString();
-      const data: BiostructureData = {binary: binary, ext: file.extension, data: dataValue};
+      const data: BiostructureData = {binary: binary, ext: file.extension, data: dataValue, options: {name: file.name}};
       await parseAndVisualsData(viewer.plugin, data);
       resolve();
     } catch (err: any) {

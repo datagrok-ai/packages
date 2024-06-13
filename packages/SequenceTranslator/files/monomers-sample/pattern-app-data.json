@@ -1,0 +1,80 @@
+{
+  "Axolabs": {
+    "RNA": {
+      "color": "rgb(255,230,153)",
+      "substitution": "$1"
+    },
+    "DNA": {
+      "color": "rgb(66, 120, 245)",
+      "substitution": "d$1"
+    },
+    "2'-Fluoro": {
+      "color": "rgb(95, 212, 245)",
+      "substitution": "$1f"
+    },
+    "2'-O-Methyl": {
+      "color": "rgb(150, 95, 245)",
+      "substitution": "$1f"
+    },
+    "2'-O-MOE": {
+      "color": "rgb(129, 199, 130)",
+      "substitution": "$1m"
+    },
+    "GNA": {
+      "color": "rgb(199, 169, 129)",
+      "substitution": "(GNA-$1)"
+    },
+    "LNA": {
+      "color": "rgb(250, 185, 182)",
+      "substitution": "$1b"
+    },
+    "UNA": {
+      "color": "rgb(237, 104, 184)",
+      "substitution": "$1o"
+    },
+    "A": {
+      "color": "rgb(255,230,153)",
+      "substitution": "A"
+    },
+    "C": {
+      "color": "rgb(255,230,153)",
+      "substitution": "C"
+    },
+    "G": {
+      "color": "rgb(255,230,153)",
+      "substitution": "G"
+    },
+    "U": {
+      "color": "rgb(255,230,153)",
+      "substitution": "U"
+    },
+    "X-New": {
+      "color": "rgb(196, 91, 252)",
+      "substitution": "X"
+    },
+    "Y-New": {
+      "color": "rgb(150, 177, 255)",
+      "substitution": "Y"
+    },
+    "Z-New": {
+      "color": "rgb(11, 222, 71)",
+      "substitution": "Z"
+    },
+    "invAb": {
+      "color": "rgb(243, 153, 247)",
+      "substitution": "(invAb)"
+    },
+    "5'-vinylps": {
+      "color": "rgb(99, 3, 40)",
+      "substitution": "(vinu)"
+    },
+    "invAb(o)": {
+      "color": "rgb(240, 224, 108)",
+      "substitution": "(invAb)"
+    },
+    "2'-OMe-U(o)": {
+      "color": "rgb(190, 237, 123)",
+      "substitution": "mU"
+    }
+  }
+}

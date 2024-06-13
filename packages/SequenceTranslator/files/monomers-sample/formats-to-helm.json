@@ -1,0 +1,63 @@
+{
+  "Axolabs": {
+    "nucleoside": {
+      "(GalNAc)": "[GalNAc]",
+      "Uf": "[fR](U)p",
+      "Af": "[fR](A)p",
+      "Cf": "[fR](C)p",
+      "Gf": "[fR](G)p",
+      "u": "[25r](U)p",
+      "a": "[25r](A)p",
+      "c": "[25r](C)p",
+      "g": "[25r](G)p"
+    },
+    "phosphateBackbone": {
+      "s": "[sp]"
+    }
+  },
+  "BioSpring": {
+    "nucleoside": {
+      "(GalNAc)": "[GalNAc]",
+      "A": "r(A)p",
+      "T": "r(T)p",
+      "G": "r(G)p",
+      "C": "r(C)p",
+      "1": "[fR](U)p",
+      "2": "[fR](A)p",
+      "3": "[fR](C)p",
+      "4": "[fR](G)p",
+      "5": "[25r](U)p",
+      "6": "[25r](A)p",
+      "7": "[25r](C)p",
+      "8": "[25r](G)p",
+      "9": "d([m5C])p"
+    },
+    "phosphateBackbone": {
+      "*": "[sp]"
+    }
+  },
+  "Mermade12": {
+    "nucleoside": {
+      "(GalNAc)": "[GalNAc]",
+      "h": "[25r](U)[sp]",
+      "e": "[25r](A)[sp]",
+      "f": "[25r](C)[sp]",
+      "g": "[25r](G)[sp]",
+      "l": "[fR](U)[sp]",
+      "i": "[fR](A)[sp]",
+      "j": "[fR](C)[sp]",
+      "k": "[fR](G)[sp]",
+      "L": "[fR](U)p",
+      "I": "[fR](A)p",
+      "J": "[fR](C)p",
+      "K": "[fR](G)p",
+      "H": "[25r](U)p",
+      "E": "[25r](A)p",
+      "F": "[25r](C)p",
+      "G": "[25r](G)p"
+    },
+    "phosphateBackbone": {
+      "<empty>": "[sp]"
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import {NUCLEOTIDES} from '../../../common/model/const';
-import {STRAND, STRANDS, TERMINUS} from '../../model/const';
+import {STRAND, STRANDS, TERMINI, TERMINUS} from '../../model/const';
 import {PatternConfiguration} from '../../model/types';
 import {isOverhangNucleotide} from '../../model/utils';
 import {SVG_CIRCLE_SIZES, SVG_ELEMENT_COLORS, SVG_TEXT_FONT_SIZES} from './const';
@@ -19,6 +19,7 @@ const RIGHT_LABEL_WIDTH = 20;
 export class StrandsBlock extends SVGBlockBase {
   private strands: SVGBlockBase[];
   private labels: SVGBlockBase[];
+  private terminalModifications: SVGBlockBase[];
   constructor(
     svgElementFactory: SVGElementFactory,
     config: PatternConfiguration,
@@ -30,16 +31,22 @@ export class StrandsBlock extends SVGBlockBase {
     this.strands = strandTypes
       .map((strand) => new SingleStrandBlock(this.svgElementFactory, config, yShift, strand));
 
+
+    this.terminalModifications = strandTypes.map(
+      (strandType, idx) =>
+        new TerminalModificationLabels(this.svgElementFactory, config, yShift, strandType, this.strands[idx] as SingleStrandBlock)
+    );
     this.labels = strandTypes.map(
       (strandType, idx) =>
-        new StrandLabel(this.svgElementFactory, config, yShift, strandType, this.strands[idx] as SingleStrandBlock)
+        new StrandLabel(this.svgElementFactory, config, yShift, strandType, this.terminalModifications[idx] as TerminalModificationLabels)
     );
   }
 
   get svgElements(): SVGElement[] {
     const elements = [
       ...this.strands,
-      ...this.labels
+      ...this.terminalModifications,
+      ...this.labels,
     ].map((block) => block.svgElements).flat();
     return elements;
   }
@@ -255,11 +262,10 @@ class StrandLabel extends SVGBlockBase {
     protected config: PatternConfiguration,
     protected yShift: number,
     private strand: STRAND,
-    private strandSvgWrapper: SingleStrandBlock
+    private terminalModifications: TerminalModificationLabels
   ) {
     super(svgElementFactory, config, yShift);
     this._svgElements = this.createSVGElements();
-    // this.strandSvgWrapper.shiftElements({x: this.getLeftLabelWidth(), y: 0});
   }
 
   private createSVGElements(): SVGElement[] {
@@ -300,7 +306,7 @@ class StrandLabel extends SVGBlockBase {
     const text = `  ${terminus}`;
     const textDimensions = TextDimensionsCalculator.getTextDimensions(text, SVG_TEXT_FONT_SIZES.NUCLEOBASE);
     const position = {
-      x: SENSE_STRAND_HORIZONTAL_SHIFT + this.strandSvgWrapper.getContentWidth() + 5,
+      x: SENSE_STRAND_HORIZONTAL_SHIFT + this.terminalModifications.getContentWidth() + 5,
       y: getStrandCircleYShift(this.strand, this.yShift) + textDimensions.height / 3
     };
 
@@ -317,7 +323,92 @@ class StrandLabel extends SVGBlockBase {
   }
 
   getContentWidth(): number {
-    return this.strandSvgWrapper.getContentWidth() + this.getLeftLabelWidth() + this.getRightLabelWidth() + SENSE_STRAND_PADDING;
+    return this.terminalModifications.getContentWidth() + this.getLeftLabelWidth() +
+      this.getRightLabelWidth() + SENSE_STRAND_PADDING;
+  }
+
+  getContentHeight(): number {
+    return this.terminalModifications.getContentHeight();
+  }
+}
+
+class TerminalModificationLabels extends SVGBlockBase {
+  private _svgElements: SVGElement[];
+  constructor(
+    protected svgElementFactory: SVGElementFactory,
+    protected config: PatternConfiguration,
+    protected yShift: number,
+    private strand: STRAND,
+    private strandSvgWrapper: SingleStrandBlock
+  ) {
+    super(svgElementFactory, config, yShift);
+    this._svgElements = this.createSVGElements();
+  }
+
+  private createSVGElements(): SVGElement[] {
+    const elements = this.createTerminalModifications();
+    return elements;
+  }
+
+  private getTerminalModification(terminus: TERMINUS): string {
+    const terminalModification = this.config.strandTerminusModifications[this.strand][terminus];
+    return terminalModification;
+  }
+
+  private getTerminalModificationTextDimensions(terminus: TERMINUS): {width: number, height: number} {
+    const terminalModification = this.getTerminalModification(terminus);
+    const textDimensions = TextDimensionsCalculator
+      .getTextDimensions(terminalModification, SVG_TEXT_FONT_SIZES.NUCLEOBASE);
+    return textDimensions;
+  }
+
+  private getLeftTerminus(): TERMINUS {
+    return this.strand === STRAND.SENSE ? TERMINUS.FIVE_PRIME : TERMINUS.THREE_PRIME;
+  }
+
+  private createTerminalModification(terminus: TERMINUS): SVGTextElement {
+    const terminalModification = this.getTerminalModification(terminus);
+    const dimensions = this.getTerminalModificationTextDimensions(terminus);
+
+    const isLeft = terminus === this.getLeftTerminus();
+    const xShift = isLeft ? SENSE_STRAND_HORIZONTAL_SHIFT :
+      SENSE_STRAND_HORIZONTAL_SHIFT +
+      this.getTerminalModificationTextDimensions(this.getLeftTerminus()).width +
+      this.strandSvgWrapper.getContentWidth();
+    const position = {
+      x: xShift,
+      y: getStrandCircleYShift(this.strand, this.yShift) + dimensions.height / 3
+    };
+    if (isLeft) {
+      this.strandSvgWrapper.shiftElements({
+        x: dimensions.width,
+        y: 0
+      });
+    }
+
+    return this.svgElementFactory.createTextElement(
+      terminalModification,
+      position,
+      SVG_TEXT_FONT_SIZES.NUCLEOBASE,
+      SVG_ELEMENT_COLORS.MODIFICATION_TEXT
+    );
+  }
+
+  private createTerminalModifications(): SVGTextElement[] {
+    const termini = (this.strand === STRAND.ANTISENSE) ? TERMINI : Array.from(TERMINI).reverse();
+    const textElements = termini.map((terminus) => this.createTerminalModification(terminus));
+    return textElements;
+  }
+
+  get svgElements(): SVGElement[] {
+    return this._svgElements;
+  }
+
+  getContentWidth(): number {
+    return this.strandSvgWrapper.getContentWidth() +
+      TERMINI
+        .map((terminus) => this.getTerminalModificationTextDimensions(terminus).width)
+        .reduce((acc, curr) => acc += curr, 0);
   }
 
   getContentHeight(): number {

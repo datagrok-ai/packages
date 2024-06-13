@@ -1,5 +1,24 @@
 # Chem changelog
 
+## 1.10.0 (2024-06-12)
+
+### Features
+
+* Webgpu acceleration for chem space, activity cliffs, molecule generations
+* GROK-15299: Chem: Ability to save results of Chem functions to projects with and without data sync
+* GROK-15454: Chem: Similarity/Diversity search viewers: Row source property
+* GROK-15508: Chem: MMP: Generated - show what cases are actually generated
+* GROK-15501: Chem: MMPA: UI/UX improvements
+* GROK-15502: Chem: MMPA: Ability to swith activity on/off
+* GROK-15507: Chem: MMP: Control of fragments size
+* Chem: Integrate with Chemprop
+* Chem: Chemprop upgrade from version "1.6.7" to version "2.0" (reduced memory usage, improved performance)
+
+### Bug Fixes
+
+* GROK-15285: Chem: MMP: Error on re-run
+* GROK-15321: Chem: MMP: Error while running Close All after running MMP
+
 ## 1.9.2 (2024-04-12)
 
 ### Features

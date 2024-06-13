@@ -82,13 +82,13 @@ category('projects', () => {
     await runSaveAndOpenProjectTest('tests/sar-small_test.csv', runElementalAnalysis,
       ['smiles', 'C', 'N', 'O', 'Cl', 'Molecule Charge'], DG.VIEWER.RADAR_VIEWER);
     expect(grok.shell.tv.grid.col('elements (smiles)') != null);
-  });
+  }, {timeout: 50000});
 
   test('elemental_analysis_sync', async () => {
     await runSaveAndOpenProjectTest('tests/sar-small_test.csv', runElementalAnalysis,
       ['smiles', 'C', 'N', 'O', 'Cl', 'Molecule Charge'], DG.VIEWER.RADAR_VIEWER, true);
     expect(grok.shell.tv.grid.col('elements (smiles)') != null);
-  });
+  }, {timeout: 50000});
 
   test('structural_alerts', async () => {
     await runSaveAndOpenProjectTest('tests/sar-small_test.csv', runStructuralAlerts,

@@ -23,6 +23,7 @@ export enum CONTROL_EXPR {
     RUN_ON_INPUT = `${META}.runOnInput`,
     OUTPUT = `${CONTROL_TAG}output`,
     COMMENT = `${CONTROL_TAG}comment`,
+    SOLVER = `${META}.solver`,
 };
 
 /** Loop consts */
@@ -39,3 +40,9 @@ export enum UPDATE {
   DURATION_IDX = 0,
   DURATION = '_duration',
 };
+
+/** Ranges of the solver options */
+export const SOLVER_OPTIONS_RANGES = new Map([
+  ['maxTime', {min: 1, max: 10000}],
+  ['scale', {min: 0.5, max: 1}],
+]);

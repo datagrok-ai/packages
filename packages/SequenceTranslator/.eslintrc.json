@@ -44,7 +44,7 @@
     "block-spacing": [2, "always"],
     "comma-dangle": ["error", {
       "arrays": "only-multiline",
-      "functions": "never",
+      "functions": "only-multiline",
       "objects": "only-multiline",
       "imports": "only-multiline"
     }],

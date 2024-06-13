@@ -1,0 +1,38 @@
+{
+  "name": "@datagrok-libraries/compute-api",
+  "friendlyName": "ComputeApi",
+  "version": "0.0.3",
+  "author": {
+    "name": "Aufar Zakiev",
+    "email": "aufar.zakiev@softwarecountry.com"
+  },
+  "description": "Datagrok compute global API",
+  "dependencies": {
+    "@datagrok-libraries/compute-utils": "latest",
+    "datagrok-api": "^1.18.6"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest",
+    "eslint": "latest",
+    "eslint-config-google": "latest",
+    "typescript": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  },
+  "scripts": {
+    "link": "npm link",
+    "link-api": "npm link datagrok-api",
+    "link-all": "npm link datagrok-api",
+    "build": "tsc",
+    "clean": "tsc --build --clean",
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --ext .ts --fix",
+    "build-all": "npm --prefix ./../../js-api run build && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:datagrok-ai/public.git",
+    "directory": "libraries/compute-api"
+  }
+}

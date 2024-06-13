@@ -2,7 +2,6 @@ import * as ui from 'datagrok-api/ui';
 
 import $ from 'cash-dom';
 
-import {PATTERN_APP_DATA} from '../../../../common/model/data-loader/json-loader';
 import {STRAND, STRANDS, STRAND_LABEL} from '../../../model/const';
 import {EventBus} from '../../../model/event-bus';
 import {StrandType} from '../../../model/types';

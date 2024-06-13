@@ -1,5 +1,9 @@
 # math changelog
 
+## 1.1.10 (2024-06-07)
+
+MMP generations on webGPU
+
 ## 1.1.9 (2024-05-27)
 
 Add inflation factor to MCL

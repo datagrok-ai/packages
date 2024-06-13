@@ -25,61 +25,111 @@ import BitArray from '@datagrok-libraries/utils/src/bit-array';
 import {FormsViewer} from '@datagrok-libraries/utils/src/viewers/forms-viewer';
 import {getEmbeddingColsNames} from
   '@datagrok-libraries/ml/src/multi-column-dimensionality-reduction/reduce-dimensionality';
+import $ from 'cash-dom';
 
-export class MmpAnalysis {
-  parentTable: DG.DataFrame;
-  parentCol: DG.Column;
-  mmpRules: MmpRules;
-  mmpView: DG.View;
+export class MatchedMolecularPairsViewer extends DG.JsViewer {
+  static TYPE: string = 'MMP';
+
+  molecules: string | null = null;
+  moleculesCol: DG.Column | null = null;
+  activities: string[] | null = null;
+  activitiesCols: DG.ColumnList | null = null;
+  fragmentCutoff: number | null;
+
+  parentTable: DG.DataFrame | null = null;
+  parentCol: DG.Column| null = null;
+  mmpRules: MmpRules | null = null;
+  mmpView: DG.View | null = null;
   enableFilters: boolean = true;
-  colorPalette: PaletteCodes;
+  colorPalette: PaletteCodes | null = null;
   //transformations tab objects
-  allPairsGrid: DG.Grid;
-  transformationsMask: DG.BitSet;
-  casesGrid: DG.Grid;
-  pairsMask: DG.BitSet;
+  allPairsGrid: DG.Grid | null = null;
+  transformationsMask: DG.BitSet | null = null;
+  casesGrid: DG.Grid | null = null;
+  pairsMask: DG.BitSet | null = null;
   //cliffs tab objects
-  diffs: Array<Float32Array>;
-  linesIdxs: Uint32Array;
-  cutoffMasks: Array<DG.BitSet>;
-  totalCutoffMask: DG.BitSet;
-  linesMask: BitArray;
+  diffs: Array<Float32Array> | null = null;
+  linesIdxs: Uint32Array | null = null;
+  cutoffMasks: Array<DG.BitSet> | null = null;
+  totalCutoffMask: DG.BitSet | null = null;
+  linesMask: BitArray | null = null;
   linesRenderer: ScatterPlotLinesRenderer | null = null;
-  lines: ILineSeries;
-  linesActivityCorrespondance: Uint32Array;
+  lines: ILineSeries | null = null;
+  linesActivityCorrespondance: Uint32Array | null = null;
   //generations tab objects
-  generationsGrid: DG.Grid;
+  generationsGrid: DG.Grid | null = null;
   //rdkit
-  rdkitModule: RDModule;
+  rdkitModule: RDModule | null = null;
   currentTab = '';
   lastSelectedPair: number | null = null;
-  propPanelViewer: FormsViewer;
-  sliderInputs: DG.InputBase[];
-  colorInputs: DG.InputBase[];
-  activeInputs: DG.InputBase[];
-  calculatedOnGPU;
+  propPanelViewer: FormsViewer | null = null;
+  sliderInputs: DG.InputBase[] | null = null;
+  colorInputs: DG.InputBase[] | null = null;
+  activeInputs: DG.InputBase[] | null = null;
+  calculatedOnGPU: boolean | null = null;
+
+
+  constructor() {
+    super();
+
+    //properties
+    this.molecules = this.string('molecules');
+    this.activities = this.stringList('activities');
+    this.fragmentCutoff = this.float('fragmentCutoff');
+  }
+
+  onTableAttached() {
+
+  }
+
+  onPropertyChanged(property: DG.Property | null): void {
+    console.log(property!.name);
+    super.onPropertyChanged(property);
+    if (property?.name === 'molecules')
+      this.moleculesCol = this.dataFrame.col(property!.get(this));
+    if (property?.name === 'activities')
+      this.activitiesCols = DG.DataFrame.fromColumns(this.dataFrame.columns.byNames(this.activities!)).columns;
+    if (this.molecules && this.activities && this.fragmentCutoff) {
+      this.render();
+      return;
+    }
+  }
+
+  async render() {
+    $(this.root).empty();
+    if (this.dataFrame) {
+      await this.runMMP(
+        {table: this.dataFrame,
+          molecules: this.moleculesCol!,
+          activities: this.activitiesCols!,
+          fragmentCutoff: this.fragmentCutoff!,
+        });
+
+      this.root.appendChild(this.mmpView!.root);
+    }
+  }
 
   private setupTransformationTab(): void {
-    this.transformationsMask.setAll(true);
-    this.parentTable.onCurrentRowChanged.pipe(debounceTime(1000)).subscribe(() => {
-      if (this.parentTable.currentRowIdx !== -1) {
+    this.transformationsMask!.setAll(true);
+    this.parentTable!.onCurrentRowChanged.pipe(debounceTime(1000)).subscribe(() => {
+      if (this.parentTable!.currentRowIdx !== -1) {
         this.refilterAllPairs(true);
-        this.refreshPair(this.rdkitModule);
+        this.refreshPair(this.rdkitModule!);
       }
     });
 
     this.refilterAllPairs(true);
 
-    this.allPairsGrid.table.onCurrentRowChanged.subscribe(() => {
-      if (this.allPairsGrid.table.currentRowIdx !== -1)
-        this.refreshPair(this.rdkitModule);
+    this.allPairsGrid!.table.onCurrentRowChanged.subscribe(() => {
+      if (this.allPairsGrid!.table.currentRowIdx !== -1)
+        this.refreshPair(this.rdkitModule!);
     });
 
-    this.mmpView.name = MMP_VIEW_NAME;
-    this.mmpView.box = true;
+    this.mmpView!.name = MMP_VIEW_NAME;
+    this.mmpView!.box = true;
 
-    this.pairsMask.setAll(false);
-    this.refreshPair(this.rdkitModule);
+    this.pairsMask!.setAll(false);
+    this.refreshPair(this.rdkitModule!);
   }
 
   private setupCliffsTab(
@@ -99,25 +149,25 @@ export class MmpAnalysis {
         this.refilterCliffs(sliderInputs.map((si) => si.value), activeInputs.map((ai) => ai.value), true);
       });
 
-      colorInputs[i].value = this.colorPalette.hex[i];
+      colorInputs[i].value = this.colorPalette!.hex[i];
       colorInputs[i].onChanged(() => {
         const progressRendering = DG.TaskBarProgressIndicator.create(`Changing colors...`);
 
         //refresh lines
         for (let i =0; i < colorInputs.length; i++) {
-          this.colorPalette.hex[i] = colorInputs[i].value;
-          this.colorPalette.numerical[i] = DG.Color.fromHtml(colorInputs[i].value);
-          this.colorPalette.rgb[i] = DG.Color.toRgb(this.colorPalette.numerical[i]);
-          this.colorPalette.rgbCut[i] = this.colorPalette.rgb[i].replace('rgb(', '').replace(')', '');
+          this.colorPalette!.hex[i] = colorInputs[i].value;
+          this.colorPalette!.numerical[i] = DG.Color.fromHtml(colorInputs[i].value);
+          this.colorPalette!.rgb[i] = DG.Color.toRgb(this.colorPalette!.numerical[i]);
+          this.colorPalette!.rgbCut[i] = this.colorPalette!.rgb[i].replace('rgb(', '').replace(')', '');
         }
 
-        const colors = this.lines.colors;
+        const colors = this.lines!.colors;
         for (let i = 0; i < colors!.length; i++)
-          colors![i] = this.colorPalette.rgbCut[linesActivityCorrespondance[i]];
+          colors![i] = this.colorPalette!.rgbCut[linesActivityCorrespondance[i]];
 
         const lines: ILineSeries = {
-          from: this.lines.from,
-          to: this.lines.to,
+          from: this.lines!.from,
+          to: this.lines!.to,
           drawArrows: true,
           opacity: 0.5,
           colors: colors,
@@ -130,7 +180,7 @@ export class MmpAnalysis {
         //refresh trellis plot
         const schemes = new Array<any>(colorInputs.length);
         for (let i = 0; i < colorInputs.length; i++)
-          schemes[i] = [this.colorPalette.numerical[i]];
+          schemes[i] = [this.colorPalette!.numerical[i]];
 
         tp.setOptions({'innerViewerLook': {'colorSchemes': schemes}});
         progressRendering.close();
@@ -144,12 +194,12 @@ export class MmpAnalysis {
     const cliffs = ui.divV([sliders, ui.box(sp.root,
       {style: {maxHeight: '100px', paddingRight: '6px'}})], 'css-flex-wrap');
 
-    this.totalCutoffMask.setAll(true);
-    this.linesMask.setAll(true);
+    this.totalCutoffMask!.setAll(true);
+    this.linesMask!.setAll(true);
 
     for (let i = 0; i < sliderInputs.length; i++) {
-      this.cutoffMasks[i] = DG.BitSet.create(this.parentTable.rowCount);
-      this.cutoffMasks[i].setAll(true);
+      this.cutoffMasks![i] = DG.BitSet.create(this.parentTable!.rowCount);
+      this.cutoffMasks![i].setAll(true);
     }
 
     this.linesRenderer = linesEditor;
@@ -187,8 +237,8 @@ export class MmpAnalysis {
       };
 
       return ui.splitV([
-        createGridDiv('Fragments', this.allPairsGrid),
-        createGridDiv('Pairs', this.casesGrid),
+        createGridDiv('Fragments', this.allPairsGrid!),
+        createGridDiv('Pairs', this.casesGrid!),
       ], {}, true);
     });
     tabs.addPane(MMP_TAB_FRAGMENTS, () => {
@@ -198,9 +248,9 @@ export class MmpAnalysis {
       return cliffs;
     });
     const genTab = tabs.addPane(MMP_TAB_GENERATION, () => {
-      return this.generationsGrid.root;
+      return this.generationsGrid!.root;
     });
-    genTab.header.append(addToWorkspaceButton(this.generationsGrid.dataFrame,
+    genTab.header.append(addToWorkspaceButton(this.generationsGrid!.dataFrame,
       'Generation', 'chem-mmpa-add-generation-to-workspace-button'));
 
     tabs.onTabChanged.subscribe(() => {
@@ -214,9 +264,9 @@ export class MmpAnalysis {
       } else if (tabs.currentPane.name == MMP_TAB_CLIFFS) {
         this.refilterCliffs(sliderInputs.map((si) => si.value), activeInputs.map((ai) => ai.value), false);
         if (this.lastSelectedPair) {
-          grok.shell.o = fillPairInfo(this.lastSelectedPair, this.linesIdxs,
-            this.linesActivityCorrespondance[this.lastSelectedPair],
-            this.casesGrid.dataFrame, this.diffs, this.parentTable, this.rdkitModule);
+          grok.shell.o = fillPairInfo(this.lastSelectedPair, this.linesIdxs!,
+            this.linesActivityCorrespondance![this.lastSelectedPair],
+            this.casesGrid!.dataFrame, this.diffs!, this.parentTable!, this.rdkitModule!);
         }
       }
     });
@@ -235,7 +285,7 @@ export class MmpAnalysis {
     return tabs;
   }
 
-  constructor(mmpInput: MmpInput, palette: PaletteCodes,
+  private fillAll(mmpInput: MmpInput, palette: PaletteCodes,
     rules: MmpRules, diffs: Array<Float32Array>,
     linesIdxs: Uint32Array, allPairsGrid: DG.Grid, casesGrid: DG.Grid, generationsGrid: DG.Grid,
     tp: DG.Viewer, sp: DG.Viewer,
@@ -257,7 +307,7 @@ export class MmpAnalysis {
     this.lines = lines;
     this.linesActivityCorrespondance = linesActivityCorrespondance;
     this.linesIdxs = linesIdxs;
-    this.calculatedOnGPU = gpuUsed
+    this.calculatedOnGPU = gpuUsed;
 
     //transformations tab setup
     this.transformationsMask = DG.BitSet.create(this.allPairsGrid.dataFrame.rowCount);
@@ -283,7 +333,7 @@ export class MmpAnalysis {
       this.linesRenderer!.currentLineId = event.id;
       if (event.id !== -1) {
         grok.shell.o = fillPairInfo(event.id, linesIdxs, linesActivityCorrespondance[event.id],
-          casesGrid.dataFrame, diffs, mmpInput.table, rdkitModule, this.propPanelViewer);
+          casesGrid.dataFrame, diffs, mmpInput.table, rdkitModule, this.propPanelViewer!);
         this.lastSelectedPair = event.id;
       }
     });
@@ -291,14 +341,14 @@ export class MmpAnalysis {
     this.mmpView.append(tabs);
 
     const propertiesColumnsNames = this.parentTable.columns.names()
-      .filter((name) => name !== this.parentCol.name && !name.startsWith('~'));
+      .filter((name) => name !== this.parentCol!.name && !name.startsWith('~'));
     this.propPanelViewer = new FormsViewer();
     this.propPanelViewer.dataframe = this.parentTable;
     this.propPanelViewer.columns = propertiesColumnsNames;
   }
 
-  static async init(mmpInput: MmpInput) {
-    console.profile('MMP');
+  async runMMP(mmpInput: MmpInput) {
+    //console.profile('MMP');
     //rdkit module
     const module = getRdKitModule();
     const moleculesArray = mmpInput.molecules.toList();
@@ -328,35 +378,35 @@ export class MmpAnalysis {
 
     const generationsGrid: DG.Grid =
       await getGenerations(mmpInput, moleculesArray, fragsOut, meanDiffs, allPairsGrid, activityMeanNames);
-    console.profileEnd('MMP');
+    //console.profileEnd('MMP');
 
-    return new MmpAnalysis(mmpInput, palette, mmpRules, diffs, linesIdxs,
+    this.fillAll(mmpInput, palette, mmpRules, diffs, linesIdxs,
       allPairsGrid, casesGrid, generationsGrid, tp, sp, sliderInputs, sliderInputValueDivs,
       colorInputs, activeInputs, linesEditor, lines, linesActivityCorrespondance, module, gpu);
   }
 
   findSpecificRule(diffFromSubstrCol: DG.Column): [idxPairs: number, cases: number[]] {
-    const idxParent = this.parentTable.currentRowIdx;
+    const idxParent = this.parentTable!.currentRowIdx;
     let idxPairs = -1;
     const cases: number[] = [];
-    const idx = this.allPairsGrid.table.currentRowIdx;
+    const idx = this.allPairsGrid!.table.currentRowIdx;
     if (idx !== -1) {
-      const ruleSmi1 = this.allPairsGrid.table.getCol(MMP_COLNAME_FROM).get(idx);
-      const ruleSmi2 = this.allPairsGrid.table.getCol(MMP_COLNAME_TO).get(idx);
-      const ruleSmiNum1 = this.mmpRules.smilesFrags.indexOf(ruleSmi1);
-      const ruleSmiNum2 = this.mmpRules.smilesFrags.indexOf(ruleSmi2);
+      const ruleSmi1 = this.allPairsGrid!.table.getCol(MMP_COLNAME_FROM).get(idx);
+      const ruleSmi2 = this.allPairsGrid!.table.getCol(MMP_COLNAME_TO).get(idx);
+      const ruleSmiNum1 = this.mmpRules!.smilesFrags.indexOf(ruleSmi1);
+      const ruleSmiNum2 = this.mmpRules!.smilesFrags.indexOf(ruleSmi2);
 
       let counter = 0;
 
-      for (let i = 0; i < this.mmpRules.rules.length; i++) {
-        const first = this.mmpRules.rules[i].smilesRule1;
-        const second = this.mmpRules.rules[i].smilesRule2;
-        for (let j = 0; j < this.mmpRules.rules[i].pairs.length; j++) {
+      for (let i = 0; i < this.mmpRules!.rules.length; i++) {
+        const first = this.mmpRules!.rules[i].smilesRule1;
+        const second = this.mmpRules!.rules[i].smilesRule2;
+        for (let j = 0; j < this.mmpRules!.rules[i].pairs.length; j++) {
           if (ruleSmiNum1 == first && ruleSmiNum2 == second) {
-            this.pairsMask.set(counter, true, false);
+            this.pairsMask!.set(counter, true, false);
             if (diffFromSubstrCol.get(counter) === null)
               cases.push(counter);
-            if (this.mmpRules.rules[i].pairs[j].firstStructure == idxParent)
+            if (this.mmpRules!.rules[i].pairs[j].firstStructure == idxParent)
               idxPairs = counter;
           }
           counter++;
@@ -392,23 +442,23 @@ export class MmpAnalysis {
   async refreshPair(rdkitModule: RDModule) : Promise<void> {
     const progressBarPairs = DG.TaskBarProgressIndicator.create(`Refreshing pairs...`);
 
-    this.pairsMask.setAll(false);
-    const diffFromSubstrCol = this.casesGrid.dataFrame.getCol(MMP_STRUCT_DIFF_FROM_NAME);
-    const diffToSubstrCol = this.casesGrid.dataFrame.getCol(MMP_STRUCT_DIFF_TO_NAME);
-    const diffFrom = this.casesGrid.dataFrame.getCol(MMP_COLNAME_FROM);
-    const diffTo = this.casesGrid.dataFrame.getCol(MMP_COLNAME_TO);
+    this.pairsMask!.setAll(false);
+    const diffFromSubstrCol = this.casesGrid!.dataFrame.getCol(MMP_STRUCT_DIFF_FROM_NAME);
+    const diffToSubstrCol = this.casesGrid!.dataFrame.getCol(MMP_STRUCT_DIFF_TO_NAME);
+    const diffFrom = this.casesGrid!.dataFrame.getCol(MMP_COLNAME_FROM);
+    const diffTo = this.casesGrid!.dataFrame.getCol(MMP_COLNAME_TO);
 
     const [idxPairs, cases] = this.findSpecificRule(diffFromSubstrCol);
     await this.recoverHighlights(cases, diffFrom, diffTo, diffFromSubstrCol, diffToSubstrCol, rdkitModule);
 
-    this.casesGrid.dataFrame.filter.copyFrom(this.pairsMask);
+    this.casesGrid!.dataFrame.filter.copyFrom(this.pairsMask!);
 
-    this.casesGrid.setOptions({
+    this.casesGrid!.setOptions({
       pinnedRowColumnNames: [],
       pinnedRowValues: [],
     });
     if (idxPairs >= 0) {
-      this.casesGrid.setOptions({
+      this.casesGrid!.setOptions({
         pinnedRowValues: [idxPairs.toString()],
         pinnedRowColumnNames: [MMP_COL_PAIRNUM],
       });
@@ -418,9 +468,9 @@ export class MmpAnalysis {
   }
 
   refreshFilterAllPairs() {
-    const consistsBitSet: DG.BitSet = DG.BitSet.create(this.allPairsGrid.dataFrame.rowCount);
+    const consistsBitSet: DG.BitSet = DG.BitSet.create(this.allPairsGrid!.dataFrame.rowCount);
     consistsBitSet.setAll(true);
-    this.allPairsGrid.dataFrame.filter.copyFrom(consistsBitSet);
+    this.allPairsGrid!.dataFrame.filter.copyFrom(consistsBitSet);
   }
 
   /**
@@ -430,16 +480,16 @@ export class MmpAnalysis {
   refilterAllPairs(rowChanged: boolean) {
     let idxTrue = -1;
     if (rowChanged) {
-      const idx = this.parentTable.currentRowIdx;
-      this.transformationsMask.setAll(false);
+      const idx = this.parentTable!.currentRowIdx;
+      this.transformationsMask!.setAll(false);
 
-      for (let i = 0; i < this.mmpRules.rules.length; i++) {
-        for (let j = 0; j < this.mmpRules.rules[i].pairs.length; j++) {
-          const fs = this.mmpRules.rules[i].pairs[j].firstStructure;
+      for (let i = 0; i < this.mmpRules!.rules.length; i++) {
+        for (let j = 0; j < this.mmpRules!.rules[i].pairs.length; j++) {
+          const fs = this.mmpRules!.rules[i].pairs[j].firstStructure;
           if (idx == fs) {
             if (idxTrue == -1)
               idxTrue = i;
-            this.transformationsMask.set(i, true, false);
+            this.transformationsMask!.set(i, true, false);
             break;
           }
         }
@@ -447,10 +497,10 @@ export class MmpAnalysis {
     }
 
     if (this.enableFilters) {
-      this.allPairsGrid.dataFrame.filter.copyFrom(this.transformationsMask);
-      this.allPairsGrid.invalidate();
+      this.allPairsGrid!.dataFrame.filter.copyFrom(this.transformationsMask!);
+      this.allPairsGrid!.invalidate();
       if (rowChanged)
-        this.allPairsGrid.table.currentRowIdx = idxTrue;
+        this.allPairsGrid!.table.currentRowIdx = idxTrue;
     }
   }
 
@@ -461,40 +511,40 @@ export class MmpAnalysis {
   */
   refilterCliffs(cutoffs: number[], isActiveVar: boolean[], refilter: boolean) {
     if (refilter) {
-      for (let i = 0; i < this.cutoffMasks.length; i ++)
-        this.cutoffMasks[i].setAll(false);
+      for (let i = 0; i < this.cutoffMasks!.length; i ++)
+        this.cutoffMasks![i].setAll(false);
 
-      this.totalCutoffMask.setAll(false);
-      this.linesMask.setAll(false);
+      this.totalCutoffMask!.setAll(false);
+      this.linesMask!.setAll(false);
 
       //setting activity associated masks
-      for (let i = 0; i < this.lines.from.length; i++) {
-        const activityNumber = this.linesActivityCorrespondance[i];
-        const line = this.linesIdxs[i];
+      for (let i = 0; i < this.lines!.from.length; i++) {
+        const activityNumber = this.linesActivityCorrespondance![i];
+        const line = this.linesIdxs![i];
         //if 'isActive' checkbox for variable is unset
         //setting line to invisible and continue, otherwise look at cutoff
         if (!isActiveVar[activityNumber]) {
-          this.linesMask.setBit(i, false, false);
+          this.linesMask!.setBit(i, false, false);
           continue;
         }
-        if (this.diffs[activityNumber][line] >= cutoffs[activityNumber]) {
-          this.cutoffMasks[activityNumber].set(this.lines.from[i], true, false);
-          this.cutoffMasks[activityNumber].set(this.lines.to[i], true, false);
-          this.linesMask.setBit(i, true, false);
+        if (this.diffs![activityNumber][line] >= cutoffs[activityNumber]) {
+          this.cutoffMasks![activityNumber].set(this.lines!.from[i], true, false);
+          this.cutoffMasks![activityNumber].set(this.lines!.to[i], true, false);
+          this.linesMask!.setBit(i, true, false);
         }
       }
 
       //setting resulting masks
       //TODO: refine
-      for (let j = 0; j < this.totalCutoffMask.length; j++) {
+      for (let j = 0; j < this.totalCutoffMask!.length; j++) {
         let res = false;
-        for (let i = 0; i < this.cutoffMasks.length; i++)
-          res = res || this.cutoffMasks[i].get(j);
-        this.totalCutoffMask.set(j, res, false);
+        for (let i = 0; i < this.cutoffMasks!.length; i++)
+          res = res || this.cutoffMasks![i].get(j);
+        this.totalCutoffMask!.set(j, res, false);
       }
     }
 
-    this.parentTable.filter.copyFrom(this.totalCutoffMask);
-    this.linesRenderer!.linesVisibility = this.linesMask;
+    this.parentTable!.filter.copyFrom(this.totalCutoffMask!);
+    this.linesRenderer!.linesVisibility = this.linesMask!;
   }
 }

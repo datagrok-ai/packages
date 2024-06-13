@@ -173,8 +173,8 @@ category('Widgets: InputForm API', () => {
 
   test('form on input change observable', async () => {
     const changedInputPropNames = [] as string[];
-    const changeSub = form.onInputChanged.subscribe((propName) => {
-      changedInputPropNames.push(propName);
+    const changeSub = form.onInputChanged.subscribe((ed) => {
+      changedInputPropNames.push(ed.args.input.property.name);
     });
 
     inputs['stringInput'].value = 'test2';
@@ -248,8 +248,8 @@ category('Widgets: InputForm API', () => {
     form.source = newFuncCall;
 
     const changedInputPropNames = [] as string[];
-    const changeSub = form.onInputChanged.subscribe((propName) => {
-      changedInputPropNames.push(propName);
+    const changeSub = form.onInputChanged.subscribe((ed) => {
+      changedInputPropNames.push(ed.args.input.property.name);
     });
 
     inputs['stringInput'].value = 'test2';
@@ -314,8 +314,8 @@ category('Widgets: InputForm w/ custom input', () => {
 
   test('form on input change observable', async () => {
     const changedInputPropNames = [] as string[];
-    const changeSub = form.onInputChanged.subscribe((propName) => {
-      changedInputPropNames.push(propName);
+    const changeSub = form.onInputChanged.subscribe((ed) => {
+      changedInputPropNames.push(ed.args.input.property.name);
     });
 
     inputs['stringInput'].value = 'test2';
@@ -357,8 +357,8 @@ category('Widgets: InputForm w/ custom input', () => {
     form.source = newFuncCall;
 
     const changedInputPropNames = [] as string[];
-    const changeSub = form.onInputChanged.subscribe((propName) => {
-      changedInputPropNames.push(propName);
+    const changeSub = form.onInputChanged.subscribe((ed) => {
+      changedInputPropNames.push(ed.args.input.property.name);
     });
 
     inputs['stringInput'].value = 'test2';

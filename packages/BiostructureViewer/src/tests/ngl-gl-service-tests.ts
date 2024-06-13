@@ -49,7 +49,7 @@ category('NglGlService', () => {
         };
         nglSvc.reset();
         consumerId = nglSvc.render(consumerId, task, 0);
-      }, 15000);
+      }, 15000, 'render pdb timeout');
 
     expect(nglSvc.errorCount, 0, 'There was errors in NglGlService.');
     expect(consumerId !== null, true, 'consumerId not assigned');

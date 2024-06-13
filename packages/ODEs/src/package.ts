@@ -4,7 +4,8 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
 import {initMatrOperApi} from '../wasm/matrix-operations-api';
-import {ODEs, solveODEs} from './solver';
+import {solveDefault, solveIVP} from './solver';
+import {ODEs, SolverOptions} from './solver-tools/solver-defs';
 import {DiffStudio} from './app';
 
 export const _package = new DG.Package();
@@ -23,7 +24,15 @@ export async function init() {
 //input: object problem
 //output: dataframe df
 export function solve(problem: ODEs): DG.DataFrame {
-  return solveODEs(problem);
+  return solveDefault(problem);
+}
+
+//name: solveEquations
+//input: object problem
+//input: object options
+//output: dataframe df
+export function solveEquations(problem: ODEs, options: Partial<SolverOptions>): DG.DataFrame {
+  return solveIVP(problem, options);
 }
 
 //name: Diff Studio

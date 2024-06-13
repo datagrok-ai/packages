@@ -48,7 +48,7 @@ import {chemDiversitySearch, ChemDiversityViewer} from './analysis/chem-diversit
 import {chemSimilaritySearch, ChemSimilarityViewer} from './analysis/chem-similarity-viewer';
 import {chemSpace, runChemSpace} from './analysis/chem-space';
 import {RGroupDecompRes, RGroupParams, rGroupAnalysis, rGroupDecomp, loadRGroupUserSettings} from './analysis/r-group-analysis';
-import {MmpAnalysis} from './analysis/molecular-matched-pairs/mmp-analysis';
+import {MatchedMolecularPairsViewer} from './analysis/molecular-matched-pairs/mmp-analysis';
 
 //file importers
 import {_importTripos} from './file-importers/mol2-importer';
@@ -74,7 +74,7 @@ import {ITSNEOptions, IUMAPOptions} from '@datagrok-libraries/ml/src/multi-colum
 import {DimReductionMethods} from '@datagrok-libraries/ml/src/multi-column-dimensionality-reduction/types';
 import {drawMoleculeLabels} from './rendering/molecule-label';
 import {getMCS} from './utils/most-common-subs';
-import { toDart } from 'datagrok-api/dg';
+import {toDart} from 'datagrok-api/dg';
 
 const drawMoleculeToCanvas = chemCommonRdKit.drawMoleculeToCanvas;
 const SKETCHER_FUNCS_FRIENDLY_NAMES: {[key: string]: string} = {
@@ -759,7 +759,7 @@ export async function rGroupDecomposition(df: DG.DataFrame, molColName: string, 
     core: core,
     rGroupName: rGroupName,
     rGroupMatchingStrategy: rGroupMatchingStrategy,
-    onlyMatchAtRGroups: onlyMatchAtRGroups
+    onlyMatchAtRGroups: onlyMatchAtRGroups,
   };
   const col = df.col(molColName);
   if (col === null)
@@ -1564,29 +1564,26 @@ export function addScaffoldTree(): void {
 }
 
 
+//name: Matched Molecular Pairs Analysis
+//tags: viewer
+//output: viewer result
+export function mmpViewer(): MatchedMolecularPairsViewer {
+  return new MatchedMolecularPairsViewer();
+}
+
 //top-menu: Chem | Analyze | Matched Molecular Pairs...
 //name:  Matched Molecular Pairs
 //input: dataframe table [Input data table]
 //input: column molecules { semType: Molecule }
 //input: column_list activities {type: numerical}
 //input: double fragmentCutoff = 0.4 { description: Max length of fragment in % of core }
-//output: object result
-export async function mmpAnalysis(table: DG.DataFrame, molecules: DG.Column,
-  activities: DG.ColumnList, fragmentCutoff: number = 0.4): Promise<MmpAnalysis> {
-  const view = grok.shell.tv;
-  const mmp = await MmpAnalysis.init({table, molecules, activities, fragmentCutoff});
+//output: viewer result
+export function mmpAnalysis(table: DG.DataFrame, molecules: DG.Column,
+  activities: DG.ColumnList, fragmentCutoff: number = 0.4): void {//Promise<MmpAnalysis> {
+  const viewer = (grok.shell.v as DG.TableView)
+    .addViewer('Matched Molecular Pairs Analysis');
 
-  //need this workaround with closing dock node since element cannot be docked repeatedly
-  mmp.mmpView.root.classList.add('mmpa');
-  const mmpaElement = view.dockManager.element.getElementsByClassName('mmpa')[0];
-  if (mmpaElement) {
-    const node = view.dockManager.findNode(mmpaElement as HTMLElement);
-    if (node)
-      view.dockManager.close(node);
-  }
-
-  view.dockManager.dock(mmp.mmpView.root, 'right', null, 'MMP Analysis', 1);
-  return mmp;
+  viewer.setOptions({molecules: molecules.name, activities: activities.names(), fragmentCutoff});
 }
 
 //name: Scaffold Tree Filter

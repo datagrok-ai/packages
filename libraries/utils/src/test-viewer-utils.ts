@@ -34,7 +34,6 @@ export async function testViewerInternal(tv: DG.TableView, viewerName: string, p
             args.viewer = viewer;
             actionsRes = await actions(args, actionsWithDelay);
         }
-        viewer!.close();
          //check that there are no active subscriptions in the viewer after close
          await testEvent(grok.events.onViewerClosed, () => {
              expect(viewer!.subs.some((s) => !s.closed), false);

@@ -76,6 +76,7 @@ export class PdbqtBranch {
       this.atoms.push(PdbqtAtomCoords.fromStr(line));
   }
 
+  /** Pushes all atoms of branches recursively to {@link flatAtomList} */
   public flattenAtoms(flatAtomList: IPdbqtAtomBase[]): void {
     flatAtomList.push(...this.atoms);
     for (const child of this.children)
@@ -177,7 +178,12 @@ export class PdbqtModel extends PdbqtBranch {
   public toPdb(): string {
     const atomFlatList: IPdbqtAtomBase[] = []; // TODO: Use know-n atom count
     this.flattenAtoms(atomFlatList);
-    const pdbLineList: string[] = atomFlatList.map((a) => a.toPdb().toStr());
+    const pdbLineList: string[] = atomFlatList
+      .map((a) => a.toPdb())
+      .sort((a, b) => {
+        return a.compare(b);
+      })
+      .map((a) => a.toStr());
     return [
       'COMPND    ' + '',
       ...pdbLineList,
@@ -262,95 +268,98 @@ export class Pdbqt {
     for (const [line, lineI] of wu(cnt.split('\n').map((l) => l.replace(/\r$/, ''))).enumerate()) {
       try {
         switch (line.slice(1 - 1, 6)) {
-          case 'MODEL ': {
+        case 'MODEL ': {
+          const model = new PdbqtModel();
+          res.pushModel(model);
+          break;
+        }
+        case 'ENDMDL': {
+          res.currentModel!.closeBranch('ENDROOT'); // overcome
+          res.closeModel();
+          break;
+        }
+
+        case 'ROOT':
+        case 'BRANCH': {
+          if (!res.currentModel) {
             const model = new PdbqtModel();
             res.pushModel(model);
-            break;
           }
-          case 'ENDMDL': {
-            res.currentModel!.closeBranch('ENDROOT'); // overcome
-            res.closeModel();
-            break;
-          }
+          res.currentModel!.pushBranch(line);
+          break;
+        }
 
-          case 'ROOT':
-          case 'BRANCH': {
-            res.currentModel!.pushBranch(line);
-            break;
-          }
+        case 'ENDROO': {
+          // Do nothing because ENDROOT before BRANCHES, close root on ENDMDL
+          break;
+        }
 
+        case 'ENDBRA': {
+          res.currentModel!.closeBranch(line);
+          break;
+        }
 
-          case 'ENDROO': {
-            // Do nothing because ENDROOT before BRANCHES, close root on ENDMDL
-            break;
-          }
+        case 'HETATM':
+        case 'ATOM  ': {
+          if (res.currentModel)
+            res.currentModel!.pushAtom(line);
+          else
+            target.pushAtom(line);
+          break;
+        }
 
-          case 'ENDBRA': {
-            res.currentModel!.closeBranch(line);
-            break;
-          }
+        case 'SEQRES':
+        case 'HELIX ':
+        case 'SHEET ': {
+          _package.logger.warning(`Pdbqt.parse() unsupported line '${line}'.`);
+          break;
+        }
 
-          case 'HETATM':
-          case 'ATOM  ': {
-            if (res.currentModel)
-              res.currentModel!.pushAtom(line);
-            else
-              target.pushAtom(line);
-            break;
-          }
+        case 'REMARK': {
+          let nameMa: RegExpMatchArray | null;
+          if (line.startsWith('REMARK VINA RESULT:')) {
+            res.pushModelVinaResult({
+              affinity: parseFloat(line.substring(20, 29)),
+              lbDistFromBest: parseFloat(line.substring(30, 40)),
+              ubDistFromBest: parseFloat(line.substring(41, 51)),
+            });
+          } else if (nameMa = line.match(/REMARK\s+Name *= *(?<name>.+)/i))
+            res.pushModelName(nameMa.groups!['name']);
+          else if (res.currentModel)
+            res.currentModel.pushRemark(line);
+          else
+            target.pushRemark(line);
+          break;
+        }
 
-          case 'SEQRES':
-          case 'HELIX ':
-          case 'SHEET ': {
-            _package.logger.warning(`Pdbqt.parse() unsupported line '${line}'.`);
-            break;
-          }
+        case 'TER': // empty TER lines
+        case 'TER   ': {
+          if (res.currentModel)
+            res.currentModel.pushTer(line);
+          else
+            target.pushTer(line);
+          break;
+        }
 
-          case 'REMARK': {
-            let nameMa: RegExpMatchArray | null;
-            if (line.startsWith('REMARK VINA RESULT:')) {
-              res.pushModelVinaResult({
-                affinity: parseFloat(line.substring(20, 29)),
-                lbDistFromBest: parseFloat(line.substring(30, 40)),
-                ubDistFromBest: parseFloat(line.substring(41, 51)),
-              });
-            } else if (nameMa = line.match(/REMARK\s+Name *= *(?<name>.+)/i))
-              res.pushModelName(nameMa.groups!['name']);
-            else if (res.currentModel)
-              res.currentModel.pushRemark(line);
-            else
-              target.pushRemark(line);
-            break;
-          }
+        case 'TORSDO': {
+          const ma = line.match(/^TORSDOF (?<value>\d+)/)!;
+          const v = parseInt(ma.groups!['value']);
+          res.currentModel!.pushTorsdof(v);
+          break;
+        }
 
-          case 'TER': // empty TER lines
-          case 'TER   ': {
-            if (res.currentModel)
-              res.currentModel.pushTer(line);
-            else
-              target.pushTer(line);
-            break;
-          }
+        case 'USER': // empty USER lines
+        case 'USER  ': {
+          res.currentModel!.pushUser(line);
+          break;
+        }
 
-          case 'TORSDO': {
-            const ma = line.match(/^TORSDOF (?<value>\d+)/)!;
-            const v = parseInt(ma.groups!['value']);
-            res.currentModel!.pushTorsdof(v);
-            break;
-          }
-
-          case 'USER': // empty USER lines
-          case 'USER  ': {
-            res.currentModel!.pushUser(line);
-            break;
-          }
-
-          case '': {
-            // ignore empty line (last empty line)
-            break;
-          }
-          default:
-            throw new Error(`Pdbqt unsupported line #${lineI} '${line}'.`);
+        case '': {
+          // ignore empty line (last empty line)
+          break;
+        }
+        default:
+          throw new Error(`Pdbqt unsupported line #${lineI} '${line}'.`);
         }
       } catch (err: any) {
         // @ts-ignore

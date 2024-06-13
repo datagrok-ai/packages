@@ -148,6 +148,8 @@ export class ChemSearchBaseViewer extends DG.JsViewer {
 
   createMoleculePropertiesDiv(idx: number, refMolecule: boolean, similarity?: number): HTMLDivElement {
     const propsDict: {[key: string]: any} = {};
+    if (!grok.shell.tv)
+      return ui.div();
     const grid = grok.shell.tv.grid;
     if (similarity) {
       if (refMolecule)

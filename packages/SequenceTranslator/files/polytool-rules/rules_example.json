@@ -1,0 +1,34 @@
+[ 
+	{
+		"type": "link",
+		"code": "1",
+		"monomericSubstitution": {
+		    "firstMonomer": "C",
+		    "secondMonomer": "C",
+		    "firstLinkingGroup":"3",
+		    "secondLinkingGroup":"3",
+		    "firstSubstitution": "C",
+		    "secondSubstitution": "C"
+		}
+	},
+	{
+		"type": "link",
+		"code": "2",
+		"monomericSubstitution": {
+		    "firstMonomer": "NH2",
+		    "secondMonomer": "L",
+		    "firstLinkingGroup":"2",
+		    "secondLinkingGroup":"3",
+		    "firstSubstitution": "NH2",
+		    "secondSubstitution": "L"
+		}
+	},
+	{
+		"type": "fragmentDuplication",
+		"code": "#3"
+	},
+	{
+		"type": "differentFragments",
+		"code": "$4"
+	}
+]

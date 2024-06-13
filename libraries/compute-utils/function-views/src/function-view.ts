@@ -85,7 +85,7 @@ export abstract class FunctionView extends DG.ViewBase {
   /**
    * Runs after an initial FuncCall loading done.
    */
-  protected async onFuncCallReady() {
+  public async onFuncCallReady() {
     await historyUtils.augmentCallWithFunc(this.funcCall, false);
     if (!this.options.isTabbed) {
       if (!this.name || this.name === 'New view') this.name = this.funcCall.func.friendlyName;
@@ -295,7 +295,7 @@ export abstract class FunctionView extends DG.ViewBase {
    * Method loads corresponding FuncCall from DB if "id" param is provided in URL.
    * @stability Stable
    */
-  protected async loadFuncCallById() {
+  public async loadFuncCallById() {
     if (this.initValue instanceof DG.FuncCall) {
       // next tick is needed to run funcCallReplaced before building UI
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -837,17 +837,17 @@ export abstract class FunctionView extends DG.ViewBase {
     * @param extOverride Overrides extension defined in {@link defaultSupportedExportExtensions}.
     * @stability Stable
    */
-  protected defaultExportFilename = (format: string, extOverride?: string) => {
+  public defaultExportFilename = (format: string, extOverride?: string) => {
     return `${this.name} - ${new Date().toLocaleString('en-US').replaceAll(/:|\//g, '-')}.${extOverride ?? this.exportConfig!.supportedExtensions[format]}`;
   };
 
-  protected defaultSupportedExportExtensions: () => Record<string, string> = () => {
+  public defaultSupportedExportExtensions: () => Record<string, string> = () => {
     return {
       'Excel': 'xlsx',
     };
   };
 
-  protected defaultSupportedExportFormats = () => {
+  public defaultSupportedExportFormats = () => {
     return ['Excel'];
   };
 

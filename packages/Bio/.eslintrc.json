@@ -20,6 +20,7 @@
     "max-params": ["warn", 7],
     "max-lines-per-function": ["warn", 100],
     "max-lines": ["warn", 300],
+    "no-throw-literal": "error",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^(_|ui$|grok$|DG$)", "argsIgnorePattern": "^_"}],
     "require-jsdoc": "off",

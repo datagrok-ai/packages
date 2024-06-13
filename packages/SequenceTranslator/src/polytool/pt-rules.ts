@@ -2,7 +2,7 @@ import * as DG from 'datagrok-api/dg';
 import * as grok from 'datagrok-api/grok';
 import {ActiveFiles} from '@datagrok-libraries/utils/src/settings/active-files-base';
 
-export const RULES_PATH = 'System:AppData/Bio/polytool-rules/';
+export const RULES_PATH = 'System:AppData/SequenceTranslator/polytool-rules/';
 export const RULES_STORAGE_NAME = 'Polytool';
 export const RULES_TYPE_LINK = 'link';
 export const RULES_TYPE_HOMODIMER = 'fragmentDuplication';

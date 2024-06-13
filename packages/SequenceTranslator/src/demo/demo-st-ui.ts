@@ -3,8 +3,7 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
 import {delay} from '@datagrok-libraries/utils/src/test';
-import {loadJsonData} from '../apps/common/model/data-loader/json-loader';
-import {_package, oligoTranslatorApp, oligoPatternApp, oligoStructureApp} from '../package';
+import {oligoTranslatorApp, oligoPatternApp, oligoStructureApp} from '../package';
 import {tryCatch} from '../apps/common/model/helpers';
 
 export async function demoOligoTranslatorUI() {
@@ -31,6 +30,7 @@ export async function demoOligoStructureUI() {
       const event = new Event('input');
       textarea.dispatchEvent(event);
     }
+
     const view = await oligoStructureApp();
     grok.shell.addView(view);
     const inputSequences = ['Afcgacsu', 'Afcgacsu', 'Afcgacsu'];

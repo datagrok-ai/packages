@@ -19,7 +19,7 @@ export function processFeatures(dataframe: DG.DataFrame) {
           val = col.categories.findIndex((cat: string) => cat === val);
           if (col.categories.length > 2) {
             for (let j = 0; j < col.categories.length; j++) {
-              array2d[i].push(val === i ? 1 : 0);
+              array2d[i].push(val === j ? 1 : 0);
             }
             continue;
           }

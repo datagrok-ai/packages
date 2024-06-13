@@ -47,6 +47,7 @@ export class NglGlDocService extends NglGlServiceBase {
     this.ngl = null;
     $(this.nglDiv).empty();
     this.nglDiv.remove();
+    await super.reset();
   }
 
   protected override async requestRender(
@@ -88,7 +89,10 @@ export class NglGlDocService extends NglGlServiceBase {
 
     await this.ngl.loadFile(stringBlob, {ext: 'pdb', defaultRepresentation: true});
     const comp = this.ngl.compList[0];
-    comp.addRepresentation('cartoon', undefined);
+    let reprType: ngl.StructureRepresentationType = 'cartoon';
+    if (comp.type === 'structure' && comp.object.atomCount < 500)
+      reprType = 'ball+stick';
+    const re = comp.addRepresentation(reprType, undefined);
     comp.autoView();
     // await delay(200); /* Sometimes compList[0] is undefined, without any other error */
     if (!comp) throw new Error('no component added');

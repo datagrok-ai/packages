@@ -73,9 +73,10 @@ export class DashboardTutorial extends Tutorial {
     );
 
     await this.action(`Add "${paramAnnotation}" as the first line of the query`,
-      interval(1000).pipe(filter(() => $(dqv.root).find('pre.CodeMirror-line > span')
-        .filter((idx, el) => el.textContent?.trim() === paramAnnotation)[0] != null)),
-      null, paramQueryDescription);
+      interval(1000).pipe(filter(() => {
+        const lines = $(dqv.root).find('pre.CodeMirror-line > span');
+        return lines.length > 0 && lines[0] !== undefined && lines[0].textContent?.trim() === paramAnnotation;
+      })), null, paramQueryDescription);
 
     await this.buttonClickAction($('.d4-ribbon')[0]!, 'Save the query', 'SAVE');
 

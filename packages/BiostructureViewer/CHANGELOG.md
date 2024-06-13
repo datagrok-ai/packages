@@ -1,5 +1,15 @@
 # BiostructureViewer changelog
 
+## 1.1.1 (2024-06-10)
+
+### Bug fixes
+
+* Fix .pdbqt parser assuming ROOT for MODEL
+* Fix .pdbqt to .pdb sorting atoms, add tests
+* Fix default representation to ball+stick for small molecule
+* Fix awaitNgl, test NgGlService/pdb
+* Fix MolstarPreview open .mmcif
+
 ## 1.1.0 (2024-05-01)
 
 Use generalized cell renderer on async renderer base
@@ -90,5 +100,6 @@ Fix the description for Docking Conformations demo
 * [Biostructure](https://datagrok.ai/help/visualize/viewers/biostructure) viewer (Mol* based)
 * [NGL](https://datagrok.ai/help/visualize/viewers/ngl) viewer
 * [Molecule3D](https://public.datagrok.ai/apps/Tutorials/Demo/Bioinformatics/Proteins) cell renderer
-* Biostructure and NGL viewers support [Molecule](https://datagrok.ai/help/develop/domains/chem/cheminformatics) column for ligands
+* Biostructure and NGL viewers support [Molecule](https://datagrok.ai/help/develop/domains/chem/cheminformatics) column
+  for ligands
 * File handlers for file [formats supported by Molstar or NGL](https://datagrok.ai/help/access/files/supported-formats)

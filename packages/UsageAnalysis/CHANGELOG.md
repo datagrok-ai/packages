@@ -1,5 +1,13 @@
 # Usage Analysis changelog
 
+## 2.0.1 (2024-06-12)
+
+*Dependency: datagarok-api >= 1.18.0*
+
+### Features
+
+* Reporting app
+
 ## 2.0.0 (2024-03-16)
 
 *Dependency: datagarok-api >= 1.18.0*

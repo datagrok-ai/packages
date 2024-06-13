@@ -22,11 +22,11 @@ export interface IScatterPlot3dSettings {
 
   showAxes: boolean;
 
-  xAxisType: AxisType;
+  xAxisType: keyof typeof AxisType;
 
-  yAxisType: AxisType;
+  yAxisType: keyof typeof AxisType;
 
-  zAxisType: AxisType;
+  zAxisType: keyof typeof AxisType;
 
   backColor: number;
 
@@ -67,7 +67,7 @@ export interface IScatterPlot3dSettings {
   markerRandomRotation: boolean;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -100,9 +100,9 @@ export interface IScatterPlot3dSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -164,7 +164,7 @@ export interface ITreeMapSettings {
   outerMarginBottom: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -197,9 +197,9 @@ export interface ITreeMapSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -322,9 +322,9 @@ export interface IHistogramSettings {
 
   showCharts: boolean;
 
-  legendVisibility: VisibilityMode;
+  legendVisibility: keyof typeof VisibilityMode;
 
-  legendPosition: FlexPosition;
+  legendPosition: keyof typeof FlexPosition;
 
   marginLeft: number;
 
@@ -341,7 +341,7 @@ export interface IHistogramSettings {
   aggTooltipColumns: string;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -370,9 +370,9 @@ export interface IHistogramSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -439,9 +439,9 @@ export interface IFiltersSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -471,9 +471,9 @@ export interface IScatterPlotSettings {
   y: string;
   yColumnName: string;
 
-  xAxisType: AxisType;
+  xAxisType: keyof typeof AxisType;
 
-  yAxisType: AxisType;
+  yAxisType: keyof typeof AxisType;
 
   invertXAxis: boolean;
 
@@ -512,6 +512,10 @@ export interface IScatterPlotSettings {
 
   invertColorScheme: boolean;
 
+  colorMin: number;
+
+  colorMax: number;
+
   /// A numerical column to use for size-coding markers.
   /// See also *Marker Min Size* and *Marker Max Size*.
   size: string;
@@ -547,7 +551,7 @@ export interface IScatterPlotSettings {
   labelsColumnName: string;
 
   /// Determines the rows shown on the scatter plot.
-  showLabelsFor: RowSet;
+  showLabelsFor: keyof typeof RowSet;
 
   labelColorAsMarker: boolean;
 
@@ -631,7 +635,7 @@ export interface IScatterPlotSettings {
   /// Controls scatter plot tooltip visibility
   showTooltip: string;
 
-  showLabels: VisibilityMode;
+  showLabels: keyof typeof VisibilityMode;
 
   /// Controls whether columns on X and Y axes are displayed in tooltip
   /// * Do not add: they are not shown
@@ -655,9 +659,9 @@ export interface IScatterPlotSettings {
   /// Requires *Auto Axis Size* to be turned off.
   yAxisWidth: number;
 
-  legendVisibility: VisibilityMode;
+  legendVisibility: keyof typeof VisibilityMode;
 
-  legendPosition: FlexPosition;
+  legendPosition: keyof typeof FlexPosition;
 
   axisFont: string;
 
@@ -666,7 +670,7 @@ export interface IScatterPlotSettings {
   defaultRenderer: boolean;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -699,9 +703,9 @@ export interface IScatterPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -734,7 +738,7 @@ export interface ILineChartSettings {
   x: string;
   xColumnName: string;
 
-  xAxisType: AxisType;
+  xAxisType: keyof typeof AxisType;
 
   /// When defined, background is colored according to the segment column.
   /// Example: time series data with the "stimuli" column
@@ -749,7 +753,7 @@ export interface ILineChartSettings {
 
   xAxisLabelOrientation: string;
 
-  xAxisTickmarksMode: AxisTickmarksMode;
+  xAxisTickmarksMode: keyof typeof AxisTickmarksMode;
 
   xMin: number;
 
@@ -763,7 +767,7 @@ export interface ILineChartSettings {
   /// Depending on the *
   yColumnNames: Array<string>;
 
-  yAxisType: AxisType;
+  yAxisType: keyof typeof AxisType;
 
   showYAxis: boolean;
 
@@ -775,7 +779,7 @@ export interface ILineChartSettings {
   /// Axis title to be shown on the left axis in multi-axis mode
   y2AxisTitle: string;
 
-  yAxisTickmarksMode: AxisTickmarksMode;
+  yAxisTickmarksMode: keyof typeof AxisTickmarksMode;
 
   showYSelectors: boolean;
 
@@ -783,7 +787,7 @@ export interface ILineChartSettings {
 
   showSplitSelector: boolean;
 
-  interpolation: LineInterpolationMode;
+  interpolation: keyof typeof LineInterpolationMode;
 
   splineTension: number;
 
@@ -884,7 +888,7 @@ export interface ILineChartSettings {
   /// Controls scatter plot tooltip visibility
   showTooltip: string;
 
-  showLabels: VisibilityMode;
+  showLabels: keyof typeof VisibilityMode;
 
   /// Newline-separated list of column names to be used in a tooltip.
   /// Requires *showTooltip* to be enabled.
@@ -892,15 +896,15 @@ export interface ILineChartSettings {
 
   rowGroupTooltip: string;
 
-  legendVisibility: VisibilityMode;
+  legendVisibility: keyof typeof VisibilityMode;
 
-  legendPosition: FlexPosition;
+  legendPosition: keyof typeof FlexPosition;
 
   /// When true, lines are added to the legend
   /// Requires *Multi Axis* to be enabled
   addLinesToLegend: boolean;
 
-  multiAxisLegendPosition: FlexExtendedPosition;
+  multiAxisLegendPosition: keyof typeof FlexExtendedPosition;
 
   innerChartMarginTop: number;
 
@@ -929,7 +933,7 @@ export interface ILineChartSettings {
   aggTooltipColumns: string;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -962,9 +966,9 @@ export interface ILineChartSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -994,14 +998,14 @@ export enum FlexExtendedPosition {
 
 export interface IBarChartSettings {
   /// Determines the rows shown on the scatter plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
   filter: string;
 
   /// Determines what happens when you click on a bar.
-  onClick: RowGroupAction;
+  onClick: keyof typeof RowGroupAction;
 
   /// Value column. See *Value Aggr Type* for aggregation options.
   value: string;
@@ -1026,7 +1030,7 @@ export interface IBarChartSettings {
   /// See also *Bar Sort Type*.
   barSortOrder: string;
 
-  axisType: AxisType;
+  axisType: keyof typeof AxisType;
 
   showValueAxis: boolean;
 
@@ -1092,7 +1096,7 @@ export interface IBarChartSettings {
 
   barCornerRadius: number;
 
-  verticalAlign: VerticalAlignType;
+  verticalAlign: keyof typeof VerticalAlignType;
 
   font: string;
 
@@ -1116,9 +1120,9 @@ export interface IBarChartSettings {
 
   barBorderLineColor: number;
 
-  legendVisibility: VisibilityMode;
+  legendVisibility: keyof typeof VisibilityMode;
 
-  legendPosition: FlexPosition;
+  legendPosition: keyof typeof FlexPosition;
 
   outerMarginLeft: number;
 
@@ -1163,9 +1167,9 @@ export interface IBarChartSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1204,7 +1208,7 @@ export interface IDensityPlotSettings {
   backColor: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -1237,9 +1241,9 @@ export interface IDensityPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1253,12 +1257,12 @@ export interface IBoxPlotSettings {
 
   showCategorySelector: boolean;
 
-  labelOrientation: TextOrientation;
+  labelOrientation: keyof typeof TextOrientation;
 
   value: string;
   valueColumnName: string;
 
-  axisType: AxisType;
+  axisType: keyof typeof AxisType;
 
   invertYAxis: boolean;
 
@@ -1343,14 +1347,14 @@ export interface IBoxPlotSettings {
   /// Controls box plot tooltip visibility
   showTooltip: string;
 
-  showLabels: VisibilityMode;
+  showLabels: keyof typeof VisibilityMode;
 
   /// Newline-separated list of column names to be used in a tooltip.
   /// Requires *showTooltip* to be enabled.
   rowTooltip: string;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -1383,9 +1387,9 @@ export interface IBoxPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1409,9 +1413,9 @@ export interface IPieChartSettings {
 
   autoLayout: boolean;
 
-  legendVisibility: VisibilityMode;
+  legendVisibility: keyof typeof VisibilityMode;
 
-  legendPosition: FlexPosition;
+  legendPosition: keyof typeof FlexPosition;
 
   segmentAngle: string;
   segmentAngleColumnName: string;
@@ -1424,7 +1428,7 @@ export interface IPieChartSettings {
   segmentLengthAggrType: string;
 
   /// Action to be performed when you click on a pie
-  onClick: RowGroupAction;
+  onClick: keyof typeof RowGroupAction;
 
   startAngle: number;
 
@@ -1463,7 +1467,7 @@ export interface IPieChartSettings {
   aggTooltipColumns: string;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -1496,9 +1500,9 @@ export interface IPieChartSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1524,7 +1528,7 @@ export interface IMatrixPlotSettings {
   innerViewerLook: any;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -1557,9 +1561,9 @@ export interface IMatrixPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1622,9 +1626,9 @@ export interface ISummarySettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1672,9 +1676,9 @@ export interface ISparklinesSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -1691,6 +1695,10 @@ export interface IGridSettings {
   /// Automatically adds a new row in the end of the dataframe when the last row is edited
   /// The grid should also be in the editable mode
   addNewRowOnLastRowEdit: boolean;
+
+  /// When [allowEditable] is true, allows user to remove the mouse over row.
+  /// The grid should also be in the editable mode
+  showRemoveRowIcon: boolean;
 
   showColumnLabels: boolean;
 
@@ -1802,7 +1810,7 @@ export interface IGridSettings {
 
   /// Color-coding that applies to all columns.
   /// Additionally, each column can be individually color-coded.
-  colorCoding: GridColorCodingType;
+  colorCoding: keyof typeof GridColorCodingType;
 
   defaultCellFont: string;
 
@@ -1813,7 +1821,7 @@ export interface IGridSettings {
   /// Orientation of the column header text.
   /// In spreadsheet mode, it defaults to horizontal no matter how small the columns are.
   /// In heat map mode, it depends on whether the text can fit in the area.
-  colLabelsOrientation: TextOrientation;
+  colLabelsOrientation: keyof typeof TextOrientation;
 
   /// Resizing column header by dragging the border between the header and the first row
   allowColHeaderResizing: boolean;
@@ -1854,7 +1862,7 @@ export interface IGridSettings {
   /// Controls grid tooltip visibility
   showTooltip: string;
 
-  showLabels: VisibilityMode;
+  showLabels: keyof typeof VisibilityMode;
 
   showCellTooltip: boolean;
 
@@ -1893,7 +1901,7 @@ export interface IGridSettings {
   maxHeatmapColumns: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -1922,9 +1930,9 @@ export interface IGridSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2000,7 +2008,7 @@ export interface ICalendarSettings {
   evenMonthColor: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2033,9 +2041,9 @@ export interface ICalendarSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2046,9 +2054,9 @@ export interface ITrellisPlotSettings {
 
   viewerType: string;
 
-  yLabelsOrientation: TextOrientation;
+  yLabelsOrientation: keyof typeof TextOrientation;
 
-  xLabelsOrientation: TextOrientation;
+  xLabelsOrientation: keyof typeof TextOrientation;
 
   categoryLabelFont: string;
 
@@ -2060,17 +2068,17 @@ export interface ITrellisPlotSettings {
 
   showGridlines: string;
 
-  legendVisibility: VisibilityMode;
+  legendVisibility: keyof typeof VisibilityMode;
 
-  legendPosition: FlexPosition;
+  legendPosition: keyof typeof FlexPosition;
 
   showXSelectors: boolean;
 
   showYSelectors: boolean;
 
-  showXAxes: VisibilityMode;
+  showXAxes: keyof typeof VisibilityMode;
 
-  showYAxes: VisibilityMode;
+  showYAxes: keyof typeof VisibilityMode;
 
   showXLabels: boolean;
 
@@ -2091,7 +2099,7 @@ export interface ITrellisPlotSettings {
   backColor: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2124,9 +2132,9 @@ export interface ITrellisPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2176,7 +2184,7 @@ export interface IPcPlotSettings {
 
   transformation: string;
 
-  labelsOrientation: TextOrientation;
+  labelsOrientation: keyof typeof TextOrientation;
 
   backColor: number;
 
@@ -2203,7 +2211,7 @@ export interface IPcPlotSettings {
   horzMargin: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2236,9 +2244,9 @@ export interface IPcPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2264,7 +2272,7 @@ export interface IMapViewerSettings {
   categoricalColorScheme: Array<number>;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2297,9 +2305,9 @@ export interface IMapViewerSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2311,7 +2319,7 @@ export interface IStatsViewerSettings {
   backColor: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2344,9 +2352,9 @@ export interface IStatsViewerSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2357,7 +2365,7 @@ export interface ICorrelationPlotSettings {
   /// Columns to be put on the Y axis
   yColumnNames: Array<string>;
 
-  correlationType: CorrelationType;
+  correlationType: keyof typeof CorrelationType;
 
   /// Shows the Pearson correlation coefficient inside the corresponding cell.
   showPearsonR: boolean;
@@ -2368,7 +2376,7 @@ export interface ICorrelationPlotSettings {
   backColor: number;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2401,9 +2409,9 @@ export interface ICorrelationPlotSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2465,9 +2473,9 @@ export interface IFormSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2476,7 +2484,7 @@ export interface IMarkupViewerSettings {
 
   content: string;
 
-  mode: TextInterpretationMode;
+  mode: keyof typeof TextInterpretationMode;
 
   /// Whether the rendered html is passed through Grok's [Markup] engine (don't confuse it
   /// with the Markup that might be used for html rendering)
@@ -2518,9 +2526,9 @@ export interface IMarkupViewerSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2578,7 +2586,7 @@ export interface INetworkDiagramSettings {
 
   autoLayout: boolean;
 
-  node1Shape: ShapeType;
+  node1Shape: keyof typeof ShapeType;
 
   node1Color: number;
 
@@ -2587,7 +2595,7 @@ export interface INetworkDiagramSettings {
 
   node1Physics: boolean;
 
-  node2Shape: ShapeType;
+  node2Shape: keyof typeof ShapeType;
 
   node2Color: number;
 
@@ -2615,7 +2623,7 @@ export interface INetworkDiagramSettings {
 
   useGoogleImage: boolean;
 
-  nodeShape: ShapeType;
+  nodeShape: keyof typeof ShapeType;
 
   nodeImg: string;
 
@@ -2625,7 +2633,7 @@ export interface INetworkDiagramSettings {
 
   edgeWidth: number;
 
-  showArrows: ArrowType;
+  showArrows: keyof typeof ArrowType;
 
   edgesPhysics: boolean;
 
@@ -2671,9 +2679,9 @@ export interface INetworkDiagramSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2704,7 +2712,7 @@ export enum ArrowType {
 export interface ICardSettings {
   caption: string;
 
-  valueSourceType: CardValueSourceType;
+  valueSourceType: keyof typeof CardValueSourceType;
 
   /// Source-type specific value.
   value: string;
@@ -2738,9 +2746,9 @@ export interface ICardSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2770,7 +2778,7 @@ export interface ITileViewerSettings {
   lanes: Array<string>;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2812,9 +2820,9 @@ export interface ITileViewerSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 
@@ -2831,12 +2839,14 @@ export interface IPivotViewerSettings {
 
   viewerSettings: Array<any>;
 
+  filteringEnabled: boolean;
+
   gridLook: any;
 
   allowViewers: boolean;
 
   /// Determines the rows shown on the plot.
-  rowSource: RowSet;
+  rowSource: keyof typeof RowSet;
 
   /// Formula that filters out rows to show.
   /// Example: "${AGE} > 20 or ${WEIGHT / 2) > 100"
@@ -2869,9 +2879,9 @@ export interface IPivotViewerSettings {
   /// JavaScript that gets executed after a viewer is initialized and added to the TableView
   onInitializedScript: string;
 
-  descriptionPosition: FlexPosition;
+  descriptionPosition: keyof typeof FlexPosition;
 
-  descriptionVisibilityMode: VisibilityMode;
+  descriptionVisibilityMode: keyof typeof VisibilityMode;
 
 }
 

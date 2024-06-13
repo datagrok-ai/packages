@@ -133,7 +133,7 @@ export function runMmpChemSpace(mmpInput: MmpInput, sp: DG.Viewer, lines: ILineS
     methodName: DimReductionMethods.UMAP,
     similarityMetric: BitArrayMetricsNames.Tanimoto as BitArrayMetrics,
     embedAxesNames: embedColsNames,
-    options: {},
+    options: {useWebGPU: true},
   };
 
   const spEditor = new ScatterPlotLinesRenderer(sp as DG.ScatterPlotViewer,

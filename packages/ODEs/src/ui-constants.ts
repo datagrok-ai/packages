@@ -5,6 +5,8 @@ export enum HOT_KEY {
   RUN = 'F5',
 };
 
+const COMPUTATION_TIME_UNITS = 'sec';
+
 /** Tooltips messages */
 export enum HINT {
   HELP = 'Open help in a new tab',
@@ -29,6 +31,9 @@ export enum HINT {
   SAVE = 'Save changes',
   SENS_AN = 'Run sensitivity analysis',
   FITTING = 'Run fitting inputs',
+  CONTINUE = 'Continue computations',
+  ABORT = 'Abort computations',
+  MAX_TIME = `Max computation time, ${COMPUTATION_TIME_UNITS}.`,
 };
 
 /** UI titles */
@@ -67,6 +72,7 @@ export enum LINK {
   DIF_STUDIO_REL = '/help/compute/diff-studio',
   DIF_STUDIO = 'https://datagrok.ai/help/compute/diff-studio',
   SENS_AN = 'https://datagrok.ai/help/compute#sensitivity-analysis',
+  FITTING = 'https://datagrok.ai/help/compute#input-parameter-optimization',
   CHEM_REACT = `${DIF_STUDIO_REL}#chem-reactions`,
   FERMENTATION = `${DIF_STUDIO_REL}#fermentation`,
   GA_PRODUCTION = `${DIF_STUDIO_REL}#acid-production`,
@@ -101,6 +107,10 @@ export enum WARNING {
   TITLE = 'WARNING',
   CHECK = 'Show this warning',
   MES = 'Overwrite the current model?',
+  CONTINUE = 'Continue?',
+  CHECK_PERF = 'Check time',
+  TIME_LIM = 'Time limit',
+  UNITS = COMPUTATION_TIME_UNITS,
 };
 
 /** Other UI constants */
@@ -122,10 +132,12 @@ export enum INFO {
   PARAMS = 'parameters of the model',
   CONSTS = 'constants definition',
   TOL = 'tolerance of numerical solution',
+  EPS_SCALE = 'scale used when computing Jacobian',
   LOOP = 'loop feature',
   UPDATE = 'update model feature',
   OUTPUT = 'output specification',
   COMMENT = 'block with comments',
+  SOLVER = 'solver options',
 };
 
 /** Demo app help info */
@@ -139,17 +151,19 @@ Define equations in a declarative form.
 Play with model inputs on the **${TITLE.IPUTS}** tab.
 
 # Examples
-Press <i class="fas fa-folder-open"></i> **Open** icon and explore **Examples**.
+Click <i class="fas fa-folder-open"></i> **Open** icon and explore **Examples**.
 
 # Scripting
-Press **JS** button and export model to JavaScript script.
+Click **JS** button and export model to JavaScript script.
 
 # Analysis
-Press <i class="fas fa-analytics"></i> **Run sensitivity analysis** icon to explore model
+* Click <i class="fas fa-analytics"></i> **Run sensitivity analysis** icon to explore model
+* Click <i class="fas fa-chart-line"></i> **Run fitting inputs** icon to optimize inputs
 
 # Learn more
 * [Diff Studio](${LINK.DIF_STUDIO})
-* [Sensitivity Analysis](${LINK.SENS_AN})`;
+* [Sensitivity Analysis](${LINK.SENS_AN})
+* [Parameter Optimization](${LINK.FITTING})`;
 
 /** Inputs types */
 export enum INPUT_TYPE {
@@ -169,9 +183,18 @@ export enum PATH {
   PARAM = `?params:`,
 };
 
-/** UI timeouts */
-export enum TIMEOUT {
+/** UI time constants */
+export enum UI_TIME {
   PREVIEW_DOCK_EDITOR = 1000,
   PREVIEW_RUN_SOLVING = 1100,
   APP_RUN_SOLVING = 1100,
+  SOLV_DEFAULT_TIME_SEC = 5,
+  SOLV_TIME_MIN_SEC = 1,
+};
+
+/** Numerical methods names */
+export enum METHOD {
+  MRT = 'mrt',
+  ROS3PRw = 'ros3prw',
+  ROS34PRw = 'ros34prw',
 };

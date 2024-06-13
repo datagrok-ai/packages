@@ -7,7 +7,8 @@
    JS-script generator creates DATAGROK JavaScript script: annotation & code.
 */
 
-import {CONTROL_TAG, CONTROL_TAG_LEN, DF_NAME, CONTROL_EXPR, LOOP, UPDATE, MAX_LINE_CHART} from './constants';
+import {CONTROL_TAG, CONTROL_TAG_LEN, DF_NAME, CONTROL_EXPR, LOOP, UPDATE, MAX_LINE_CHART,
+  SOLVER_OPTIONS_RANGES} from './constants';
 
 // Scripting specific constants
 export const CONTROL_SEP = ':';
@@ -21,6 +22,7 @@ export const BRACKET_OPEN = '[';
 export const BRACKET_CLOSE = ']';
 export const ANNOT_SEPAR = ';';
 const DEFAULT_TOL = '0.00005';
+export const DEFAULT_SOLVER_SETTINGS: string = '{}';
 const COLUMNS = `${SERVICE}columns`;
 const COMMENT_SEQ = '//';
 export const STAGE_COL_NAME = `${SERVICE}Stage`;
@@ -30,7 +32,7 @@ const INCEPTION = 'Inception';
 const PACKAGE_NAME = 'DiffStudio';
 
 /** Numerical solver function */
-const SOLVER_FUNC = 'solve';
+const SOLVER_FUNC = 'solveEquations';
 
 /** Elementary math tools */
 const MATH_FUNCS = ['pow', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sqrt', 'exp', 'log', 'sinh', 'cosh', 'tanh'];
@@ -40,7 +42,7 @@ const MATH_CONSTS = ['PI', 'E'];
 /** Default meta */
 const defaultMetas = `//meta.runOnOpen: true
 //meta.runOnInput: true
-//meta.features: {"sens-analysis": true}`;
+//meta.features: {"sens-analysis": true, "fitting": true}`;
 
 /** Numerical input specification */
 export type Input = {
@@ -110,6 +112,7 @@ export type IVP = {
   updates: Update[] | null,
   metas: string[],
   outputs: Map<string, Output> | null,
+  solverSettings: string,
 };
 
 /** Specific error messages */
@@ -137,9 +140,10 @@ enum ERROR_MSG {
   NAN = `is not a number. Check the line`,
   SERVICE_START = `Variable names should not start with '${SERVICE}'`,
   REUSE_NAME = 'Variable reuse (case-insensitive): rename ',
+  SOLVER = `Incorrect solver options. Check the '${CONTROL_EXPR.SOLVER}'-line`,
 }
 
-/** Datagrok annatations */
+/** Datagrok annotations */
 enum ANNOT {
   NAME = '//name:',
   DESCR = '//description:',
@@ -165,7 +169,7 @@ enum SCRIPT {
   ODE = 'let odes = {',
   SOLVER_COM = '// solve the problem',
   SOLVER = `const solver = await grok.functions.eval('${PACKAGE_NAME}:${SOLVER_FUNC}');`,
-  PREPARE = 'let call = solver.prepare({problem: odes});',
+  PREPARE = 'let call = solver.prepare({problem: odes, options: opts});',
   CALL = 'await call.call();',
   OUTPUT = `let ${DF_NAME} = call.getParamValue('${DF_NAME}');`,
   SPACE2 = '  ',
@@ -497,6 +501,7 @@ export function getIVP(text: string): IVP {
   const updates = [] as Update[];
   const metas = [] as string[];
   let outputs: Map<string, Output> | null = null;
+  let solverSettings = DEFAULT_SOLVER_SETTINGS;
 
   // 0. Split text into lines & remove comments
   const lines = text.replaceAll('\t', ' ').split('\n')
@@ -536,6 +541,8 @@ export function getIVP(text: string): IVP {
       params = getEqualities(lines, block.begin + 1, block.end);
     } else if (firstLine.startsWith(CONTROL_EXPR.TOL)) { // the 'tolerance' block
       tolerance = firstLine.slice( firstLine.indexOf(CONTROL_SEP) + 1).trim();
+    } else if (firstLine.startsWith(CONTROL_EXPR.SOLVER)) { // the 'solver settings' block
+      solverSettings = firstLine.slice( firstLine.indexOf(CONTROL_SEP) + 1).trim();
     } else if (firstLine.startsWith(CONTROL_EXPR.LOOP)) { // the 'loop' block
       loop = getLoop(lines, block.begin + 1, block.end);
     } else if (firstLine.startsWith(CONTROL_EXPR.UPDATE)) { // the 'update' block
@@ -570,6 +577,7 @@ export function getIVP(text: string): IVP {
     updates: (updates.length === 0) ? null : updates,
     metas: metas,
     outputs: outputs,
+    solverSettings: solverSettings,
   };
 
   checkCorrectness(ivp);
@@ -806,8 +814,13 @@ function getScriptMainBodyBasic(ivp: IVP): string[] {
 
   // 2.4) final lines of the problem specification
   res.push(`${SCRIPT.SPACE4}tolerance: ${ivp.tolerance},`);
+  //res.push(`${SCRIPT.SPACE6}solverOptions: ${ivp.solverSettings.replaceAll(ANNOT_SEPAR, COMMA)},`);
   res.push(`${SCRIPT.SPACE4}solutionColNames: [${names.map((key) => `'${key}'`).join(', ')}]`);
   res.push('};');
+
+  // 2.5) solver options
+  res.push('');
+  res.push(`let opts = ${ivp.solverSettings.replaceAll(';', ',')};`);
 
   // 3. Math functions
   if (ivp.usedMathFuncs.length > 0) {
@@ -886,8 +899,13 @@ function getScriptFunc(ivp: IVP, funcParamsNames: string): string[] {
 
   // 2.4) final lines of the problem specification
   res.push(`${SCRIPT.SPACE6}tolerance: ${ivp.tolerance},`);
+  //res.push(`${SCRIPT.SPACE6}solverOptions: ${ivp.solverSettings.replaceAll(ANNOT_SEPAR, COMMA)},`);
   res.push(`${SCRIPT.SPACE6}solutionColNames: [${names.map((key) => `'${key}'`).join(', ')}]`);
   res.push(`${SCRIPT.SPACE2}};`);
+
+  // 2.5) solver options
+  res.push('');
+  res.push(`${SCRIPT.SPACE2}let opts = ${ivp.solverSettings.replaceAll(';', ',')};`);
 
   // 3. Math functions
   if (ivp.usedMathFuncs.length > 0) {
@@ -1074,6 +1092,34 @@ function getSolutionDfColsNames(ivp: IVP): string[] {
   return res;
 }
 
+/** Check solver settings */
+function checkSolverSettings(line: string): void {
+  const settings = new Map<string, string>();
+
+  const openBraceIdx = line.indexOf(BRACE_OPEN);
+  const closeBraceIdx = line.indexOf(BRACE_CLOSE);
+  let sepIdx: number;
+
+  if (openBraceIdx >= closeBraceIdx)
+    throw new Error(`${ERROR_MSG.BRACES}. Check the line '${line}'`);
+
+  for (const item of line.slice(openBraceIdx + 1, closeBraceIdx).split(ANNOT_SEPAR)) {
+    sepIdx = item.indexOf(CONTROL_SEP);
+
+    if (sepIdx > 1)
+      settings.set(item.slice(0, sepIdx).trim(), item.slice(sepIdx + 1).trim());
+  }
+
+  SOLVER_OPTIONS_RANGES.forEach((range, opt) => {
+    if (settings.has(opt)) {
+      const val = Number(settings.get(opt));
+
+      if ((val < range.min) || (val > range.max))
+        throw new Error(`${ERROR_MSG.SOLVER}: ${opt} must be in the range ${range.min}..${range.max}`);
+    }
+  });
+}
+
 /** Check IVP correctness */
 function checkCorrectness(ivp: IVP): void {
   // 0. Check basic elements
@@ -1162,4 +1208,7 @@ function checkCorrectness(ivp: IVP): void {
       scriptInputs.push(current);
     });
   }
+
+  // 5. Check solver settings
+  checkSolverSettings(ivp.solverSettings);
 } // checkCorrectness

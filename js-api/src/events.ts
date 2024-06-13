@@ -337,3 +337,7 @@ export interface GridCellArgs {
 export interface DataFrameArgs {
   dataFrame: DataFrame;
 }
+
+export interface InputArgs {
+  input: InputBase;
+}

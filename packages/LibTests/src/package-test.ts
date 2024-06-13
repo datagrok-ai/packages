@@ -1,10 +1,12 @@
 import * as DG from 'datagrok-api/dg';
 import {TestContext, runTests, tests} from '@datagrok-libraries/utils/src/test';
 
-import './tests/expectTests';
-import './tests/jsonSerializationTests';
-import './tests/richFunctionViewTests';
-import './tests/compositionPipelineTests';
+import './tests/compute-api/rich-function-view-tests';
+import './tests/compute-api/composition-pipeline-tests';
+import './tests/utils/expect-tests';
+import './tests/utils/json-serialization-tests';
+import './tests/compute-utils/rich-function-view-tests';
+import './tests/compute-utils/composition-pipeline-tests';
 
 export const _package = new DG.Package();
 export {tests};

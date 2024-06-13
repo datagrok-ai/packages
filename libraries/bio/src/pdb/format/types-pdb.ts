@@ -27,8 +27,14 @@ export class PdbAtomCoords extends AtomCoordsBase implements IPdbAtomCoords {
     super(a, a.x, a.y, a.z, a.occupancy, a.bFactor);
   }
 
-  static fromStr(src: string): PdbAtomCoords {
-    throw new Error('Not implemented');
+  static fromStr(line: string): PdbAtomCoords {
+    const res = new PdbAtomCoords(
+      AtomCoordsBase.fromStr(line),
+      /* segment */ line.slice(73 - 1, 76),
+      /* element */ line.slice(77 - 1, 78),
+      /* charge */ line.slice(79 - 1, 80),
+    );
+    return res;
   }
 
   override isValid(): boolean {

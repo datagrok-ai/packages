@@ -124,7 +124,7 @@ export class RichFunctionView extends FunctionView {
     super(initValue, options);
   }
 
-  protected async onFuncCallReady() {
+  public async onFuncCallReady() {
     await this.loadInputsOverrides();
     await this.loadInputsValidators();
     await super.onFuncCallReady();

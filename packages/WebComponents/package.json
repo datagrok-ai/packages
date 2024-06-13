@@ -1,0 +1,43 @@
+{
+  "name": "@datagrok/webcomponents",
+  "friendlyName": "WebComponents",
+  "version": "0.0.2",
+  "description": "",
+  "dependencies": {
+    "@datagrok-libraries/utils": "latest",
+    "@datagrok-libraries/webcomponents": "^0.0.2",
+    "cash-dom": "latest",
+    "datagrok-api": "latest",
+    "dayjs": "latest"
+  },
+  "devDependencies": {
+    "datagrok-tools": "latest",
+    "source-map-loader": "^5.0.0",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest"
+  },
+  "scripts": {
+    "link-all": "",
+    "debug-webcomponents": "webpack && grok publish",
+    "release-webcomponents": "webpack && grok publish --release",
+    "build-webcomponents": "webpack",
+    "build": "webpack",
+    "debug-webcomponents-dev": "webpack && grok publish dev",
+    "release-webcomponents-dev": "webpack && grok publish dev --release",
+    "debug-webcomponents-public": "webpack && grok publish public",
+    "release-webcomponents-public": "webpack && grok publish public --release"
+  },
+  "canEdit": [
+    "Developers"
+  ],
+  "canView": [
+    "All users"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:datagrok-ai/public.git",
+    "directory": "packages/WebComponents"
+  }
+}

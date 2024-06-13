@@ -1,7 +1,9 @@
+import {PATTERN_APP_DATA_FILENAME} from '../../../common/model/data-loader/const';
 import {NUCLEOTIDES} from '../../../common/model/const';
-import {PATTERN_APP_DATA} from '../../../common/model/data-loader/json-loader';
 import {LUMINANCE_COEFFICIENTS, TEXT_COLOR, SVG_CIRCLE_SIZES} from './const';
 import {isOverhangNucleotide} from '../../model/utils';
+
+import {_package} from '../../../../package';
 
 export function computeLegendCircleYPosition(isAntisenseStrandActive: boolean): number {
   return (isAntisenseStrandActive ? 9.5 : 6) * SVG_CIRCLE_SIZES.NUCLEOBASE_RADIUS;
@@ -28,10 +30,10 @@ export function computeTextColorForNucleobaseLabel(nucleobase: string): string {
 
 export function getNucleobaseColorFromStyleMap(nucleobase: string): string {
   // todo: optimize
-  const format = Object.keys(PATTERN_APP_DATA)[0];
+  const format = Object.keys(_package.jsonData.patternAppData)[0];
   if (!format)
-    throw new Error('No format found in PATTERN_APP_DATA');
+    throw new Error(`No format found in '${PATTERN_APP_DATA_FILENAME}'`);
 
-  const styleMap = PATTERN_APP_DATA[format];
+  const styleMap = _package.jsonData.patternAppData[format];
   return styleMap[nucleobase].color || '';
 }

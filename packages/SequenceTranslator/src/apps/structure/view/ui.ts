@@ -10,11 +10,13 @@ import './style.css';
 import {errorToConsole} from '@datagrok-libraries/utils/src/to-console';
 
 import {ColoredTextInput} from '../../common/view/components/colored-input/colored-text-input';
-import {highlightInvalidSubsequence} from '../../common/view/components/colored-input/input-painters';
 import {MoleculeImage} from '../../common/view/components/molecule-img';
 import {APP_NAME} from '../../common/view/const';
 import {IsolatedAppUIBase} from '../../common/view/isolated-app-ui';
 import {getLinkedMolfile, saveSdf, StrandData} from '../model/oligo-structure';
+import {ITranslationHelper} from '../../../types';
+
+import {_package} from '../../../package';
 
 const enum DIRECTION {
   STRAIGHT = '5′ → 3′',
@@ -23,7 +25,10 @@ const enum DIRECTION {
 const STRANDS = ['ss', 'as', 'as2'] as const;
 
 class StructureAppLayout {
+  private readonly th: ITranslationHelper;
+
   constructor() {
+    this.th = _package;
     this.onInput = new rxjs.Subject<string>();
     this.onInvalidInput = new rxjs.Subject<string>();
     this.inputBase = Object.fromEntries(
@@ -53,12 +58,12 @@ class StructureAppLayout {
   private onInvalidInput: rxjs.Subject<string>;
   private useChiralInput: DG.InputBase<boolean | null>;
   private saveAllStrandsInput: DG.InputBase<boolean | null>;
-  private inputBase: {[key: string]: DG.InputBase<string>};
-  private directionInversion: {[key: string]: boolean};
+  private inputBase: { [key: string]: DG.InputBase<string> };
+  private directionInversion: { [key: string]: boolean };
   private moleculeImgDiv: HTMLDivElement;
 
-  async getHtmlDivElement(): Promise<HTMLDivElement> {
-    const tableLayout = this.getTableInput();
+  async getHtmlDivElement(th: ITranslationHelper): Promise<HTMLDivElement> {
+    const tableLayout = this.getTableInput(th);
     const boolInputsAndButton = this.getBoolInputsAndButton();
     await this.updateMoleculeImg();
     const bottomDiv = ui.divH([boolInputsAndButton, this.moleculeImgDiv]);
@@ -75,7 +80,7 @@ class StructureAppLayout {
       ui.bigButton('Save SDF', () => {
         const strandData = this.getStrandData();
         saveSdf(strandData.ss, strandData.as, strandData.as2,
-          this.useChiralInput.value!, this.saveAllStrandsInput.value!);
+          this.useChiralInput.value!, this.saveAllStrandsInput.value!, this.th);
       })
     ]);
 
@@ -86,10 +91,10 @@ class StructureAppLayout {
     return boolInputsAndButton;
   }
 
-  private getTableInput(): HTMLTableElement {
+  private getTableInput(th: ITranslationHelper): HTMLTableElement {
     const coloredInput = Object.fromEntries(
       STRANDS.map(
-        (key) => [key, new ColoredTextInput(this.inputBase[key], highlightInvalidSubsequence)]
+        (key) => [key, new ColoredTextInput(this.inputBase[key], th.highlightInvalidSubsequence)]
       )
     );
 
@@ -181,7 +186,7 @@ class StructureAppLayout {
     //   return '';
     // }
 
-    return getLinkedMolfile(ss, as, as2, this.useChiralInput.value!);
+    return getLinkedMolfile(ss, as, as2, this.useChiralInput.value!, this.th);
   }
 
   private async updateMoleculeImg(): Promise<void> {
@@ -205,13 +210,16 @@ class StructureAppLayout {
 }
 
 export class OligoStructureUI extends IsolatedAppUIBase {
-  constructor() {
+  constructor(
+    private readonly th: ITranslationHelper
+  ) {
     super(APP_NAME.STRUCTURE);
     this.layout = new StructureAppLayout();
   }
+
   private readonly layout: StructureAppLayout;
 
   protected getContent(): Promise<HTMLDivElement> {
-    return this.layout.getHtmlDivElement();
+    return this.layout.getHtmlDivElement(this.th);
   }
 }

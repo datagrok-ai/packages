@@ -29,29 +29,52 @@ To run **Diff Studio**:
 * Go to **Apps** and run **Diff Studio**. You will see the default code template with one simple differential equation.
 * Go to **Run** tab and you will get UI for interactive model exploration.
 * Go to **Model** tab, edit formulas or add new ones.
-* Click **F5** or go to **Run** tab to re-run calculations and see updated data.
+* Press **F5** or go to **Run** tab to re-run calculations and see updated data.
 
-![Run Diff Studio](pics/DiffStudio-run.gif)
+![Run Diff Studio](pics/diff-studio-run.gif)
 
 ### Loading and saving data
 
-* **To save formulas** in a local file, press the <i class="fas fa-save"></i> **Save** icon on the ribbon, and find the *ivp*-file in Downloads. You can open and edit this file using any text editor.
-* **To load formulas** from a local file, press the <i class="fas fa-folder-open"></i> **Load...** on the ribbon, choose **From file...**
+* **To save formulas** to a local file, click the <i class="fas fa-save"></i> **Save** icon on the ribbon, and find the *ivp*-file in Downloads. You can open and edit this file using any text editor.
+* **To load formulas** from a local file, click the <i class="fas fa-folder-open"></i> **Load...** on the ribbon, choose **From file...**
   option and choose a local file to upload.
 * **Drag-n-drop** your *ivp*-file to Datagrok. Diff Studio will open it and load formulas. You can open *ivp*-files stored in the platform.
 
 ### Sensitivity analysis
 
-Explore the relationship between inputs and outputs of your model using the [Sensitivity Analysis](https://datagrok.ai/help/compute/#sensitivity-analysis) feature. Run it directly from Diff Studio:
+Explore the relationship between inputs and outputs of your model using the [Sensitivity Analysis](compute.md#sensitivity-analysis) feature. Run it directly from Diff Studio:
 
-* Press <i class="fas fa-analytics"></i> **Run sensitivity analysis** icon
+* Click <i class="fas fa-analytics"></i> **Run sensitivity analysis** icon
 * Apply one of the following methods:
-  * [Monte Carlo](https://datagrok.ai/help/compute#monte-carlo)
-  * [Sobol](https://datagrok.ai/help/compute#sobol)
-  * [Grid](https://datagrok.ai/help/compute#grid)
+  * [Monte Carlo](compute.md#monte-carlo)
+  * [Sobol](compute.md#sobol)
+  * [Grid](compute.md#grid)
 * Analyze model evaluations
 
-![Run Sens Analysis](pics/DiffStudio-run-sens-analysis.gif)
+![Run Sens Analysis](pics/diff-studio-run-sens-analysis.gif)
+
+### Parameter Optimization
+
+Find input conditions leading to the specified output constraints using the [Parameter Optimization](compute.md#input-parameter-optimization) feature. It finds input values that minimize deviation measured by [loss function](https://en.wikipedia.org/wiki/Loss_function). Run it directly from Diff Studio:
+
+* Click <i class="fas fa-chart-line"></i> **Run fitting inputs** icon
+* In the `Fit` block, use switchers to specify inputs to be found:
+  * Set `min` and `max` values for each selected item. They define the variation range
+  * Set values of all other inputs
+* In the `Target` block, specify output constraints:
+  * Set dataframe with expected output values (in the table input)
+  * Set column with values of the independent variable (in the `argument` field)
+* Specify settings of fitting:
+  * Choose numerical optimization method (in the `method` field), and set loss function type (in the `loss` field)
+  * Specify number of points to be found (in the `samples` field)
+  * Set the maximum scaled deviation between similar fitted points (in the `similarity` field): the higher the value, the fewer points will be found
+* Click <i class="fas fa-play"></i> **Run fitting** icon. You will get a [grid](../visualize/viewers/grid) containing
+  * loss function values
+  * fitted inputs
+  * [line charts](../visualize/viewers/line-chart) visualizing the goodness of fit and showing the loss function minimization
+* Open `Context panel` (F4). You will get the simulation run corresponding to the selected grid row
+
+![Run fitting](pics/diff-studio-run-fitting.gif)
 
 ## Creating a custom differential equation model
 
@@ -150,7 +173,7 @@ To customize the computation output, select columns and their captions in the `o
   A2 {caption: Periferal}
 ```
 
-![Customize output](pics/DiffStudio-output.gif)
+![Customize output](pics/diff-studio-output.gif)
 
 Set [tolerance](https://pythonnumericalmethods.berkeley.edu/notebooks/chapter19.02-Tolerance.html) of the numerical method in the `#tolerance`-line:
 
@@ -179,7 +202,7 @@ You can set new values for parameters and change values for functions.
   N += 2
 ```
 
-![Multi-stage model - loop](pics/DiffStudio-loop.gif)
+![Multi-stage model - loop](pics/diff-studio-loop.gif)
 
 ### Multistage model
 
@@ -204,7 +227,7 @@ Add the `#update` block. Enter name of the stage and set its duration. Add lines
 
 You can add any number of `update` blocks. Simulation stages are marked with a color:
 
-![Multi-stage model - update](pics/DiffStudio-update.gif)
+![Multi-stage model - update](pics/diff-studio-update.gif)
 
 ## Usability improvements
 
@@ -254,11 +277,11 @@ Specify `min`, `max` and `step` values to get sliders and clickers for the rapid
   y = 0 {min: -2; max: 2; step: 0.1}
 ```
 
-![Using input annotations](pics/DiffStudio-input-annotations.gif)
+![Using input annotations](pics/diff-studio-input-annotations.gif)
 
 ## Loading templates and examples
 
-To load a template, press the <i class="fas fa-folder-open"></i> **Load...** on the ribbon,
+To load a template, click the <i class="fas fa-folder-open"></i> **Load...** on the ribbon,
 select **Templates** and choose one of the following templates:
 
 | Template   | Features                                                                                    |
@@ -267,7 +290,7 @@ select **Templates** and choose one of the following templates:
 | `Advanced` | Extra math features: *expressions*, *constants*, *parameters* and *tolerance* specification |
 | `Extended` | The *annotating* feature for extended UI generation                                         |
 
-To load an example, press the <i class="fas fa-folder-open"></i> **Load...** on the ribbon,
+To load an example, click the <i class="fas fa-folder-open"></i> **Load...** on the ribbon,
 select **Examples** and choose a one.
 
 ## Examples
@@ -279,7 +302,7 @@ via the <i class="fas fa-folder-open"></i> **Load...** button on the ribbon and 
 
 The `Chem react` example simulates deterministic [mass-action kinetics](https://en.wikipedia.org/wiki/Law_of_mass_action) given in the network
 
-![add-to-workspace](pics/DiffStudio-chem-react-network.png)
+![add-to-workspace](pics/diff-studio-chem-react-network.png)
 
 This example illustrates annotation of model inputs.
 
@@ -287,7 +310,7 @@ This example illustrates annotation of model inputs.
 
 Robertson’s chemical reaction model is a well-known example of [stiff equations](https://en.wikipedia.org/wiki/Stiff_equation). It describes the process
 
-![add-to-workspace](pics/DiffStudio-robertson-network.png)
+![add-to-workspace](pics/diff-studio-robertson-network.png)
 
 Numerical solution of stiff problems is a complicated task. Diff Studio provides solution of both stiff and non-stiff equations.
 
@@ -295,37 +318,37 @@ Numerical solution of stiff problems is a complicated task. Diff Studio provides
 
 The `Fermentation` example illustrates the kinetics of the biochemical reactions in [fermentation](https://en.wikipedia.org/wiki/Fermentation).
 
-![add-to-workspace](pics/DiffStudio-fermentation.gif)
+![add-to-workspace](pics/diff-studio-fermentation.gif)
 
 ### PK
 
-[Pharmacokinetics](https://en.wikipedia.org/wiki/Pharmacokinetics) (PK) studies how the body absorbs, distributes, metabolizes, and excretes drugs over time. The `PK` example simulates this process.
+[Pharmacokinetics](https://en.wikipedia.org/wiki/Pharmacokinetics) (PK) studies how the body absorbs, distributes, metabolizes, and excretes drugs over time. The `PK` example simulates this process. It demonstrates the usage of the `meta.solver` feature for numerical [solver management](#solver-settings).
 
-![add-to-workspace](pics/DiffStudio-pk.png)
+![add-to-workspace](pics/diff-studio-pk.png)
 
 ### PK-PD
 
 PK-PD modeling simulates pharmacokinetics (PK), pharmacodynamics (PD), and their [relationship](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7348046). It is used in drug discovery and development. The `PK-PD` example illustrates the usage of the `loop` feature for dosing specification
 
-![add-to-workspace](pics/DiffStudio-pk-pd.gif)
+![add-to-workspace](pics/diff-studio-pk-pd.gif)
 
 ### Acid production
 
 `Acid production` models gluconic acid [production](https://oatao.univ-toulouse.fr/9919/1/Elqotbi_9919.pdf) by Aspergillus niger. This example shows the usage of the `update` feature for multistage simulation
 
-![add-to-workspace](pics/DiffStudio-acid-production.gif)
+![add-to-workspace](pics/diff-studio-acid-production.gif)
 
 ### Nimotuzumab
 
 The `Nimotuzumab` example simulates population pharmacokinetic for [nimotuzumab](https://www.mdpi.com/1999-4923/12/12/1147). It demonstrates the `output` feature
 
-![add-to-workspace](pics/DiffStudio-nimotuzumab.gif)
+![add-to-workspace](pics/diff-studio-nimotuzumab.gif)
 
 ### Bioreactor
 
 The `Bioreactor` example models the [kinetic mechanism](https://doi.org/10.1074/jbc.RA117.000303) of controlled Fab-arm exchange for the formation of bispecific immunoglobulin G1 antibodies.
 
-![add-to-workspace](pics/DiffStudio-bioreactor.png)
+![add-to-workspace](pics/diff-studio-bioreactor.png)
 
 Datagrok's ODEs suite has tools for solving both stiff and non-stiff equations. Combine Diff Studio
 with [viewers](../visualize/viewers/viewers.md) and [compute](compute.md) tools to explore complex models.
@@ -334,8 +357,8 @@ with [viewers](../visualize/viewers/viewers.md) and [compute](compute.md) tools 
 
 You can convert any Diff Studio project to the Datagrok script:
 
-* Press the **JS** button on the top panel
-* Press the **SAVE** button to save generated script
+* Click the **JS** button on the top panel
+* Click the **SAVE** button to save generated script
 
 Find the created Javascript script in the platform `Scripts`.
 
@@ -353,7 +376,32 @@ The export feature provides an extension of your project with [scripting](script
 * non-elementary and special functions' use
 * Datagrok packages' functions call
 
+## Solver settings
+
+Manage the solver of ODEs to improve performance. Specify its settings in the `#meta.solver`-line:
+
+* the numerical method (`method`)
+* the maximum number of iterations (`maxIterations`)
+* the maximum computation time (`maxTimeMs`)
+
+Diff Studio implements the following [Rosenbrock–Wanner](https://doi.org/10.1016/j.cam.2015.03.010) methods for solving ODEs:
+
+|Method|Value|
+|-------------|--------|
+|The modified Rosenbrock triple|`'mrt'`|
+|The ROS3PRw method|`'ros3prw'`|
+|The ROS34PRw method|`'ros34prw'`|
+
+By default, Diff Studio uses ROS34PRw and alerts you if computations take too long. The default time limit is 5 seconds. To customize it, set the maximum computation time (in milliseconds):
+
+```python
+#meta.solver: {method: 'mrt'; maxTimeMs: 50}
+```
+
+Set the maximum number of iterations to debug formulas in complex models.
+
 See also
 
-* [Numerical methods for ODEs](https://en.wikipedia.org/wiki/Numerical_methods_for_ordinary_differential_equations)
 * [Stiff equations](https://en.wikipedia.org/wiki/Stiff_equation)
+* [Numerical methods for ODEs](https://en.wikipedia.org/wiki/Numerical_methods_for_ordinary_differential_equations)
+* [Rosenbrock–Wanner method](https://doi.org/10.1016/j.cam.2015.03.010)

@@ -6,13 +6,16 @@ import * as DG from 'datagrok-api/dg';
 import {sortByReverseLength} from '../helpers';
 import {DEFAULT_FORMATS} from '../const';
 import {MonomerLibWrapper} from '../monomer-lib/lib-wrapper';
-import {CODES_TO_HELM_DICT} from '../data-loader/json-loader';
-import {SequenceValidator} from './sequence-validator';
+
+import {ITranslationHelper} from '../../../../types';
 
 export class FormatDetector {
-  constructor(private sequence: string) {
-    this.libWrapper = MonomerLibWrapper.getInstance();
-    this.formats = Object.keys(CODES_TO_HELM_DICT);
+  constructor(
+    private sequence: string,
+    private readonly th: ITranslationHelper,
+  ) {
+    this.libWrapper = this.th.monomerLibWrapper;
+    this.formats = Object.keys(this.th.jsonData.codesToHelmDict);
   };
 
   private libWrapper: MonomerLibWrapper;
@@ -26,7 +29,7 @@ export class FormatDetector {
     if (possibleFormats.length === 0)
       return null;
 
-    const validator = new SequenceValidator(this.sequence);
+    const validator = this.th.createSequenceValidator(this.sequence);
     const outputIndices = Array(possibleFormats.length).fill(0);
     for (let i = 0; i < possibleFormats.length; ++i) {
       const format = possibleFormats[i];

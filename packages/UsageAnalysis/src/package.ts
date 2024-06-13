@@ -6,13 +6,49 @@ import { UsageWidget } from './widgets/usage-widget';
 import { PackageUsageWidget } from './widgets/package-usage-widget';
 import '../css/usage_analysis.css';
 import '../css/test_track.css';
-import {ViewHandler} from './view-handler';
-import {TestTrack} from './test-track/app';
-import {ReportsWidget} from "./widgets/reports-widget";
-import {ReportingApp} from "./reporting/reporting_app";
+import { ViewHandler } from './view-handler';
+import { TestTrack } from './test-track/app';
+import { ReportsWidget } from "./widgets/reports-widget";
+import { ReportingApp } from "./reporting/reporting_app";
+import { TestAnalysesManager } from './test-analysis/testAnalysesManager';
+
+import { getDate } from './utils';
+import dayjs from "dayjs";
 
 
 export const _package = new DG.Package();
+
+//name: BuildTests
+//meta.runOnOpen: false
+//meta.runOnInput: false
+//input: string build {choices: UsageAnalysis:Builds}
+//output: dataframe df
+export async function BuildTests(build: any) {
+  const builds: DG.DataFrame = await grok.functions.call('UsageAnalysis:Builds');
+  let date = dayjs();
+  let next = dayjs();
+  for (let i = 0; i < builds.rowCount; i++) {
+    if (builds.get('text', i) == build) {
+      date = builds.get('build', i);
+      next = builds.get('next', i);
+      break;
+    }
+  }
+  return await grok.functions.call('UsageAnalysis:BuildTestsData', {'dateStart': date, 'dateEnd': next});
+}
+
+
+//name: TestAnalysisReportForCurrentDay
+//input: datetime date 
+//output: dataframe df
+export async function TestAnalysisReportForCurrentDay(date: any) {
+  const tests = await TestAnalysesManager.collectTests();
+  const testsListMapped = tests.map((elem) => {
+    return { 'name':  "test-package " + elem.packageName + ": " + elem.test.category + ": " + elem.test.name };
+  });
+  const testRuns = await grok.functions.call('UsageAnalysis:getServerStartTestResults', { 'date': getDate(new Date(date)), 'testslist': DG.DataFrame.fromObjects(testsListMapped) });
+  return testRuns;
+}
 
 
 //name: Usage Analysis
@@ -36,9 +72,8 @@ export async function usageAnalysisApp(path?: string, date?: string, groups?: st
 //input: string path {isOptional: true; meta.url: true}
 //input: map params {isOptional: true}
 export function testTrackApp(): void {
-  if (!grok.shell.dockManager.findNode(TestTrack.getInstance().root)) 
+  if (!grok.shell.dockManager.findNode(TestTrack.getInstance().root))
     TestTrack.getInstance().init();
-  
 }
 
 //name: Reports
@@ -47,7 +82,7 @@ export function testTrackApp(): void {
 //input: string path {isOptional: true; meta.url: true}
 //input: map params {isOptional: true}
 //output: view v
-export async function reportsApp(path?: string):Promise<DG.ViewBase> {
+export async function reportsApp(path?: string): Promise<DG.ViewBase> {
   const parent = grok.functions.getCurrentCall();
   const app = new ReportingApp(parent);
   await app.init(path);
@@ -58,7 +93,7 @@ export async function reportsApp(path?: string):Promise<DG.ViewBase> {
 //input: view browseView
 export async function reportsAppTreeBrowser(treeNode: DG.TreeViewGroup, browseView: DG.BrowseView) {
   await treeNode.group('Reports', null, false).loadSources(grok.dapi.reports.by(10));
-  await treeNode.group('Rules', null, false).loadSources(grok.dapi.rules.by(10));
+  await treeNode.group('Rules', null, false).loadSources(grok.dapi.rules.include('actions,actions.assignee').by(10));
 }
 
 //output: widget result

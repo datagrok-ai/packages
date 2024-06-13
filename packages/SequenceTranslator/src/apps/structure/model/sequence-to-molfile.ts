@@ -5,12 +5,13 @@ import * as DG from 'datagrok-api/dg';
 
 import {MonomerSequenceParser} from './monomer-code-parser';
 import {MonomerLibWrapper} from '../../common/model/monomer-lib/lib-wrapper';
+import {_package} from '../../../package';
 
 export class SequenceToMolfileConverter {
   constructor(
     sequence: string, private invert: boolean = false, format: string
   ) {
-    this.lib = MonomerLibWrapper.getInstance();
+    this.lib = _package.monomerLibWrapper;
     const codeToSymbolMap = this.lib.getCodeToSymbolMap(format);
     this.parser = new MonomerSequenceParser(sequence, codeToSymbolMap);
   }

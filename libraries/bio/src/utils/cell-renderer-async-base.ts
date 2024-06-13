@@ -69,7 +69,9 @@ export abstract class RenderServiceBase<TProps extends PropsBase, TAux> {
   public get errorCount(): number { return this._errorCount; }
 
   /** Disposes MolstarViewer to free WebGL context */
-  abstract reset(): Promise<void>;
+  async reset(): Promise<void> {
+    this._errorCount = 0;
+  }
 
   /** Queues render tasks
    * @param consumerId   Identifier of the consumer of this render service

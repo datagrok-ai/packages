@@ -15,10 +15,22 @@
     font-size: 18px;
     position: absolute;
     height: 28px;
+    
+}
+
+.ml-dim-reduction-settings-input i.grok-icon.grok-font-icon-settings:not(.ml-dim-reduction-column-editor-input-root i) {
+    left: -20px;
+}
+.dlg-dimensionality-reduction.ui-form, .dlg-markov-clustering.ui-form, .dlg-markov-clustering.ui-form .ui-form, .dlg-dimensionality-reduction.ui-form .ui-form {
+    max-width: unset;
 }
 
 .ml-dim-reduction-column-editor-input-root label {
     display: none !important;
+}
+
+.dim-reduction-dialog-form > .ui-input-root, .dim-reduction-dialog-form > div > .ui-input-root {
+    margin-left: 10px;
 }
 
 .ml-dim-reduction-column-editor-input-root input, .ml-dim-reduction-column-editor-input-root select {
@@ -34,7 +46,7 @@ h3.ml-dim-reduction-column-editor-input-root {
     flex-direction: row;
     align-items: center;
     margin-bottom: 10px !important;
-    width: 600px !important;
+    width: 700px !important;
 }
 
 .ml-dim-reduction-column-editor-column-title {
@@ -44,4 +56,8 @@ h3.ml-dim-reduction-column-editor-input-root {
 
 .ml-dim-reduction-column-editor-header-root > h1:not(:first-child) {
     margin-left: 20px !important;
+}
+
+.ml-dim-reduction-column-editor-table-root .header > td:not(:first-child) {
+    padding-left: 32px;
 }

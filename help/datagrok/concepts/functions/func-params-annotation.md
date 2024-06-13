@@ -532,6 +532,12 @@ of that function instead of the normal dataframe input. When the top-level funct
 `orders` parameters gets evaluated to the results of the execution of the `Samples:OrdersByEmployee` 
 function with the specified parameters.
 
+To get the internal parameters of the `orders` function, you can specify them in the input using the
+`editorParam` option. In the following example, we have a parameter `country` that points to the `shipCountry`
+parameter of the `orders` function. When the top-level function is executed, `country` parameter gets evaluated
+to the value of the `orders.shipCountry` parameter. That way, you can reference the internal parameters of the
+helper function and use them in the top-level function.
+
 This powerful technique allows to reuse functions, and mix multiple technologies and languages 
 within one script. You can get your data with a SQL query, run calculations in Python, and then
 visualize it interactively in Datagrok - all of that without writing a single line of UI code.
@@ -545,9 +551,10 @@ To learn more, see [Compute](../../../compute/compute.md#data-access).
 //language: javaScript
 //input: dataframe orders {category: Data; editor: Samples:OrdersByEmployee}
 //input: int factor = 2 {category: Computation}
-//output: int result
+//input: string country {category: Computation; editorParam: orders.shipCountry}
+//output: string result
 
-result = orders.rowCount * 2;
+result = `${country} - ${orders.rowCount * factor}`;
 ```
 
 ![img.png](function-input.png)

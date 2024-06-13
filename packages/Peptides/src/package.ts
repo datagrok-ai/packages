@@ -95,6 +95,14 @@ export function peptidesDialog(): DG.Dialog {
   return dialog.show();
 }
 
+//name: testInitFunctionPeptides
+//input: viewer v
+export async function testInitFunctionPeptides(v: DG.Viewer): Promise<void> {
+  grok.shell.info('Test init function for Peptides package');
+  grok.shell.info('Viewer name: ' + v.dataFrame.name);
+  await new Promise<void>((r) => setTimeout(r, 1000));
+}
+
 //name: Peptides
 //tags: panel, widgets
 //input: column col {semType: Macromolecule}

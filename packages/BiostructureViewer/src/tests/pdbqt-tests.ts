@@ -4,7 +4,7 @@ import * as ui from 'datagrok-api/ui';
 
 import * as ngl from 'NGL';
 
-import {category, expect/*, expect*/, expectObject, test} from '@datagrok-libraries/utils/src/test';
+import {category, expect, expectArray/*, expect*/, expectObject, test} from '@datagrok-libraries/utils/src/test';
 import {Molecule3DUnitsHandler} from '@datagrok-libraries/bio/src/molecule-3d';
 import {errInfo} from '@datagrok-libraries/bio/src/utils/err-info';
 import {IPdbAtomBase, IPdbqtAtomBase} from '@datagrok-libraries/bio/src/pdb/format/types';
@@ -121,6 +121,41 @@ category('pdbqt', () => {
   test('ngl-pdbqt-parser-ligands', async () => {
     await _testNglPdbqtParserLigands();
   });
+
+  // -- PDB sort atoms --
+
+  const sortAtomTests = {
+    'sort1': {
+      src: `
+ATOM      2  CA  VAL A   1       7.060  17.792   4.760  6.00 48.47           C
+ATOM      3  C   VAL A   1       8.561  17.703   5.038  6.00 37.13           C
+ATOM      4  O   VAL A   1       8.992  17.182   6.072  8.00 36.25           O
+ATOM      5  CB  VAL A   1       6.342  18.738   5.727  6.00 55.13           C
+ATOM      6  CG1 VAL A   1       7.114  20.033   5.993  6.00 54.30           C
+ATOM      7  CG2 VAL A   1       4.924  19.032   5.232  6.00 64.75           C
+ATOM      8  N   LEU A   2       9.333  18.209   4.095  7.00 30.18           N
+ATOM      9  CA  LEU A   2      10.785  18.159   4.237  6.00 35.60           C
+ATOM     10  C   LEU A   2      11.247  19.305   5.133  6.00 35.47           C
+ATOM      1  N   VAL A   1       6.452  16.459   4.843  7.00 47.38           N
+`,
+      tgt: `
+ATOM      1  N   VAL A   1       6.452  16.459   4.843  7.00 47.38           N
+ATOM      2  CA  VAL A   1       7.060  17.792   4.760  6.00 48.47           C
+ATOM      3  C   VAL A   1       8.561  17.703   5.038  6.00 37.13           C
+ATOM      4  O   VAL A   1       8.992  17.182   6.072  8.00 36.25           O
+ATOM      5  CB  VAL A   1       6.342  18.738   5.727  6.00 55.13           C
+ATOM      6  CG1 VAL A   1       7.114  20.033   5.993  6.00 54.30           C
+ATOM      7  CG2 VAL A   1       4.924  19.032   5.232  6.00 64.75           C
+ATOM      8  N   LEU A   2       9.333  18.209   4.095  7.00 30.18           N
+ATOM      9  CA  LEU A   2      10.785  18.159   4.237  6.00 35.60           C
+ATOM     10  C   LEU A   2      11.247  19.305   5.133  6.00 35.47           C`
+    }
+  };
+  for (const [testName, testData] of Object.entries(sortAtomTests)) {
+    test(`PDB-${testName}`, async () => {
+      await _testPdbSort(testData.src, testData.tgt);
+    });
+  }
 });
 
 async function _testPdbqtParse(): Promise<void> {
@@ -214,4 +249,21 @@ async function _testNglPdbqtParserLigands(): Promise<void> {
   const pose0Val = val.getView(new ngl.Selection('/0'));
   expect(pose0Val.atomCount, 30);
   expect(pose0Val.bondCount, 34);
+}
+
+async function _testPdbSort(src: string, tgt: string): Promise<void> {
+  const strToAtomList = (str: string): PdbAtomCoords[] => {
+    return str.split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line.startsWith('ATOM ') /* not empty */)
+      .map((line) => PdbAtomCoords.fromStr(line));
+  };
+
+  const srcAtomList = strToAtomList(src);
+  const tgtAtomList = strToAtomList(tgt);
+
+  const resAtomList = srcAtomList
+    .sort((a, b) => a.compare(b));
+
+  expectArray(resAtomList, tgtAtomList);
 }

@@ -60,6 +60,10 @@ declare module 'NGL' {
     ) // from NGL lib
 
   export class Component {
+    /** structure, surface, ... */ get type(): string;
+
+    get object(): Structure | Surface | Volume | any;
+
     addRepresentation(type: StructureRepresentationType, params?: RepresentationParameters): RepresentationElement;
 
     autoView(duration?: number): undefined;

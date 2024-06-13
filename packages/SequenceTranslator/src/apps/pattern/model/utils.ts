@@ -1,7 +1,6 @@
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 
-import {PATTERN_APP_DATA} from '../../common/model/data-loader/json-loader';
 import {NucleotideSequences} from './types';
 
 

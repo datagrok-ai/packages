@@ -117,6 +117,8 @@ ${CONTROL_EXPR.PARAMS}:
   KA = 0.3 {caption: rate constant; category: Paramters; min: 0.1; max: 1}
   CL = 2 {caption: clearance; category: Paramters; min: 1; max: 5}
   V2 = 4 {caption: central volume; category: Paramters; min: 1; max: 10} [Central compartment volume]
+
+${CONTROL_EXPR.SOLVER}: {method: 'mrt'; maxTimeMs: 50}
   
 ${CONTROL_EXPR.TOL}: 1e-9`;
 

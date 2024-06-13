@@ -23,7 +23,7 @@ export async function markovCluster(
   df: DG.DataFrame, cols: DG.Column[], metrics: KnownMetrics[],
   weights: number[], aggregationMethod: DistanceAggregationMethod, preprocessingFuncs: (DG.Func | null | undefined)[],
   preprocessingFuncArgs: any[], threshold: number = 80, maxIterations: number = 10,
-  useWebGPU: boolean = false, inflate: number = 2
+  useWebGPU: boolean = false, inflate: number = 2, scp?: DG.ScatterPlotViewer
 ): Promise<undefined | MCLClusterViewerResult> {
   const scatterPlotProps = {
     showXAxis: false,
@@ -33,7 +33,7 @@ export async function markovCluster(
   };
   const tv = grok.shell.tableView(df.name) ?? grok.shell.addTableView(df);
 
-  const sc = tv.scatterPlot({...scatterPlotProps, title: 'MCL'});
+  const sc = scp ?? tv.scatterPlot({...scatterPlotProps, title: 'MCL'});
 
   ui.setUpdateIndicator(sc.root, true);
   const distanceFnArgs: Options[] = [];

@@ -328,6 +328,10 @@ export class FuncParamOptions {
 
   static Separators = 'separators';
 
+  static Layout = 'layout';
+
+  static EditorParam = 'editorParam';
+
   /// Column filter.
   /// Applies to dataframes and columns
   /// Example: `{columns: numerical}`

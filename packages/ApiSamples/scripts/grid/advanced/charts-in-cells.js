@@ -26,7 +26,7 @@ tv.grid.onCellPrepare((gc) => {
   };
 
   if (gc.isTableCell && gc.gridColumn.name === 'ic50' && gc.cell.value != null)
-    gc.style.element = gc.cell.value.GrokJsObject__jsObject.plot.line(lineOptions).root;
+    gc.style.element = gc.cell.value.plot.line(lineOptions).root;
   if (gc.isTableCell && gc.gridColumn.name === 'hist' && gc.cell.value != null)
-    gc.style.element = gc.cell.value.GrokJsObject__jsObject.plot.histogram({showBinSelector: 'false', showColumnSelector: 'false'}).root;
+    gc.style.element = gc.cell.value.plot.histogram({showBinSelector: 'false', showColumnSelector: 'false'}).root;
 });

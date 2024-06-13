@@ -15,6 +15,7 @@ import {SubscriptionManager} from '../../model/subscription-manager';
 
 export class TranslationExamplesBlock {
   private subscriptions = new SubscriptionManager();
+
   constructor(
     private eventBus: EventBus,
     private dataManager: DataManager
@@ -55,7 +56,7 @@ class StrandExample {
   constructor(
     private strand: STRAND,
     private eventBus: EventBus,
-    private subscriptions: SubscriptionManager
+    private subscriptions: SubscriptionManager,
   ) { }
 
   create(): HTMLDivElement {

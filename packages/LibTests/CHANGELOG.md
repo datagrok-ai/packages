@@ -1,5 +1,9 @@
 # LibTests changelog
 
+## 1.2.0 (2024-06-12)
+
+- Added tests for ComputeAPI
+
 ## 1.1.3 (2024-05-09)
 
 - Deps update (compute-utils v.1.33.5)

@@ -55,6 +55,7 @@ const WRONG_RBF_SIGMA_MESSAGE = 'sigma must be strictly positive.';
 const WRONG_POLYNOMIAL_C_MESSAGE = 'c must be strictly positive.';
 const WRONG_POLYNOMIAL_D_MESSAGE = 'd must be strictly positive.';
 const WRONG_KERNEL_MESSAGE = 'incorrect kernel.';
+const WRONG_LABELS_MESSAGE = 'labels must be strings of two categories.';
 
 // names
 const LABELS = 'Labels';
@@ -276,7 +277,15 @@ export async function getTrainedModel(hyperparameters: any, df: DG.DataFrame, pr
   const labels = columns.byName(predictColumn);
   columns.remove(predictColumn);
 
-  return await trainAndAnalyzeModel(hyperparameters, columns, labels);
+  if (labels.categories.length != 2)
+    throw new Error(WRONG_LABELS_MESSAGE);
+  let labelNumeric : DG.Column = DG.Column.float(labels.name, labels.length);
+  for (var i = 0; i < labels.length; i++)
+    labelNumeric.set(i, labels.get(i) == labels.categories[0] ? -1.0 : 1.0, false);
+
+  let model = await trainAndAnalyzeModel(hyperparameters, columns, labelNumeric);
+  model.realLabels = labels;
+  return model;
 }
 
 // Returns dataframe with short info about model
@@ -313,26 +322,9 @@ function getConfusionMatrixDF(model: any): DG.DataFrame {
 }
 
 // Show training report
-export function showTrainReport(df: DG.DataFrame, model: any): void {
-  df.name = ML_REPORT;
-  df.columns.add(model.trainLabels);
-  df.columns.add(model.predictedLabels);
-  df.columns.add(model.correctness);
-  const dfView = grok.shell.addTableView(df);
-  dfView.addViewer(DG.Viewer.form(getModelInfo(model)));
-  dfView.addViewer(DG.Viewer.scatterPlot(df,
-    {title: ML_REPORT_PREDICTED_LABELS,
-      color: model.predictedLabels.name,
-    }));
-  dfView.addViewer(DG.Viewer.scatterPlot(df,
-    {title: ML_REPORT_TRAIN_LABELS,
-      color: model.trainLabels.name,
-    }));
-  dfView.addViewer(DG.Viewer.grid(getConfusionMatrixDF(model)));
-  dfView.addViewer(DG.Viewer.scatterPlot(df,
-    {title: ML_REPORT_CORRECTNESS,
-      color: model.correctness.name,
-    }));
+export function showTrainReport(df: DG.DataFrame, packedModel: any): HTMLElement {
+  const model = getUnpackedModel(packedModel);
+  return DG.Viewer.form(model.modelInfo).root;
 } // showTrainReport
 
 // Returns trained model packed into UInt8Array
@@ -341,14 +333,18 @@ export function getPackedModel(model: any): any {
   const dataCols = model.normalizedTrainData.columns;
   const samplesCount = model.trainSamplesCount;
   const featuresCount = model.featuresCount;
-
+  const realLabelsBuffer = DG.DataFrame.fromColumns([model.realLabels]).toByteArray();
+  const realLabelsSize = BYTES + realLabelsBuffer.length + 4 - realLabelsBuffer.length % 4;
+  const modelInfoBuffer = getModelInfo(model).toByteArray();
+  const modelInfoSize = BYTES + modelInfoBuffer.length + 4 - modelInfoBuffer.length % 4;
+  
   /*let bufferSize = BYTES * (7 + featuresCount * samplesCount
     + 3 * featuresCount + 2 * samplesCount);*/
 
   // compute size of packed model
   const bufferSize = BYTES * (INTS_COUNT + KER_PARAMS_COUNT +
     samplesCount + featuresCount + featuresCount + samplesCount + LS_SVM_ADD_CONST +
-    featuresCount + LS_SVM_ADD_CONST + featuresCount * samplesCount);
+    featuresCount + LS_SVM_ADD_CONST + featuresCount * samplesCount) + realLabelsSize + modelInfoSize;
 
   // packed model
   const result = new Uint8Array(bufferSize);
@@ -356,7 +352,7 @@ export function getPackedModel(model: any): any {
   let offset = 0;
 
   // pack kernel type and sizes
-  const ints = new Int32Array(buffer, offset, INTS_COUNT);
+  let ints = new Int32Array(buffer, offset, INTS_COUNT);
   ints[MODEL_KERNEL_INDEX] = model.kernelType;
   ints[SAMPLES_COUNT_INDEX] = samplesCount;
   ints[FEATURES_COUNT_INDEX] = featuresCount;
@@ -399,6 +395,18 @@ export function getPackedModel(model: any): any {
     offset += featuresCount * BYTES;
   }
 
+  // pack labels of training data
+  ints = new Int32Array(buffer, offset, 1);
+  ints[0] = realLabelsBuffer.length;
+  result.set(realLabelsBuffer, offset + BYTES);
+  offset += realLabelsSize;
+
+  // pack model info
+  ints = new Int32Array(buffer, offset, 1);
+  ints[0] = modelInfoBuffer.length;
+  result.set(modelInfoBuffer, offset + BYTES);
+  offset += modelInfoSize;
+
   return result;
 } // getPackedModel
 
@@ -412,7 +420,6 @@ function getUnpackedModel(packedModel: any): any {
   offset += INTS_COUNT * BYTES;
   const samplesCount = header[SAMPLES_COUNT_INDEX];
   const featuresCount = header[FEATURES_COUNT_INDEX];
-
   // extract parameters of kernel
   const kernelParams = DG.Column.fromFloat32Array(KERNEL_PARAMS,
     new Float32Array(modelBytes, offset, KER_PARAMS_COUNT));
@@ -454,14 +461,30 @@ function getUnpackedModel(packedModel: any): any {
 
   const normalizedTrainData = DG.DataFrame.fromColumns(dataCols);
 
+  // extract real training labels
+  const labelsCount = new Int32Array(modelBytes, offset, 1)[0];
+  const labelsBytesCount = labelsCount + 4 - labelsCount % 4;
+  offset += BYTES;
+  const realLabels = DG.DataFrame.fromByteArray(new Uint8Array(modelBytes, offset, labelsCount)).columns.byIndex(0);
+  offset += labelsBytesCount;
+
+  // extract model info
+  const modelInfoSize = new Int32Array(modelBytes, offset, 1)[0];
+  const modelInfoBytesSize = modelInfoSize + 4 - modelInfoSize % 4;
+  offset += BYTES;
+  const modelInfo = DG.DataFrame.fromByteArray(new Uint8Array(modelBytes, offset, modelInfoSize));
+  offset += modelInfoBytesSize;
+  
   const model = {kernelType: header[MODEL_KERNEL_INDEX],
     kernelParams: kernelParams,
     trainLabels: trainLabels,
+    realLabels: realLabels,
     means: means,
     stdDevs: stdDevs,
     modelParams: modelParams,
     modelWeights: modelWeights,
     normalizedTrainData: normalizedTrainData,
+    modelInfo: modelInfo
   };
 
   return model;
@@ -471,8 +494,23 @@ function getUnpackedModel(packedModel: any): any {
 export async function getPrediction(df: DG.DataFrame, packedModel: any): Promise<DG.DataFrame> {
   const model = getUnpackedModel(new Uint8Array(packedModel));
 
-  const res = await predict(model, df.columns);
-  res.name = PREDICTION;
+  const resNumeric = await predict(model, df.columns);
+  const res = DG.Column.string(PREDICTION, resNumeric.length);
+  const categories = model.realLabels.categories;
+  for (var i = 0; i < res.length; i++) {
+    res.set(i, resNumeric.get(i) == -1 ? categories[0] : categories[1]);
+  }
 
   return DG.DataFrame.fromColumns([res]);
 } // getPrediction
+
+
+export function isApplicableSVM(df: DG.DataFrame, predictColumn: string): boolean {
+  const columns = df.columns;
+  const labels = columns.byName(predictColumn);
+  columns.remove(predictColumn);
+  var res: boolean = labels.type == 'string';
+  for (var i = 0; i < columns.length; i++)
+    res = res && (columns.byIndex(i).type == 'double' || columns.byIndex(i).type == 'int');
+  return res;
+}

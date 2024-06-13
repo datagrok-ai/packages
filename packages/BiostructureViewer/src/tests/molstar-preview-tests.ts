@@ -34,20 +34,14 @@ const demoFilesPath: string = 'bio/ngl-formats';
 
 category('MolstarPreview', () => {
   validFileNames.forEach((fn) => {
-    test(`open${fn.substring(fn.indexOf('.'), fn.length)}`, async () => {
-      let noException = true;
+    test(`open-${fn.substring(fn.indexOf('.'), fn.length)}`, async () => {
       const folderName: string = `System:AppData/${_package.name}/samples`;
       const file = (
         await grok.dapi.files.list(folderName, false, fn))[0];
 
-      try {
-        const {view, loadingPromise} = previewMolstarUI(file);
-        grok.shell.newView('Molstar Preview', [view]);
-        await loadingPromise;
-      } catch (e) {
-        noException = false;
-      }
-      expect(noException, true);
+      const {view, loadingPromise} = previewMolstarUI(file);
+      grok.shell.newView('Molstar Preview', [view]);
+      await loadingPromise;
     });
   });
 

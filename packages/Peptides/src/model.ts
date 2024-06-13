@@ -54,6 +54,7 @@ import {getDbscanWorker} from '@datagrok-libraries/math';
 import {markovCluster} from '@datagrok-libraries/ml/src/MCL/clustering-view';
 import {DistanceAggregationMethods} from '@datagrok-libraries/ml/src/distance-matrix/types';
 import {ClusterMaxActivityViewer, IClusterMaxActivity} from './viewers/cluster-max-activity-viewer';
+import {MCL_OPTIONS_TAG, MCLSerializableOptions} from '@datagrok-libraries/ml/src/MCL';
 
 export enum VIEWER_TYPE {
   MONOMER_POSITION = 'Monomer-Position',
@@ -1305,7 +1306,29 @@ export class PeptidesModel {
       }], mclParams!.threshold, mclParams!.maxIterations, false/** TODO, add webgpu controll */, mclParams!.inflation,
     );
     mclAdditionSub.unsubscribe();
-    this._mclViewer = mclViewer?.sc ?? null;
+    if (mclViewer?.sc) {
+      const serializedOptions: string = JSON.stringify({
+        cols: [seqCol].map((col) => col.name),
+        metrics: [mclParams!.distanceF],
+        weights: [1],
+        aggregationMethod: DistanceAggregationMethods.MANHATTAN,
+        preprocessingFuncs: [bioPreprocessingFunc].map((func) => func?.name ?? null),
+        preprocessingFuncArgs: [{
+          gapOpen: mclParams!.gapOpen, gapExtend: mclParams!.gapExtend,
+          fingerprintType: mclParams!.fingerprintType,
+        }],
+        threshold: mclParams!.threshold,
+        maxIterations: mclParams!.maxIterations,
+        useWebGPU: false,
+        inflate: mclParams!.inflation,
+      } satisfies MCLSerializableOptions);
+      this.df.setTag(MCL_OPTIONS_TAG, serializedOptions);
+
+
+      //@ts-ignore
+      mclViewer.sc.props['initializationFunction'] = 'EDA:MCLInitializationFunction';
+      this._mclViewer = mclViewer?.sc ?? null;
+    }
   }
 
   /**

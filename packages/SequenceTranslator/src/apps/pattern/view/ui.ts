@@ -8,10 +8,13 @@ import {URLRouter} from '../model/router';
 import {PatternAppLeftSection} from './components/left-section';
 import {PatternAppRightSection} from './components/right-section';
 import {PatternConfigRecord} from '../model/types';
+import {ITranslationHelper} from '../../../types';
 
 
 export class OligoPatternUI extends IsolatedAppUIBase {
-  constructor() {
+  constructor(
+    private readonly th: ITranslationHelper
+  ) {
     super(APP_NAME.PATTERN);
   }
 

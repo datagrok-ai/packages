@@ -1,5 +1,5 @@
 import {toDart, toJs} from "./wrappers";
-import {__obs, _sub, observeStream, StreamSubscription} from "./events";
+import {__obs, _sub, EventData, InputArgs, observeStream, StreamSubscription} from "./events";
 import * as rxjs from "rxjs";
 import {fromEvent, Observable, Subject, Subscription} from "rxjs";
 import {Func, Property, PropertyOptions} from "./entities";
@@ -1200,7 +1200,7 @@ export class InputForm extends DartWrapper {
   set source(source: any) { api.grok_InputForm_Set_Source(this.dart, toDart(source)); };
 
   /** Occurs when user changes any input value in a form. */
-  get onInputChanged(): Observable<any> { return observeStream(api.grok_InputForm_OnInputChanged(this.dart)); }
+  get onInputChanged(): Observable<EventData<InputArgs>> { return observeStream(api.grok_InputForm_OnInputChanged(this.dart)); }
 
   /** Occurs after the form is validated, no matter whether it is valid or not. */
   get onValidationCompleted(): Observable<any> { return observeStream(api.grok_InputForm_OnValidationCompleted(this.dart)); }

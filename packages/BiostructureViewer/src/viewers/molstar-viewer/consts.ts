@@ -31,7 +31,7 @@ export const molecule3dFileExtensions: {
   // 'nc', 'md', 'dcd', 'xtc', 'mrc' unsupported ????
 
   // BuiltInTrajectoryFormats
-  'mmcif': {binary: true}, //?
+  'mmcif': {binary: false},
   'cifCore': {binary: false},
   'pdb': {binary: false},
   'pdbqt': {binary: false},

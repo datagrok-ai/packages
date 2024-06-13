@@ -11,8 +11,8 @@ import {
 
 import objectHash from 'object-hash';
 import {EventBus} from './event-bus';
-import {PATTERN_APP_DATA} from '../../common/model/data-loader/json-loader';
-
+import {ITranslationHelper} from '../../../types';
+import {_package} from '../../../package';
 
 export class DataManager {
   private currentUserName: string;
@@ -21,10 +21,13 @@ export class DataManager {
   private currentUserPatternNameToHash = new Map<string, string>();
 
   // WARNING: init logic encapsulated
-  private constructor( ) { }
+  private constructor(
+    private readonly th: ITranslationHelper
+  ) { }
 
   static async getInstance(): Promise<DataManager> {
-    const instance = new DataManager();
+    const th = await _package.getTranslationHelper();
+    const instance = new DataManager(th);
 
     instance.currentUserName = await instance.fetchCurrentUserName();
     instance.currentUserId = await instance.fetchCurrentUserId();
@@ -222,8 +225,8 @@ export class DataManager {
   }
 
   fetchAvailableNucleotideBases(): string[] {
-    const format = Object.keys(PATTERN_APP_DATA)[0];
-    const nucleotideBases: string[] = Object.keys(PATTERN_APP_DATA[format]);
+    const format = Object.keys(this.th.jsonData.patternAppData)[0];
+    const nucleotideBases: string[] = Object.keys(this.th.jsonData.patternAppData[format]);
     return nucleotideBases;
   }
 

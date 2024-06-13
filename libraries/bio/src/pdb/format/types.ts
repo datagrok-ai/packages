@@ -12,6 +12,7 @@ export interface IAtomBase {
   get resNumber(): number;
   get insCode(): string;
 
+  compare(b: IAtomBase): any;
   toStr(): string;
 }
 

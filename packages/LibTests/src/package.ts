@@ -10,6 +10,11 @@ import equal from 'deep-equal';
 import {ValidationInfo, makeAdvice, makeRevalidation, makeValidationResult} from '@datagrok-libraries/compute-utils';
 import {CompositionPipeline, PipelineCompositionConfiguration, PipelineConfiguration} from '@datagrok-libraries/compute-utils';
 import {delay} from '@datagrok-libraries/utils/src/test';
+import type {ViewerT, InputFormT} from '@datagrok-libraries/webcomponents/src';
+import {createApp} from 'vue';
+import {VueViewerTestApp} from './components/VueViewerTestApp';
+import {VueFormTestApp} from './components/VueFormTestApp';
+import {VueElementsTestApp} from './components/VueElelementsTestApp';
 
 export const _package = new DG.Package();
 
@@ -790,4 +795,127 @@ export async function TestCompositionPipeline12() {
   grok.shell.addView(pipeline.makePipelineView());
   await pipeline.init();
   return pipeline;
+}
+
+
+//tags: test
+export async function TestViewerComponent() {
+  const view = new DG.ViewBase();
+  const viewerComponent = document.createElement('dg-viewer') as ViewerT;
+
+  const setSrcBtn1 = ui.button('Set source demog', () => {
+    viewerComponent.dataFrame = grok.data.demo.demog();
+  });
+  const setSrcBtn2 = ui.button('Set source doseResponse', () => {
+    viewerComponent.dataFrame = grok.data.demo.doseResponse();
+  });
+
+  const remSrcBtn = ui.button('Remove source', () => {
+    viewerComponent.dataFrame = undefined;
+  });
+
+  const setViewerTypeBtn1 = ui.button('Line chart', () => {
+    viewerComponent.type = 'Line chart';
+  });
+  const setViewerTypeBtn2 = ui.button('Grid', () => {
+    viewerComponent.type = 'Grid';
+  });
+
+  const setViewerTypeBtn3 = ui.button('Remove type', () => {
+    viewerComponent.type = undefined;
+  });
+
+  const changeViewerBtn1 = ui.button('Provide histogram', () => {
+    viewerComponent.viewer = grok.data.demo.demog().plot.histogram();
+  });
+
+  const changeViewerBtn2 = ui.button('Provide barchart', () => {
+    viewerComponent.viewer = grok.data.demo.demog().plot.bar();
+  });
+
+  const changeViewerBtn3 = ui.button('Provide empty', () => {
+    viewerComponent.viewer = undefined;
+  });
+
+  view.root.insertAdjacentElement('beforeend', setSrcBtn1);
+  view.root.insertAdjacentElement('beforeend', setSrcBtn2);
+  view.root.insertAdjacentElement('beforeend', remSrcBtn);
+  view.root.insertAdjacentElement('beforeend', setViewerTypeBtn1);
+  view.root.insertAdjacentElement('beforeend', setViewerTypeBtn2);
+  view.root.insertAdjacentElement('beforeend', setViewerTypeBtn3);
+  view.root.insertAdjacentElement('beforeend', changeViewerBtn1);
+  view.root.insertAdjacentElement('beforeend', changeViewerBtn2);
+  view.root.insertAdjacentElement('beforeend', changeViewerBtn3);
+  view.root.insertAdjacentElement('beforeend', viewerComponent);
+
+  grok.shell.addView(view);
+}
+
+//tags: test
+export async function TestFromComponent() {
+  const func: DG.Func = await grok.functions.eval('LibTests:simpleInputs');
+  const fc1 = func.prepare({
+    a: 1,
+    b: 2,
+    c: 3,
+  });
+  const formComponent = document.createElement('dg-input-form') as InputFormT;
+  formComponent.funcCall = fc1;
+
+  const view = new DG.ViewBase();
+
+  const replaceFnBtn = ui.button('Replace funcall', () => {
+    const fc2 = func.prepare({
+      a: 1,
+      b: 2,
+      c: 3,
+    });
+    formComponent.funcCall = fc2;
+  });
+
+  const showFormFcInputsBtn = ui.button('Log funcall inputs', () => {
+    console.log(Object.entries(formComponent.funcCall!.inputs));
+  });
+
+  view.root.insertAdjacentElement('beforeend', showFormFcInputsBtn);
+  view.root.insertAdjacentElement('beforeend', replaceFnBtn);
+  view.root.insertAdjacentElement('beforeend', formComponent);
+  grok.shell.addView(view);
+}
+
+//tags: test
+export async function TestElements() {
+  const bnt = document.createElement('button', {is: 'dg-button'});
+  bnt.textContent = 'Click me';
+  const bigBtn = document.createElement('button', {is: 'dg-big-button'});
+  bigBtn.textContent = 'Click me';
+  const view = new DG.ViewBase();
+  view.root.insertAdjacentElement('beforeend', bnt);
+  view.root.insertAdjacentElement('beforeend', bigBtn);
+  grok.shell.addView(view);
+}
+
+//tags: test
+export async function TestVueViewerComponent() {
+  const view = new DG.ViewBase();
+  const app = createApp(VueViewerTestApp);
+  app.mount(view.root);
+  grok.shell.addView(view);
+}
+
+//tags: test
+export async function TestVueFormComponent() {
+  const view = new DG.ViewBase();
+  const app = createApp(VueFormTestApp);
+  app.mount(view.root);
+  grok.shell.addView(view);
+}
+
+
+//tags: test
+export async function TestVueElements() {
+  const view = new DG.ViewBase();
+  const app = createApp(VueElementsTestApp);
+  app.mount(view.root);
+  grok.shell.addView(view);
 }

@@ -2,12 +2,17 @@ import {NUCLEOTIDES} from '../const';
 import {MonomerLibWrapper} from '../monomer-lib/lib-wrapper';
 import {sortByReverseLength} from '../helpers';
 import {DEFAULT_FORMATS} from '../const';
+import {ITranslationHelper} from '../../../../types';
 
 export class SequenceValidator {
-  constructor(private sequence: string) {
-    this.libWrapper = MonomerLibWrapper.getInstance();
-  };
   private libWrapper: MonomerLibWrapper;
+
+  constructor(
+    private readonly sequence: string,
+    private readonly th: ITranslationHelper,
+  ) {
+    this.libWrapper = this.th.monomerLibWrapper;
+  };
 
   getInvalidCodeIndex(format: string): number {
     if (format === DEFAULT_FORMATS.HELM)

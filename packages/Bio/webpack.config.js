@@ -3,14 +3,11 @@ const FuncGeneratorPlugin = require('datagrok-tools/plugins/func-gen-plugin');
 const packageName = path.parse(require('./package.json').name).name.toLowerCase().replace(/-/g, '');
 
 const mode = process.env.NODE_ENV ?? 'production';
-if (mode !== 'production') {
+if (mode !== 'production')
   console.warn(`Building Bio in '${mode}' mode.`);
-}
 
 module.exports = {
-  cache: {
-    type: 'filesystem',
-  },
+  ...(mode === 'production' ? {cache: {type: 'filesystem'}} : {}),
   mode: mode,
   entry: {
     package: ['./src/package.ts'],

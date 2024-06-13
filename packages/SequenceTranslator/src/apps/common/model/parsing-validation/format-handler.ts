@@ -3,15 +3,17 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {CODES_TO_HELM_DICT} from '../data-loader/json-loader';
 import {CodesInfo} from '../data-loader/types';
 import {DEFAULT_FORMATS} from '../const';
+import {ITranslationHelper} from '../../../../types';
 import {GROUP_TYPE, PHOSPHATE_SYMBOL} from '../../../translator/model/const';
 
 const inverseLengthComparator = (a: string, b: string) => b.length - a.length;
 
 export class FormatHandler {
-  constructor() {
+  constructor(
+    private readonly th: ITranslationHelper,
+  ) {
     this.formats = this.getFormats();
   }
 
@@ -31,19 +33,19 @@ export class FormatHandler {
     return this.getFormatCodes(format);
   }
 
-  getHelmToFormatDict(format: string): {[key: string]: string} {
+  getHelmToFormatDict(format: string): { [key: string]: string } {
     this.validateFormat(format);
 
-    const codesInfoObject = CODES_TO_HELM_DICT[format] as CodesInfo;
+    const codesInfoObject = this.th.jsonData.codesToHelmDict[format] as CodesInfo;
     const dict = getHelmToCodeDict(codesInfoObject);
     return dict;
   }
 
-  getFormatToHelmDict(format: string): {[key: string]: string} {
+  getFormatToHelmDict(format: string): { [key: string]: string } {
     this.validateFormat(format);
 
-    const codesInfoObject = CODES_TO_HELM_DICT[format] as CodesInfo;
-    const dict = Object.assign({}, ...Object.values(codesInfoObject)) as {[code: string]: string};
+    const codesInfoObject = this.th.jsonData.codesToHelmDict[format] as CodesInfo;
+    const dict = Object.assign({}, ...Object.values(codesInfoObject)) as { [code: string]: string };
     return dict;
   }
 
@@ -75,7 +77,7 @@ export class FormatHandler {
   getPhosphateHelmCodesRegExp(format: string): RegExp {
     this.validateFormat(format);
 
-    const codesInfoObject = CODES_TO_HELM_DICT[format] as CodesInfo;
+    const codesInfoObject = this.th.jsonData.codesToHelmDict[format] as CodesInfo;
     const phosphateHELMCodes = Array.from(
       new Set(Object.values(codesInfoObject[GROUP_TYPE.LINKAGE]))
     ).sort(inverseLengthComparator);
@@ -89,7 +91,7 @@ export class FormatHandler {
   }
 
   private getFormats(): string[] {
-    return Object.keys(CODES_TO_HELM_DICT);
+    return Object.keys(this.th.jsonData.codesToHelmDict);
   }
 
   private validateFormat(format: string) {
@@ -109,7 +111,8 @@ export class FormatHandler {
 
   private getNonHelmFormatRegExp(format: string): RegExp {
     const formatCodes = this.getCodesByFormat(format);
-    const formatRegExp = new RegExp(getRegExpPattern(formatCodes) + '|\\([^()]*\\)|.', 'g'); // the added group before '|.' is to avoid mismatch inside parenths
+    // the added group before '|.' is to avoid mismatch inside parenthesis
+    const formatRegExp = new RegExp(getRegExpPattern(formatCodes) + '|\\([^()]*\\)|.', 'g');
     return formatRegExp;
   }
 }
@@ -128,8 +131,8 @@ export function getRegExpPattern(arr: string[]): string {
 }
 
 function getHelmToCodeDict(infoObj: CodesInfo) {
-  const result: {[key: string]: string | string[]} = {};
-  Object.values(infoObj).forEach((obj: {[code: string]: string}) => {
+  const result: { [key: string]: string | string[] } = {};
+  Object.values(infoObj).forEach((obj: { [code: string]: string }) => {
     Object.entries(obj).forEach(([code, helm]) => {
       const key = helm.replace(/\)p/g, ')').replace(/\]p/g, ']');
       if (result[key] === undefined)
@@ -142,5 +145,5 @@ function getHelmToCodeDict(infoObj: CodesInfo) {
     const sorted = (value as string[]).sort(inverseLengthComparator);
     result[key] = sorted[0] as string;
   });
-  return result as {[key: string]: string};
+  return result as { [key: string]: string };
 }

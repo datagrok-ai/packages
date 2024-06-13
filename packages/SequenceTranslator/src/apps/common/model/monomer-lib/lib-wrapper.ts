@@ -7,23 +7,23 @@ import {IMonomerLib, Monomer} from '@datagrok-libraries/bio/src/types';
 import {HELM_REQUIRED_FIELD as REQ, HELM_OPTIONAL_FIELDS as OPT} from '@datagrok-libraries/bio/src/utils/const';
 
 import {META_FIELDS as MET} from './const';
-import {CODES_TO_SYMBOLS_DICT} from '../data-loader/json-loader';
+import {JsonData} from '../data-loader/json-loader';
 
 export class MonomerLibWrapper {
-  private constructor() {
-    const lib = _package.monomerLib;
-    if (lib === null)
+  public constructor(
+    private readonly lib: IMonomerLib,
+    private readonly jsonData: JsonData
+  ) {
+    if (this.lib === null)
       throw new Error('SequenceTranslator: monomer library is null');
-    this.lib = lib!;
     this.allMonomers = this.getAllMonomers();
   }
 
-  private lib: IMonomerLib;
   private static instance?: MonomerLibWrapper;
   private allMonomers: Monomer[];
 
-  private formatMonomerForViewer(sourceObj: Monomer): {[key: string]: string} {
-    const formattedObject: {[key: string]: string} = {};
+  private formatMonomerForViewer(sourceObj: Monomer): { [key: string]: string } {
+    const formattedObject: { [key: string]: string } = {};
     formattedObject[REQ.NAME] = sourceObj[REQ.SYMBOL];
     formattedObject[REQ.SYMBOL] = sourceObj[REQ.SYMBOL];
     formattedObject[REQ.MOLFILE] = sourceObj[REQ.MOLFILE];
@@ -31,7 +31,7 @@ export class MonomerLibWrapper {
     formats.forEach((format) => {
       if (format === DEFAULT_FORMATS.HELM)
         return;
-      const map = CODES_TO_SYMBOLS_DICT[format];
+      const map = this.jsonData.codesToSymbolsDict[format];
       const codes = Object.keys(map).filter((code) => map[code] === sourceObj.symbol);
       formattedObject[format] = codes.join(', ');
     });
@@ -59,12 +59,6 @@ export class MonomerLibWrapper {
     return monomer!;
   }
 
-  static getInstance(): MonomerLibWrapper {
-    if (MonomerLibWrapper.instance === undefined)
-      MonomerLibWrapper.instance = new MonomerLibWrapper();
-    return MonomerLibWrapper.instance!;
-  }
-
   getMolfileBySymbol(monomerSymbol: string): string {
     const monomer = this.getMonomer(monomerSymbol);
     return monomer.molfile;
@@ -85,15 +79,15 @@ export class MonomerLibWrapper {
   }
 
   getCodeToSymbolMap(format: string): Map<string, string> {
-    return new Map<string, string>(Object.entries(CODES_TO_SYMBOLS_DICT[format]));
+    return new Map<string, string>(Object.entries(this.jsonData.codesToSymbolsDict[format]));
   }
 
   getCodesByFormat(format: string): string[] {
-    return Object.keys(CODES_TO_SYMBOLS_DICT[format]);
+    return Object.keys(this.jsonData.codesToSymbolsDict[format]);
   }
 
   getAllFormats(): string[] {
-    return Object.keys(CODES_TO_SYMBOLS_DICT);
+    return Object.keys(this.jsonData.codesToSymbolsDict);
   }
 
   getTableForViewer(): DG.DataFrame {
@@ -104,7 +98,7 @@ export class MonomerLibWrapper {
 
   getCodesToWeightsMap(): Map<string, number> {
     const codesToWeightsMap = new Map<string, number>();
-    Object.entries(CODES_TO_SYMBOLS_DICT).forEach(([_, dict]) => {
+    Object.entries(this.jsonData.codesToSymbolsDict).forEach(([_, dict]) => {
       Object.entries(dict).forEach(([code, monomerSymbol]) => {
         const monomer = this.getMonomer(monomerSymbol);
         const weight = monomer[OPT.META]?.[MET.MOLWEIGHT];

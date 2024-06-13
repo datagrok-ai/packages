@@ -8,7 +8,7 @@
     "access": "public"
   },
   "friendlyName": "Datagrok math library",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Library for high performance computations",
   "dependencies": {
     "@webgpu/types": "^0.1.40",

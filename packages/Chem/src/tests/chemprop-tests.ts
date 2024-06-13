@@ -41,7 +41,7 @@ category('chemprop', () => {
     const smilesColumn = table.columns.byName('canonical_smiles');
     const column = await applyModel(MODEL_ID, binBlob, DG.DataFrame.fromColumns([smilesColumn]).toCsv());
         
-    expect(column.length, 29);
+    expect(column.length, 30);
   });
 });
 

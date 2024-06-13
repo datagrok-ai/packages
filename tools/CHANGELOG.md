@@ -1,5 +1,12 @@
 # Datagrok-tools changelog
 
+## 4.13.1 (2024-06-04)
+
+### Features
+
+* Added argument `package`, which allows you to choose a package for the `test` command
+
+
 ## 4.12.13 (2023-08-17)
 
 ### Bug Fixes

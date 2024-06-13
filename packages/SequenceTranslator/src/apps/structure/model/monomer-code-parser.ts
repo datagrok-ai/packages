@@ -5,8 +5,14 @@ import * as DG from 'datagrok-api/dg';
 
 import {PHOSPHATE_SYMBOL} from './const';
 import {sortByReverseLength} from '../../common/model/helpers';
-import {MonomerLibWrapper} from '../../common/model/monomer-lib/lib-wrapper';
-import {MONOMERS_WITH_PHOSPHATE} from '../../common/model/data-loader/json-loader';
+
+import {_package} from '../../../package';
+
+export class MonomerNotFoundError extends Error {
+  constructor(message?: string, options?: ErrorOptions) {
+    super(message, options);
+  }
+}
 
 /** Wrapper for parsing a strand and getting a sequence of monomer IDs (with
  * omitted linkers, if needed)  */
@@ -61,6 +67,10 @@ export class MonomerSequenceParser {
       const code = allCodesOfFormat.find(
         (s: string) => s === this.sequence.substring(i, i + s.length)
       )!;
+      if (code === undefined) {
+        throw new MonomerNotFoundError(
+          `Unable to match a monomer for the rest of the sequence '${this.sequence.slice(i)}'.`);
+      }
       parsedCodes.push(code);
       i += code.length;
     }
@@ -76,13 +86,13 @@ export class MonomerSequenceParser {
 
 // todo: to be eliminated after full helm support
 function monomerHasLeftPhosphateLinker(monomerSymbol: string): boolean {
-  return MONOMERS_WITH_PHOSPHATE['left'].includes(monomerSymbol);
+  return _package.jsonData.monomersWithPhosphate['left'].includes(monomerSymbol);
 }
 
 function monomerHasRightPhosphateLinker(monomerSymbol: string): boolean {
-  return MONOMERS_WITH_PHOSPHATE['right'].includes(monomerSymbol);
+  return _package.jsonData.monomersWithPhosphate['right'].includes(monomerSymbol);
 }
 
 function monomerIsPhosphateLinker(monomerSymbol: string): boolean {
-  return MONOMERS_WITH_PHOSPHATE['phosphate'].includes(monomerSymbol);
+  return _package.jsonData.monomersWithPhosphate['phosphate'].includes(monomerSymbol);
 }

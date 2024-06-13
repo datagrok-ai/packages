@@ -68,7 +68,7 @@ The solver has built-in use cases. Get access to them via the context menu. You 
   * shows the usage of `min` and `max` in inputs annotation
 * `PK`
   * [pharmacokinetic](https://en.wikipedia.org/wiki/Pharmacokinetics) (PK) simulation
-  * one-compartment model
+  * demonstrates the usage of the `meta.solver` feature for numerical solver management
 * `PK-PD`
   * simulates pharmacokinetics (PK), pharmacodynamics (PD), and their [relationship](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7348046)
   * illustrates the usage of the `loop` feature for dosing specification
@@ -106,17 +106,18 @@ Use the following sections to specify various problems:
 
 |Control block|Features|
 |-------------|--------|
-|```#name```|Defines a name.|
+|```#name```|Defines a name|
 |```#equations```|Differential equation specification|
 |```#argument```|Independent variable specification|
 |```#inits```|Initial values specification|
 |```#constants```|Constants specification|
 |```#parameters```|Parameters specification|
-|```#expressions```|Defines auxiliary compuations.|
+|```#expressions```|Defines auxiliary compuations|
 |```#output```|Defines output columns and their captions|
-|```#tags```|Specifies tags (`model`, `app`, etc.).|
-|```#description```|Defines description of the model.|
-|```#comment```|Specifies comments block.|
+|```#tags```|Specifies tags (`model`, `app`, etc.)|
+|```#description```|Defines description of the model|
+|```#comment```|Specifies comments block|
+|```#meta.solver```|Defines the solver settings|
 
 ## Annotations
 
@@ -153,12 +154,46 @@ Provide hints in brackets `[ ]`:
   P1 = 1 {category: Parameters} [P1 parameter tooltip]
 ```
 
+## Solver management
+
+You can manage the solver of ODEs. Specify its settings in the `#meta.solver`-line:
+
+* the numerical method (`method`)
+* the maximum number of iterations (`maxIterations`)
+* the maximum computation time (`maxTimeMs`)
+
+Diff Studio implements the following [Rosenbrock–Wanner](https://doi.org/10.1016/j.cam.2015.03.010) methods for solving ODEs:
+
+|Method|Value|
+|-------------|--------|
+|the modified Rosenbrock triple|`'mrt'`|
+|the ROS3PRw method|`'ros3prw'`|
+|the ROS34PRw method|`'ros34prw'`|
+
+By default, Diff Studio uses ROS34PRw. You may specify the method as follows:
+
+```python
+#meta.solver: {method: 'mrt'}
+```
+
+To check correctness of formulas, set the maximum number of iterations:
+
+```python
+#meta.solver: {method: 'mrt'; maxIterations: 1}
+```
+
+Diff Studio alerts you if computations take too long. The default time limit is 5 seconds. To customize it, set the maximum computation time (in milliseconds):
+
+```python
+#meta.solver: {method: 'mrt'; maxTimeMs: 50}
+```
+
 ## Export to JavaScript script
 
 Once you are satisfied with the result, you can convert your model to a Datagrok application. To do so:
 
-1. Press **JS** button on the top panel
-2. Press **SAVE** button
+1. Click **JS** button on the top panel
+2. Click **SAVE** button
 3. Script is created, and can be found in the "Scripts" section of the platform
 
 Improve usability. Use `#tags: model` to add your model to `Model Catalog`. Provide a description in the `#description`-line:
@@ -180,5 +215,4 @@ See also
 
 * [Sensitivity analysis](https://datagrok.ai/help/compute/#sensitivity-analysis)
 * [Parameter optimization](https://datagrok.ai/help/compute/#input-parameter-optimization)
-* [Viewers gallery](https://datagrok.ai/help/visualize/gallery)
 * [Scripting](https://datagrok.ai/help/compute/scripting)

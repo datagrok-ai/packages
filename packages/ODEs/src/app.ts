@@ -15,10 +15,11 @@ import {DF_NAME, CONTROL_EXPR, MAX_LINE_CHART} from './constants';
 import {TEMPLATES, DEMO_TEMPLATE} from './templates';
 import {USE_CASES} from './use-cases';
 import {HINT, TITLE, LINK, HOT_KEY, ERROR_MSG, INFO,
-  WARNING, MISC, demoInfo, INPUT_TYPE, PATH, TIMEOUT} from './ui-constants';
+  WARNING, MISC, demoInfo, INPUT_TYPE, PATH, UI_TIME} from './ui-constants';
 import {getIVP, getScriptLines, getScriptParams, IVP, Input, SCRIPTING,
   BRACE_OPEN, BRACE_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, ANNOT_SEPAR,
-  CONTROL_SEP, STAGE_COL_NAME, ARG_INPUT_KEYS} from './scripting-tools';
+  CONTROL_SEP, STAGE_COL_NAME, ARG_INPUT_KEYS, DEFAULT_SOLVER_SETTINGS} from './scripting-tools';
+import {CallbackAction, DEFAULT_OPTIONS} from './solver-tools/solver-defs';
 
 import './css/app-styles.css';
 
@@ -112,6 +113,7 @@ const completions = [
   {label: `${CONTROL_EXPR.PARAMS}:\n  `, type: 'keyword', info: INFO.PARAMS},
   {label: `${CONTROL_EXPR.CONSTS}:\n  `, type: 'keyword', info: INFO.CONSTS},
   {label: `${CONTROL_EXPR.TOL}: `, type: 'keyword', info: INFO.TOL},
+  {label: `${CONTROL_EXPR.SOLVER}: `, type: 'keyword', info: INFO.SOLVER},
   {label: `${CONTROL_EXPR.LOOP}:\n  `, type: 'keyword', info: INFO.LOOP},
   {label: `${CONTROL_EXPR.UPDATE}:  `, type: 'keyword', info: INFO.UPDATE},
   {label: `${CONTROL_EXPR.OUTPUT}:\n  `, type: 'keyword', info: INFO.OUTPUT},
@@ -196,7 +198,7 @@ export class DiffStudio {
           await this.setState(EDITOR_STATE.BASIC_TEMPLATE);
       }
     },
-    TIMEOUT.APP_RUN_SOLVING);
+    UI_TIME.APP_RUN_SOLVING);
 
     return this.solverView;
   } // runSolverApp
@@ -274,7 +276,7 @@ export class DiffStudio {
 
     this.toRunWhenFormCreated = true;
 
-    setTimeout(() => this.runSolving(true), TIMEOUT.PREVIEW_RUN_SOLVING);
+    setTimeout(() => this.runSolving(true), UI_TIME.PREVIEW_RUN_SOLVING);
 
     return this.solverView;
   } // getFilePreview
@@ -300,6 +302,9 @@ export class DiffStudio {
   private isSolvingSuccess = false;
   private toChangePath = false;
   private toRunWhenFormCreated = true;
+  private toCheckPerformance = true;
+  private toShowPerformanceDlg = true;
+  private secondsLimit = UI_TIME.SOLV_DEFAULT_TIME_SEC;
   private modelPane: DG.TabPane;
   private runPane: DG.TabPane;
   private editorView: EditorView | undefined;
@@ -310,6 +315,7 @@ export class DiffStudio {
   private exportButton: HTMLButtonElement;
   private sensAnIcon: HTMLElement;
   private fittingIcon: HTMLElement;
+  private performanceDlg: DG.Dialog | null = null;
 
   private inputsByCategories = new Map<string, DG.InputBase[]>();
 
@@ -323,7 +329,8 @@ export class DiffStudio {
     this.modelPane = this.tabControl.addPane(TITLE.MODEL, () => {
       setTimeout(() => {
         this.modelDiv.style.height = '100%';
-        this.editorView!.dom.style.height = '100%';
+        if (this.editorView)
+          this.editorView!.dom.style.height = '100%';
       }, 10);
       return this.modelDiv;
     });
@@ -341,7 +348,7 @@ export class DiffStudio {
     };
 
     if (!toAddTableView)
-      setTimeout(dockTabCtrl, TIMEOUT.PREVIEW_DOCK_EDITOR);
+      setTimeout(dockTabCtrl, UI_TIME.PREVIEW_DOCK_EDITOR);
     else
       dockTabCtrl();
 
@@ -557,14 +564,9 @@ export class DiffStudio {
   private async exportToJS(): Promise<void> {
     try {
       const ivp = getIVP(this.editorView!.state.doc.toString());
+      await this.tryToSolve(ivp);
       const scriptText = getScriptLines(ivp, true, true).join('\n');
       const script = DG.Script.create(scriptText);
-
-      // try to call computations - correctness check
-      const params = getScriptParams(ivp);
-      const call = script.prepare(params);
-      await call.call();
-
       const sView = DG.ScriptView.create(script);
       grok.shell.addView(sView);
     } catch (err) {
@@ -576,6 +578,8 @@ export class DiffStudio {
 
   /** Solve IVP */
   private async solve(ivp: IVP, inputsPath: string): Promise<void> {
+    const customSettings = (ivp.solverSettings !== DEFAULT_SOLVER_SETTINGS);
+
     try {
       if (this.toChangePath)
         this.solverView.path = `${this.solverMainPath}${PATH.PARAM}${inputsPath}`;
@@ -590,12 +594,18 @@ export class DiffStudio {
       if ((step <= 0) || (step > finish - start))
         return;
 
+      if (this.toCheckPerformance && !customSettings)
+        ivp.solverSettings = `{maxTimeMs: ${this.secondsLimit * 1000}}`;
+
       const scriptText = getScriptLines(ivp).join('\n');
       const script = DG.Script.create(scriptText);
       const params = getScriptParams(ivp);
       const call = script.prepare(params);
 
       await call.call();
+
+      if (!customSettings)
+        ivp.solverSettings = DEFAULT_SOLVER_SETTINGS;
 
       if (this.solutionViewer) {
         const options = this.solutionViewer.getOptions().look;
@@ -644,9 +654,20 @@ export class DiffStudio {
       this.isSolvingSuccess = true;
       this.runPane.header.hidden = false;
     } catch (error) {
-      this.clearSolution();
-      this.isSolvingSuccess = false;
-      grok.shell.error(error instanceof Error ? error.message : ERROR_MSG.SCRIPTING_ISSUE);
+      if (error instanceof CallbackAction) {
+        this.isSolvingSuccess = true;
+        this.runPane.header.hidden = false;
+
+        if (this.toShowPerformanceDlg && !customSettings) {
+          ivp.solverSettings = DEFAULT_SOLVER_SETTINGS;
+          this.showPerformanceDlg(ivp, inputsPath);
+        } else
+          grok.shell.warning(error.message);
+      } else {
+        this.clearSolution();
+        this.isSolvingSuccess = false;
+        grok.shell.error(error instanceof Error ? error.message : ERROR_MSG.SCRIPTING_ISSUE);
+      }
     }
   }; // solve
 
@@ -693,8 +714,12 @@ export class DiffStudio {
       } else
         this.tabControl.currentPane = this.modelPane;
     } catch (error) {
-      this.clearSolution();
-      grok.shell.error(error instanceof Error ? error.message : ERROR_MSG.UI_ISSUE);
+      if (error instanceof CallbackAction)
+        grok.shell.warning(error.message);
+      else {
+        this.clearSolution();
+        grok.shell.error(error instanceof Error ? error.message : ERROR_MSG.SCRIPTING_ISSUE);
+      }
     }
   }; // runSolving
 
@@ -839,7 +864,7 @@ export class DiffStudio {
     }
 
     // Inputs for initial values
-    ivp.inits.forEach((val, key, map) => {
+    ivp.inits.forEach((val, key) => {
       options = getOptions(key, val, CONTROL_EXPR.INITS);
       const input = ui.input.forProperty(DG.Property.fromOptions(options));
       input.onChanged(async () => {
@@ -854,7 +879,7 @@ export class DiffStudio {
 
     // Inputs for parameters
     if (ivp.params !== null) {
-      ivp.params.forEach((val, key, map) => {
+      ivp.params.forEach((val, key) => {
         options = getOptions(key, val, CONTROL_EXPR.PARAMS);
         const input = ui.input.forProperty(DG.Property.fromOptions(options));
         input.onChanged(async () => {
@@ -894,14 +919,9 @@ export class DiffStudio {
   private async runSensitivityAnalysis(): Promise<void> {
     try {
       const ivp = getIVP(this.editorView!.state.doc.toString());
+      await this.tryToSolve(ivp);
       const scriptText = getScriptLines(ivp, true, true).join('\n');
       const script = DG.Script.create(scriptText);
-
-      // try to call computations - correctness check
-      const params = getScriptParams(ivp);
-      const call = script.prepare(params);
-      await call.call();
-
       //@ts-ignore
       await SensitivityAnalysisView.fromEmpty(script);
     } catch (err) {
@@ -915,14 +935,9 @@ export class DiffStudio {
   private async runFitting(): Promise<void> {
     try {
       const ivp = getIVP(this.editorView!.state.doc.toString());
+      await this.tryToSolve(ivp);
       const scriptText = getScriptLines(ivp, true, true).join('\n');
       const script = DG.Script.create(scriptText);
-
-      // try to call computations - correctness check
-      const params = getScriptParams(ivp);
-      const call = script.prepare(params);
-      await call.call();
-
       //@ts-ignore
       await FittingView.fromEmpty(script);
     } catch (err) {
@@ -930,5 +945,70 @@ export class DiffStudio {
       grok.shell.error(`${ERROR_MSG.SENS_AN_FAILS}:
         ${(err instanceof Error) ? err.message : ERROR_MSG.SCRIPTING_ISSUE}`);
     }
+  }
+
+  /** Try to solve IVP */
+  private async tryToSolve(ivp: IVP): Promise<void> {
+    const optionsBuf = ivp.solverSettings;
+    ivp.solverSettings = DEFAULT_OPTIONS.SCRIPTING;
+
+    try {
+      const scriptText = getScriptLines(ivp, true, true).join('\n');
+      ivp.solverSettings = optionsBuf;
+      const script = DG.Script.create(scriptText);
+
+      // try to call computations - correctness check
+      const params = getScriptParams(ivp);
+      const call = script.prepare(params);
+      await call.call();
+    } catch (err) {
+      if (!(err instanceof CallbackAction))
+        throw new Error((err instanceof Error) ? err.message : ERROR_MSG.SCRIPTING_ISSUE);
+    }
+  }
+
+  /** Close previousely opened performance dialog */
+  private closePerformanceDlg(): void {
+    this.performanceDlg?.close();
+    this.performanceDlg = null;
+  }
+
+  /** Show performance dialog */
+  private showPerformanceDlg(ivp: IVP, inputsPath: string): DG.Dialog {
+    this.closePerformanceDlg();
+    this.performanceDlg = ui.dialog({title: WARNING.TITLE, helpUrl: LINK.DIF_STUDIO_REL});
+    this.solverView.append(this.performanceDlg);
+
+    const opts = {
+      name: WARNING.TIME_LIM,
+      defaultValue: this.secondsLimit,
+      inputType: INPUT_TYPE.INT,
+      min: UI_TIME.SOLV_TIME_MIN_SEC,
+      description: HINT.MAX_TIME,
+      showPlusMinus: true,
+      units: WARNING.UNITS,
+    };
+    const maxTimeInput = ui.input.forProperty(DG.Property.fromOptions(opts));
+    maxTimeInput.onInput(() => {
+      if (maxTimeInput.value >= UI_TIME.SOLV_TIME_MIN_SEC)
+        this.secondsLimit = maxTimeInput.value;
+      else maxTimeInput.value = this.secondsLimit;
+    });
+
+    this.performanceDlg.add(ui.label(`Max time exceeded (${this.secondsLimit} sec.). ${WARNING.CONTINUE}`))
+      .onCancel(() => this.performanceDlg.close())
+      .onOK(async () => {
+        ivp.solverSettings = DEFAULT_SOLVER_SETTINGS;
+        this.performanceDlg.close();
+        setTimeout(async () => await this.solve(ivp, inputsPath), 20);
+        ;
+      })
+      .show();
+
+    this.performanceDlg.add(ui.form([maxTimeInput]));
+    ui.tooltip.bind(this.performanceDlg.getButton('OK'), HINT.CONTINUE);
+    ui.tooltip.bind(this.performanceDlg.getButton('CANCEL'), HINT.ABORT);
+
+    return this.performanceDlg;
   }
 };

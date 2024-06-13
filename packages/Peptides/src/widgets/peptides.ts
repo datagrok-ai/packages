@@ -158,9 +158,8 @@ export function analyzePeptidesUI(df: DG.DataFrame, col?: DG.Column<string>): Di
     ui.splitH([
       ui.splitV(inputElements),
       histogramHost,
-    ], {style: {height: bottomHeight}}),
+    ], {style: {height: bottomHeight, minWidth: '500px', maxWidth: '600px'}}),
   ]);
-  mainHost.style.maxWidth = '400px';
   return {host: mainHost, callback: startAnalysisCallback};
 }
 

@@ -5,19 +5,22 @@ import * as DG from 'datagrok-api/dg';
 
 import {ExternalPluginUI} from '../apps/common/view/utils';
 import {ColoredTextInput} from '../apps/common/view/components/colored-input/colored-text-input';
-import {highlightInvalidSubsequence} from '../apps/common/view/components/colored-input/input-painters';
-import {CODES_TO_SYMBOLS_DICT} from '../apps/common/model/data-loader/json-loader';
 import {MERMADE} from './const';
+import {ITranslationHelper} from '../types';
 
-export async function getExternalAppViewFactories(): Promise<{[name: string]: () => DG.View} | undefined> {
+import {_package} from '../package';
+
+export async function getExternalAppViewFactories(
+  th: ITranslationHelper
+): Promise<{ [name: string]: () => DG.View } | undefined> {
   const externalPluginData = {
     [MERMADE.FUNCTION_NAME]: {
       tabName: MERMADE.TAB_NAME,
-      parameters: getMerMadeParameters()
+      parameters: getMerMadeParameters(th)
     },
   };
 
-  const result: {[tabName: string]: () => DG.View} = {};
+  const result: { [tabName: string]: () => DG.View } = {};
 
   for (const [pluginName, data] of Object.entries(externalPluginData)) {
     let div: HTMLDivElement;
@@ -37,12 +40,12 @@ export async function getExternalAppViewFactories(): Promise<{[name: string]: ()
   return result;
 }
 
-function getMerMadeParameters(): {[name: string]: any} {
+function getMerMadeParameters(th: ITranslationHelper): { [name: string]: any } {
   const base = ui.textInput('', '');
-  const input = new ColoredTextInput(base, highlightInvalidSubsequence);
+  const input = new ColoredTextInput(base, th.highlightInvalidSubsequence);
 
   return {
     coloredInput: input,
-    codes: CODES_TO_SYMBOLS_DICT
+    codes: th.jsonData.codesToSymbolsDict
   };
 }

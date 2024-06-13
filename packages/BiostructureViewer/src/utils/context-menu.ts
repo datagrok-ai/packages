@@ -5,8 +5,9 @@ import * as ui from 'datagrok-api/ui';
 import {Molecule3DUnitsHandler} from '@datagrok-libraries/bio/src/molecule-3d';
 import {BiostructureData, BiostructureDataJson} from '@datagrok-libraries/bio/src/pdb/types';
 
-import {openPdbResidues} from '../package';
 import {defaultErrorHandler} from './err-info';
+
+import {_package, openPdbResidues} from '../package';
 
 export type BiostructureViewerWindowType = Window & {
   $biostructureViewer?: {
@@ -42,18 +43,21 @@ export function addContextMenuUI(event: DG.EventData): void {
 
 export function addContextMenuForFileInfo(fi: DG.FileInfo, menu: DG.Menu): boolean {
   switch (fi.extension.toLowerCase()) {
-    case 'pdb': {
-      menu.item('Open table residues', async () => {
-        openPdbResidues(fi)
-          .catch(defaultErrorHandler);
-      });
-      return true;
-    }
+  case 'pdb': {
+    menu.item('Open table residues', async () => {
+      openPdbResidues(fi)
+        .catch(defaultErrorHandler);
+    });
+    return true;
+  }
   }
   return false;
 }
 
 export function addContextMenuForCell(gridCell: DG.GridCell, menu: DG.Menu): boolean {
+  const logPrefix: string = `BsV: addContextMenuForCell()`;
+  _package.logger.debug(`${logPrefix}, start`);
+
   function copyRawValue(): void {
     const tgtValue: string = gridCell.cell.value;
     if (!navigator.clipboard) {
@@ -113,17 +117,17 @@ export function addContextMenuForCell(gridCell: DG.GridCell, menu: DG.Menu): boo
 
   if (gridCell && gridCell.tableColumn) {
     switch (gridCell.tableColumn.semType) {
-      case DG.SEMTYPE.MOLECULE3D: {
-        menu
-          .item('Copy', copyRawValue)
-          .item('Download', downloadRawValue);
-        const showG = menu.group('Show');
-        const nglM = showG.item('Biostructure', showBiostructureViewer, null,
-          {description: 'Show with Biostructure (mol*) viewer'});
-        const msM = showG.item('NGL', showNglViewer, null,
-          {description: 'Show with NGL viewer'});
-        return true;
-      }
+    case DG.SEMTYPE.MOLECULE3D: {
+      menu
+        .item('Copy', copyRawValue)
+        .item('Download', downloadRawValue);
+      const showG = menu.group('Show');
+      const nglM = showG.item('Biostructure', showBiostructureViewer, null,
+        {description: 'Show with Biostructure (mol*) viewer'});
+      const msM = showG.item('NGL', showNglViewer, null,
+        {description: 'Show with NGL viewer'});
+      return true;
+    }
     }
   }
   return false;

@@ -1,5 +1,17 @@
 # Diff Studio changelog
 
+## 1.0.10 (2024-06-10)
+
+Implemented
+
+* The ROS3PRw and ROS34PRw methods for numerical solving ODEs
+* Callback mechanism for solvers control
+* `#meta.solver`-block for solving method control:
+  * method
+  * max iterations count
+  * max computation time
+* Max computation time control feature
+
 ## 1.0.9 (2024-05-15)
 
 Added parameters fitting feature

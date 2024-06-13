@@ -179,7 +179,7 @@ export class TestManager extends DG.ViewBase {
           });
         selectedPackage.categories = packageTestsFinal;
         selectedPackage.totalTests = testsNumInPack;
-      };
+      }
     }
   }
 
@@ -339,8 +339,7 @@ export class TestManager extends DG.ViewBase {
         this.runAllTests(node, tests, nodeType);
       };
     }
-    const nodeId = Object.keys(this.nodeDict).length.toString();
-    node.root.id = nodeId;
+    node.root.id = Object.keys(this.nodeDict).length.toString();
     this.nodeDict[Object.keys(this.nodeDict).length] = {tests: tests, nodeType: nodeType};
   }
 
@@ -479,8 +478,9 @@ export class TestManager extends DG.ViewBase {
     }
     }
     await delay(1000);
-    if (grok.shell.lastError.length > 0) {
-      grok.shell.error(`Unhandled exception: ${grok.shell.lastError}`);
+    const unhandled = await grok.shell.lastError;
+    if (unhandled) {
+      grok.shell.error(`Unhandled exception: ${unhandled}`);
       switch (nodeType) {
       case NODE_TYPE.PACKAGE:
         catsValuesSorted.forEach((cat) => this.updateIconUnhandled(cat));
@@ -494,10 +494,10 @@ export class TestManager extends DG.ViewBase {
         break;
       }
     }
-    setTimeout(() => {
-      grok.shell.o = this.getTestsInfoPanel(node, tests, nodeType,
-        grok.shell.lastError.length ? grok.shell.lastError : '');
-      grok.shell.lastError = '';
+    setTimeout(async () => {
+      const unhandled = await grok.shell.lastError;
+      grok.shell.o = this.getTestsInfoPanel(node, tests, nodeType, unhandled);
+      grok.shell.clearLastError();
     }, 30);
   }
 

@@ -2,11 +2,13 @@ const path = require('path');
 const packageName = path.parse(require('./package.json').name).name.toLowerCase().replace(/-/g, '');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const mode = process.env.NODE_ENV ?? 'production';
+if (mode !== 'production')
+  console.warn(`Building Bio in '${mode}' mode.`);
+
 module.exports = {
-  cache: {
-    type: 'filesystem',
-  },
-  mode: 'development',
+  ...(mode === 'production' ? {cache: {type: 'filesystem'}} : {}),
+  mode: mode,
   entry: {
     package: ['./src/package.ts'],
     test: {
@@ -48,7 +50,7 @@ module.exports = {
   plugins: [
     new MiniCssExtractPlugin({filename: 'molstar.css'}),
   ],
-  devtool: 'source-map',
+  devtool: mode !== 'production' ? 'inline-source-map' : 'source-map',
   externals: {
     'datagrok-api/dg': 'DG',
     'datagrok-api/grok': 'grok',

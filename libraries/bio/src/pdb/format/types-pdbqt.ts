@@ -46,17 +46,6 @@ export class PdbqtAtomCoords extends AtomCoordsBase implements IPdbqtAtomCoords 
       /* partCharge */ parseFloat(line.slice(71 - 1, 76)),
       `${line.slice(78 - 1, 79).trim()}`,
     );
-    // if (!res.atomName && res.atomType.startsWith(res.atomElement) && res.atomType.length > res.atomElement.length) {
-    //   const atomName = res.atomType.replace(new RegExp(`^${res.atomElement}`), '');
-    //   res = new PdbqtAtomCoords(
-    //     new AtomCoordsBase(
-    //       new AtomBase(res, res.number, res.atomElement,
-    //         atomName /* replacing res.atomName*/,
-    //         res.altLoc, res.resName, res.chain, res.resNumber, res.insCode),
-    //       res.x, res.y, res.z, res.occupancy, res.bFactor),
-    //     res.partCharge, res.atomType);
-    // }
-
     return res;
   }
 

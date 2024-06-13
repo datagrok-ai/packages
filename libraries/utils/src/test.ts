@@ -5,7 +5,7 @@ import { testData } from './dataframe-utils';
 import Timeout = NodeJS.Timeout;
 import { changeOptionsSaveLayout, filterAsync, loadLayout, selectFilterChangeCurrent, testViewerInternal } from './test-viewer-utils';
 
-const STANDART_TIMEOUT = 30000;
+const STANDART_TIMEOUT = 180000;
 const BENCHMARK_TIMEOUT = 10800000;
 
 const stdLog = console.log.bind(console);
@@ -264,7 +264,7 @@ export async function initAutoTests(package_: DG.Package, module?: any) {
       if (moduleTests[cat] === undefined)
         moduleTests[cat] = { tests: [], clear: true };
       moduleTests[cat].tests.push(new Test(cat, name,
-        async () => await f.apply(), { isAggregated: f.outputs.length > 0, timeout: 300000 }));
+        async () => await f.apply(), { isAggregated: f.outputs.length > 0, timeout: STANDART_TIMEOUT }));
     }
   }
   const moduleAutoTests = [];

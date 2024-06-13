@@ -7,6 +7,7 @@ import {SequenceValidator} from '../../../model/parsing-validation/sequence-vali
 import {FormatDetector} from '../../../model/parsing-validation/format-detector';
 
 import $ from 'cash-dom';
+import {ITranslationHelper} from '../../../../../types';
 
 /** Set different colors for letters, can be upgraded to color various monomers */
 export function demoPainter(input: string): HTMLSpanElement[] {
@@ -24,12 +25,12 @@ export function demoPainter(input: string): HTMLSpanElement[] {
 }
 
 // todo: port to another place
-export function highlightInvalidSubsequence(input: string): HTMLSpanElement[] {
+export function highlightInvalidSubsequence(input: string, th: ITranslationHelper): HTMLSpanElement[] {
   // validate sequence
   let cutoff = 0;
-  const format = (new FormatDetector(input)).getFormat();
+  const format = th.createFormatDetector(input).getFormat();
   if (format !== null)
-    cutoff = (new SequenceValidator(input)).getInvalidCodeIndex(format!);
+    cutoff = (new SequenceValidator(input, th)).getInvalidCodeIndex(format!);
   const isValid = cutoff < 0 || input === '';
   const greyTextSpan = ui.span([]);
   $(greyTextSpan).css('-webkit-text-fill-color', 'var(--grey-6)');

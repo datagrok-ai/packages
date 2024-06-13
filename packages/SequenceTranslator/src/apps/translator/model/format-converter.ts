@@ -1,7 +1,9 @@
 import * as DG from 'datagrok-api/dg';
+
 import {DEFAULT_FORMATS} from '../../common/model/const';
-import {PHOSPHATE_SYMBOL, UNKNOWN_SYMBOL} from './const';
 import {FormatHandler, getRegExpPattern} from '../../common/model/parsing-validation/format-handler';
+import {ITranslationHelper} from '../../../types';
+import {PHOSPHATE_SYMBOL, UNKNOWN_SYMBOL} from './const';
 
 const HELM_WRAPPER = {
   LEFT: 'RNA1{',
@@ -9,14 +11,22 @@ const HELM_WRAPPER = {
 };
 
 export class FormatConverter {
-  constructor(private readonly sequence: string, private readonly sourceFormat: string) { };
+  constructor(
+    private readonly sequence: string,
+    private readonly sourceFormat: string,
+    private readonly th: ITranslationHelper,
+  ) { };
 
-  private formats = new FormatHandler();
+  private formats = new FormatHandler(this.th);
 
   convertTo(targetFormat: string): string {
     const formats = this.formats.getFormatNames();
 
-    if (this.sourceFormat === DEFAULT_FORMATS.HELM && formats.includes(targetFormat)) { return this.helmToFormat(this.sequence, targetFormat); } else if (formats.includes(this.sourceFormat) && targetFormat === DEFAULT_FORMATS.HELM) { return this.formatToHelm(this.sequence, this.sourceFormat); } else if ([this.sourceFormat, targetFormat].every((el) => formats.includes(el))) {
+    if (this.sourceFormat === DEFAULT_FORMATS.HELM && formats.includes(targetFormat)) {
+      return this.helmToFormat(this.sequence, targetFormat);
+    } else if (formats.includes(this.sourceFormat) && targetFormat === DEFAULT_FORMATS.HELM) {
+      return this.formatToHelm(this.sequence, this.sourceFormat);
+    } else if ([this.sourceFormat, targetFormat].every((el) => formats.includes(el))) {
       const helm = this.formatToHelm(this.sequence, this.sourceFormat);
       return this.helmToFormat(helm, targetFormat);
     } else {
@@ -48,7 +58,7 @@ export class FormatConverter {
     const formatRegExp = this.formats.getFormatRegExp(sourceFormat);
     const phosphateRegExp = this.formats.getPhosphateHelmCodesRegExp(sourceFormat);
 
-    let helm = sequence.replace(formatRegExp, (match) => {
+    let helm = !sequence ? '' : sequence.replace(formatRegExp, (match) => {
       const result = formatCodes.includes(match) ? dict[match] + '.' : '?';
       return result;
     });

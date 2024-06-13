@@ -31,7 +31,7 @@ export class ReportsWidget extends DG.Widget {
         const clock = ui.iconFA('clock', null, report.createdOn.toISOString());
         clock.style.marginRight = '10px';
         const portrait = ui.tooltip.bind(userHandler.renderIcon(report.reporter.dart)!, () => {
-          return userHandler.renderTooltip(report.reporter)!;
+          return userHandler.renderTooltip(report.reporter.dart)!;
         });
         portrait.style.marginRight = '10px';
         const content = ui.divH([clock, portrait, ui.divText(report.description)]);

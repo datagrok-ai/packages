@@ -1,4 +1,5 @@
 import * as DG from 'datagrok-api/dg';
+import * as ui from 'datagrok-api/ui';
 import { processFeatures, loadModel } from './utils';
 import { prepareAndTrainNN } from './nn';
 export let _package = new DG.Package();
@@ -70,4 +71,78 @@ export async function applyNN(df, model) {
     // predictions = predictions.map((vector) => oneHotToCategory(vector, categoryArray));
     // }
     return DG.DataFrame.fromColumns([DG.Column.fromList(DG.TYPE.FLOAT, "pred", predictions)]);
+}
+
+//name: isApplicableNN
+//meta.mlname: tfjsNN
+//meta.mlrole: isApplicable
+//input: dataframe df
+//input: string predict_column
+//output: bool result
+export async function isApplicableNN(df, predict_column) {
+    return df.columns.byName(predict_column).matches('numerical');
+}
+
+
+//name: visualizeNN
+//meta.mlname: tfjsNN
+//meta.mlrole: visualize
+//input: dataframe df
+//input: string predict_column
+//input: string target_column
+//input: dynamic model
+//output: dynamic widget
+export async function visualizeNN(df, predict_column, target_column, model) {
+    let loadedModel = await loadModel(model);
+    let weights = loadedModel.getNamedWeights();
+    const offset = 50;
+    const width = 1000;
+    const height = 400;
+    let canvas = ui.canvas(1000, 400);
+    canvas.style.width = '600px';
+    
+    const g = canvas.getContext("2d");
+    let blockWidth = (width - 2 * offset) / (loadedModel.layers.length + 1);
+
+    var drawLayer = function (tensor, layerIdx) {
+        let blockHeight = (height - 2 * offset) / tensor.shape[1];
+        for (var j = 0; j < tensor.shape[1]; j++) {
+            DG.Paint.marker(g, DG.MARKER_TYPE.CIRCLE,
+                offset + layerIdx * blockWidth + blockWidth / 2, offset + j * blockHeight + blockHeight / 2,
+                '#000000', 5);        
+        }
+    };
+    var drawWeights = function (layer, layerIdx) {
+        if (layer.kernel !== undefined) {
+            let curBlockHeight = (height - 2 * offset) / layer.kernel.shape[0];
+            let nxtBlockHeight = (height - 2 * offset) / layer.kernel.shape[1];
+            var curWeights = weights.find((w, _index, _obj) => w.name === layer.kernel.originalName).tensor.arraySync();
+            for (var j = 0; j < layer.kernel.shape[0]; j++) {
+                for (var k = 0; k < layer.kernel.shape[1]; k++) {
+                    var intensity = curWeights[j][k];
+                    g.strokeStyle = `rgba(0, 0, 0, ${Math.abs(intensity)})`;
+                    g.beginPath();
+                    g.moveTo(offset + layerIdx * blockWidth + blockWidth / 2, offset + curBlockHeight * j + curBlockHeight / 2);
+                    g.lineTo(offset + (layerIdx + 1) * blockWidth + blockWidth / 2, offset + nxtBlockHeight * k + nxtBlockHeight / 2);
+                    g.stroke();
+                }
+            }
+        } else {
+            g.beginPath();
+            let curBlockHeight = (height - 2 * offset) / layer.input.shape[1];
+            for (var j = 0; j < layer.input.shape[1]; j++) {
+                g.strokeStyle = `rgb(0, 0, 0)`;
+                g.moveTo(offset + layerIdx * blockWidth + blockWidth / 2, offset + curBlockHeight * j + curBlockHeight / 2);
+                g.lineTo(offset + (layerIdx + 1) * blockWidth + blockWidth / 2, offset + curBlockHeight * j + curBlockHeight / 2);
+            }
+            g.stroke();
+        }
+    };
+    for (var i = 0; i < loadedModel.layers.length; i++) {
+        let layer = loadedModel.layers[i];
+        drawLayer(layer.input, i);
+        drawWeights(layer, i);
+    }
+    drawLayer(loadedModel.layers[loadedModel.layers.length - 1].output, loadedModel.layers.length);
+    return canvas;
 }

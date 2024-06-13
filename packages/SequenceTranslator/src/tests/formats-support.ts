@@ -1,19 +1,19 @@
-/* Do not change these import lines to match external modules in webpack configuration */
 import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
 import {before, category, expect, test} from '@datagrok-libraries/utils/src/test';
 import {DEFAULT_FORMATS} from '../apps/common/model/const';
-import {loadJsonData} from '../apps/common/model/data-loader/json-loader';
-import {formatsToHelm} from './const';
-import {SequenceValidator} from '../apps/common/model/parsing-validation/sequence-validator';
 import {getTranslatedSequences} from '../apps/translator/model/conversion-utils';
-import {_package} from '../package';
+import {ITranslationHelper} from '../types';
 
-function getTranslationObject(sequence: string, format: string): {[format: string]: string} {
-  const indexOfInvalidChar = (new SequenceValidator(sequence)).getInvalidCodeIndex(format);
-  return getTranslatedSequences(sequence, indexOfInvalidChar, format);
+import {_package} from '../package-test';
+import {formatsToHelm} from './const';
+
+
+function getTranslationObject(sequence: string, format: string, th: ITranslationHelper): { [format: string]: string } {
+  const indexOfInvalidChar = th.createSequenceValidator(sequence).getInvalidCodeIndex(format);
+  return getTranslatedSequences(sequence, indexOfInvalidChar, format, th);
 }
 
 const inputs = {
@@ -22,14 +22,15 @@ const inputs = {
 };
 
 category('Formats support', () => {
+  let th: ITranslationHelper;
+
   before(async () => {
-    await loadJsonData();
-    await _package.initMonomerLib();
+    th = await _package.getTranslationHelper();
   });
 
   Object.entries(inputs).forEach(([format, sequence]) => {
     test(`All formats for ${format}`, async () => {
-      const output = getTranslationObject(sequence, format);
+      const output = getTranslationObject(sequence, format, th);
       const result = Object.keys(output).length;
       // +1 due to nucleotides
       const expected = Object.keys(formatsToHelm).length + 1;

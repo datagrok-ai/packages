@@ -54,7 +54,7 @@ export function test(args: TestArgs): boolean {
     } else {
       const packageData = JSON.parse(fs.readFileSync(path.join(curDir, 'package.json'), { encoding: 'utf-8' }));
       if (packageData.name) {
-        process.env.TARGET_PACKAGE = utils.kebabToCamelCase(packageData.name);
+        process.env.TARGET_PACKAGE = utils.kebabToCamelCase(utils.removeScope(packageData.name));
       } else {
         color.error('Invalid package name. Set the `name` field in `package.json`');
         return false;
@@ -226,14 +226,15 @@ export function test(args: TestArgs): boolean {
               resolve({ failReport, skipReport, passReport, failed, csv, countReport });
             }).catch((e: any) => {
               const stack = ((<any>window).DG.Logger.translateStackTrace(e.stack)).then(() => {
-              resolve({
-                failReport: `${e.message}\n${stack}`,
-                skipReport: '',
-                passReport: '',
-                failed: true,
-                csv: '',
-                countReport: {skip: 0, pass: 0}
-              });});
+                resolve({
+                  failReport: `${e.message}\n${stack}`,
+                  skipReport: '',
+                  passReport: '',
+                  failed: true,
+                  csv: '',
+                  countReport: { skip: 0, pass: 0 }
+                });
+              });
             });
           });
         }, targetPackage, options, new testUtils.TestContext(options.catchUnhandled, options.report));

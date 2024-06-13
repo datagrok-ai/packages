@@ -26,5 +26,7 @@
   KA = 0.3 {caption: rate constant; category: Paramters; min: 0.1; max: 1}
   CL = 2 {caption: clearance; category: Paramters; min: 1; max: 5}
   V2 = 4 {caption: central volume; category: Paramters; min: 1; max: 10} [Central compartment volume]
-  
+
+#meta.solver: {method: 'mrt'; maxTimeMs: 50}
+
 #tolerance: 1E-9

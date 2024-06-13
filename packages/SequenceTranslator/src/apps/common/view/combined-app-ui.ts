@@ -9,32 +9,34 @@ import {OligoTranslatorUI} from '../../translator/view/ui';
 import {AppUIBase} from './app-ui-base';
 import {IsolatedAppUIBase} from './isolated-app-ui';
 import {APP_NAME, TAB_NAME} from './const';
+import {ITranslationHelper} from '../../../types';
 
-type ViewFactories = {[name: string]: () => DG.View};
+type ViewFactories = { [name: string]: () => DG.View };
 
 export class CombinedAppUI extends AppUIBase {
-  constructor(externalViewFactories: ViewFactories) {
+  constructor(
+    private readonly externalViewFactories: ViewFactories,
+    private readonly th: ITranslationHelper
+  ) {
     super(APP_NAME.COMBINED);
-    this.externalViewFactories = externalViewFactories;
-    const factories = this.getViewFactories();
+
+    const factories = this.getViewFactories(this.th);
     this.multiView = new DG.MultiView({viewFactories: factories});
   }
 
   private multiView: DG.MultiView;
-  private externalViewFactories?: ViewFactories;
 
-
-  private getViewFactories(): ViewFactories {
-    function viewFactory(UiConstructor: new (view: DG.View) => IsolatedAppUIBase): () => DG.View {
+  private getViewFactories(th: ITranslationHelper): ViewFactories {
+    function viewFactory(UiConstructor: new (th: ITranslationHelper) => IsolatedAppUIBase): () => DG.View {
       const view = DG.View.create();
-      const translateUI = new UiConstructor(view);
+      const translateUI = new UiConstructor(th);
       translateUI.initView().catch(
         (e) => console.error(`Failed to initialize ${UiConstructor.name}: ${e}`)
       );
       return () => translateUI.getView();
     }
 
-    let result: {[key: string]: () => DG.View } = {
+    let result: { [key: string]: () => DG.View } = {
       [TAB_NAME.TRANSLATOR]: viewFactory(OligoTranslatorUI),
       [TAB_NAME.PATTERN]: viewFactory(OligoPatternUI),
       [TAB_NAME.STRUCTURE]: viewFactory(OligoStructureUI),

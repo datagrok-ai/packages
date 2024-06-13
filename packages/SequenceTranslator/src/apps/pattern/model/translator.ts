@@ -1,7 +1,9 @@
 import * as grok from 'datagrok-api/grok';
 import {STRAND, STRANDS, TERMINI, TERMINUS} from './const';
-import {PATTERN_APP_DATA} from '../../common/model/data-loader/json-loader';
 import {EventBus} from './event-bus';
+import {ITranslationHelper} from '../../../types';
+import {_package} from '../../../package';
+import {JsonData} from '../../common/model/data-loader/json-loader';
 
 export function bulkTranslate(eventBus: EventBus): void {
   const df = eventBus.getTableSelection();
@@ -31,16 +33,12 @@ export function applyPatternToRawSequence(
   rawNucleotideSequence: string,
   modifications: string[],
   ptoFlags: boolean[],
-  terminalModifications: Record<TERMINUS, string>
+  terminalModifications: Record<TERMINUS, string>,
 ): string {
   const rawNucleotides = rawNucleotideSequence.split('');
 
   const modifiedNucleotides = rawNucleotides.map((nucleotide, i) => {
-    const modifiedNucleotide = getModifiedNucleotide(
-      nucleotide,
-      modifications[i]
-
-    );
+    const modifiedNucleotide = getModifiedNucleotide(nucleotide, modifications[i], _package.jsonData);
     return modifiedNucleotide;
   });
 
@@ -51,9 +49,9 @@ export function applyPatternToRawSequence(
   return modificationsWithPTOLinkages.join('');
 }
 
-function getModifiedNucleotide(nucleotide: string, modification: string): string {
-  const format = Object.keys(PATTERN_APP_DATA)[0];
-  const substitution = PATTERN_APP_DATA[format][modification].substitution;
+function getModifiedNucleotide(nucleotide: string, modification: string, jsonData: JsonData): string {
+  const format = Object.keys(jsonData.patternAppData)[0];
+  const substitution = jsonData.patternAppData[format][modification].substitution;
   return nucleotide.replace(/([AGCTU])/, substitution);
 }
 

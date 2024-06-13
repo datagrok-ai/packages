@@ -57,7 +57,7 @@ export class SimilarityDiversitySearchTutorial extends Tutorial {
       if (data.args.viewer.type === 'Chem Diversity Search')
         div = data.args.viewer;
       return !!div;
-    })), this.getMenuItem('Chem'));
+    })), this.getMenuItem('Chem', true));
 
     this.title('Explore the dataset using similarity and diversity viewers', true);
     this.describe(`The similarity and diversity viewers are interactive and are synchronized with each other,

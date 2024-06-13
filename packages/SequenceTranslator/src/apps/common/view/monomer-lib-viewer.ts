@@ -5,10 +5,11 @@ import * as DG from 'datagrok-api/dg';
 
 import {drawZoomedInMolecule} from './components/draw-molecule';
 import {MonomerLibWrapper} from '../model/monomer-lib/lib-wrapper';
+import {_package} from '../../../package';
 
 export class MonomerLibViewer {
   static async view(): Promise<void> {
-    const table = MonomerLibWrapper.getInstance().getTableForViewer();
+    const table = _package.monomerLibWrapper.getTableForViewer();
     table.name = 'Monomer Library';
     const view = grok.shell.addTableView(table);
     view.grid.props.allowEdit = false;

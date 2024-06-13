@@ -162,9 +162,10 @@ export class DimReductionBaseEditor {
       this.methodSettingsDiv = ui.inputs([]);
       const functions = this.columnFunctionsMap[this.colInput.value!.name];
 
-      this.preprocessingFunctionInput = ui.choiceInput('Encoding function', functions[0], functions, () => {
-        this.onPreprocessingFunctionChanged();
-      });
+      this.preprocessingFunctionInput = ui.choiceInput('Encoding function',
+        functions[0], functions, () => {
+          this.onPreprocessingFunctionChanged();
+        });
       let flagPfi = false;
       if (!this.preprocessingFunctionInputRoot) {
         this.preprocessingFunctionInputRoot = this.preprocessingFunctionInput.root;
@@ -347,7 +348,7 @@ export class DimReductionBaseEditor {
         this.plotEmbeddingsInput,
         this.clusterEmbeddingsInput,
         this.dbScanSettingsDiv
-      ], {style: {minWidth: '320px'}, classes: 'ui-form'});
+      ], {style: {minWidth: '420px'}, classes: 'ui-form dim-reduction-dialog-form'});
     }
 
     public getParams(): DimReductionParams {
