@@ -208,9 +208,10 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
     // this.emdbProvider = this.string(PROPS.emdbProvider, defaults.emdbProvider,
     //   {category: PROPS_CATS.DATA});
 
+    const repTypes = ['cartoon', 'backbone', 'ball-and-stick', 'carbohydrate', 'ellipsoid', 'gaussian-surface', 'spacefill'];
     // -- Style --
-    this.representation = this.string(PROPS.representation, defaults.representation,
-      {category: PROPS_CATS.STYLE, choices: Object.values(RepresentationType)});
+    this.representation = this.string(PROPS.representation, 'cartoon',
+      {category: PROPS_CATS.STYLE, choices: repTypes});
 
     // -- Layout --
     this.layoutIsExpanded = this.bool(PROPS.layoutIsExpanded, defaults.layoutIsExpanded,
@@ -273,7 +274,13 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
     this.subs.push(DG.debounce(this.setDataRequest, DebounceIntervals.setData)
       .subscribe(() => { this.onSetDataRequestDebounced(); }));
     this.viewSubs.push(this.onContextMenu.subscribe(this.onContextMenuHandler.bind(this)));
+    this._initButtonExpand();
     this._initMenu();
+  }
+
+  private _initButtonExpand() {
+    const button = $('.msp-btn.msp-btn-icon.msp-btn-link-toggle-off');
+    button.on('click',  () => this.root.requestFullscreen());
   }
 
   private static viewerCounter: number = -1;
@@ -281,7 +288,7 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
 
   private viewerToLog(): string { return `MolstarViewer<${this.viewerId}>`; }
 
-  override onPropertyChanged(property: DG.Property | null): void {
+  override async onPropertyChanged(property: DG.Property | null): Promise<void> {
     const logIndent: number = 0;
     const callLog: string = `onPropertyChanged( '${property?.name}' )`;
     const logPrefix: string = `${margin(logIndent)}${this.viewerToLog()}.${callLog}`;
@@ -375,8 +382,6 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
         break;
       }
 
-      case PROPS.representation:
-        break;
       case PROPS.showImportControls:
         break;
       case PROPS.layoutIsExpanded:
@@ -406,8 +411,18 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
         this.setData(logIndent + 1, callLog);
         break;
       }
+      case PROPS.representation:
+        await this.updateRepresentation(property);
+        break;
     }
     this.logger.debug(`${logPrefix}, end`);
+  }
+  async updateRepresentation(property: DG.Property) {
+    const builder = this.viewer!.plugin.builders.structure.representation;
+    const update = this.viewer!.plugin.build();
+    const current = this.viewer!.plugin.managers.structure.component.currentStructures;
+    builder.buildRepresentation(update, current[0].cell, { type: property.get(this) });
+    await update.commit();
   }
 
   // effective PDB value (to plot)
@@ -714,8 +729,12 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
       });
       this.root.style.overflow = 'hidden'; /* Prevent blinking viewer size changed */
       this.root.appendChild(this.viewerDiv);
-      this.viewSubs.push(ui.onSizeChanged(this.root).subscribe(
-        this.rootOnSizeChanged.bind(this)));
+      this.viewSubs.push(ui.onSizeChanged(this.root).subscribe(() => this.viewer?.handleResize()));
+      this.viewSubs.push(ui.onSizeChanged(this.viewerDiv).subscribe(() => this.viewer?.handleResize()));
+
+      const currentView = grok.shell.tv.root;
+      if (currentView)
+        this.viewSubs.push(ui.onSizeChanged(currentView).subscribe(() => this.viewer?.handleResize()));
 
       const props: Partial<RcsbViewerProps> = {};
 
@@ -806,6 +825,7 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
     if (this.viewerDiv && this.viewer) {
       this.viewerDiv.style.width = `${cw}px`;
       this.viewerDiv.style.height = `${ch}px`;
+     
       this.viewer.handleResize();
     }
 
