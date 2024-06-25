@@ -1,5 +1,6 @@
 import * as ui from 'datagrok-api/ui';
 import * as grok from 'datagrok-api/grok';
+import * as DG from 'datagrok-api/dg';
 
 import {IHelmHelper, getHelmHelper} from '@datagrok-libraries/bio/src/helm/helm-helper';
 import {IHelmWebEditor} from '@datagrok-libraries/bio/src/helm/types';
@@ -9,6 +10,7 @@ import * as org from 'org';
 import $ from 'cash-dom';
 import {Unsubscribable, fromEvent} from 'rxjs';
 import {IMonomerLibFileManager, IMonomerLibHelper} from '@datagrok-libraries/bio/src/monomer-works/monomer-utils';
+import {NOTATION} from '@datagrok-libraries/bio/src/utils/macromolecule/consts';
 
 import {Chain} from './pt-conversion';
 
@@ -99,7 +101,13 @@ export class HelmInput {
     editor.host.style.width = '200px';
     editor.host.style.height = '100px';
     editor.host.style.paddingLeft = '40px';
-    editor.editor.setHelm(PT_HELM_EXAMPLE);
+
+    const cell = grok.shell.tv.dataFrame.currentCell;
+
+    if (cell.column.semType === DG.SEMTYPE.MACROMOLECULE && cell.column.tags[DG.TAGS.UNITS] === NOTATION.HELM)
+      editor.editor.setHelm(cell.value);
+    else
+      editor.editor.setHelm(PT_HELM_EXAMPLE);
 
     return new HelmInput(helmHelper, editor);
   }
@@ -110,6 +118,12 @@ export class HelmInput {
 
   getHelmSelections() {
     return this.helmSelection;
+  }
+
+  setHelmString(helm: string): void {
+    this.helmString = helm;
+    this.editor.editor.setHelm(helm);
+    this.helmSelection = [];
   }
 
   getDiv(): HTMLDivElement {

@@ -57,7 +57,7 @@ export abstract class HistoryInputBase<T = DG.FuncCall> extends DG.InputBase<T |
     });
   private _historyDialog = this.getHistoryDialog();
 
-  private _visibleInput = ui.stringInput(this.label, '', null);
+  private _visibleInput = ui.input.string(this.label, {value: ''});
   private _visibleIcon = ui.iconFA('search', () => this.showSelectionDialog());
   private _chosenRun: DG.FuncCall | null = null;
   private _chosenRunId: string | null = null;
@@ -77,7 +77,7 @@ export abstract class HistoryInputBase<T = DG.FuncCall> extends DG.InputBase<T |
       stringValueFunc?: (currentRun: DG.FuncCall) => string,
     },
   ) {
-    const primaryInput = ui.stringInput(label, '', null);
+    const primaryInput = ui.input.string(label, {value: ''});
     super(primaryInput.dart);
 
     this._visibleInput = primaryInput;

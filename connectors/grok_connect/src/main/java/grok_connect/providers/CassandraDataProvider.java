@@ -1,11 +1,14 @@
 package grok_connect.providers;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import grok_connect.connectors_info.DataConnection;
 import grok_connect.connectors_info.DataQuery;
@@ -104,7 +107,7 @@ public class CassandraDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchemas(DataConnection connection) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchemas(DataConnection connection) throws QueryCancelledByUser, GrokConnectException {
         String db = connection.get(DbCredentials.KEYSPACE);
         if (GrokConnectUtil.isNotEmpty(db)) {
             StringColumn column = new StringColumn(new String[]{db});
@@ -118,7 +121,7 @@ public class CassandraDataProvider extends JdbcDataProvider {
 
     @Override
     public DataFrame getSchema(DataConnection connection, String schema, String table)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+            throws QueryCancelledByUser, GrokConnectException {
         FuncCall queryRun = new FuncCall();
         queryRun.func = new DataQuery();
         queryRun.func.query = getSchemaSql(connection.get(DbCredentials.KEYSPACE), schema, table);

@@ -10,16 +10,19 @@ export class AdmeticaBaseEditor {
   colInput!: DG.InputBase<DG.Column | null>;
   colInputRoot: HTMLElement;
   templatesInput: DG.ChoiceInput<string>; 
-  addPiechartInput = ui.boolInput('Add piechart', true);
+  addPiechartInput = ui.input.bool('Add piechart', {value: true});
   modelsSettingsDiv = ui.inputs([]);
   modelsSettingsIcon: HTMLElement;
   expanded: boolean = false;
   tree: DG.TreeViewGroup = ui.tree();
 
   constructor() {
-    this.tableInput = ui.tableInput('Table', grok.shell.tv.dataFrame, grok.shell.tables, () => this.onTableInputChanged());
-    this.colInput = ui.columnInput('Molecules', grok.shell.tv.dataFrame, grok.shell.tv.dataFrame.columns.bySemType(DG.SEMTYPE.MOLECULE), null, 
-    {filter: (col: DG.Column) => col.semType === DG.SEMTYPE.MOLECULE} as ColumnInputOptions);
+    this.tableInput = ui.input.table('Table', {onValueChanged: () => this.onTableInputChanged()});
+    this.colInput = ui.input.column('Molecules', {
+      table: grok.shell.tv.dataFrame,
+      filter: (col: DG.Column) => col.semType === DG.SEMTYPE.MOLECULE,
+      value: grok.shell.tv.dataFrame.columns.bySemType(DG.SEMTYPE.MOLECULE)!
+    });
     this.colInputRoot = this.colInput.root;
     this.templatesInput = ui.input.choice('Template', {onValueChanged: async () =>  {
       if(settingsOpened)
@@ -66,7 +69,7 @@ export class AdmeticaBaseEditor {
     ui.empty(inputs);
     inputs.classList.add('admetox-input-form');
     inputs.appendChild(ui.divText(group.name, 'admetox-descriptor-name'));
-    inputs.appendChild(ui.textInput('', group.description).root);
+    inputs.appendChild(ui.input.textArea('', {size: {width: 100, height: 150}, value: group.description}).root);
   }
   
   private createInputsForModels(model: Model, inputs: HTMLElement): void {
@@ -155,9 +158,11 @@ export class AdmeticaBaseEditor {
   }
   
   onTableInputChanged(): void {
-    this.colInput = ui.columnInput(
-      'Molecules', this.tableInput.value!, this.tableInput.value!.columns.bySemType(DG.SEMTYPE.MOLECULE), null,
-      {filter: (col: DG.Column) => col.semType === DG.SEMTYPE.MOLECULE} as ColumnInputOptions);
+    this.colInput = ui.input.column('Molecule', {
+      table: this.tableInput.value!,
+      value: this.tableInput.value!.columns.bySemType(DG.SEMTYPE.MOLECULE)!,
+      filter: (col: DG.Column) => col.semType === DG.SEMTYPE.MOLECULE
+    });
     ui.empty(this.colInputRoot);
     Array.from(this.colInput.root.children).forEach((it) => this.colInputRoot.append(it));
   }

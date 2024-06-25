@@ -627,7 +627,7 @@ export class ScaffoldTreeViewer extends DG.JsViewer {
     const s = JSON.stringify(this.serializeTrees(this.tree));
     const dialog = ui.dialog({title: 'Enter file name'});
     dialog
-      .add(ui.stringInput('Name', 'scaffold-tree'))
+      .add(ui.input.string('Name', {value: 'scaffold-tree'}))
       .onOK(() => {
         DG.Utils.download(`${dialog.inputs[0].stringValue}.tree`, s);
         dialog.close();
@@ -1988,11 +1988,11 @@ export class ScaffoldTreeViewer extends DG.JsViewer {
 
   render() {
     const thisViewer = this;
-    this._bitOpInput = ui.choiceInput('', BitwiseOp.OR, Object.values(BitwiseOp), (op: BitwiseOp) => {
-      thisViewer.bitOperation = op;
+    this._bitOpInput = ui.input.choice('', {value: BitwiseOp.OR, items: Object.values(BitwiseOp), onValueChanged: v => {
+      thisViewer.bitOperation = v as unknown as BitwiseOp;
       thisViewer.updateFilters();
       this.treeEncode = JSON.stringify(this.serializeTrees(this.tree));
-    });
+    }});
     this._bitOpInput.setTooltip('AND: all selected substructures match \n\r OR: any selected substructures match');
     this._bitOpInput.root.style.marginLeft = '20px';
     const iconHost = ui.box(ui.divH([

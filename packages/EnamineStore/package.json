@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "datagrok-api": "^1.18.0",
-    "@datagrok-libraries/utils": "latest"
+    "@datagrok-libraries/utils": "^4.2.11"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "latest",

@@ -98,6 +98,10 @@ export class MatchedMolecularPairsViewer extends DG.JsViewer {
   async render() {
     $(this.root).empty();
     if (this.dataFrame) {
+      const loader = ui.div(ui.loader());
+      loader.classList.add('mmpa-loader');
+      this.root.appendChild(loader);
+      const progressMMP = DG.TaskBarProgressIndicator.create(`Running MMP analysis...`);
       await this.runMMP(
         {table: this.dataFrame,
           molecules: this.moleculesCol!,
@@ -105,7 +109,9 @@ export class MatchedMolecularPairsViewer extends DG.JsViewer {
           fragmentCutoff: this.fragmentCutoff!,
         });
 
+      $(this.root).empty();
       this.root.appendChild(this.mmpView!.root);
+      progressMMP.close();
     }
   }
 

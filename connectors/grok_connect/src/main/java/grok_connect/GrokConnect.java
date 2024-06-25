@@ -15,15 +15,15 @@ import grok_connect.utils.*;
 import org.slf4j.LoggerFactory;
 import serialization.BufferAccessor;
 import serialization.DataFrame;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
 import javax.servlet.ServletOutputStream;
 import javax.ws.rs.core.MediaType;
 import grok_connect.handlers.QueryHandler;
@@ -74,10 +74,10 @@ public class GrokConnect {
         });
 
         post("/query", (request, response) -> {
-        BufferAccessor buffer;
-        DataQueryRunResult result = new DataQueryRunResult();
-        result.log = "";// use builder instead
-        FuncCall call = null;
+            BufferAccessor buffer;
+            DataQueryRunResult result = new DataQueryRunResult();
+            result.log = "";// use builder instead
+            FuncCall call = null;
             try {
                 call = gson.fromJson(request.body(), FuncCall.class);
                 call.log = "";
@@ -111,14 +111,10 @@ public class GrokConnect {
                 buffer = new BufferAccessor(result.blob);
                 buffer.bufPos = result.blob.length;
 
-            } catch (Throwable ex) {
-                buffer = packException(result,ex);
-                if (ex instanceof OutOfMemoryError) {
-                    PARENT_LOGGER.error("SEVER", ex);
-                    needToReboot = true;
-                } else {
-                    PARENT_LOGGER.info(DEFAULT_LOG_EXCEPTION_MESSAGE, ex);
-                }
+            } catch (QueryCancelledByUser | GrokConnectException ex) {
+                buffer = packException(result, ex.getClass().equals(GrokConnectException.class)
+                        ? (Exception) ex.getCause() : ex);
+                PARENT_LOGGER.info(DEFAULT_LOG_EXCEPTION_MESSAGE, ex);
             }
             finally {
                 if (call != null)
@@ -139,7 +135,12 @@ public class GrokConnect {
             DataConnection connection = gson.fromJson(request.body(), DataConnection.class);
             DataProvider provider = providerManager.getByName(connection.dataSource);
             response.type(MediaType.TEXT_PLAIN);
-            return provider.testConnection(connection);
+            try {
+                provider.testConnection(connection);
+                return DataProvider.CONN_AVAILABLE;
+            } catch (GrokConnectException e) {
+                return e.getMessage();
+            }
         });
 
         post("/query_table_sql", (request, response) -> {
@@ -149,7 +150,7 @@ public class GrokConnect {
                 TableQuery tableQuery = gson.fromJson(connection.get("queryTable"), TableQuery.class);
                 DataProvider provider = providerManager.getByName(connection.dataSource);
                 query = provider.queryTableSql(connection, tableQuery);
-            } catch (Throwable ex) {
+            } catch (Exception ex) {
                 PARENT_LOGGER.info(DEFAULT_LOG_EXCEPTION_MESSAGE, ex);
                 buildExceptionResponse(response, printError(ex));
             }
@@ -164,9 +165,10 @@ public class GrokConnect {
                 DataProvider provider = providerManager.getByName(connection.dataSource);
                 DataFrame dataFrame = provider.getSchemas(connection);
                 buffer = packDataFrame(result, dataFrame);
-            } catch (Throwable ex) {
-                PARENT_LOGGER.debug(DEFAULT_LOG_EXCEPTION_MESSAGE, ex);
-                buffer = packException(result, ex);
+            } catch (QueryCancelledByUser | GrokConnectException ex) {
+                buffer = packException(result, ex.getClass().equals(GrokConnectException.class)
+                        ? (Exception) ex.getCause() : ex);
+                PARENT_LOGGER.info(DEFAULT_LOG_EXCEPTION_MESSAGE, ex);
             }
             prepareResponse(result, response, buffer);
             return response;
@@ -180,9 +182,10 @@ public class GrokConnect {
                 DataProvider provider = providerManager.getByName(connection.dataSource);
                 DataFrame dataFrame = provider.getSchema(connection, connection.get("schema"), connection.get("table"));
                 buffer = packDataFrame(result, dataFrame);
-            } catch (Throwable ex) {
+            } catch (QueryCancelledByUser | GrokConnectException ex) {
+                buffer = packException(result, ex.getClass().equals(GrokConnectException.class)
+                        ? (Exception) ex.getCause() : ex);
                 PARENT_LOGGER.info(DEFAULT_LOG_EXCEPTION_MESSAGE, ex);
-                buffer = packException(result, ex);
             }
             prepareResponse(result, response, buffer);
             return response;
@@ -248,19 +251,17 @@ public class GrokConnect {
         return buffer;
     }
 
-    public static BufferAccessor packException(DataQueryRunResult result, Throwable ex) {
+    public static BufferAccessor packException(DataQueryRunResult result, Exception ex) {
         Map<String, String> exception = printError(ex);
         result.errorMessage = exception.get("errorMessage");
         result.errorStackTrace = exception.get("errorStackTrace");
         return new BufferAccessor();
     }
 
-
     public static Map<String, String> printError(Throwable ex) {
-        String errorMessage = ex.toString();
-        StringWriter stackTrace = new StringWriter();
-        ex.printStackTrace(new PrintWriter(stackTrace));
-        String errorStackTrace = stackTrace.toString();
+        String errorMessage = ex.getMessage();
+        String errorStackTrace = Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString)
+                .collect(Collectors.joining(System.lineSeparator()));
         return new HashMap<String, String>() {{
             put("errorMessage", errorMessage);
             put("errorStackTrace", errorStackTrace);

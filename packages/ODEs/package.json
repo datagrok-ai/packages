@@ -15,7 +15,7 @@
     "@codemirror/state": "^6.3.1",
     "@datagrok-libraries/compute-utils": "^1.34.1",
     "@datagrok-libraries/tutorials": "^1.3.11",
-    "@datagrok-libraries/utils": "latest",
+    "@datagrok-libraries/utils": "^4.2.11",
     "cash-dom": "latest",
     "codemirror": "^6.0.1",
     "css-loader": "^6.10.0",

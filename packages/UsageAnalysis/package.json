@@ -13,12 +13,12 @@
     "directory": "packages/UsageAnalysis"
   },
   "dependencies": {
-    "@datagrok-libraries/utils": "^4.1.1",
+    "@datagrok-libraries/utils": "^4.2.11",
     "acorn": "^8.5.0",
     "cash-dom": "^8.1.0",
     "choices.js": "^10.1.0",
     "color-hash": "^2.0.2",
-    "datagrok-api": "^1.19.0",
+    "datagrok-api": "../../js-api",
     "moment": "^2.29.1",
     "rxjs": "^6.5.5",
     "dayjs": "latest"

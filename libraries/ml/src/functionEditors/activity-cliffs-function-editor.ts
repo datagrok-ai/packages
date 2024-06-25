@@ -62,7 +62,7 @@ export class ActivityCliffsEditor extends DimReductionBaseEditor {
         this.methodSettingsDiv,
         this.similarityMetricInputRoot,
         this.similarityInput,
-      ], {style: {minWidth: '320px'}, classes: 'ui-form'});
+      ], {style: {minWidth: '320px'}, classes: 'ui-form dim-reduction-dialog-form'});
     }
 
     public getParams(): ActivityCliffsParams {

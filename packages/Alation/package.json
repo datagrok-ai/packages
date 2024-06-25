@@ -23,7 +23,7 @@
     "datagrok-api": "^1.12.0",
     "cash-dom": "latest",
     "dayjs": "latest",
-    "@datagrok-libraries/utils": "^1.16.1",
+    "@datagrok-libraries/utils": "^4.2.11",
     "rxjs": "^6.5.5"
   },
   "devDependencies": {

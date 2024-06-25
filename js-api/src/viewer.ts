@@ -563,8 +563,20 @@ export class ViewerMetaHelper {
 export class ViewerFormulaLinesHelper extends FormulaLinesHelper {
   readonly viewer: Viewer;
 
-  get storage(): string { return this.viewer.props['formulaLines']; }
-  set storage(value: string) { this.viewer.props['formulaLines'] = value; }
+  get storage(): string {
+    if (this.viewer.getOptions()['type'] === DG.VIEWER.TRELLIS_PLOT) {
+      let innerLook = this.viewer.props['innerViewerLook'];
+      return api.grok_PropMixin_GetPropertyValue(innerLook, 'formulaLines');
+    }
+    return this.viewer.props['formulaLines'];
+  }
+  set storage(value: string) {
+    if (this.viewer.getOptions()['type'] === DG.VIEWER.TRELLIS_PLOT) {
+      let innerLook = this.viewer.props['innerViewerLook'];
+      api.grok_PropMixin_SetPropertyValue(innerLook, 'formulaLines', value);
+    } else
+      this.viewer.props['formulaLines'] = value;
+  }
 
   constructor(viewer: Viewer) {
     super();

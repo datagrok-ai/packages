@@ -142,12 +142,17 @@ export function formulaLinesDialog(src: DG.DataFrame | DG.Viewer): FormulaLinesD
 // Adds "Formula Lines" menu group to the Scatter Plot context menu:
 grok.events.onContextMenu.subscribe((args) => {
   const src = args.args.context;
+  let menu;
   if (src instanceof DG.ScatterPlotViewer ||
-     (src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.LINE_CHART)) {
-    const menu = args.args.menu.find('Tools');
-    if (menu != null)
-      menu.item('Formula Lines...', () => {formulaLinesDialog(src);});
-  }
+      (src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.LINE_CHART))
+    menu = args.args.menu.find('Tools');
+
+  if (src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.TRELLIS_PLOT &&
+      src.getOptions().look['viewerType'] == DG.VIEWER.SCATTER_PLOT)
+    menu = args.args.menu.find('Inner Viewer').find('Tools');
+
+  if (menu != null)
+    menu.item('Formula Lines...', () => {formulaLinesDialog(src);});
 });
 
 //tags: init

@@ -25,6 +25,8 @@ export class DataSourceType {
 
   static MariaDB = 'MariaDB';
 
+  static MlFlow = 'MlFlow';
+
   static MongoDB = 'MongoDB';
 
   static MsSql = 'MS SQL';

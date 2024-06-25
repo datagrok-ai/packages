@@ -452,12 +452,12 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
   private static viewerCounter: number = -1;
   private readonly viewerId: number = ++WebLogoViewer.viewerCounter;
 
-  private viewerToLog(): string { return `WebLogoViewer<${this.viewerId}>`; }
+  private toLog(): string { return `WebLogoViewer<${this.viewerId}>`; }
 
   // -- Data --
 
   setData(): void {
-    const logPrefix = `${this.viewerToLog()}.setData()`;
+    const logPrefix = `${this.toLog()}.setData()`;
     _package.logger.debug(`${logPrefix}, in`);
     this.viewSyncer.sync(`${logPrefix}`, async () => { // setData
       if (!this.setDataInProgress) this.setDataInProgress = true; else return; // check setDataInProgress synced
@@ -493,18 +493,18 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
     this.viewSubs = [];
 
     const dataFrameTxt = `${this.dataFrame ? 'data' : 'null'}`;
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.destroyView( dataFrame = ${dataFrameTxt} ) start`);
+    _package.logger.debug(`${this.toLog()}.destroyView( dataFrame = ${dataFrameTxt} ) start`);
 
     this.host!.remove();
     this.msgHost = undefined;
     this.host = undefined;
 
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.destroyView() end`);
+    _package.logger.debug(`${this.toLog()}.destroyView() end`);
   }
 
   private async buildView(): Promise<void> {
     const dataFrameTxt: string = this.dataFrame ? 'data' : 'null';
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.buildView( dataFrame = ${dataFrameTxt} ) start`);
+    _package.logger.debug(`${this.toLog()}.buildView( dataFrame = ${dataFrameTxt} ) start`);
     const dpr = window.devicePixelRatio;
     this.viewSubs.push(DG.debounce(this.renderRequest, Debounces.render)
       .subscribe(this.renderRequestOnDebounce.bind(this)));
@@ -559,14 +559,20 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
       fromEvent<WheelEvent>(this.canvas, 'wheel').subscribe(this.canvasOnWheel.bind(this)));
 
     this.render(WlRenderLevel.Freqs, 'buildView');
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.buildView() end`);
+    _package.logger.debug(`${this.toLog()}.buildView() end`);
   }
 
-  /** Handler of changing size WebLogo */
-  private rootOnSizeChanged(): void {
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.rootOnSizeChanged(), start `);
+  private lastSize: { width: number, height: number } = {width: -1, height: -1};
 
-    this.render(WlRenderLevel.Layout, 'rootOnSizeChanged');
+  /** Handler of changing size WebLogo */
+  private rootOnSizeChanged(value: ResizeObserverEntry): void {
+    const size = {width: value.target.clientWidth, height: value.target.clientHeight};
+    if (this.lastSize.width != size.width || this.lastSize.height != size.height) {
+      _package.logger.debug(
+        `${this.toLog()}.rootOnSizeChanged(), ${JSON.stringify(size)}, start `);
+      this.render(WlRenderLevel.Layout, 'rootOnSizeChanged');
+    }
+    this.lastSize = size;
   }
 
   private updateEditors(): void {
@@ -853,7 +859,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
 
   /** Add filter handlers when table is a attached  */
   public override onTableAttached() {
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.onTableAttached(), `);
+    _package.logger.debug(`${this.toLog()}.onTableAttached(), `);
 
     super.onTableAttached();
     this.setData();
@@ -861,7 +867,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
 
   /** Remove all handlers when table is a detach  */
   public override detach() {
-    const logPrefix = `${this.viewerToLog()}.detach()`;
+    const logPrefix = `${this.toLog()}.detach()`;
     _package.logger.debug(`${logPrefix}, in`);
 
     const superDetach = super.detach.bind(this);
@@ -933,7 +939,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
 
   /** Renders requested repeatedly will be performed once on window.requestAnimationFrame() */
   render(renderLevel: WlRenderLevel, reason: string): void {
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>` +
+    _package.logger.debug(`${this.toLog()}` +
       `.render( recalcLevelVal=${renderLevel}, reason='${reason}' )`);
     this.requestedRenderLevel = Math.max(this.requestedRenderLevel, renderLevel);
     this.renderRequest.next(this.requestedRenderLevel);
@@ -943,12 +949,12 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
    *@param {WlRenderLevel} renderLevel - indicates that need to recalculate data for rendering
    */
   protected async renderInt(renderLevel: WlRenderLevel): Promise<void> {
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.render.renderInt( renderLevel=${renderLevel} ), ` +
+    _package.logger.debug(`${this.toLog()}.render.renderInt( renderLevel=${renderLevel} ), ` +
       `start `);
 
     /** Calculate freqs of monomers */
     const calculateFreqsInt = (): void => {
-      _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.render.calculateFreqsInt(), start `);
+      _package.logger.debug(`${this.toLog()}.render.calculateFreqsInt(), start `);
       if (!this.host || !this.seqCol || !this.dataFrame) return;
 
       // region updatePositions
@@ -1050,7 +1056,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
 
     /** Calculate layout of monomers on screen (canvas) based on freqs, required to handle mouse events */
     const calculateLayoutInt = (firstPos: number, lastPos: number, dpr: number, positionLabelsHeight: number): void => {
-      _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.render.calculateLayoutInt(), start `);
+      _package.logger.debug(`${this.toLog()}.render.calculateLayoutInt(), start `);
 
       const absoluteMaxHeight: number = this.canvas.height - positionLabelsHeight * dpr;
       let alphabetSizeLog: number;
@@ -1066,7 +1072,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
 
       for (let jPos = firstPos; jPos <= lastPos; ++jPos) {
         if (!(jPos in this.positions)) {
-          _package.logger.warning(`Bio: WebLogoViewer<${this.viewerId}>.render.calculateLayoutInt() ` +
+          _package.logger.warning(`${this.toLog()}.render.calculateLayoutInt() ` +
             `this.positions.length = ${this.positions.length}, jPos = ${jPos}`);
           continue;
         }
@@ -1074,7 +1080,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
           jPos, this.slider.min, absoluteMaxHeight, this.positionHeight,
           alphabetSizeLog, this._positionWidthWithMargin, this._positionWidth, dpr, positionLabelsHeight);
       }
-      _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.render.calculateLayoutInt(), end `);
+      _package.logger.debug(`${this.toLog()}.render.calculateLayoutInt(), end `);
       this._onLayoutCalculated.next();
     };
 
@@ -1132,11 +1138,11 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
       g.restore();
     }
 
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.render.renderInt( recalcLevel=${renderLevel} ), end`);
+    _package.logger.debug(`${this.toLog()}.render.renderInt( recalcLevel=${renderLevel} ), end`);
   }
 
   private renderRequestOnDebounce(renderLevel: WlRenderLevel): void {
-    const logPrefix = `${this.viewerToLog()}.renderRequestOnDebounce()`;
+    const logPrefix = `${this.toLog()}.renderRequestOnDebounce()`;
     if ($(this.root).offsetParent().get()[0]?.tagName === 'HTML') {
       _package.logger.warning(`${logPrefix}, $(this.root).offsetParent() is the 'HTML' tag.`);
       return;
@@ -1167,35 +1173,35 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
         maxRange: this.slider.maxRange
       };
       _package.logger.debug(
-        `Bio: WebLogoViewer<${this.viewerId}>.sliderOnValuesChanged( ${JSON.stringify(val)} ), start`);
+        `${this.toLog()}.sliderOnValuesChanged( ${JSON.stringify(val)} ), start`);
       this.render(WlRenderLevel.Layout, 'sliderOnValuesChanged');
     } catch (err: any) {
       const errMsg = errorToConsole(err);
-      _package.logger.error(`Bio: WebLogoViewer<${this.viewerId}>.sliderOnValuesChanged() error:\n` + errMsg);
+      _package.logger.error(`${this.toLog()}.sliderOnValuesChanged() error:\n` + errMsg);
       //throw err; // Do not throw to prevent disabling event handler
     }
   }
 
   private dataFrameFilterOnChanged(_value: any): void {
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.dataFrameFilterChanged()`);
+    _package.logger.debug(`${this.toLog()}.dataFrameFilterChanged()`);
     try {
       if (this.filterSource === FilterSources.Filtered)
         this.render(WlRenderLevel.Freqs, 'dataFrameFilterOnChanged');
     } catch (err: any) {
       const errMsg = errorToConsole(err);
-      _package.logger.error(`Bio: WebLogoViewer<${this.viewerId}>.dataFrameFilterOnChanged() error:\n` + errMsg);
+      _package.logger.error(`${this.toLog()}.dataFrameFilterOnChanged() error:\n` + errMsg);
       //throw err; // Do not throw to prevent disabling event handler
     }
   }
 
   private dataFrameSelectionOnChanged(_value: any): void {
-    _package.logger.debug(`Bio: WebLogoViewer<${this.viewerId}>.dataFrameSelectionOnChanged()`);
+    _package.logger.debug(`${this.toLog()}.dataFrameSelectionOnChanged()`);
     try {
       if (this.filterSource === FilterSources.Selected)
         this.render(WlRenderLevel.Freqs, 'dataFrameSelectionOnChanged');
     } catch (err: any) {
       const errMsg = errorToConsole(err);
-      _package.logger.error(`Bio: WebLogoViewer<${this.viewerId}>.dataFrameSelectionOnChanged() error:\n` + errMsg);
+      _package.logger.error(`${this.toLog()}.dataFrameSelectionOnChanged() error:\n` + errMsg);
       //throw err; // Do not throw to prevent disabling event handler
     }
   }
@@ -1236,7 +1242,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
         ui.tooltip.hide();
     } catch (err: any) {
       const errMsg = errorToConsole(err);
-      _package.logger.error(`Bio: WebLogoViewer<${this.viewerId}>.canvasOnMouseMove() error:\n` + errMsg);
+      _package.logger.error(`${this.toLog()}.canvasOnMouseMove() error:\n` + errMsg);
       //throw err; // Do not throw to prevent disabling event handler
     }
   }
@@ -1257,7 +1263,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
       }
     } catch (err: any) {
       const errMsg = errorToConsole(err);
-      _package.logger.error(`Bio: WebLogoViewer<${this.viewerId}>.canvasOnMouseDown() error:\n` + errMsg);
+      _package.logger.error(`${this.toLog()}.canvasOnMouseDown() error:\n` + errMsg);
       //throw err; // Do not throw to prevent disabling event handler
     }
   }
@@ -1271,7 +1277,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
       this.slider.scrollBy(this.slider.min + countOfScrollPositions);
     } catch (err: any) {
       const errMsg = errorToConsole(err);
-      _package.logger.error(`Bio: WebLogoViewer<${this.viewerId}>.canvasOnWheel() error:\n` + errMsg);
+      _package.logger.error(`${this.toLog()}.canvasOnWheel() error:\n` + errMsg);
       //throw err; // Do not throw to prevent disabling event handler
     }
   }
@@ -1284,7 +1290,7 @@ export class WebLogoViewer extends DG.JsViewer implements IWebLogoViewer {
 
   invalidate(caller?: string): void {
     const callLog = `invalidate(${caller ? ` <- ${caller} ` : ''})`;
-    const logPrefix = `${this.viewerToLog()}.${callLog}`;
+    const logPrefix = `${this.toLog()}.${callLog}`;
     // Put the event trigger in the tail of the synced calls queue.
     this.render(WlRenderLevel.None, callLog); // Put render request to the syncer
     this.viewSyncer.sync(`${logPrefix}`, async () => {

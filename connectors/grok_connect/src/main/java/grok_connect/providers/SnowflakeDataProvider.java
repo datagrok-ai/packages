@@ -40,13 +40,12 @@ public class SnowflakeDataProvider extends JdbcDataProvider {
     public Properties getProperties(DataConnection conn) {
         java.util.Properties properties = defaultConnectionProperties(conn);
         if (!conn.hasCustomConnectionString()) {
-            properties.put(DbCredentials.DB, conn.getDb());
-            properties.put(DbCredentials.WAREHOUSE, conn.get(DbCredentials.WAREHOUSE));
-            properties.put(DbCredentials.ACCOUNT, buildAccount(conn));
+            setIfNotNull(properties, DbCredentials.DB, conn.getDb());
+            setIfNotNull(properties, DbCredentials.WAREHOUSE, conn.get(DbCredentials.WAREHOUSE));
+            setIfNotNull(properties, DbCredentials.ACCOUNT, buildAccount(conn));
             String schema = conn.get(DbCredentials.SCHEMA);
-            properties.put(DbCredentials.SCHEMA, schema == null ? DEFAULT_SCHEMA : schema);
-            if (conn.parameters.containsKey(DbCredentials.ROLE))
-                properties.put(DbCredentials.ROLE, conn.get(DbCredentials.ROLE));
+            properties.setProperty(DbCredentials.SCHEMA, schema == null ? DEFAULT_SCHEMA : schema);
+            setIfNotNull(properties, DbCredentials.ROLE, conn.get(DbCredentials.ROLE));
         }
         return properties;
     }

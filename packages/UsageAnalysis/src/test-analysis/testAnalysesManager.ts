@@ -1,11 +1,11 @@
 import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
+import { _package } from '../package';
 
 import { delay, Test, TestContext, initAutoTests, awaitCheck } from '@datagrok-libraries/utils/src/test';
- 
-import { getDate } from '../utils';
 
+import { getDate } from '../utils';
 
 interface IPackageTest {
     test: Test,
@@ -13,31 +13,29 @@ interface IPackageTest {
 }
 
 export class TestAnalysesManager {
-    private testsListMapped: any[] = [];
+    private testsListMapped: any[] = []; 
 
-    constructor(){
+    constructor() {
     }
 
-    public async init(){ 
-        let testsList = await TestAnalysesManager.collectTests();
-
+    public async init() {
+        let testsList = await TestAnalysesManager.collectPackageTests();
         this.testsListMapped = testsList.map((elem) => {
-            return { 'name': elem.packageName + ": " + elem.test.category + ": " + elem.test.name  };
+            return { 'name': elem.packageName + ": " + elem.test.category + ": " + elem.test.name };
         });
     }
 
-    public async getTestsStatusesByLastCommit() : Promise<DG.DataFrame>{
-        let currentDate = getDate(new Date(Date.now()));  
- 
-        let testsListDF = DG.DataFrame.fromObjects(this.testsListMapped); 
+    public async getTestsStatusesByLastCommit(): Promise<DG.DataFrame> {
+        let currentDate = getDate(new Date(Date.now()));
 
-        const runs: DG.DataFrame = await grok.functions.call('UsageAnalysis:getServerStartsFor2Weeks',  { 'date': currentDate });
-        let commitBuildTime : any = Array.from(runs.rows)[0]['buildtime']; 
-        let commitBuildDate = getDate(new  Date(commitBuildTime));
-        const tests: DG.DataFrame = await grok.functions.call('UsageAnalysis:getTestStatusesInTimespan',  { 'startDate': commitBuildDate, 'endDate' : currentDate, 'testslist': testsListDF });
+        let testsListDF = DG.DataFrame.fromObjects(this.testsListMapped);
+
+        const runs: DG.DataFrame = await grok.functions.call('UsageAnalysis:getServerStartsFor2Weeks', { 'date': currentDate });
+        let commitBuildTime: any = Array.from(runs.rows)[0]['buildtime'];
+        let commitBuildDate = getDate(new Date(commitBuildTime));
+        const tests: DG.DataFrame = await grok.functions.call('UsageAnalysis:getTestStatusesInTimespan', { 'startDate': commitBuildDate, 'endDate': currentDate, 'testslist': testsListDF });
         return tests;
     }
-
 
     static async collectPackages(packageName?: string): Promise<any[]> {
         let testFunctions = DG.Func.find({ name: 'Test', meta: { file: 'package-test.js' } });
@@ -46,7 +44,9 @@ export class TestAnalysesManager {
         return testFunctions;
     }
 
-    static async collectTests(): Promise<IPackageTest[]> {
+    static async collectPackageTests(): Promise<IPackageTest[]> {
+        await TestAnalysesManager.collectManualTestNames()
+
         let packagesTests = await this.collectPackages();
         let testsData: IPackageTest[] = [];
 
@@ -71,4 +71,24 @@ export class TestAnalysesManager {
         }
         return testsData;
     }
+
+    static async collectManualTestNames(): Promise<string[]> { 
+        const files = await _package.files.list('Test Track', true);
+        const tests: string[] = [];
+        
+        for (const file of files) {
+            if (!file.isDirectory) { 
+                const pathL = file.path.replace(/\.[^.]+$/, '').split('/').slice(2);
+
+                if (pathL.length < 2)
+                    grok.shell.error('Root test case');
+
+                tests[tests.length] = pathL.join(': '); 
+            }
+        }
+
+        return tests;
+    }
+
+
 }

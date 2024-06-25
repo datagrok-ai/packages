@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import grok_connect.GrokConnect;
@@ -62,7 +61,7 @@ public class QueryManager {
         logger.debug("Deserialized and preprocessed call");
     }
 
-    public void initResultSet(FuncCall query) throws ClassNotFoundException, GrokConnectException, QueryCancelledByUser, SQLException {
+    public void initResultSet(FuncCall query) throws GrokConnectException, QueryCancelledByUser, SQLException {
         logger.debug(EventType.CONNECTION_RECEIVE.getMarker(EventType.Stage.START), "Receiving connection to {} database...", provider.descriptor.type);
         connection = provider.getConnection(query.func.connection);
         logger.debug(EventType.CONNECTION_RECEIVE.getMarker(EventType.Stage.END), "Received connection to {} database", provider.descriptor.type);
@@ -76,7 +75,7 @@ public class QueryManager {
         columnCount = metaData.getColumnCount();
     }
 
-    public void dryRun(boolean skipColumnFillingLog) throws QueryCancelledByUser, SQLException, GrokConnectException, ClassNotFoundException {
+    public void dryRun(boolean skipColumnFillingLog) throws QueryCancelledByUser, SQLException, GrokConnectException {
         // need to create new FuncCall on every run because state of params changes irrevocably after each run
         queryLogger.writeLog(false);
         FuncCall query = gson.fromJson(initMessage, FuncCall.class);
@@ -155,9 +154,8 @@ public class QueryManager {
         return Math.min(Math.max(MIN_FETCH_SIZE, fetchSize), MAX_FETCH_SIZE);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private void initParams() {
-        query.options.entrySet().removeIf(e -> ((Map.Entry)e).getValue() == null);
+        query.options.entrySet().removeIf(e -> e.getValue() == null);
         setFetchSize(query.options.getOrDefault(FETCH_SIZE_KEY, "").toString());
         setInitFetchSize(query.options.getOrDefault(INIT_FETCH_SIZE_KEY, "").toString());
     }

@@ -5,7 +5,7 @@ import { testData } from './dataframe-utils';
 import Timeout = NodeJS.Timeout;
 import { changeOptionsSaveLayout, filterAsync, loadLayout, selectFilterChangeCurrent, testViewerInternal } from './test-viewer-utils';
 
-const STANDART_TIMEOUT = 180000;
+const STANDART_TIMEOUT = 30000;
 const BENCHMARK_TIMEOUT = 10800000;
 
 const stdLog = console.log.bind(console);
@@ -256,15 +256,13 @@ export async function initAutoTests(package_: DG.Package, module?: any) {
     return;
   }
   if (package_.name === 'DevTools' || (!!module && module._package.name === 'DevTools')) {
-    const testFunctions: DG.Func[] = DG.Func.find({ tags: ['dartTest'] });
-    for (const f of testFunctions) {
-      const arr = f.name.split(/\s*\|\s*/g);
+    for (const f of (<any>window).dartTests) {
+      const arr = f.name.split(/\s*\|\s*!/g);
       const name = arr.pop() ?? f.name;
       const cat = arr.length ? coreCatName + ': ' + arr.join(': ') : coreCatName;
       if (moduleTests[cat] === undefined)
-        moduleTests[cat] = { tests: [], clear: true };
-      moduleTests[cat].tests.push(new Test(cat, name,
-        async () => await f.apply(), { isAggregated: f.outputs.length > 0, timeout: STANDART_TIMEOUT }));
+        moduleTests[cat] = {tests: [], clear: true};
+      moduleTests[cat].tests.push(new Test(cat, name, f.test, {isAggregated: false, timeout: STANDART_TIMEOUT}));
     }
   }
   const moduleAutoTests = [];
@@ -431,50 +429,21 @@ export async function runTests(options?:
   if (options.testContext.catchUnhandled) {
     await delay(1000);
     const error = await grok.shell.lastError;
-    if (error) {
-      results.push({
-        category: 'Unhandled exceptions',
-        name: 'exceptions',
-        result: error, success: false, ms: 0, skipped: false
+    const params = {
+      category: 'Unhandled exceptions',
+      name: 'Exception',
+      result: error ?? '', success: !error, ms: 0, skipped: false
+    };
+    results.push(params);
+    (<any>params).package = package_.name;
+    if ((<any>grok.shell).reportTest != null)
+      await (<any>grok.shell).reportTest('package', params);
+    else {
+      await fetch(`${grok.dapi.root}/log/tests/package`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify(params)
       });
-    }
-  }
-  if (!options.test && results.length) {
-    const successful = results.filter((r) => r.success).length;
-    const skipped = results.filter((r) => r.skipped).length;
-    const failed = results.filter((r) => !r.success);
-    const packageName = package_.name;
-    for (const cat of categories) {
-      const res = results.filter((r) => r.category === cat);
-      const failed_ = res.filter((r) => !r.success).length;
-      const params = {
-        success: failed_ === 0,
-        passed: res.filter((r) => r.success).length,
-        skipped: res.filter((r) => r.skipped).length,
-        failed: failed_,
-        type: 'package', packageName, category: cat
-      };
-      grok.log.usage(`${packageName}: ${cat}`,
-        params, `category-package ${packageName}: ${cat}`);
-    }
-    if (!options.category) {
-      const params = {
-        success: failed.length === 0, passed: successful, skipped, failed: failed.length,
-        type: 'package', packageName
-      };
-      grok.log.usage(packageName, params, `package-package ${packageName}`);
-    }
-    if (options.testContext.report) {
-      const logger = new DG.Logger();
-      const description = 'Package @package tested: @successful successful, @skipped skipped, @failed failed tests';
-      const params = {
-        successful: successful,
-        skipped: skipped,
-        failed: failed.length,
-        package: package_
-      };
-      for (const r of failed) Object.assign(params, { [`${r.category} | ${r.name}`]: r.result });
-      logger.log(description, params, 'package-tested');
     }
   }
   return results;
@@ -510,7 +479,6 @@ async function execTest(t: Test, predicate: string | undefined, logs: any[],
   }
   if (t.options?.isAggregated && r.result.constructor === DG.DataFrame) {
     const col = r.result.col('success');
-    type = 'core';
     if (col)
       r.success = col.stats.sum === col.length;
     if (!verbose) {
@@ -529,15 +497,22 @@ async function execTest(t: Test, predicate: string | undefined, logs: any[],
   r.name = t.name;
   if (!filter) {
     let params = {
-      'success': r.success, 'result': r.result, 'ms': r.ms, 'skipped': r.skipped,
-      'type': type, packageName, 'category': t.category, 'test': t.name, 'logs': r.logs
+      'success': r.success, 'result': r.result, 'ms': r.ms,
+      'skipped': r.skipped, 'package': packageName, 'category': t.category, 'name': t.name, 'logs': r.logs
     };
     if (r.result.constructor == Object) {
       const res = Object.keys(r.result).reduce((acc, k) => ({ ...acc, ['result.' + k]: r.result[k] }), {});
       params = { ...params, ...res };
     }
-    grok.log.usage(`${packageName}: ${t.category}: ${t.name}`,
-      params, `test-${type} ${packageName}: ${t.category}: ${t.name}`);
+    if ((<any>grok.shell).reportTest != null)
+      await (<any>grok.shell).reportTest(type, params);
+    else {
+      await fetch(`${grok.dapi.root}/log/tests/${type}`, {
+        method: 'POST', headers: {'Content-Type': 'application/json'},
+        credentials: 'same-origin',
+        body: JSON.stringify(params)
+      });
+    }
   }
   return r;
 }

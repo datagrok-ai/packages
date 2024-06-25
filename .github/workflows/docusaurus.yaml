@@ -155,7 +155,7 @@ jobs:
 
               if [ "$line_count" -gt 1 ]; then
                 echo "## Broken links" >> ${GITHUB_STEP_SUMMARY}
-                # Add CSV as Markdown table 
+                # Add CSV as Markdown table
                 echo "|$(head -n 1 help/_broken_links.csv | sed 's/,/|/g')|" | sed -e 's/|"/|/g' -e 's/"|/|/g' >> ${GITHUB_STEP_SUMMARY}
                 echo "|$(head -n 1 help/_broken_links.csv | sed 's/[^,]/-/g' | sed 's/,/|/g')|" >> ${GITHUB_STEP_SUMMARY}
                 tail -n +2 help/_broken_links.csv | sed 's/,/|/g' | sed 's/^/|/' | sed 's/$/|/' | sed -e 's/|"/|/g' -e 's/"|/|/g' >> ${GITHUB_STEP_SUMMARY}
@@ -166,7 +166,7 @@ jobs:
                 echo ":no_entry_sign: Docusaurus build errors:"
                 cat help/_docusaurus_build.txt
               fi
-    
+
               if [[ "${{ steps.build.outcome }}" == "failure" ]]; then
                   echo ':x: Docusaurus build failed'
                   echo 'Check workflow output for more information: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'

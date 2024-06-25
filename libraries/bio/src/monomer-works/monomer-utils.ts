@@ -316,6 +316,7 @@ export async function getMonomerSubstitutionMatrix(monomerSet: string[], fingerp
     for (let j = i + 1; j < fingerPrints.length; ++j) {
       if (!fingerPrints[j])
         continue;
+      // @ts-ignore
       scoringMatrix[i][j] = scoringMatrix[j][i] = tanimotoSimilarity(fingerPrints[i]!, fingerPrints[j]!);
     }
   }

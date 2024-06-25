@@ -1,0 +1,37 @@
+[
+    {
+        "monomerType": "Backbone",
+        "smiles": "CCCCCCCC[C@H](N[H:1])C([OH:2])=O",
+        "name": "2-Aminocapric acid",
+        "author": "Pistoia Alliance HELM project",
+        "molfile": "HELM Core Monomer library\n     RDKit          2D\n\n 14 13  0  0  1  0  0  0  0  0999 V2000\n    0.6430   -4.4293    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    1.2375   -5.0013    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.0301   -4.7725    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    2.6246   -5.3445    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    3.4172   -5.1157    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.0117   -5.6877    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    4.8044   -5.4589    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    5.3988   -6.0310    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    6.1915   -5.8021    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    6.7859   -6.3742    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n    7.5786   -6.1454    0.0000 R#  0  0  0  0  0  0  0  0  0  0  0  0\n    6.3896   -5.0013    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    5.7951   -4.4293    0.0000 R#  0  0  0  0  0  0  0  0  0  0  0  0\n    7.1823   -4.7725    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0\n  2  3  1  0\n  3  4  1  0\n  4  5  1  0\n  5  6  1  0\n  6  7  1  0\n  7  8  1  0\n  9  8  1  0\n  9 10  1  1\n 10 11  1  0\n  9 12  1  0\n 12 13  1  0\n 12 14  2  0\nM  RGP  2  11   1  13   2\nM  END\n",
+        "naturalAnalog": "X",
+        "rgroups": [
+            {
+                "capGroupSMILES": "[*:1][H]",
+                "alternateId": "R1-H",
+                "capGroupName": "H",
+                "label": "R1"
+            },
+            {
+                "capGroupSMILES": "O[*:2]",
+                "alternateId": "R2-OH",
+                "capGroupName": "OH",
+                "label": "R2"
+            }
+        ],
+        "meta": {
+            "colors": {
+                "default": {
+                    "line": "#202020",
+                    "text": "#202020",
+                    "background": "#60FF40"
+                }
+            }
+        },
+        "createDate": null,
+        "id": 0,
+        "polymerType": "PEPTIDE",
+        "symbol": "Aca"
+    }
+]

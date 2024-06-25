@@ -326,8 +326,8 @@ export async function demoDocking(): Promise<void> {
 //output: widget result
 export async function autodockPanel(smiles: DG.SemanticValue): Promise<DG.Widget> {
   const items = await getConfigFiles();
-  const target = ui.choiceInput('Target', items[0], items);
-  const conformations = ui.intInput('Conformations', 10);
+  const target = ui.input.choice('Target', {value: items[0], items: items})
+  const conformations = ui.input.int('Conformations', {value: 10});
 
   const resultsContainer = ui.div();
   const button = ui.button('Run', async () => {

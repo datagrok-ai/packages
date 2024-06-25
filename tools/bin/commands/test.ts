@@ -114,7 +114,7 @@ export function test(args: TestArgs): boolean {
 
   function test(): void {
     color.info('Starting tests...');
-    const P_START_TIMEOUT: number = 3600000;
+    const P_START_TIMEOUT: number = 900000;
     let browser: Browser;
     let page: Page;
     let recorder: PuppeteerScreenRecorder;

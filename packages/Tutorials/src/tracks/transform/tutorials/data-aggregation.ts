@@ -4,6 +4,7 @@ import { Tutorial } from '@datagrok-libraries/tutorials/src/tutorial';
 import $ from 'cash-dom';
 import { interval } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { waitForElementClick } from '../../eda/tutorials/utils';
 
 
 
@@ -15,7 +16,7 @@ export class AggregationTutorial extends Tutorial {
     return 'Learn different ways of data aggregation and pivoting';
   }
   get steps(): number {
-    return 10;
+    return 13;
   }
 
   helpUrl: string = 'https://datagrok.ai/help/transform/aggregate-rows';
@@ -58,7 +59,7 @@ export class AggregationTutorial extends Tutorial {
 
     const groupByCol2 = 'SEX';
     await this.action(`Group rows by column "${groupByCol2}"`, findColTag(groupByRoot, groupByCol2),
-      null, 'Another way to add a column to group by is to drag it from the column list on the right. ' +
+    groupByRoot.querySelector('.grok-pivot-column-tags-plus') as HTMLElement, 'Another way to add a column to group by is to drag it from the column list on the right. ' +
       'Add the second column to the grouping list.');
 
     this.title('Pivoting');
@@ -78,18 +79,42 @@ export class AggregationTutorial extends Tutorial {
     const aggRoot = $('.grok-pivot-column-panel').filter((_, el) =>
       el.textContent?.startsWith('Aggregate') === true)[0]!;
 
-    await this.action('Leave only the "avg(AGE)" aggregation',
-      findColTag(aggRoot, 'avg(AGE)', () => $(aggRoot).find(colTagSelector).length === 1), null,
+    const ageAggr = $(aggRoot).find(colTagSelector).filter((_, el) => $(el).text().includes('AGE')).get(0);
+    await this.action(
+      'Leave only the "avg(AGE)" aggregation',
+      findColTag(aggRoot, 'avg(AGE)', () => $(aggRoot).find(colTagSelector).length === 1),
+      ageAggr,
       'Initially, the editor shows the average values for the "AGE" and "HEIGHT" columns. To keep ' +
       'only one aggregation, right-click this aggregation and select <b>Remove others</b> in the ' +
-      'context menu.');
-
+      'context menu.'
+    );
+    
     await this.action('Change a column to "WEIGHT"', findColTag(aggRoot, 'avg(WEIGHT)', () =>
-      $(aggRoot).find(colTagSelector).length === 1), null, 'You can change the aggregation column ' +
-      'and function from the context menu. For example, if you are adding multiple columns using the ' +
-      'same aggregation function, you can set it as default by pressing the "+" sign and choosing ' +
-      'it under the "Aggregation" submenu. Let\'s calculate the average weight for each patient ' +
-      'group instead of age. Right-click the aggregation field and select <b>Column > WEIGHT</b>.');
+      $(aggRoot).find(colTagSelector).length === 1), ageAggr, 'In addition, you can change the aggregation column from the context menu too. ' +
+      'For example, if you are adding multiple columns using the same aggregation function, you can set it as default by pressing the "+" sign and choosing ' +
+      'it under the "Aggregation" submenu. Let\'s calculate the average weight for each patient group instead of age. Right-click the aggregation field and select <b>Column > WEIGHT</b>.'
+    );
+
+    await this.action('Change the aggregation function to "med"',
+      findColTag(aggRoot, 'med(WEIGHT)', () => $(aggRoot).find(colTagSelector).length === 1), ageAggr,
+      'To change the aggregation function, right-click the "avg(WEIGHT), ' +
+      'select <b>Aggregation</b> from the context menu, and choose <b>med</b>.'
+    );
+
+
+    const viewerPopup = $(aggRoot).find('.d4-combo-popup').get(0);
+    await this.action('Add viewer to visualize aggregation', waitForElementClick(viewerPopup as HTMLElement), viewerPopup,
+      'To change the viewer, click on the combobox.' + 
+      'This action will open a dropdown list containing various visualization options for aggregations.' + 
+      'You\'ll find a selection of standard viewers like scatterplot, barchart, piechart, and more.'
+    );
+
+    const lineChartEl = $(aggRoot).find("div[name=\"Instance of 'LineChartDescriptor'-host\"]").get(0);
+    await this.action('Choose Line Chart from the viewers list', waitForElementClick(lineChartEl as HTMLElement), lineChartEl,
+      'Now, choose the Line Chart viewer from the list.' +
+      'By doing so, you\'ll be able to visualize the aggregation results in a line chart format.' +
+      'In this scenario, the data has been aggregated based on weight, and the Line Chart will represent this aggregation accordingly.'
+    );
 
     this.title('Interactivity');
 

@@ -6,16 +6,17 @@ import * as DG from 'datagrok-api/dg';
 import wu from 'wu';
 import {Observable, Subject} from 'rxjs';
 
-import {
-  IMonomerLib, Monomer, MonomerLibSummaryType, MonomerType, PolymerType, RGroup
-} from '@datagrok-libraries/bio/src/types';
-import {PolymerTypes} from '@datagrok-libraries/bio/src/utils/const';
+import {MonomerType, PolymerType} from '@datagrok-libraries/bio/src/helm/types';
+import {IMonomerLib, Monomer, MonomerLibSummaryType, RGroup} from '@datagrok-libraries/bio/src/types';
 import {HELM_REQUIRED_FIELD as REQ, HELM_RGROUP_FIELDS as RGP} from '@datagrok-libraries/bio/src/utils/const';
 import {MolfileHandler} from '@datagrok-libraries/chem-meta/src/parsing-utils/molfile-handler';
 import {GapOriginals} from '@datagrok-libraries/bio/src/utils/seq-handler';
 import {NOTATION} from '@datagrok-libraries/bio/src/utils/macromolecule';
+import {PolymerTypes} from '@datagrok-libraries/bio/src/helm/consts';
 
 import '../../../css/cell-renderer.css';
+
+import {_package} from '../../package';
 
 /** Wrapper for monomers obtained from different sources. For managing monomere
  * libraries, use MolfileHandler class instead */
@@ -75,7 +76,8 @@ export class MonomerLib implements IMonomerLib {
     return m;
   }
 
-  getMonomer(polymerType: PolymerType, argMonomerSymbol: string): Monomer | null {
+  getMonomer(polymerType: PolymerType | null, argMonomerSymbol: string): Monomer | null {
+    const logPrefix = `Bio: MonomerLib.getMonomer()`;
     // Adjust RNA's 'R' for ribose to 'r' and 'P' for phosphate to 'p' for case-sensitive monomer names.
     // There are uppercase 'R' and 'P' at RNA samples in test data 'helm2.csv' but lowercase in HELMCoreLibrary.json
     let monomerSymbol = argMonomerSymbol;
@@ -84,10 +86,20 @@ export class MonomerLib implements IMonomerLib {
     if (polymerType == 'RNA' && monomerSymbol == 'P')
       monomerSymbol = 'p';
 
-    if (polymerType in this._monomers! && monomerSymbol in this._monomers![polymerType])
-      return this._monomers![polymerType][monomerSymbol];
-    else
-      return null;
+    let res: Monomer | null = null;
+
+    if (!polymerType) {
+      _package.logger.warning(`${logPrefix} symbol '${argMonomerSymbol}', polymerType not specified.`);
+      // Assume any polymer type
+      for (const [polymerType, dict] of Object.entries(this._monomers)) {
+        res = dict[monomerSymbol];
+        if (res) break;
+      }
+    } else {
+      const dict = this._monomers[polymerType];
+      res = dict ? dict[monomerSymbol] : null;
+    }
+    return res;
   }
 
   getPolymerTypes(): PolymerType[] {
@@ -231,6 +243,7 @@ export class MonomerLib implements IMonomerLib {
       const chemOptions = {autoCrop: true, autoCropMargin: 0, suppressChiralText: true};
       let structureEl: HTMLElement;
       if (monomer.molfile) {
+        //
         structureEl = grok.chem.svgMol(monomer.molfile, undefined, undefined, chemOptions);
       } else if (monomer.smiles) {
         structureEl = ui.divV([
@@ -245,7 +258,7 @@ export class MonomerLib implements IMonomerLib {
         {style: {display: 'flex', flexDirection: 'row', justifyContent: 'center', margin: '6px'}}));
 
       // Source
-      res.append(ui.divText(monomer.lib?.source ?? 'unknown'));
+      res.append(ui.divText(monomer.lib?.source ?? 'Missed in libraries'));
 
       // const label = (s: string) => {
       //   return ui.label(s /* span ? */, {classes: 'ui-input-label'});

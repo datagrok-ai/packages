@@ -34,6 +34,9 @@ export type SliderOptions = {
   style?: RangeSliderStyle
 }
 
+export type ICodeEditorOptions = {
+  root?: HTMLDivElement;
+}
 export type TypeAheadConfig = Omit<typeaheadConfig<Dictionary>, 'input' | 'className'>;
 export type CodeConfig = {
   script?: string;
@@ -998,8 +1001,8 @@ export class CodeEditor {
     this.dart = dart;
   }
 
-  static create(script = '', mode = 'javascript', placeholder = '', root?: HTMLDivElement): CodeEditor {
-    return toJs(api.grok_CodeEditor(script, mode, placeholder, root));
+  static create(script = '', mode = 'javascript', placeholder = '', options?: ICodeEditorOptions): CodeEditor {
+    return toJs(api.grok_CodeEditor(script, mode, placeholder, options?.root));
   }
 
   append(text: string): void {

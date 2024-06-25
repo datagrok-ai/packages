@@ -1,0 +1,2057 @@
+{
+  "#type": "ViewLayout",
+  "viewStateMap": {
+    "containerType": "vertical",
+    "state": {
+      "width": 1116,
+      "height": 733
+    },
+    "children": [
+      {
+        "containerType": "horizontal",
+        "state": {
+          "width": 1116,
+          "height": 520
+        },
+        "children": [
+          {
+            "containerType": "fill",
+            "state": {
+              "width": 557,
+              "height": 520,
+              "documentManager": true
+            },
+            "children": [
+              {
+                "containerType": "panel",
+                "state": {
+                  "width": 557,
+                  "height": 520,
+                  "element": {
+                    "id": "ad472a00-fec0-11ee-ed28-f7e968d693c2",
+                    "type": "Grid",
+                    "look": {
+                      "#type": "GridLook",
+                      "showAddNewRowIcon": true,
+                      "addNewRowOnLastRowEdit": true,
+                      "rowHeight": 100,
+                      "topLevelDefaultMenu": true,
+                      "allowColumnMenu": true,
+                      "columns": [
+                        {
+                          "width": 36,
+                          "backgroundColor": 4294440951,
+                          "customName": "",
+                          "cellType": "row header",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "width": 200,
+                          "columnName": "smiles",
+                          "cellType": "Molecule",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "width": 80,
+                          "customName": "piechart",
+                          "cellType": "piechart",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {},
+                          "settings": {
+                            "sectors": {
+                              "lowerBound": 0.8,
+                              "upperBound": 1,
+                              "values": "",
+                              "sectors": [
+                                {
+                                  "sectorColor": "#2ca02c",
+                                  "subsectors": [
+                                    {
+                                      "name": "CYP1A2-Inhibitor",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 1,
+                                      "weight": 1,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.42495501041412354
+                                      ]
+                                    },
+                                    {
+                                      "name": "CYP2C19-Inhibitor",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 1,
+                                      "weight": 0.8,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4245476722717285
+                                      ]
+                                    },
+                                    {
+                                      "name": "CYP2C9-Inhibitor",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 1,
+                                      "weight": 0.2,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4274807274341583
+                                      ]
+                                    },
+                                    {
+                                      "name": "CYP2C9-Substrate",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 1,
+                                      "weight": 0.8,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.45382630825042725
+                                      ]
+                                    },
+                                    {
+                                      "name": "CYP2D6-Inhibitor",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 1,
+                                      "weight": 0.3,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.42412006855010986
+                                      ]
+                                    },
+                                    {
+                                      "name": "CYP2D6-Substrate",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 1,
+                                      "weight": 0.1,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4481780529022217
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "sectorColor": "#1f77b4",
+                                  "subsectors": [
+                                    {
+                                      "name": "Pgp-Substrate",
+                                      "lowThreshold": 1,
+                                      "highThreshold": 0,
+                                      "weight": 0.5,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.42814740538597107
+                                      ]
+                                    },
+                                    {
+                                      "name": "Caco2",
+                                      "lowThreshold": -6,
+                                      "highThreshold": -5.5,
+                                      "weight": 0.9,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.39926454424858093
+                                      ]
+                                    },
+                                    {
+                                      "name": "Lipophilicity",
+                                      "lowThreshold": 0,
+                                      "highThreshold": 5,
+                                      "weight": 0.5,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4208123981952667
+                                      ]
+                                    },
+                                    {
+                                      "name": "Solubility",
+                                      "lowThreshold": -4.5,
+                                      "highThreshold": -1,
+                                      "weight": 0.5,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.3719114065170288
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "sectorColor": "#d62728",
+                                  "subsectors": [
+                                    {
+                                      "name": "CL-Hepa",
+                                      "lowThreshold": 10,
+                                      "highThreshold": 100,
+                                      "weight": 0.5,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.42388832569122314
+                                      ]
+                                    },
+                                    {
+                                      "name": "CL-Micro",
+                                      "lowThreshold": 10,
+                                      "highThreshold": 100,
+                                      "weight": 0.1,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4051731824874878
+                                      ]
+                                    },
+                                    {
+                                      "name": "Half-Life",
+                                      "lowThreshold": 24,
+                                      "highThreshold": 2,
+                                      "weight": 0.8,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4372502267360687
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "sectorColor": "#ff7f0e",
+                                  "subsectors": [
+                                    {
+                                      "name": "PPBR",
+                                      "lowThreshold": 40,
+                                      "highThreshold": 90,
+                                      "weight": 0.2,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.422953337430954
+                                      ]
+                                    },
+                                    {
+                                      "name": "VDss",
+                                      "lowThreshold": 1,
+                                      "highThreshold": 2,
+                                      "weight": 0.2,
+                                      "applicability": 0.41,
+                                      "probabilities": [
+                                        0.4310963749885559
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            "piechart": {
+                              "columnNames": [
+                                "Pgp-Substrate",
+                                "Caco2",
+                                "Lipophilicity",
+                                "Solubility",
+                                "PPBR",
+                                "VDss",
+                                "CYP1A2-Inhibitor",
+                                "CYP2C19-Inhibitor",
+                                "CYP2C9-Inhibitor",
+                                "CYP2C9-Substrate",
+                                "CYP2D6-Inhibitor",
+                                "CYP2D6-Substrate",
+                                "CL-Hepa",
+                                "CL-Micro",
+                                "Half-Life"
+                              ],
+                              "style": "Radius",
+                              "sectors": {
+                                "lowerBound": 0.8,
+                                "upperBound": 1,
+                                "values": "",
+                                "sectors": [
+                                  {
+                                    "sectorColor": "#2ca02c",
+                                    "subsectors": [
+                                      {
+                                        "name": "CYP1A2-Inhibitor",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 1,
+                                        "weight": 1,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.42495501041412354
+                                        ]
+                                      },
+                                      {
+                                        "name": "CYP2C19-Inhibitor",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 1,
+                                        "weight": 0.8,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4245476722717285
+                                        ]
+                                      },
+                                      {
+                                        "name": "CYP2C9-Inhibitor",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 1,
+                                        "weight": 0.2,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4274807274341583
+                                        ]
+                                      },
+                                      {
+                                        "name": "CYP2C9-Substrate",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 1,
+                                        "weight": 0.8,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.45382630825042725
+                                        ]
+                                      },
+                                      {
+                                        "name": "CYP2D6-Inhibitor",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 1,
+                                        "weight": 0.3,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.42412006855010986
+                                        ]
+                                      },
+                                      {
+                                        "name": "CYP2D6-Substrate",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 1,
+                                        "weight": 0.1,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4481780529022217
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "sectorColor": "#1f77b4",
+                                    "subsectors": [
+                                      {
+                                        "name": "Pgp-Substrate",
+                                        "lowThreshold": 1,
+                                        "highThreshold": 0,
+                                        "weight": 0.5,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.42814740538597107
+                                        ]
+                                      },
+                                      {
+                                        "name": "Caco2",
+                                        "lowThreshold": -6,
+                                        "highThreshold": -5.5,
+                                        "weight": 0.9,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.39926454424858093
+                                        ]
+                                      },
+                                      {
+                                        "name": "Lipophilicity",
+                                        "lowThreshold": 0,
+                                        "highThreshold": 5,
+                                        "weight": 0.5,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4208123981952667
+                                        ]
+                                      },
+                                      {
+                                        "name": "Solubility",
+                                        "lowThreshold": -4.5,
+                                        "highThreshold": -1,
+                                        "weight": 0.5,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.3719114065170288
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "sectorColor": "#d62728",
+                                    "subsectors": [
+                                      {
+                                        "name": "CL-Hepa",
+                                        "lowThreshold": 10,
+                                        "highThreshold": 100,
+                                        "weight": 0.5,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.42388832569122314
+                                        ]
+                                      },
+                                      {
+                                        "name": "CL-Micro",
+                                        "lowThreshold": 10,
+                                        "highThreshold": 100,
+                                        "weight": 0.1,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4051731824874878
+                                        ]
+                                      },
+                                      {
+                                        "name": "Half-Life",
+                                        "lowThreshold": 24,
+                                        "highThreshold": 2,
+                                        "weight": 0.8,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4372502267360687
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "sectorColor": "#ff7f0e",
+                                    "subsectors": [
+                                      {
+                                        "name": "PPBR",
+                                        "lowThreshold": 40,
+                                        "highThreshold": 90,
+                                        "weight": 0.2,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.422953337430954
+                                        ]
+                                      },
+                                      {
+                                        "name": "VDss",
+                                        "lowThreshold": 1,
+                                        "highThreshold": 2,
+                                        "weight": 0.2,
+                                        "applicability": 0.41,
+                                        "probabilities": [
+                                          0.4310963749885559
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 127,
+                          "columnName": "CYP1A2-Inhibitor",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 135,
+                          "columnName": "CYP2C19-Inhibitor",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 127,
+                          "columnName": "CYP2C9-Inhibitor",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 135,
+                          "columnName": "CYP2C9-Substrate",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 127,
+                          "columnName": "CYP2D6-Inhibitor",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 135,
+                          "columnName": "CYP2D6-Substrate",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 127,
+                          "columnName": "Pgp-Substrate",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 62,
+                          "columnName": "Caco2",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "-6",
+                          "colorCodingSchemeMax": "-5.5",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 96,
+                          "columnName": "Lipophilicity",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "0",
+                          "colorCodingSchemeMax": "5",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 80,
+                          "columnName": "Solubility",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4294901760,
+                            4278255360
+                          ],
+                          "colorCodingSchemeMin": "-4.5",
+                          "colorCodingSchemeMax": "-1",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 58,
+                          "columnName": "PPBR",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Conditional",
+                          "colorCodingConditional": {
+                            "> 90": "#00ffff",
+                            "40 - 90": "#800000",
+                            "< 40": "#ffff00"
+                          },
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 55,
+                          "columnName": "VDss",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Conditional",
+                          "colorCodingConditional": {
+                            "> 2": "#00ffff",
+                            "1 - 2": "#800000",
+                            "< 1": "#ffff00"
+                          },
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 76,
+                          "columnName": "CL-Hepa",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4278255360,
+                            4294901760
+                          ],
+                          "colorCodingSchemeMin": "10",
+                          "colorCodingSchemeMax": "100",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "isColorCoded": true,
+                          "isTextColorCoded": true,
+                          "width": 79,
+                          "columnName": "CL-Micro",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "colorCodingType": "Linear",
+                          "colorCodingLinear": [
+                            4278255360,
+                            4294901760
+                          ],
+                          "colorCodingSchemeMin": "10",
+                          "colorCodingSchemeMax": "100",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "width": 76,
+                          "columnName": "Half-Life",
+                          "customFormat": "0.00",
+                          "cellType": "number",
+                          "format": "0.00",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "visible": false,
+                          "columnName": "~smiles.Pattern",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        },
+                        {
+                          "visible": false,
+                          "columnName": "~smiles.canonicalSmiles",
+                          "contentCellStyle": {},
+                          "headerCellStyle": {}
+                        }
+                      ]
+                    },
+                    "title": "Grid",
+                    "default": true
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 558,
+              "height": 520,
+              "element": {
+                "id": "ad48b0a0-fec0-11ee-c4d0-4558e7a8081d",
+                "type": "Form",
+                "look": {
+                  "#type": "FormLook",
+                  "sketchState": {
+                    "#type": "SketchState",
+                    "elementStates": [
+                      {
+                        "left": -22,
+                        "top": 49,
+                        "width": 188,
+                        "height": 142,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "smiles",
+                          "format": "0.00"
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 209,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CYP2D6-Inhibitor"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 161,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CYP2C9-Inhibitor",
+                          "format": "0.00",
+                          "textColor": 4289026304
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 352,
+                        "width": 250,
+                        "height": 15,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "                         Distribution",
+                          "backgroundColor": 4293717745
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 317,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "Solubility",
+                          "format": "0.00",
+                          "textColor": 4294901760
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 352,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "Half-Life",
+                          "format": "0.00"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 307,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CL-Hepa",
+                          "format": "0.00",
+                          "textColor": 4283085824
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 207,
+                        "width": 250,
+                        "height": 15,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "                         Absorption",
+                          "backgroundColor": 4293717745
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 185,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CYP2C9-Substrate"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 233,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CYP2D6-Substrate",
+                          "format": "0.00",
+                          "textColor": 4286349824
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 382,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "PPBR"
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 133,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CYP2C19-Inhibitor"
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 332,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CL-Micro"
+                        }
+                      },
+                      {
+                        "left": 280,
+                        "top": 278,
+                        "width": 280,
+                        "height": 15,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "                         Excretion",
+                          "backgroundColor": 4293717745
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 317,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "Solubility"
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 267,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "Caco2"
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 402,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "VDss",
+                          "format": "0.00",
+                          "textColor": 4278255615
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 292,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "Lipophilicity",
+                          "format": "0.00",
+                          "textColor": 4283803904
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 267,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "Caco2",
+                          "format": "0.00",
+                          "textColor": 4278255360
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 402,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "VDss"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 133,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CYP2C19-Inhibitor",
+                          "format": "0.00",
+                          "textColor": 4279887104
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 233,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CYP2D6-Substrate"
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 242,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "Pgp-Substrate",
+                          "format": "0.00",
+                          "textColor": 4282563584
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 307,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CL-Hepa"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 332,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CL-Micro",
+                          "format": "0.00",
+                          "textColor": 4288047104
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 209,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CYP2D6-Inhibitor",
+                          "format": "0.00",
+                          "textColor": 4282694144
+                        }
+                      },
+                      {
+                        "left": 280,
+                        "top": 87,
+                        "width": 280,
+                        "height": 15,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "                         Metabolism",
+                          "backgroundColor": 4293717745
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 161,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CYP2C9-Inhibitor"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 352,
+                        "width": 100,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input class=\"ui-input-editor\" autocomplete=\"off\" id=\"1047\" value=\"null\" style=\"color: rgb(180, 241, 188);\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "",
+                          "textColor": 4290048444
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 292,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "Lipophilicity"
+                        }
+                      },
+                      {
+                        "left": 2,
+                        "top": 1,
+                        "width": 680,
+                        "height": 10,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "",
+                          "backgroundColor": 4284779971
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 382,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "PPBR",
+                          "format": "0.00",
+                          "textColor": 4278255615
+                        }
+                      },
+                      {
+                        "left": 12,
+                        "top": 242,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "Pgp-Substrate"
+                        }
+                      },
+                      {
+                        "left": 99,
+                        "top": 73,
+                        "width": 200,
+                        "height": 100,
+                        "type": "sparkline-cell",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "piechart"
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 185,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CYP2C9-Substrate",
+                          "format": "0.00",
+                          "textColor": 4288569344
+                        }
+                      },
+                      {
+                        "left": 162,
+                        "top": 402,
+                        "width": 100,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input class=\"ui-input-editor\" autocomplete=\"off\" id=\"884\" value=\"null\" style=\"color: rgb(180, 241, 188);\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "",
+                          "textColor": 4290048444
+                        }
+                      },
+                      {
+                        "left": 460,
+                        "top": 107,
+                        "width": 100,
+                        "height": 20,
+                        "type": "field",
+                        "viewerSettings": {
+                          "table": "Table",
+                          "column": "CYP1A2-Inhibitor",
+                          "format": "0.00",
+                          "textColor": 4278255360
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 107,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "CYP1A2-Inhibitor"
+                        }
+                      },
+                      {
+                        "left": 290,
+                        "top": 352,
+                        "width": 150,
+                        "height": 20,
+                        "type": "html",
+                        "viewerSettings": {
+                          "markup": "<input type=\"text\" class=\"d4-sketch-column-name ui-input-editor\">",
+                          "table": null,
+                          "column": null,
+                          "input-value": "Half-Life"
+                        }
+                      }
+                    ]
+                  },
+                  "columnNames": [
+                    "smiles",
+                    "CYP2C9-Inhibitor",
+                    "Solubility",
+                    "Half-Life",
+                    "CL-Hepa",
+                    "CYP2D6-Substrate",
+                    "VDss",
+                    "Lipophilicity",
+                    "Caco2",
+                    "CYP2C19-Inhibitor",
+                    "Pgp-Substrate",
+                    "CL-Micro",
+                    "CYP2D6-Inhibitor",
+                    "PPBR",
+                    "CYP2C9-Substrate",
+                    "CYP1A2-Inhibitor"
+                  ]
+                },
+                "title": "Form"
+              }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "containerType": "panel",
+        "state": {
+          "width": 1116,
+          "height": 212,
+          "element": {
+            "id": "ad48b0a0-fec0-11ee-fa65-29f46b05ac25",
+            "type": "Markup",
+            "look": {
+              "#type": "MarkupViewerLook",
+              "content": "# ADMETox\n      \nExplore the pharmacokinetic properties of chemical compounds effortlessly!\n      \n* Calculate essential properties such as Pgp-Substrate, Solubility, PPBR, VDss, CL-Hepa etc.\n* Visualize property distribution through the interactive pie chart.\n* Click on a structure to reveal an ADMETox panel for property calculation."
+            },
+            "title": "Markup"
+          }
+        },
+        "children": []
+      }
+    ],
+    "floating": [],
+    "tableId": "29fd1650-fec0-11ee-ee57-fd15e4672937",
+    "tableName": "Table"
+  },
+  "columns": [
+    {
+      "name": "smiles",
+      "type": "string",
+      "semType": "Molecule",
+      "id": "2a066520-fec0-11ee-ac26-edf4994fbaf2",
+      "friendlyName": "Smiles",
+      "entityTags": [
+        {
+          "tag": ".id",
+          "id": "ad4925d0-fec0-11ee-d26f-59b6e1593b5d"
+        },
+        {
+          "tag": "units",
+          "id": "ad4925d0-fec0-11ee-b684-d31efa70903f"
+        },
+        {
+          "tag": "quality",
+          "id": "ad4925d0-fec0-11ee-fbb9-2d483ab7432e"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4925d0-fec0-11ee-9054-4dff769b52b7"
+        },
+        {
+          "tag": "cell.renderer",
+          "id": "ad4925d0-fec0-11ee-e6d2-9d6568750d19"
+        },
+        {
+          "tag": ".Pattern.Version",
+          "id": "ad494ce0-fec0-11ee-ea05-c90f485f59be"
+        },
+        {
+          "tag": ".canonicalSmiles.Version",
+          "id": "ad494ce0-fec0-11ee-8a94-ef062b33a343"
+        }
+      ],
+      "metaParams": {
+        ".id": "2a066520-fec0-11ee-ac26-edf4994fbaf2",
+        "units": "smiles",
+        "quality": "Molecule",
+        ".semantic-detection-duration": "52",
+        "cell.renderer": "Molecule",
+        ".Pattern.Version": "10",
+        ".canonicalSmiles.Version": "10"
+      }
+    },
+    {
+      "name": "CYP2C9-Inhibitor",
+      "type": "double",
+      "id": "2a070160-fec0-11ee-9d30-bf7cf975208c",
+      "friendlyName": "CY P2 C9- Inhibitor",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad494ce0-fec0-11ee-e2b0-b53d955bebf1"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad494ce0-fec0-11ee-b16f-ed997f496d2c"
+        },
+        {
+          "tag": ".id",
+          "id": "ad494ce0-fec0-11ee-9cf1-d73790e4b3fd"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4973f0-fec0-11ee-f4f3-83d1b07953dd"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4973f0-fec0-11ee-d35f-73ef819a7118"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4973f0-fec0-11ee-f777-5f6a7ff44728"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4973f0-fec0-11ee-c7f2-21f36ab996fd"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4973f0-fec0-11ee-943e-0d10b50c9a34"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a070160-fec0-11ee-9d30-bf7cf975208c",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    },
+    {
+      "name": "Solubility",
+      "type": "double",
+      "id": "2a06da50-fec0-11ee-f898-25e66179abaf",
+      "friendlyName": "Solubility",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad499b00-fec0-11ee-aaa2-a5ddd9d8babf"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad499b00-fec0-11ee-82ea-771442234dfa"
+        },
+        {
+          "tag": ".id",
+          "id": "ad499b00-fec0-11ee-cc0f-df13e520c79e"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad499b00-fec0-11ee-8799-3541e8ba14b1"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad499b00-fec0-11ee-a0fb-47fd2613eb3c"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad499b00-fec0-11ee-cd79-19fbe3578459"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad49c210-fec0-11ee-ab08-7189b3f9d17a"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad49c210-fec0-11ee-dc1c-d31ff5da47c2"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a06da50-fec0-11ee-f898-25e66179abaf",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "-4.5",
+        ".color-coding-scheme-max": "-1"
+      }
+    },
+    {
+      "name": "Half-Life",
+      "type": "double",
+      "id": "2a072870-fec0-11ee-8dbe-d5c10756691d",
+      "friendlyName": "Half- Life",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad49c210-fec0-11ee-b369-1be4f2c42bc5"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad49c210-fec0-11ee-eeb8-c99f733497ba"
+        },
+        {
+          "tag": ".id",
+          "id": "ad49c210-fec0-11ee-8107-5daa4a0c9590"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad49c210-fec0-11ee-b765-5d0c37021c12"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a072870-fec0-11ee-8dbe-d5c10756691d",
+        ".semantic-detection-duration": "0"
+      }
+    },
+    {
+      "name": "CL-Hepa",
+      "type": "double",
+      "id": "2a072870-fec0-11ee-d353-27357aba4df6",
+      "friendlyName": "C L- Hepa",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad49c210-fec0-11ee-cf90-c17344c5f1c4"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad49e920-fec0-11ee-916e-e10ba8507e76"
+        },
+        {
+          "tag": ".id",
+          "id": "ad49e920-fec0-11ee-f0eb-8d7389b02b39"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad49e920-fec0-11ee-9a75-0bbd8b4c4425"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad49e920-fec0-11ee-a2e6-0b10a5dc4d3d"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad49e920-fec0-11ee-d797-7b846a6ad7f2"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad49e920-fec0-11ee-ac95-15857a48dd1e"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad49e920-fec0-11ee-d0be-3de74ce0bacb"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a072870-fec0-11ee-d353-27357aba4df6",
+        ".semantic-detection-duration": "0",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4278255360,4294901760]",
+        ".color-coding-scheme-min": "10",
+        ".color-coding-scheme-max": "100"
+      }
+    },
+    {
+      "name": "CYP2D6-Substrate",
+      "type": "double",
+      "id": "2a072870-fec0-11ee-a3b5-cfd5c8599adf",
+      "friendlyName": "CY P2 D6- Substrate",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4a1030-fec0-11ee-8364-afdeb34a8bae"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4a1030-fec0-11ee-e58a-f9c30678c36f"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4a1030-fec0-11ee-85ee-613f57a3c658"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4a1030-fec0-11ee-d859-99cbf6a4ef42"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4a1030-fec0-11ee-dca3-098c414f3b47"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4a1030-fec0-11ee-88e9-b3316350756a"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4a1030-fec0-11ee-9fc7-1b32584b28f2"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4a1030-fec0-11ee-fa0f-e1e4db70fa5d"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a072870-fec0-11ee-a3b5-cfd5c8599adf",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    },
+    {
+      "name": "VDss",
+      "type": "double",
+      "id": "2a06da50-fec0-11ee-d2de-2d5a87757775",
+      "friendlyName": "V Dss",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4a3740-fec0-11ee-95f1-798a4faadfac"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4a3740-fec0-11ee-d96c-65f0b5ce18ba"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4a3740-fec0-11ee-cfc5-c96d34b57f45"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4a3740-fec0-11ee-cf26-0b1a07c3a11e"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4a3740-fec0-11ee-e69e-d1d1a45a81f9"
+        },
+        {
+          "tag": ".color-coding-conditional",
+          "id": "ad4a3740-fec0-11ee-e16a-19b32bbd9c61"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a06da50-fec0-11ee-d2de-2d5a87757775",
+        ".semantic-detection-duration": "0",
+        ".color-coding-type": "Conditional",
+        ".color-coding-conditional": "{\"> 2\":\"#00ffff\",\"1 - 2\":\"#800000\",\"< 1\":\"#ffff00\"}"
+      }
+    },
+    {
+      "name": "Lipophilicity",
+      "type": "double",
+      "id": "2a06da50-fec0-11ee-8eae-d56a26b2f4bb",
+      "friendlyName": "Lipophilicity",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4a3740-fec0-11ee-c173-2962e1f5500c"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4a3740-fec0-11ee-cdb8-6bd96556bfa0"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4a5e50-fec0-11ee-e24f-09b0cb130d35"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4a5e50-fec0-11ee-ab76-dd7ca9ed85b3"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4a5e50-fec0-11ee-9996-ebf99758525f"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4a5e50-fec0-11ee-caf5-691570ad26c1"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4a5e50-fec0-11ee-9bbe-672ea0fa4f5f"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4a5e50-fec0-11ee-d920-e57c30666a84"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a06da50-fec0-11ee-8eae-d56a26b2f4bb",
+        ".semantic-detection-duration": "0",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "5"
+      }
+    },
+    {
+      "name": "Caco2",
+      "type": "double",
+      "id": "2a068c30-fec0-11ee-b6a5-0d99ab17dec8",
+      "friendlyName": "Caco2",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4a5e50-fec0-11ee-ca4b-5312b6905c65"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4a5e50-fec0-11ee-c3d4-d368cdb43454"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4a8560-fec0-11ee-d92c-055da9ebbbcb"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4a8560-fec0-11ee-880f-058c0bc32477"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4a8560-fec0-11ee-8459-831b91e05fde"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4a8560-fec0-11ee-cb65-5b586d2774a2"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4a8560-fec0-11ee-8195-49634ff4ec4f"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4a8560-fec0-11ee-a7c4-2ffb39ab7465"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a068c30-fec0-11ee-b6a5-0d99ab17dec8",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "-6",
+        ".color-coding-scheme-max": "-5.5"
+      }
+    },
+    {
+      "name": "CYP2C19-Inhibitor",
+      "type": "double",
+      "id": "2a070160-fec0-11ee-fd2e-5159fc87c1b5",
+      "friendlyName": "CY P2 C19- Inhibitor",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4a8560-fec0-11ee-c78f-0335dc03e317"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4a8560-fec0-11ee-fcb2-5f2139da51ac"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4aac70-fec0-11ee-af36-f578195d7454"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4aac70-fec0-11ee-f94e-75d640b3de61"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4aac70-fec0-11ee-d7b4-bf0106d666b5"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4aac70-fec0-11ee-c5d4-996079a9f487"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4aac70-fec0-11ee-991d-d9fdf3e12c89"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4aac70-fec0-11ee-c510-ef08d769084c"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a070160-fec0-11ee-fd2e-5159fc87c1b5",
+        ".semantic-detection-duration": "0",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    },
+    {
+      "name": "Pgp-Substrate",
+      "type": "double",
+      "id": "2a068c30-fec0-11ee-86ab-21b488b3566a",
+      "friendlyName": "Pgp- Substrate",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4aac70-fec0-11ee-cdc7-3db59c9d52fb"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4aac70-fec0-11ee-cdc9-53c35cb8439f"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4ad380-fec0-11ee-c7af-85acac062cfe"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4ad380-fec0-11ee-df31-f300f0f90ff4"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4ad380-fec0-11ee-9c5d-d5af88faaf0b"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4ad380-fec0-11ee-edea-07fb19211733"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4ad380-fec0-11ee-fac3-d93f021436dc"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4ad380-fec0-11ee-fe55-9bb875b317d7"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a068c30-fec0-11ee-86ab-21b488b3566a",
+        ".semantic-detection-duration": "3",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    },
+    {
+      "name": "CL-Micro",
+      "type": "double",
+      "id": "2a072870-fec0-11ee-aabc-5d24bd3621c5",
+      "friendlyName": "C L- Micro",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4ad380-fec0-11ee-89f8-212b6267f363"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4ad380-fec0-11ee-8ae3-e5d2763b7b67"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4ad380-fec0-11ee-92ea-5b908b29dee6"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4afa90-fec0-11ee-c5ab-23024a420277"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4afa90-fec0-11ee-9969-659dd2e52ab6"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4afa90-fec0-11ee-ffbb-a152fc24d040"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4afa90-fec0-11ee-b868-e97a8459fb00"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4afa90-fec0-11ee-c381-438b41b33ce1"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a072870-fec0-11ee-aabc-5d24bd3621c5",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4278255360,4294901760]",
+        ".color-coding-scheme-min": "10",
+        ".color-coding-scheme-max": "100"
+      }
+    },
+    {
+      "name": "CYP2D6-Inhibitor",
+      "type": "double",
+      "id": "2a070160-fec0-11ee-e721-8dcb094576bb",
+      "friendlyName": "CY P2 D6- Inhibitor",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4afa90-fec0-11ee-9fe9-bdb9ea200c9c"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4afa90-fec0-11ee-a1c2-71168d2f65a0"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4afa90-fec0-11ee-fa1a-572dc3e5716d"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4b21a0-fec0-11ee-c036-f1a62831fcec"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4b21a0-fec0-11ee-c5cb-45a25341562d"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4b21a0-fec0-11ee-e91a-77840a68753a"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4b21a0-fec0-11ee-c488-b7656bfb8877"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4b21a0-fec0-11ee-85ac-0f19c27d659d"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a070160-fec0-11ee-e721-8dcb094576bb",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    },
+    {
+      "name": "PPBR",
+      "type": "double",
+      "id": "2a06da50-fec0-11ee-adaa-af04646b8007",
+      "friendlyName": "PPBR",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4b21a0-fec0-11ee-8232-c59b97ec6403"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4b21a0-fec0-11ee-cf6f-a16b8309b76d"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4b21a0-fec0-11ee-e931-15c0c6ca9ce6"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4b21a0-fec0-11ee-8634-cfcb32c15fa6"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4b48b0-fec0-11ee-ec21-337b18cf5074"
+        },
+        {
+          "tag": ".color-coding-conditional",
+          "id": "ad4b48b0-fec0-11ee-f37f-6dbc47a7a6bc"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a06da50-fec0-11ee-adaa-af04646b8007",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Conditional",
+        ".color-coding-conditional": "{\"> 90\":\"#00ffff\",\"40 - 90\":\"#800000\",\"< 40\":\"#ffff00\"}"
+      }
+    },
+    {
+      "name": "CYP2C9-Substrate",
+      "type": "double",
+      "id": "2a070160-fec0-11ee-dc08-c1735cf5291b",
+      "friendlyName": "CY P2 C9- Substrate",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4b48b0-fec0-11ee-f263-07274354f725"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4b48b0-fec0-11ee-8579-d55baff6fb5d"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4b48b0-fec0-11ee-971e-1d18ec4b0873"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4b48b0-fec0-11ee-e62c-5b1645ce438e"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4b48b0-fec0-11ee-c660-25856a15e3bd"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4b48b0-fec0-11ee-9e80-0fba13860e6b"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4b48b0-fec0-11ee-ad8d-f5d97f56fc7e"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4b6fc0-fec0-11ee-c686-fdd25217e714"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a070160-fec0-11ee-dc08-c1735cf5291b",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    },
+    {
+      "name": "CYP1A2-Inhibitor",
+      "type": "double",
+      "id": "2a070160-fec0-11ee-d218-a937bfe0aee4",
+      "friendlyName": "CY P1 A2- Inhibitor",
+      "entityTags": [
+        {
+          "tag": "format",
+          "id": "ad4b6fc0-fec0-11ee-e0ef-93878a7b4fe9"
+        },
+        {
+          "tag": ".source-precision",
+          "id": "ad4b6fc0-fec0-11ee-c42c-5f7e21622668"
+        },
+        {
+          "tag": ".id",
+          "id": "ad4b6fc0-fec0-11ee-bdf7-f107f95fbfd0"
+        },
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "ad4b6fc0-fec0-11ee-9551-17bb3ce5c390"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "ad4b6fc0-fec0-11ee-ed72-11e19607933f"
+        },
+        {
+          "tag": ".color-coding-linear",
+          "id": "ad4b6fc0-fec0-11ee-ec8b-49f161383987"
+        },
+        {
+          "tag": ".color-coding-scheme-min",
+          "id": "ad4b6fc0-fec0-11ee-8608-ef6a90628e78"
+        },
+        {
+          "tag": ".color-coding-scheme-max",
+          "id": "ad4b6fc0-fec0-11ee-b7df-6b266bc6bdc3"
+        }
+      ],
+      "metaParams": {
+        "format": "0.00",
+        ".source-precision": "2",
+        ".id": "2a070160-fec0-11ee-d218-a937bfe0aee4",
+        ".semantic-detection-duration": "1",
+        ".color-coding-type": "Linear",
+        ".color-coding-linear": "[4294901760,4278255360]",
+        ".color-coding-scheme-min": "0",
+        ".color-coding-scheme-max": "1"
+      }
+    }
+  ],
+  "name": "Table",
+  "friendlyName": "Table",
+  "author": {
+    "id": "ca82ee60-6280-11ee-df26-75193ba005c5"
+  },
+  "createdOn": "2024-05-31T14:18:39.645Z"
+}

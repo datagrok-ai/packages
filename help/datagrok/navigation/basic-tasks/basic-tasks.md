@@ -26,19 +26,15 @@ open.
 To learn more about data access options, see the
 [Access](../../../access/access.md) section of our documentation.
 
-## Save
+## Save and share a table
 
-When you open an object in Datagrok (like a table or a query), your changes to
+When you import a table in Datagrok, your changes to
 it **_aren't_** saved automatically. Everything stays in your browser's memory. If you close or
-refresh the browser tab, any unsaved work will be lost. 
+refresh the browser tab, any unsaved work will be lost. Click SAVE button on top 
+to upload it to the server. A project containing this table will be automatically created.
 
-To save your changes, you must manually upload the modified object to
-the server. Uploading your object doesn't automatically share it with others. You
+Uploading the project object doesn't automatically share it with others. You
 must share it explicitly.
-
-To save your changes, find the **SAVE** button at the top of the screen and
-click it. This typically opens the dialog where you can specify what to save and
-where to save it.
 
 ### Saving a dashboard
 
@@ -48,22 +44,17 @@ that produces a table, it opens a [Table View](../views/table-view.md) resemblin
 [layout](../../../visualize/view-layout.md)).
 
 Tables and layouts are separate [entities](../../concepts/objects.md). This means you can
-choose to save changes made to the data, layout, or both.
-
-All _entities_ are stored within [projects](../../concepts/project/project.md).
-Based on your privileges, you can either update the original project or create
-a copy with your changes.
+choose to save changes made to the data, layout, or both. 
 
 To save:
 
-1. At the top of your screen, find the **SAVE** button and click it to open
-   the **Save project** dialog.
+1. At the top of your screen, click the **SAVE** button top open the **Save project** dialog.
 1. In the dialog:
    * **For new entities**: Enter a name and, optionally, a
       description for your project. By default, mew entities are saved to your personal project under **My stuff**. 
    * **For existing (modified) entities**: Remove any tables you don't want to save. By default, all open tables are included. Select one of the following: 
           * **Save original project**: Updates the original project.
-          * **Save a copy**: Creates a new version of the project. If you choose this option, you must also decide what happens to each table included in your new project:
+          * **Save a copy**: Useful when you want to edit the project, but don't have the privilege to modify the original one. If you choose this option, you must also decide what happens to each table included in your new project:
               * **Clone**: Creates a copy of the table in your new project.
               * **Move**: Moves the table to the new project, leaving a read-only linked copy in the original project. The linked copy updates with changes made to the table in the new project.
               * **Link**: Creates a read-only linked copy of the original table in your project. Changes to the table in the original project are automatically reflected in the linked table in your project.
@@ -72,13 +63,13 @@ To save:
       * To update the data every time you open a project, toggle **Data sync**.
          This feature is commonly used to create [dynamic dashboards](../../../access/databases/databases.md#creating-dynamic-dashboards-for-query-results)
          or when tables link to different projects.
-      * To save your project in a presentation mode, toggle **Presentation mode**.
+      * To save your project in a presentation mode, toggle **Presentation mode**. Useful for sharing with data consumers. Toolboxes, status bars, menus, ribbons, context panels will not be shown, letting users focus on the data and visualizations you have created.
 1. Click **OK** to save. The **SAVE** button in the **Table View** turns grey,
    indicating you have no unsaved changes.
 
 :::note
 
-Moving tables between projects, impacts their hierarchy, name, and privileges. [Learn more](../../concepts/project/project.md).
+Moving tables between projects impacts their hierarchy, name, and privileges. [Learn more](../../concepts/project/project.md).
 
 :::
 
@@ -105,18 +96,13 @@ You can share Datagrok [entities](../../concepts/objects.md) with other users or
 To learn how to manage groups and privileges, see
 [Access control](../../../govern/access-control/access-control.md#authorization).
 
-You can share _entities_ in two ways:
+To share an entity, right-click to open the context menu and click "Share...". You can also do that from the  [Context Panel](../panels/panels.md#context-panel).
 
-1. Via context actions, accessible through the **Context Menu** (right-click) or
-   the [Context Panel](../panels/panels.md#context-panel).
-1. By sharing the entity's URL. To access an entity via a URL, the recipient
-   needs appropriate permissions. The URL links never expire, can't be revoked,
-   and may break if the entity is renamed. Use them with caution.
+You can send the entity's URL to your colleague. To access an entity via a URL, the recipient needs appropriate permissions. 
 
 To share an entity using context actions:
 
-1. Find and click the **Share...** command on the **Context Menu** (available on
-   right-click) or the **Context Panel**. This opens a dialog.
+1. Right-click to open the context menu and click "Share...".
 1. In the dialog: 
    1. In the identity/email field, start typing the name, username,
       email, or group name and select the appropriate match.
@@ -134,7 +120,7 @@ To share an entity using context actions:
 :::note
 
 You can share an entity with an email address that doesn't yet have a Datagrok
-account. In such cases, Datagrok creates a 'quasi' user account. To access the
+account. In such cases, Datagrok creates a non-active user account. To access the
 shared entity, the recipient will need to register and activate their account
 using the specified email address.
 
@@ -205,8 +191,7 @@ table using drag and drop.
 ### Files
 
 To download a file, go to **Sidebar** > **Browse**. In the **Browse** tree,
-locate the file you want to download, right-click it and select the download
-option from its **Context Menu**.
+right-click the file and select the download option from its **Context Menu**.
 
 ## Add to favorites
 

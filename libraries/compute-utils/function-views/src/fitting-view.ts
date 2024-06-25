@@ -67,7 +67,7 @@ export class FittingView {
     );
 
     const getSwitchElement = (defaultValue: boolean, f: (v: boolean) => any, isInput: boolean = true) => {
-      const input = ui.switchInput(' ', defaultValue, f);
+      const input = ui.input.toggle(' ', {value: defaultValue, onValueChanged: () => f(input.value)});
       $(input.root).addClass('sa-switch-input');
       $(input.captionLabel).hide();
 
@@ -108,10 +108,10 @@ export class FittingView {
           const: {
             input:
             (() => {
-              const inp = ui.floatInput(caption, defaultValue, (v: number) => {
-                ref.const.value = v;
+              const inp = ui.input.float(caption, {value: defaultValue, onValueChanged: () => {
+                ref.const.value = inp.value;
                 this.updateApplicabilityState();
-              });
+              }});
               inp.root.insertBefore(isChangingInputConst.root, inp.captionLabel);
               inp.addPostfix(inputProp.options['units']);
               inp.setTooltip(`Value of '${caption}'`);
@@ -123,10 +123,10 @@ export class FittingView {
           min: {
             input:
               (() => {
-                const inp = ui.floatInput(`${caption} (min)`, getInputValue(inputProp, 'min'), (v: number) => {
-                  (ref as FittingNumericStore).min.value = v;
+                const inp = ui.input.float(`${caption} (min)`, {value: getInputValue(inputProp, 'min'), onValueChanged: () => {
+                  (ref as FittingNumericStore).min.value = inp.value;
                   this.updateApplicabilityState();
-                });
+                }});
                 inp.addValidator((s:string) => (Number(s) > temp.max.value) ? 'Greater than max': null);
                 inp.root.insertBefore(isChangingInputMin.root, inp.captionLabel);
                 inp.addPostfix(inputProp.options['units']);
@@ -138,10 +138,10 @@ export class FittingView {
           },
           max: {
             input: (() => {
-              const inp = ui.floatInput(`${caption} (max)`, getInputValue(inputProp, 'max'), (v: number) => {
-                (ref as FittingNumericStore).max.value = v;
+              const inp = ui.input.float(`${caption} (max)`, {value: getInputValue(inputProp, 'max'), onValueChanged: () => {
+                (ref as FittingNumericStore).max.value = inp.value;
                 this.updateApplicabilityState();
-              });
+              }});
               inp.addValidator((s:string) => (Number(s) < temp.min.value) ? 'Smaller than min': null);
               inp.addPostfix(inputProp.options['units']);
               inp.setTooltip(`Max value of '${caption}'`);
@@ -284,7 +284,7 @@ export class FittingView {
             return input;
           })(),
           colNameInput: (() => {
-            const input = ui.choiceInput<string|null>('argument', null, [null], (v: string) => temp.colName = v);
+            const input = ui.input.choice<string|null>('argument', {value: null, items: [null], onValueChanged: () => {temp.colName = input.value!;}});
             input.setTooltip('Column with argument values');
             input.root.insertBefore(getSwitchMock(), input.captionLabel);
             input.root.hidden = outputProp.propertyType !== DG.TYPE.DATA_FRAME || !this.toSetSwitched;
@@ -351,10 +351,10 @@ export class FittingView {
     max: 1000,
   }));
   private loss = LOSS.RMSE;
-  private lossInput = ui.choiceInput(TITLE.LOSS_LOW, this.loss, [LOSS.MAD, LOSS.RMSE], () => {
+  private lossInput = ui.input.choice(TITLE.LOSS_LOW, {value: this.loss, items: [LOSS.MAD, LOSS.RMSE], onValueChanged: () => {
     this.loss = this.lossInput.value!;
     this.lossInput.setTooltip(lossTooltip.get(this.loss)!);
-  });
+  }});
   private similarity = FITTING_UI.SIMILARITY_DEFAULT;
   private similarityInput = ui.input.forProperty(DG.Property.fromOptions({
     name: TITLE.SIMILARITY,
@@ -367,11 +367,11 @@ export class FittingView {
   private helpDN: DG.DockNode | undefined = undefined;
 
   private method = METHOD.NELDER_MEAD;
-  private methodInput = ui.choiceInput(TITLE.METHOD, this.method, [METHOD.NELDER_MEAD], () => {
+  private methodInput = ui.input.choice(TITLE.METHOD, {value: this.method, items: [METHOD.NELDER_MEAD], onValueChanged: () => {
     this.method = this.methodInput.value!;
     this.showHideSettingInputs();
     this.methodInput.setTooltip(methodTooltip.get(this.method)!);
-  });
+  }});
 
   // The Nelder-Mead method settings
   private nelderMeadSettings = new Map<string, number>();

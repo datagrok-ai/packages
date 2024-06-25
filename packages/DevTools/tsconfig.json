@@ -5,6 +5,7 @@
     "module": "es2020",
     "lib": ["ES2022", "DOM"],
     "moduleResolution": "node",
+    "strict": false,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,

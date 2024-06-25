@@ -1,17 +1,14 @@
 package grok_connect.providers;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import grok_connect.connectors_info.DataConnection;
-import grok_connect.connectors_info.DataProvider;
 import grok_connect.connectors_info.DataSource;
 import grok_connect.connectors_info.DbCredentials;
 import grok_connect.managers.ColumnManager;
@@ -58,9 +55,9 @@ public class SQLiteDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public String testConnection(DataConnection conn) throws ClassNotFoundException, SQLException {
-        boolean exists = Files.exists(Paths.get(conn.getDb()));
-        return exists ? DataProvider.CONN_AVAILABLE : "Connection is not available";
+    public void testConnection(DataConnection conn) throws GrokConnectException {
+        if (!Files.exists(Paths.get(conn.getDb())))
+            throw new GrokConnectException("Connection is not available");
     }
 
     @Override
@@ -69,7 +66,7 @@ public class SQLiteDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchemas(DataConnection connection) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchemas(DataConnection connection) throws QueryCancelledByUser, GrokConnectException {
         StringColumn column = new StringColumn(new String[]{""});
         column.name = "TABLE_SCHEMA";
         DataFrame dataFrame = new DataFrame();
@@ -78,26 +75,30 @@ public class SQLiteDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchema(DataConnection connection, String schema, String table) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
-        DataFrame result = new DataFrame();
-        Column tableSchema = new StringColumn();
-        tableSchema.name = "table_schema";
-        Column tableNameColumn = new StringColumn();
-        tableNameColumn.name = "table_name";
-        Column columnName = new StringColumn();
-        columnName.name = "column_name";
-        Column dataType = new StringColumn();
-        dataType.name = "data_type";
-        result.addColumn(tableSchema);
-        result.addColumn(tableNameColumn);
-        result.addColumn(columnName);
-        result.addColumn(dataType);
-        Connection dbConnection = getConnection(connection);
-        ResultSet columns = dbConnection.getMetaData().getColumns(null, schema, table, null);
-        while (columns.next())
-            result.addRow(columns.getString(2), columns.getString(3),
-                    columns.getString(4), columns.getString(6));
-        return result;
+    public DataFrame getSchema(DataConnection connection, String schema, String table) throws QueryCancelledByUser,
+            GrokConnectException {
+        try (Connection dbConnection = getConnection(connection);
+             ResultSet columns = dbConnection.getMetaData().getColumns(null, schema, table, null)) {
+            DataFrame result = new DataFrame();
+            Column tableSchema = new StringColumn();
+            tableSchema.name = "table_schema";
+            Column tableNameColumn = new StringColumn();
+            tableNameColumn.name = "table_name";
+            Column columnName = new StringColumn();
+            columnName.name = "column_name";
+            Column dataType = new StringColumn();
+            dataType.name = "data_type";
+            result.addColumn(tableSchema);
+            result.addColumn(tableNameColumn);
+            result.addColumn(columnName);
+            result.addColumn(dataType);
+            while (columns.next())
+                result.addRow(columns.getString(2), columns.getString(3),
+                        columns.getString(4), columns.getString(6));
+            return result;
+        } catch (SQLException e) {
+            throw new GrokConnectException(e);
+        }
     }
 
     @Override

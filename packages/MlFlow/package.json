@@ -1,0 +1,53 @@
+{
+  "name": "@datagrok/mlflow",
+  "friendlyName": "MlFlow",
+  "version": "0.0.1",
+  "description": "MlFlow Integration package",
+  "author": {
+    "name": "Konstantin Amelichev",
+    "email": "kamelichev@datagrok.ai"
+  },
+  "dependencies": {
+    "datagrok-api": "../../js-api",
+    "cash-dom": "latest",
+    "dayjs": "latest",
+    "@datagrok-libraries/utils": "latest"
+  },
+  "devDependencies": {
+    "datagrok-tools": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "eslint": "latest",
+    "eslint-config-google": "latest",
+    "@typescript-eslint/eslint-plugin": "latest",
+    "@typescript-eslint/parser": "latest"
+  },
+  "scripts": {
+    "link-all": "",
+    "debug-mlflow": "webpack && grok publish",
+    "release-mlflow": "webpack && grok publish --release",
+    "build-mlflow": "webpack",
+    "build": "webpack",
+    "debug-mlflow-dev": "webpack && grok publish dev",
+    "release-mlflow-dev": "webpack && grok publish dev --release",
+    "debug-mlflow-local": "webpack && grok publish local",
+    "release-mlflow-local": "webpack && grok publish local --release",
+    "debug-mlflow-localhost": "webpack && grok publish localhost",
+    "release-mlflow-localhost": "webpack && grok publish localhost --release",
+    "lint": "eslint src --ext .ts",
+    "lint-fix": "eslint src --ext .ts --fix"
+  },
+  "canEdit": [
+    "Developers"
+  ],
+  "canView": [
+    "All users"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com/datagrok-ai/public.git",
+    "directory": "packages/MlFlow"
+  }
+}

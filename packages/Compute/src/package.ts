@@ -18,6 +18,9 @@ import {
   makeRevalidation as makeRevalidationInst,
 } from '@datagrok-libraries/compute-utils/shared-utils/validation';
 import {ModelCatalogView, ModelHandler} from '@datagrok-libraries/compute-utils/model-catalog';
+import {
+  testPipeline as testPipelineInst
+} from '@datagrok-libraries/compute-utils/shared-utils/function-views-testing';
 
 let initCompleted: boolean = false;
 export const _package = new DG.Package();
@@ -318,7 +321,7 @@ export function HeatCapValidator(params: any) {
 //input: object params
 //output: object input
 export function CustomStringInput(params: any) {
-  const defaultInput = ui.stringInput('Custom input', '');
+  const defaultInput = ui.input.string('Custom input', {value:''});
   defaultInput.root.style.backgroundColor = 'aqua';
   defaultInput.input.style.backgroundColor = 'aqua';
   return defaultInput;
@@ -336,6 +339,7 @@ export function ObjectCoolingSelector(params: any) {
 
 //// Compute-utils API section
 
+export const testPipeline = testPipelineInst;
 export const CompView = ComputationViewInst;
 export const RFV = RichFunctionViewInst;
 export const Pipeline = PipelineViewInst;

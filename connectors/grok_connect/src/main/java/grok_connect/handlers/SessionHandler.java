@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import grok_connect.connectors_info.DataQueryRunResult;
 import grok_connect.log.EventType;
 import grok_connect.log.QueryLogger;
+import grok_connect.utils.GrokConnectException;
 import grok_connect.utils.QueryChunkNotSent;
 import grok_connect.utils.QueryManager;
 import org.eclipse.jetty.websocket.api.Session;
@@ -49,7 +50,9 @@ public class SessionHandler {
             // guess it won't work because there is no memory left!
             GrokConnect.needToReboot = true;
         }
-        String message = cause.toString();
+        if (cause.getClass().equals(GrokConnectException.class))
+            cause = cause.getCause();
+        String message = cause.getMessage();
         String stackTrace = Arrays.stream(cause.getStackTrace()).map(StackTraceElement::toString)
                 .collect(Collectors.joining(System.lineSeparator()));
         logger.error(EventType.ERROR.getMarker(), message, cause);

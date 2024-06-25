@@ -1,10 +1,18 @@
 # Bio changelog
 
-## 2.12.24 (WIP)
+## 2.13.0 (2024-06-24)
 
 ### Bug fixes
 
 * PolyTool: files moved to SequenceTranslator
+* GROK-15994: Bio: Color missing monomers
+* Use types from js-draw-lite, helm-web-editor
+* Fix error on access to MaxMonomerLength package settings
+* Fix getMonomer for PolymerType unspecified as any
+* Fix monomer lib validation
+* GROK-15995: Colors for libraries monomers
+* Fix error on open Manage Monomer Libraries
+* Fix WebLogo in a column header tooltip
 
 ## 2.12.23 (2024-05-30)
 

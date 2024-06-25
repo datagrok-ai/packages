@@ -39,7 +39,7 @@ export class FileInput extends DG.InputBase<File | null> {
     public onValueChanged: Function | null = null,
     public fileType: string | null = EXCEL_BLOB_TYPE,
   ) {
-    const primaryInput = ui.stringInput('Input file', '', null);
+    const primaryInput = ui.input.string('Input file', {value: ''});
     super(primaryInput.dart);
     this.subscribeOnEvents();
 

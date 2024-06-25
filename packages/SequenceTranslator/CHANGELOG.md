@@ -1,5 +1,11 @@
 # Sequence Translator changelog
 
+## 1.3.5 (2024-06-13)
+
+### Features
+
+* PolyTool Enumeration: cell with helm is added to the input
+
 ## 1.3.4 (2024-06-12)
 
 ### Bug fixes

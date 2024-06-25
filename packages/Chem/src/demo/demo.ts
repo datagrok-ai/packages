@@ -187,9 +187,9 @@ export async function _demoSimilarityDiversitySearch(): Promise<void> {
 
 
 export async function _demoMMPA(): Promise<void> {
-  const tv = await openMoleculeDataset('demo_files/matched_molecular_pairs.csv');
+  const tv = await openMoleculeDataset('demo_files/mmp_20k.csv');
   await mmpAnalysis(tv.dataFrame, tv.dataFrame.col('smiles')!,
-    tv.dataFrame.clone().columns.remove('smiles'));
+    tv.dataFrame.clone().columns.remove('smiles'), 0.9);
   grok.shell.windows.showHelp = true;
   //@ts-ignore
   grok.shell.windows.help.showHelp('/help/datagrok/solutions/domains/chem/chem#matched-molecular-pairs');

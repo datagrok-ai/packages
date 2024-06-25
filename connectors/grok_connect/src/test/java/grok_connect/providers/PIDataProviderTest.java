@@ -47,9 +47,7 @@ class PIDataProviderTest {
     @DisplayName("Tests of testConnection(DataConnection conn)")
     @Test
     public void testConnection() {
-        String expected = DataProvider.CONN_AVAILABLE;
-        String actual = Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
     }
 
     @DisplayName("test queries")

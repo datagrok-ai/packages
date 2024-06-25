@@ -607,6 +607,12 @@
   visibility: visible;
 }
 
+.mmpa-loader {
+  position: relative;
+  top: 50%;
+  text-align: center
+}
+
 .mmpa-color-input > .ui-input-color-input {
   display: none;
   margin-left: 6px;

@@ -1,8 +1,9 @@
 import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
-import {delay, Test, TestContext, initAutoTests, awaitCheck} from '@datagrok-libraries/utils/src/test';
-import {c} from './package';
+import { delay, Test, TestContext, initAutoTests, awaitCheck } from '@datagrok-libraries/utils/src/test';
+import { initComputeApi } from "@datagrok-libraries/compute-api";
+import { c } from './package';
 import '../css/styles.css';
 
 interface ITestManagerUI {
@@ -18,7 +19,7 @@ interface ITestManagerUI {
 interface IPackageTests {
   name: string;
   friendlyName: string;
-  categories: {[index: string]: ICategory} | null;
+  categories: { [index: string]: ICategory } | null;
   totalTests: number | null;
   resultDiv: HTMLElement;
   check: boolean;
@@ -28,7 +29,7 @@ interface ICategory {
   name: string,
   fullName: string,
   tests: IPackageTest[],
-  subcategories: {[index: string]: ICategory},
+  subcategories: { [index: string]: ICategory },
   packageName: string,
   subCatsNames: string[],
   resultDiv: HTMLElement,
@@ -84,6 +85,11 @@ export class TestManager extends DG.ViewBase {
   ribbonPanelDiv = undefined;
   dockLeft?: boolean;
   detailsTable: HTMLTableElement | undefined;
+  searchInput: DG.InputBase = ui.input.search('');
+  packagePromises: Map<string, Promise<any>> = new Map<string, Promise<any>>();
+  packNodes: any[][] = [];
+  isSearchIniting = false;
+  timeoutNumber: number | undefined;
 
   constructor(name: string, dockLeft?: boolean) {
     super({});
@@ -92,95 +98,135 @@ export class TestManager extends DG.ViewBase {
   }
 
   async init(): Promise<void> {
-    let TMStateB = false;
     let pathSegments = window.location.pathname.split('/');
+    let pathInputParameter = new URLSearchParams(window.location.search);;
+    console.log(pathInputParameter);
     pathSegments = pathSegments.map((it) => it ? it.replace(/%20/g, ' ') : undefined);
     const TMState = localStorage.getItem('TMState');
     if (pathSegments.length <= 4 && TMState) {
       pathSegments = TMState.split('/');
       pathSegments = pathSegments.map((it) => it ? it.replace(/%20/g, ' ') : undefined);
-      TMStateB = true;
     }
+
+    // we need to init Compute package here, before loading any of
+    // compute model packages, since theirs top level might implicitly
+    // depend on Compute provided globals
+    try {
+      await initComputeApi();
+    } catch (e) {
+      console.error(e);
+    }
+
+    let searchInvoked = false
+    this.searchInput.onChanged(async () => {
+      if (this.searchInput.value.length > 0) {
+        this.searchEvent();
+        searchInvoked = true;
+      }
+      else if (searchInvoked) {
+        this.closeTreeCategories();
+        searchInvoked = false;
+      }
+    });
+
+    this.searchInput.input.onkeyup = (event) => {
+      if (event.key === 'Escape')
+        this.searchInput.fireChanged();
+    };
+
     this.testFunctions = await this.collectPackages();
     this.testManagerView = DG.View.create();
     const testFromUrl = pathSegments.length > 4 ?
-      {packName: pathSegments[4], catName: pathSegments.slice(5, -1).join(': '),
-        testName: pathSegments[pathSegments.length - 1]} : null;
+      {
+        packName: pathSegments[4], catName: pathSegments.slice(5, -1).join(': '),
+        testName: pathSegments[pathSegments.length - 1]
+      } : null;
     const testUIElements: ITestManagerUI = await this.createTestManagerUI(testFromUrl);
     this.testManagerView.name = this.name;
     addView(this.testManagerView);
     this.testManagerView.path = APP_PREFIX;
     this.testManagerView.temp['ignoreCloseAll'] = true;
     this.ribbonPanelDiv = testUIElements.ribbonPanelDiv;
+    this.testManagerView.append(ui.div(this.searchInput.root, { style: { maxHeight: '30px', minHeight: '30px' } }));
     this.testManagerView.append(testUIElements.ribbonPanelDiv);
     this.testManagerView.append(testUIElements.testsTree.root);
     if (this.dockLeft)
       grok.shell.dockManager.dock(this.testManagerView.root, DG.DOCK_TYPE.LEFT, null, this.name, 0.25);
-    if (!TMStateB)
+    if (pathInputParameter.has("run") && pathInputParameter.get("run") == 'true')
       this.runTestsForSelectedNode();
   }
 
   async collectPackages(packageName?: string): Promise<any[]> {
-    let testFunctions = DG.Func.find({name: 'Test', meta: {file: 'package-test.js'}});
+    let testFunctions = DG.Func.find({ name: 'Test', meta: { file: 'package-test.js' } });
     testFunctions = testFunctions.sort((a, b) => a.package.friendlyName.localeCompare(b.package.friendlyName));
     if (packageName) testFunctions = testFunctions.filter((f: DG.Func) => f.package.name === packageName);
     return testFunctions;
   }
 
   async collectPackageTests(packageNode: DG.TreeViewGroup, f: any, testFromUrl?: ITestFromUrl): Promise<void> {
-    const selectedPackage = this.packagesTests.find((pt) => pt.name === f.package.name);
-    if (this.testFunctions.filter((it) => it.package.name === f.package.name).length !== 0 &&
-    selectedPackage.categories === null && selectedPackage.check === false) {
-      selectedPackage.check = true;
-      await f.package.load({file: f.options.file});
-      const testModule = f.package.getModule(f.options.file);
-      if (!testModule)
-        console.error(`Error getting tests from '${f.package.name}/${f.options.file}' module.`);
-      await initAutoTests(f.package, testModule);
-      const allPackageTests = testModule ? testModule.tests : undefined;
-      const packageTestsFinal: { [cat: string]: ICategory } = {};
-      if (allPackageTests) {
-        Object.keys(allPackageTests).forEach((cat) => {
-          const tests: IPackageTest[] = allPackageTests[cat].tests.map((t) => {
-            return {test: t, packageName: f.package.name};
-          });
-          const subcats = cat.split(':');
-          let subcatsFromUrl = [];
-          if (testFromUrl && testFromUrl.catName)
-            subcatsFromUrl = testFromUrl.catName.split(':');
-          let previousCat = packageTestsFinal;
-          for (let i = 0; i < subcats.length; i++) {
-            if (!previousCat[subcats[i]]) {
-              previousCat[subcats[i]] = {
-                tests: [],
-                subcategories: {},
-                packageName: f.package.name,
-                name: subcats[i],
-                fullName: subcats.slice(0, i + 1).join(':'),
-                subCatsNames: [cat],
-                resultDiv: null,
-                expand: subcats[i] === subcatsFromUrl[i],
-                totalTests: 0,
-              };
-            } else
-              previousCat[subcats[i]].subCatsNames.push(cat);
-            if (i === subcats.length - 1) {
-              previousCat[subcats[i]].tests = previousCat[subcats[i]].tests ?
-                previousCat[subcats[i]].tests.concat(tests) : tests;
-            } else
-              previousCat = previousCat[subcats[i]].subcategories;
+    var resultPromise: Promise<void>;
+
+    if (!this.packagePromises.has(f.package.name))
+      this.packagePromises[f.package.name] = new Promise<void>(async (resolve) => {
+        const selectedPackage = this.packagesTests.find((pt) => pt.name === f.package.name);
+        if (this.testFunctions.filter((it) => it.package.name === f.package.name).length !== 0 &&
+          selectedPackage.categories === null && selectedPackage.check === false) {
+          selectedPackage.check = true;
+          await f.package.load({ file: f.options.file });
+          const testModule = f.package.getModule(f.options.file);
+          if (!testModule)
+            console.error(`Error getting tests from '${f.package.name}/${f.options.file}' module.`);
+          await initAutoTests(f.package, testModule);
+          const allPackageTests = testModule ? testModule.tests : undefined;
+          const packageTestsFinal: { [cat: string]: ICategory } = {};
+          if (allPackageTests) {
+            Object.keys(allPackageTests).forEach((cat) => {
+              const tests: IPackageTest[] = allPackageTests[cat].tests.map((t) => {
+                return { test: t, packageName: f.package.name };
+              });
+              const subcats = cat.split(':');
+              let subcatsFromUrl = [];
+              if (testFromUrl && testFromUrl.catName)
+                subcatsFromUrl = testFromUrl.catName.split(':');
+              let previousCat = packageTestsFinal;
+              for (let i = 0; i < subcats.length; i++) {
+                if (!previousCat[subcats[i]]) {
+                  previousCat[subcats[i]] = {
+                    tests: [],
+                    subcategories: {},
+                    packageName: f.package.name,
+                    name: subcats[i],
+                    fullName: subcats.slice(0, i + 1).join(':'),
+                    subCatsNames: [cat],
+                    resultDiv: null,
+                    expand: subcats[i] === subcatsFromUrl[i],
+                    totalTests: 0,
+                  };
+                } else
+                  previousCat[subcats[i]].subCatsNames.push(cat);
+                if (i === subcats.length - 1) {
+                  previousCat[subcats[i]].tests = previousCat[subcats[i]].tests ?
+                    previousCat[subcats[i]].tests.concat(tests) : tests;
+                } else
+                  previousCat = previousCat[subcats[i]].subcategories;
+              }
+            });
+            let testsNumInPack = 0;
+            Object.keys(packageTestsFinal)
+              .sort((a, b) => a.localeCompare(b))
+              .forEach((cat) => {
+                testsNumInPack += this.addCategoryRecursive(packageNode, packageTestsFinal[cat], testFromUrl);
+              });
+            selectedPackage.categories = packageTestsFinal;
+            selectedPackage.totalTests = testsNumInPack;
           }
-        });
-        let testsNumInPack = 0;
-        Object.keys(packageTestsFinal)
-          .sort((a, b) => a.localeCompare(b))
-          .forEach((cat) => {
-            testsNumInPack += this.addCategoryRecursive(packageNode, packageTestsFinal[cat], testFromUrl);
-          });
-        selectedPackage.categories = packageTestsFinal;
-        selectedPackage.totalTests = testsNumInPack;
-      }
-    }
+        }
+        resolve();
+      });
+
+    await this.packagePromises[f.package.name];
+
+    return resultPromise;
   }
 
   addCategoryRecursive(node: DG.TreeViewGroup, category: ICategory, testFromUrl?: ITestFromUrl): number {
@@ -208,7 +254,7 @@ export class TestManager extends DG.ViewBase {
       t.resultDiv = testPassed;
       this.setRunTestsMenuAndLabelClick(item, t, NODE_TYPE.TEST);
       ui.tooltip.bind(item.root,
-        () => this.getTestsInfoGrid({package: t.packageName, category: t.test.category, name: t.test.name},
+        () => this.getTestsInfoGrid({ package: t.packageName, category: t.test.category, name: t.test.name },
           NODE_TYPE.TEST, true)?.info);
       if (testFromUrl && testFromUrl.catName === category.fullName && testFromUrl.testName === t.test.name)
         this.selectedNode = item;
@@ -247,22 +293,33 @@ export class TestManager extends DG.ViewBase {
       }
       packNode.root.children[0].appendChild(testPassed);
       packNode.onNodeExpanding.subscribe(() => {
+
+        if (this.isSearchIniting && !this.packagePromises.has(packNode.text)) {
+          return
+        }
         packNode.root.children[0].appendChild(ui.loader());
         this.collectPackageTests(packNode, pack).then((_) => packNode.root.children[0].lastChild.remove());
       });
+      this.packNodes.push([pack, packNode]);
     }
 
-    const {runAll, run, debug, benchmark, runSkipped} = this.createButtons();
-    const {runAll: runAll1, run: run1, debug: debug1,
-      benchmark: benchmark1, runSkipped: runSkipped1} = this.createButtons();
+    const { runAll, run, debug, benchmark, runSkipped } = this.createButtons();
+    const { runAll: runAll1, run: run1, debug: debug1,
+      benchmark: benchmark1, runSkipped: runSkipped1 } = this.createButtons();
 
     const ribbonPanelDiv = ui.divH([runAll1, run1, debug1.root, benchmark1.root, runSkipped1.root],
-      {style: {minHeight: '50px', maxHeight: '50px', alignItems: 'Center',
-        borderBottom: '1px solid var(--grey-1)', paddingLeft: '5px'}});
+      {
+        style: {
+          minHeight: '50px', maxHeight: '50px', alignItems: 'Center',
+          borderBottom: '1px solid var(--grey-1)', paddingLeft: '5px'
+        }
+      });
     ribbonPanelDiv.classList.add('test');
 
-    return {runAllButton: runAll, runButton: run, testsTree: this.tree,
-      debugButton: debug, benchmarkButton: benchmark, runSkippedButton: runSkipped, ribbonPanelDiv: ribbonPanelDiv};
+    return {
+      runAllButton: runAll, runButton: run, testsTree: this.tree,
+      debugButton: debug, benchmarkButton: benchmark, runSkippedButton: runSkipped, ribbonPanelDiv: ribbonPanelDiv
+    };
   }
 
   createButtons(): {
@@ -271,7 +328,7 @@ export class TestManager extends DG.ViewBase {
     debug: DG.InputBase<boolean>,
     benchmark: DG.InputBase<boolean>,
     runSkipped: DG.InputBase<boolean>
-    } {
+  } {
     const runTestsButton = ui.button('Run', async () => {
       this.runTestsForSelectedNode();
     }, 'Run selected');
@@ -285,7 +342,7 @@ export class TestManager extends DG.ViewBase {
     });
     runTestsButton.classList.add('ui-btn-outline');
 
-    const debugButton = ui.boolInput('Debug', this.debugMode, () => {this.debugMode = !this.debugMode;});
+    const debugButton = ui.boolInput('Debug', this.debugMode, () => { this.debugMode = !this.debugMode; });
     debugButton.classList.add('tm-button');
 
     const benchmarkButton = ui.boolInput('Benchmark', this.benchmarkMode, () => {
@@ -295,11 +352,13 @@ export class TestManager extends DG.ViewBase {
     benchmarkButton.classList.add('tm-button');
 
     const runSkippedButton = ui.boolInput('Run skipped', this.runSkippedMode,
-      () => {this.runSkippedMode = !this.runSkippedMode;});
+      () => { this.runSkippedMode = !this.runSkippedMode; });
     runSkippedButton.classList.add('tm-button');
 
-    return {runAll: runAllButton, run: runTestsButton, debug: debugButton,
-      benchmark: benchmarkButton, runSkipped: runSkippedButton};
+    return {
+      runAll: runAllButton, run: runTestsButton, debug: debugButton,
+      benchmark: benchmarkButton, runSkipped: runSkippedButton
+    };
   }
 
   async runTestsForSelectedNode(): Promise<void> {
@@ -321,6 +380,10 @@ export class TestManager extends DG.ViewBase {
         .item('Copy URL', async () => {
           navigator.clipboard.writeText(encodeURI(`${window.location
             .origin}/apps/DevTools${this.getPath(tests, nodeType)}`));
+        })
+        .item('Copy URL(running)', async () => {
+          navigator.clipboard.writeText(encodeURI(`${window.location
+            .origin}/apps/DevTools${this.getPath(tests, nodeType)}?run=true`));
         });
       if (nodeType === NODE_TYPE.TEST) {
         menu.item('Run force', async () => {
@@ -340,7 +403,7 @@ export class TestManager extends DG.ViewBase {
       };
     }
     node.root.id = Object.keys(this.nodeDict).length.toString();
-    this.nodeDict[Object.keys(this.nodeDict).length] = {tests: tests, nodeType: nodeType};
+    this.nodeDict[Object.keys(this.nodeDict).length] = { tests: tests, nodeType: nodeType };
   }
 
   updateTestResultsIcon(resultDiv: HTMLElement, success?: boolean, skipped?: boolean): void {
@@ -401,10 +464,10 @@ export class TestManager extends DG.ViewBase {
     this.testInProgress(t.resultDiv, true);
     const res: DG.DataFrame = await grok.functions.call(
       `${t.packageName}:test`, {
-        'category': t.test.category,
-        'test': t.test.name,
-        'testContext': new TestContext(false),
-      });
+      'category': t.test.category,
+      'test': t.test.name,
+      'testContext': new TestContext(false),
+    });
     if (res.getCol('result').type !== 'string')
       res.changeColumnType('result', 'string');
     const testSucceeded = res.get('success', 0);
@@ -425,15 +488,15 @@ export class TestManager extends DG.ViewBase {
   getPath(tests: any, nodeType: NODE_TYPE): string {
     let path: string;
     switch (nodeType) {
-    case NODE_TYPE.PACKAGE:
-      path = `${APP_PREFIX}${tests.package.name}`;
-      break;
-    case NODE_TYPE.CATEGORY:
-      path = `${APP_PREFIX}${tests.packageName}/${tests.fullName}`;
-      break;
-    case NODE_TYPE.TEST:
-      path = `${APP_PREFIX}${tests.packageName}/${tests.test.category}/${tests.test.name}`;
-      break;
+      case NODE_TYPE.PACKAGE:
+        path = `${APP_PREFIX}${tests.package.name}`;
+        break;
+      case NODE_TYPE.CATEGORY:
+        path = `${APP_PREFIX}${tests.packageName}/${tests.fullName}`;
+        break;
+      case NODE_TYPE.TEST:
+        path = `${APP_PREFIX}${tests.packageName}/${tests.test.category}/${tests.test.name}`;
+        break;
     }
     return path;
   }
@@ -444,60 +507,60 @@ export class TestManager extends DG.ViewBase {
     let catsValuesSorted: ICategory[];
     localStorage.setItem('TMState', this.testManagerView.path);
     switch (nodeType) {
-    case NODE_TYPE.PACKAGE: {
-      const progressBar = DG.TaskBarProgressIndicator.create(tests.package.name);
-      let testsSucceded = true;
-      const packageTests = this.packagesTests.find((pt) => pt.name === tests.package.name);
-      this.testInProgress(packageTests.resultDiv, true);
-      await this.collectPackageTests(node as DG.TreeViewGroup, tests);
-      await awaitCheck(() => packageTests.categories !== null, 'cannot load package categories', 5000);
-      const cats = packageTests.categories;
-      catsValuesSorted = Object.keys(cats).sort((a, b) => a.localeCompare(b)).map((cat) => cats[cat]);
-      let completedTestsNum = 0;
-      for (const cat of catsValuesSorted) {
+      case NODE_TYPE.PACKAGE: {
+        const progressBar = DG.TaskBarProgressIndicator.create(tests.package.name);
+        let testsSucceded = true;
+        const packageTests = this.packagesTests.find((pt) => pt.name === tests.package.name);
         this.testInProgress(packageTests.resultDiv, true);
-        const res = await this.runTestsRecursive(cat, progressBar,
-          packageTests.totalTests, completedTestsNum, tests.package.name);
-        completedTestsNum = res.completedTests;
-        if (!res.catRes)
-          testsSucceded = false;
+        await this.collectPackageTests(node as DG.TreeViewGroup, tests);
+        await awaitCheck(() => packageTests.categories !== null, 'cannot load package categories', 5000);
+        const cats = packageTests.categories;
+        catsValuesSorted = Object.keys(cats).sort((a, b) => a.localeCompare(b)).map((cat) => cats[cat]);
+        let completedTestsNum = 0;
+        for (const cat of catsValuesSorted) {
+          this.testInProgress(packageTests.resultDiv, true);
+          const res = await this.runTestsRecursive(cat, progressBar,
+            packageTests.totalTests, completedTestsNum, tests.package.name);
+          completedTestsNum = res.completedTests;
+          if (!res.catRes)
+            testsSucceded = false;
+        }
+        this.updateTestResultsIcon(packageTests.resultDiv, testsSucceded);
+        progressBar.close();
+        break;
       }
-      this.updateTestResultsIcon(packageTests.resultDiv, testsSucceded);
-      progressBar.close();
-      break;
-    }
-    case NODE_TYPE.CATEGORY: {
-      const progressBar = DG.TaskBarProgressIndicator.create(`${tests.packageName}/${tests.fullName}`);
-      await this.runTestsRecursive(tests, progressBar, tests.totalTests, 0, `${tests.packageName}/${tests.fullName}`);
-      progressBar.close();
-      break;
-    }
-    case NODE_TYPE.TEST: {
-      await this.runTest(tests, force);
-      break;
-    }
+      case NODE_TYPE.CATEGORY: {
+        const progressBar = DG.TaskBarProgressIndicator.create(`${tests.packageName}/${tests.fullName}`);
+        await this.runTestsRecursive(tests, progressBar, tests.totalTests, 0, `${tests.packageName}/${tests.fullName}`);
+        progressBar.close();
+        break;
+      }
+      case NODE_TYPE.TEST: {
+        await this.runTest(tests, force);
+        break;
+      }
     }
     await delay(1000);
     const unhandled = await grok.shell.lastError;
     if (unhandled) {
       grok.shell.error(`Unhandled exception: ${unhandled}`);
       switch (nodeType) {
-      case NODE_TYPE.PACKAGE:
-        catsValuesSorted.forEach((cat) => this.updateIconUnhandled(cat));
-        break;
-      case NODE_TYPE.CATEGORY:
-        this.updateIconUnhandled(tests);
-        break;
-      case NODE_TYPE.TEST:
-        if (tests.resultDiv.innerHTML === '') return;
-        (tests.resultDiv.firstChild as HTMLElement).style.color = 'var(--orange-2)';
-        break;
+        case NODE_TYPE.PACKAGE:
+          catsValuesSorted.forEach((cat) => this.updateIconUnhandled(cat));
+          break;
+        case NODE_TYPE.CATEGORY:
+          this.updateIconUnhandled(tests);
+          break;
+        case NODE_TYPE.TEST:
+          if (tests.resultDiv.innerHTML === '') return;
+          (tests.resultDiv.firstChild as HTMLElement).style.color = 'var(--orange-2)';
+          break;
       }
     }
     setTimeout(async () => {
       const unhandled = await grok.shell.lastError;
       grok.shell.o = this.getTestsInfoPanel(node, tests, nodeType, unhandled);
-      grok.shell.clearLastError();
+      //grok.shell.clearLastError();
     }, 30);
   }
 
@@ -525,11 +588,11 @@ export class TestManager extends DG.ViewBase {
       if (!res)
         testsSucceded = false;
       completedTestsNum += 1;
-      const percent = Math.floor(completedTestsNum/totalNumTests*100);
+      const percent = Math.floor(completedTestsNum / totalNumTests * 100);
       progressBar.update(percent, `${progressInfo}: ${percent}% completed`);
     }
     this.updateTestResultsIcon(category.resultDiv, testsSucceded);
-    return {completedTests: completedTestsNum, catRes: testsSucceded};
+    return { completedTests: completedTestsNum, catRes: testsSucceded };
   }
 
   addPackageInfo(df: DG.DataFrame, pack: string): void {
@@ -558,8 +621,8 @@ export class TestManager extends DG.ViewBase {
       nodeType, false, unhandled, isAggrTest);
     const grid = obj.info;
     const testInfo = obj.testInfo;
-    acc.addPane('Details', () => ui.div(this.testDetails(node, tests, nodeType), {style: {userSelect: 'text'}}), true);
-    const res = acc.addPane('Results', () => ui.div(grid, {style: {width: '100%'}}), true);
+    acc.addPane('Details', () => ui.div(this.testDetails(node, tests, nodeType), { style: { userSelect: 'text' } }), true);
+    const res = acc.addPane('Results', () => ui.div(grid, { style: { width: '100%' } }), true);
     res.root.oncontextmenu = (e) => {
       DG.Menu.popup()
         .item('Print to the console', () => console.error(grid.innerText))
@@ -577,21 +640,21 @@ export class TestManager extends DG.ViewBase {
       let b2: string | boolean = false;
       let col: string = 'success';
       switch (nodeType) {
-      case NODE_TYPE.PACKAGE:
-        query = 'PackageHistory';
-        params = {packageName: tests.package.name};
-        break;
-      case NODE_TYPE.CATEGORY:
-        query = 'CategoryHistory';
-        params = {packageName: tests.packageName, category: tests.fullName};
-        break;
-      case NODE_TYPE.TEST:
-        query = 'TestHistory';
-        params = {packageName: tests.packageName, category: tests.test.category, test: tests.test.name};
-        b1 = 'passed';
-        b2 = 'failed';
-        col = 'status';
-        break;
+        case NODE_TYPE.PACKAGE:
+          query = 'PackageHistory';
+          params = { packageName: tests.package.name };
+          break;
+        case NODE_TYPE.CATEGORY:
+          query = 'CategoryHistory';
+          params = { packageName: tests.packageName, category: tests.fullName };
+          break;
+        case NODE_TYPE.TEST:
+          query = 'TestHistory';
+          params = { packageName: tests.packageName, category: tests.test.category, test: tests.test.name };
+          b1 = 'passed';
+          b2 = 'failed';
+          col = 'status';
+          break;
       }
       const history: DG.DataFrame = await grok.data.query(`DevTools:${query}`, params);
       const arr = history.col(col).toList();
@@ -606,21 +669,21 @@ export class TestManager extends DG.ViewBase {
     return acc.root;
   };
 
-  resultsGridFilterCondition(tests: any, nodeType: NODE_TYPE): {package: string, category?: string, name?: string} {
+  resultsGridFilterCondition(tests: any, nodeType: NODE_TYPE): { package: string, category?: string, name?: string } {
     switch (nodeType) {
-    case NODE_TYPE.PACKAGE:
-      return {package: tests.package.name};
-    case NODE_TYPE.CATEGORY:
-      return {package: tests.packageName, category: tests.fullName};
-    case NODE_TYPE.TEST:
-      return {package: tests.packageName, category: tests.test.category, name: tests.test.name};
+      case NODE_TYPE.PACKAGE:
+        return { package: tests.package.name };
+      case NODE_TYPE.CATEGORY:
+        return { package: tests.packageName, category: tests.fullName };
+      case NODE_TYPE.TEST:
+        return { package: tests.packageName, category: tests.test.category, name: tests.test.name };
     }
   }
 
   testDetails(node: DG.TreeViewGroup | DG.TreeViewNode, tests: any, nodeType: NODE_TYPE): HTMLDivElement {
-    const detailsMap = nodeType === NODE_TYPE.PACKAGE ? {package: tests.package.name} :
-      nodeType === NODE_TYPE.CATEGORY ? {package: tests.packageName, category: tests.fullName} :
-        {package: tests.packageName, category: tests.test.category, test: tests.test.name};
+    const detailsMap = nodeType === NODE_TYPE.PACKAGE ? { package: tests.package.name } :
+      nodeType === NODE_TYPE.CATEGORY ? { package: tests.packageName, category: tests.fullName } :
+        { package: tests.packageName, category: tests.test.category, test: tests.test.name };
     detailsMap[LAST_SUCCESS] = ui.loader();
     detailsMap[LAST_FAILURE] = ui.loader();
     const detailsTable = ui.tableFromMap(detailsMap);
@@ -636,7 +699,7 @@ export class TestManager extends DG.ViewBase {
   }
 
   getTestsInfoGrid(condition: object, nodeType: NODE_TYPE, isTooltip?: boolean,
-    unhandled?: string, isAggrTest?: boolean): {info: HTMLDivElement, testInfo: DG.DataFrame} {
+    unhandled?: string, isAggrTest?: boolean): { info: HTMLDivElement, testInfo: DG.DataFrame } {
     let info = ui.divText('No tests have been run');
     let testInfo: DG.DataFrame;
     if (this.testsResultsDf) {
@@ -651,22 +714,26 @@ export class TestManager extends DG.ViewBase {
           'exceptions', testInfo.get('package', 0)]);
       }
       if (testInfo.rowCount === 1 && testInfo.col('name').isNone(0))
-        return {info, testInfo};
+        return { info, testInfo };
       if (testInfo.rowCount === 1 && !testInfo.col('name').isNone(0)) {
         const cat = testInfo.get('category', 0);
         if (isAggrTest) {
           const grid = DG.DataFrame.fromCsv(testInfo.get('result', 0)).plot.grid().root;
           grid.style.width = 'inherit';
           grid.style.maxWidth = null;
-          info = ui.div(grid, {style: {width: '100%'}});
-          return {info, testInfo};
+          info = ui.div(grid, { style: { width: '100%' } });
+          return { info, testInfo };
         }
         const time = testInfo.get('ms', 0);
         const result = testInfo.get('result', 0);
         const resColor = testInfo.get('success', 0) ? 'var(--green-2)' : 'var(--red-3)';
         info = ui.divV([
-          ui.divText(result, {style: {color: testInfo.get('skipped', 0) ?
-            'var(--orange-2)' : resColor, userSelect: 'text'}}),
+          ui.divText(result, {
+            style: {
+              color: testInfo.get('skipped', 0) ?
+                'var(--orange-2)' : resColor, userSelect: 'text'
+            }
+          }),
           ui.divText(`Time, ms: ${time}`),
         ]);
         if (nodeType !== NODE_TYPE.TEST)
@@ -686,6 +753,96 @@ export class TestManager extends DG.ViewBase {
         } else return null;
       }
     }
-    return {info, testInfo};
+    return { info, testInfo };
   };
+
+  private closeTreeCategories() {
+    const categoriesLists = this.tree.root.getElementsByClassName('d4-tree-view-group-host');
+    const categoriesTitles = Array.from(this.tree.root.getElementsByClassName('d4-tree-view-tri'));
+    const dom = this.tree.root.getElementsByClassName('d4-tree-view-node');
+
+    for (let i = 0; i < dom.length; i++) {
+      const item = dom[i] as HTMLElement;
+      item.classList.remove('hidden');
+    }
+    for (const title of categoriesTitles)
+      title.classList.remove('d4-tree-view-tri-expanded');
+    for (let i = 0; i < categoriesLists.length; i++) {
+      let element = categoriesLists[i] as HTMLElement;
+      if (!element.parentElement?.classList.contains('d4-tree-view-root'))
+        element.style.display = 'none';
+    }
+  }
+
+  private searchEvent() {
+    if (!this.isSearchIniting) {
+      if (this.testFunctions.length === this.packagePromises.values.length) {
+        this.searchTreeItems(this.searchInput.value);
+      }
+      else {
+        this.isSearchIniting = true;
+        this.loadAllPackages().then(() => {
+          this.searchTreeItems(this.searchInput.value);
+          this.isSearchIniting = false;
+        });
+      }
+    }
+  }
+
+  private async loadAllPackages(): Promise<void> {
+    for (const packNode of this.packNodes) {
+      packNode[1].root.children[0].appendChild(ui.loader());
+    }
+
+    for (const packNode of this.packNodes) {
+      await this.collectPackageTests(packNode[1], packNode[0]);
+      packNode[1].root.children[0].lastChild.remove();
+      if (this.searchInput.value.length > 0) {
+        this.searchTreeItems(this.searchInput.value);
+      }
+    }
+  }
+
+  private async searchTreeItems(stringToSearch: string) {
+    const dom = this.tree.root.getElementsByClassName('d4-tree-view-node');
+    const regExpToSearch = new RegExp(stringToSearch.toLowerCase());
+    const listToShow: HTMLElement[] = [];
+
+    function isFitsSearchString(stringToCheck: string): boolean {
+      return regExpToSearch.test(stringToCheck.toLocaleLowerCase());
+    }
+
+    for (let i = 0; i < dom.length; i++) {
+      const item = dom[i] as HTMLElement;
+      const foundFunc = isFitsSearchString(item.textContent?.toString() || '');
+      if (foundFunc) {
+        listToShow[listToShow.length] = (item);
+        item.classList.remove('hidden');
+      }
+      else
+        item.classList.add('hidden');
+    }
+
+    for (const itemToShow of listToShow) {
+      let itemHierarchy: HTMLElement = itemToShow;
+      while (!itemHierarchy.classList.contains('d4-tree-view-root')) {
+        if (itemHierarchy.classList.contains('d4-tree-view-group')) {
+          let categoryToUpdate = itemHierarchy.getElementsByClassName('d4-tree-view-tri')[0];
+          if (categoryToUpdate) {
+            categoryToUpdate.classList.add('d4-tree-view-tri-expanded');
+            categoryToUpdate.parentElement?.classList.remove('hidden');
+          }
+        }
+
+        if (itemHierarchy.style.display === 'none')
+          itemHierarchy.style.display = 'block';
+
+        if (itemHierarchy.classList.contains('hidden'))
+          itemHierarchy.classList.remove('hidden');
+
+        itemHierarchy = itemHierarchy.parentElement!;
+      }
+
+    }
+  }
 }

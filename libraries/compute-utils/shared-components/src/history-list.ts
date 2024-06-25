@@ -725,12 +725,13 @@ export class HistoricalRunsList extends DG.Widget {
     this.compactMode = !this.compactMode;
   }, 'Toggle compact mode'), {style: {'padding-top': '4px'}});
 
-  private showMetadataIcon = ui.switchInput('Metadata', true, () => {
+  private showMetadataIcon = ui.input.toggle('Metadata', {value: true, onValueChanged: () => {
     this.styleHistoryGrid();
     this.styleHistoryFilters();
-  });
+  }});
 
-  private showInputsIcon = ui.switchInput('Params', false, async (newValue: boolean) => {
+  private showInputsIcon = ui.input.toggle('Params', {value: false, onValueChanged: async () => {
+    const newValue = this.showInputsIcon.value;
     if (this.runs.size === 0) return;
 
     if (newValue && this.options?.isHistory) {
@@ -753,7 +754,7 @@ export class HistoricalRunsList extends DG.Widget {
       this.styleHistoryGrid();
       this.styleHistoryFilters();
     }
-  });
+  }});
 
   private styleHistoryGrid() {
     this._historyGrid.setOptions({

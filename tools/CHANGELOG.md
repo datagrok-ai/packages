@@ -1,5 +1,11 @@
 # Datagrok-tools changelog
 
+## 4.13.3 (2024-06-21)
+
+### Features
+
+* Added check on source maps in grock check command
+
 ## 4.13.1 (2024-06-04)
 
 ### Features

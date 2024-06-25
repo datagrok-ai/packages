@@ -96,12 +96,12 @@ public class AthenaDataProvider extends JdbcDataProvider {
     @Override
     public Properties getProperties(DataConnection conn) {
         Properties properties = new Properties();
-        properties.put("User", conn.credentials.parameters.get(DbCredentials.ACCESS_KEY).toString());
-        properties.put("Password", conn.credentials.parameters.get(DbCredentials.SECRET_KEY).toString());
+        setIfNotNull(properties, "User", (String )conn.credentials.parameters.get(DbCredentials.ACCESS_KEY));
+        setIfNotNull(properties, "Password", (String) conn.credentials.parameters.get(DbCredentials.SECRET_KEY));
         if (!conn.hasCustomConnectionString()) {
-            properties.put("S3OutputLocation", conn.get(DbCredentials.S3OutputLocation));
-            properties.put("Schema", conn.getDb());
-            properties.put("S3OutputEncOption", conn.get(DbCredentials.S3OutputEncOption));
+            setIfNotNull(properties, "S3OutputLocation", conn.get(DbCredentials.S3OutputLocation));
+            setIfNotNull(properties, "Schema", conn.getDb());
+            setIfNotNull(properties, "S3OutputEncOption", conn.get(DbCredentials.S3OutputEncOption));
         }
         return properties;
     }

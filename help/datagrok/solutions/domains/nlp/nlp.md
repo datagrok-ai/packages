@@ -5,7 +5,7 @@ sidebar_position: 0
 
 The Datagrok platform has a plugin designed for natural language processing. This feature
 can be applied to comfortably work with [files](../../../../access/files/files.md) with text content.
-To try it out, import your text files according to the [instructions](../../../../access/files/files.md#importing-text)
+To try it out, import your text files according to the [instructions](../../../../datagrok/navigation/views/browse.md#importing-text)
 or use the provided [demo files](https://public.datagrok.ai/files/demo.testjobs.files.demofiles/nlp).
 The rest of the article is dedicated to the main applications of this domain integrated into the platform.
 

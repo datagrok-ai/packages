@@ -2,18 +2,12 @@ import * as ui from 'datagrok-api/ui';
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 
-import '../types/helm';
-import * as org from 'org';
-// Alias helm consts
-import PolymerTypes = org.helm.PolymerTypes;
-import HelmTypes = org.helm.HelmTypes;
-import MonomerTypes = org.helm.MonomerTypes;
+import {MonomerType, PolymerType} from '../helm/types';
+import {MonomerTypes, PolymerTypes} from '../helm/consts';
 
-export {PolymerTypes, HelmTypes, MonomerTypes};
-
-import HELM_POLYMER_TYPE = org.helm.PolymerTypes;
-import HELM_MONOMER_TYPE = org.helm.MonomerTypes;
-import {MonomerType, PolymerType, RGroup} from '../types';
+import HELM_POLYMER_TYPE = PolymerTypes;
+import HELM_MONOMER_TYPE = MonomerTypes;
+import {RGroup} from '../types';
 
 export {HELM_POLYMER_TYPE, HELM_MONOMER_TYPE};
 

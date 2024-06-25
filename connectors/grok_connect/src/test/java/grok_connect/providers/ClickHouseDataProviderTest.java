@@ -6,6 +6,7 @@ import grok_connect.connectors_info.DbCredentials;
 import grok_connect.connectors_info.FuncCall;
 import grok_connect.providers.utils.NamedArgumentConverter;
 import grok_connect.providers.utils.Provider;
+import grok_connect.utils.GrokConnectException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -43,8 +44,7 @@ class ClickHouseDataProviderTest extends ContainerizedProviderBaseTest {
     @Test
     public void testConnection_notOk() {
         connection.parameters.put(DbCredentials.PORT, (double) 1);
-        String result = Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
-        Assertions.assertTrue(result.startsWith("ERROR"));
+        Assertions.assertThrows(GrokConnectException.class, () -> provider.testConnection(connection));
     }
 
     @DisplayName("Test of getSchemas() method with correct DataConnection")

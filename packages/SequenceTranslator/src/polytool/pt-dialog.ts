@@ -8,6 +8,7 @@ import {addTransformedColumn} from './pt-conversion';
 
 import {handleError} from './utils';
 import {getLibrariesList, HelmInput, getEnumeration} from './pt-enumeration';
+import {NOTATION} from '@datagrok-libraries/bio/src/utils/macromolecule/consts';
 
 const PT_ERROR_DATAFRAME = 'No dataframe with macromolecule columns open';
 const PT_WARNING_COLUMN = 'No marcomolecule column chosen!';
@@ -86,6 +87,13 @@ export async function getPolyToolEnumerationDialog(): Promise<DG.Dialog> {
     screenLibrary.root
   ]);
 
+  const cccSubs = grok.events.onCurrentCellChanged.subscribe(() => {
+    const cell = grok.shell.tv.dataFrame.currentCell;
+
+    if (cell.column.semType === DG.SEMTYPE.MACROMOLECULE && cell.column.tags[DG.TAGS.UNITS] === NOTATION.HELM)
+      helmInput.setHelmString(cell.value);
+  });
+
   const dialog = ui.dialog(PT_UI_DIALOG_ENUMERATION)
     .add(div)
     .onOK(async () => {
@@ -105,10 +113,10 @@ export async function getPolyToolEnumerationDialog(): Promise<DG.Dialog> {
       } catch (err: any) {
 
       } finally {
-
+        cccSubs.unsubscribe();
       }
     }).onCancel(() => {
-
+      cccSubs.unsubscribe();
     });
 
   return dialog;

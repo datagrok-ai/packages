@@ -95,8 +95,6 @@ export interface SettingsInterface {
 
   allowEventScripts: boolean;
 
-  enableStickyMeta: boolean;
-
   /// Whenever an error occurs, automatically reports extended logs to the server. Use UsageAnalysis to browse them.
   /// This includes console logs, server logs, data connectivity logs, Docker logs, etc.
   autoReportExtendedLogs: boolean;
@@ -123,14 +121,8 @@ export interface SettingsInterface {
   /// Datlas API URL.
   apiUrl: string;
 
-  /// Jupyter Gateway instance token.
-  jupyterGatewayToken: string;
-
   /// Jupyter Notebook instance token.
   jupyterNotebookToken: string;
-
-  /// Help base URL.
-  helpBaseUrl: string;
 
   clientFuncCacheEnabled: boolean;
 

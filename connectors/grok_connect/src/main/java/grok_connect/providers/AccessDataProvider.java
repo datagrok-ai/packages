@@ -1,11 +1,9 @@
 package grok_connect.providers;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import grok_connect.connectors_info.DataConnection;
@@ -52,7 +50,7 @@ public class AccessDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchemas(DataConnection connection) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchemas(DataConnection connection) {
         StringColumn column = new StringColumn(new String[]{""});
         column.name = "TABLE_SCHEMA";
         DataFrame dataFrame = new DataFrame();
@@ -61,26 +59,29 @@ public class AccessDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchema(DataConnection connection, String schema, String table) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
-        DataFrame result = new DataFrame();
-        Column tableSchema = new StringColumn();
-        tableSchema.name = "table_schema";
-        Column tableNameColumn = new StringColumn();
-        tableNameColumn.name = "table_name";
-        Column columnName = new StringColumn();
-        columnName.name = "column_name";
-        Column dataType = new StringColumn();
-        dataType.name = "data_type";
-        result.addColumn(tableSchema);
-        result.addColumn(tableNameColumn);
-        result.addColumn(columnName);
-        result.addColumn(dataType);
-        Connection dbConnection = getConnection(connection);
-        ResultSet columns = dbConnection.getMetaData().getColumns(null, schema, table, null);
-        while (columns.next())
-            result.addRow(columns.getString(2), columns.getString(3),
-                    columns.getString(4), columns.getString(6));
-        return result;
+    public DataFrame getSchema(DataConnection connection, String schema, String table) throws GrokConnectException {
+        try (Connection dbConnection = getConnection(connection);
+             ResultSet columns = dbConnection.getMetaData().getColumns(null, schema, table, null)) {
+            DataFrame result = new DataFrame();
+            Column tableSchema = new StringColumn();
+            tableSchema.name = "table_schema";
+            Column tableNameColumn = new StringColumn();
+            tableNameColumn.name = "table_name";
+            Column columnName = new StringColumn();
+            columnName.name = "column_name";
+            Column dataType = new StringColumn();
+            dataType.name = "data_type";
+            result.addColumn(tableSchema);
+            result.addColumn(tableNameColumn);
+            result.addColumn(columnName);
+            result.addColumn(dataType);
+            while (columns.next())
+                result.addRow(columns.getString(2), columns.getString(3),
+                        columns.getString(4), columns.getString(6));
+            return result;
+        } catch (SQLException e) {
+            throw new GrokConnectException(e);
+        }
     }
 
     @Override

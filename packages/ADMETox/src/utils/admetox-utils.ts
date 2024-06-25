@@ -9,7 +9,7 @@ import { STORAGE_NAME, KEY, TEMPLATES_FOLDER, Model, ModelColoring, Subgroup, Te
 
 export let DEFAULT_LOWER_VALUE = 0.8;
 export let DEFAULT_UPPER_VALUE = 1.0;
-export let DEFAULT_APPLICABILITY_VALUE = 0.5;
+export let DEFAULT_APPLICABILITY_VALUE = 0.41;
 export let properties: any;
 
 async function getAdmetoxContainer() {
@@ -149,6 +149,11 @@ export async function getQueryParams(): Promise<string> {
       .map((model: Model) => model.name).join(',');
 }
 
+function generateNumber(): number {
+  return Math.round(Math.random() * 10) / 10;
+}
+
+
 function createPieSettings(columnNames: string[], properties: any, probabilities: { [key: string]: number[] }): any {
   const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728'];
   let sectors: any[] = [];
@@ -167,7 +172,6 @@ function createPieSettings(columnNames: string[], properties: any, probabilities
         let { min, max } = model;
         if (model.properties) {
           const directionProperty = model.properties.find((prop: any) => prop.property.name === 'direction');
-          weightProperty = model.properties.find((prop: any) => prop.property.name === 'weight');
           if (directionProperty && directionProperty.object.direction === 'Lower is better')
             [min, max] = [max, min];
         }
@@ -176,7 +180,7 @@ function createPieSettings(columnNames: string[], properties: any, probabilities
           name: modelName,
           lowThreshold: min,
           highThreshold: max,
-          weight: weightProperty.object.weight,
+          weight: generateNumber(),
           applicability: DEFAULT_APPLICABILITY_VALUE,
           probabilities: Object.entries(probabilities)
             .filter(([key, value]) => key.includes(modelName))

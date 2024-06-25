@@ -1,8 +1,5 @@
 package grok_connect.providers;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,10 +8,14 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Properties;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import grok_connect.connectors_info.DataConnection;
 import grok_connect.connectors_info.DataProvider;
 import grok_connect.connectors_info.DataQuery;
@@ -45,13 +46,13 @@ public abstract class JdbcDataProvider extends DataProvider {
     protected QueryMonitor queryMonitor = QueryMonitor.getInstance();
     protected String driverClassName;
 
-    public void prepareProvider() throws ClassNotFoundException {
+    public void prepareProvider() throws GrokConnectException {
     }
 
-    public Connection getConnection(DataConnection conn)
-            throws ClassNotFoundException, SQLException, GrokConnectException {
+    public Connection getConnection(DataConnection conn) throws SQLException, GrokConnectException {
         prepareProvider();
-        return ConnectionPool.getInstance().getConnection(getConnectionString(conn), getProperties(conn), driverClassName);
+        return ConnectionPool.getInstance().getConnection(getConnectionString(conn),
+                getProperties(conn), driverClassName);
     }
 
     public Properties getProperties(DataConnection conn) {
@@ -76,32 +77,15 @@ public abstract class JdbcDataProvider extends DataProvider {
         return conn.connectionString;
     }
 
-    // "CONN_AVAILABLE" or exception text
-    public String testConnection(DataConnection conn) throws ClassNotFoundException, SQLException {
-        Connection sqlConnection = null;
-        String res;
-        try {
-            sqlConnection = getConnection(conn);
-            if (sqlConnection.isClosed() || !sqlConnection.isValid(30))
-                res = "Connection is not available";
-            else
-                res = DataProvider.CONN_AVAILABLE;
-        } catch (Throwable ex) {
-            StringWriter errors = new StringWriter();
-            errors.write("ERROR:\n" + ex + "\n\nSTACK TRACE:\n");
-            ex.printStackTrace(new PrintWriter(errors));
-            System.out.println(errors);
-            res = errors.toString();
+    public void testConnection(DataConnection conn) throws GrokConnectException {
+        try (Connection connection = getConnection(conn)) {
+            // just open and close the connection
+        } catch (SQLException e) {
+            throw new GrokConnectException(e);
         }
-        finally {
-            if (sqlConnection != null)
-                sqlConnection.close();
-        }
-        return res;
     }
 
-    public DataFrame getSchemas(DataConnection connection)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchemas(DataConnection connection) throws QueryCancelledByUser, GrokConnectException {
         FuncCall queryRun = new FuncCall();
         queryRun.func = new DataQuery();
         queryRun.func.query = getSchemasSql(connection.getDb());
@@ -110,8 +94,8 @@ public abstract class JdbcDataProvider extends DataProvider {
         return execute(queryRun);
     }
 
-    public DataFrame getSchema(DataConnection connection, String schema, String table)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchema(DataConnection connection, String schema, String table) throws QueryCancelledByUser,
+            GrokConnectException {
         FuncCall queryRun = new FuncCall();
         queryRun.func = new DataQuery();
         queryRun.func.query = getSchemaSql(connection.getDb(), schema, table);
@@ -358,56 +342,45 @@ public abstract class JdbcDataProvider extends DataProvider {
             else throw e;
         }
     }
-    public DataFrame getResultSetSubDf(FuncCall queryRun, ResultSet resultSet, ResultSetManager resultSetManager, int maxIterations, int columnCount,
-                                       Logger queryLogger, int operationNumber, boolean dryRun) throws SQLException, QueryCancelledByUser {
-        if (queryMonitor.checkCancelledId((String) queryRun.aux.get("mainCallId"))) {
-            queryLogger.info("Query was canceled");
-            throw new QueryCancelledByUser();
-        }
+    public DataFrame getResultSetSubDf(FuncCall queryRun, ResultSet resultSet, ResultSetManager resultSetManager,
+                                       int maxIterations, int columnCount, Logger queryLogger, int operationNumber,
+                                       boolean dryRun) throws SQLException, QueryCancelledByUser {
         DataFrame dataFrame = new DataFrame();
-        try {
-            EventType resultSetProcessingEventType = dryRun ? EventType.RESULT_SET_PROCESSING_WITHOUT_DATAFRAME_FILL
-                    : EventType.RESULT_SET_PROCESSING_WITH_DATAFRAME_FILL;
-            queryLogger.debug(resultSetProcessingEventType.getMarker(operationNumber, EventType.Stage.START),
-                    "Filling columns of DataFrame with id {}...", operationNumber);
-            if (resultSet.next()) {
-                int rowCount = 0;
-                do {
-                    rowCount++;
-                    for (int c = 1; c < columnCount + 1; c++) {
-                        Object value = getObjectFromResultSet(resultSet, c);
+        EventType resultSetProcessingEventType = dryRun ? EventType.RESULT_SET_PROCESSING_WITHOUT_DATAFRAME_FILL
+                : EventType.RESULT_SET_PROCESSING_WITH_DATAFRAME_FILL;
+        queryLogger.debug(resultSetProcessingEventType.getMarker(operationNumber, EventType.Stage.START),
+                "Filling columns of DataFrame with id {}...", operationNumber);
+        if (resultSet.next()) {
+            int rowCount = 0;
+            do {
+                rowCount++;
+                for (int c = 1; c < columnCount + 1; c++) {
+                    Object value = getObjectFromResultSet(resultSet, c);
 
-                        if (dryRun) continue;
-                        resultSetManager.processValue(value, c, queryLogger);
+                    if (dryRun) continue;
+                    resultSetManager.processValue(value, c, queryLogger);
 
-                        if (queryMonitor.checkCancelledIdResultSet(queryRun.id)) {
-                            queryLogger.info("Query was canceled");
-                            resultSet.close();
-                            queryMonitor.removeResultSet(queryRun.id);
-                            break;
-                        }
+                    if (queryMonitor.checkCancelledIdResultSet(queryRun.id)) {
+                        queryLogger.info("Query was canceled");
+                        queryMonitor.removeResultSet(queryRun.id);
+                        throw new QueryCancelledByUser();
                     }
-                } while ((maxIterations < 0 || rowCount < maxIterations) && resultSet.next());
+                }
+            } while ((maxIterations < 0 || rowCount < maxIterations) && resultSet.next());
 
-                queryLogger.debug(resultSetProcessingEventType.getMarker(operationNumber, EventType.Stage.END),
-                        "Filled columns with {} rows of DataFrame with id {}", rowCount, operationNumber);
-            }
-            else
-                queryLogger.debug(resultSetProcessingEventType.getMarker(operationNumber, EventType.Stage.END),
-                        "Result set is empty");
-            dataFrame.addColumns(resultSetManager.getProcessedColumns());
-            return dataFrame;
-        } catch (Exception e) {
-            queryLogger.warn(EventType.ERROR.getMarker(), "An exception was thrown", e);
-            throw new RuntimeException("Something went wrong", e);
+            queryLogger.debug(resultSetProcessingEventType.getMarker(operationNumber, EventType.Stage.END),
+                    "Filled columns with {} rows of DataFrame with id {}", rowCount, operationNumber);
         }
+        else
+            queryLogger.debug(resultSetProcessingEventType.getMarker(operationNumber, EventType.Stage.END),
+                    "Result set is empty");
+        dataFrame.addColumns(resultSetManager.getProcessedColumns());
+        return dataFrame;
     }
 
-    public DataFrame execute(FuncCall queryRun)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
-        try (Connection connection = getConnection(queryRun.func.connection)) {
-            ResultSet resultSet = getResultSet(queryRun, connection, logger, 100);
-
+    public DataFrame execute(FuncCall queryRun) throws QueryCancelledByUser, GrokConnectException {
+        try (Connection connection = getConnection(queryRun.func.connection);
+                ResultSet resultSet = getResultSet(queryRun, connection, logger, 100)) {
             if (resultSet == null)
                 return new DataFrame();
             ResultSetManager resultSetManager = getResultSetManager();
@@ -418,7 +391,7 @@ public abstract class JdbcDataProvider extends DataProvider {
         } catch (SQLException e) {
             if (queryMonitor.checkCancelledId((String) queryRun.aux.get("mainCallId")))
                 throw new QueryCancelledByUser();
-            else throw e;
+            else throw new GrokConnectException(e);
         }
     }
 
@@ -603,8 +576,7 @@ public abstract class JdbcDataProvider extends DataProvider {
                 descriptor.limitAtEnd);
     }
 
-    public DataFrame queryTable(DataConnection conn, TableQuery query)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame queryTable(DataConnection conn, TableQuery query) throws QueryCancelledByUser, GrokConnectException {
         FuncCall queryRun = new FuncCall();
         queryRun.func = new DataQuery();
         String sql = queryTableSql(conn, query);
@@ -622,15 +594,18 @@ public abstract class JdbcDataProvider extends DataProvider {
     public static java.util.Properties defaultConnectionProperties(DataConnection conn) {
         java.util.Properties properties = new java.util.Properties();
         if (conn.credentials != null) {
-            if (conn.credentials.getLogin() != null)
-                properties.setProperty("user", conn.credentials.getLogin());
-            if (conn.credentials.getPassword() != null)
-                properties.setProperty("password", conn.credentials.getPassword());
+            setIfNotNull(properties, "user", conn.credentials.getLogin());
+            setIfNotNull(properties, "password", conn.credentials.getPassword());
         }
         return properties;
     }
 
     public ResultSetManager getResultSetManager() {
         return DefaultResultSetManager.getDefaultManager();
+    }
+
+    public static void setIfNotNull(java.util.Properties properties, String key, String value) {
+        if (value != null)
+            properties.setProperty(key, value);
     }
 }

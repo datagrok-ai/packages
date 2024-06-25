@@ -1,9 +1,7 @@
 package grok_connect.providers;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 import grok_connect.managers.ColumnManager;
@@ -82,7 +80,7 @@ public class MySqlDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchemas(DataConnection connection) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchemas(DataConnection connection) throws QueryCancelledByUser, GrokConnectException {
         String db = connection.getDb();
         StringColumn column = new StringColumn(new String[]{db});
         column.name = "TABLE_SCHEMA";

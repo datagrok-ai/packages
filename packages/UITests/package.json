@@ -9,7 +9,7 @@
   "servicePackage": true,
   "description": "Automated UI tests",
   "dependencies": {
-    "@datagrok-libraries/utils": "^4.1.36",
+    "@datagrok-libraries/utils": "^4.2.11",
     "cash-dom": "latest",
     "datagrok-api": "^1.18.0",
     "dayjs": "latest",

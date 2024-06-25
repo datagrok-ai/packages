@@ -6,6 +6,7 @@ import {MmpInput} from './mmp-constants';
 import {IMmpFragmentsResult} from '../../rdkit-service/rdkit-service-worker-substructure';
 import {getRdKitService} from '../../utils/chem-common-rdkit';
 import {generationsGPU} from '@datagrok-libraries/math/src/webGPU/mmp/webGPU-generations';
+
 export async function getGenerations(mmpInput: MmpInput, moleculesArray: string[],
   fragsOut: IMmpFragmentsResult, meanDiffs: Float32Array[],
   allPairsGrid: DG.Grid, activityMeanNames: Array<string>):
@@ -39,7 +40,7 @@ export async function getGenerations(mmpInput: MmpInput, moleculesArray: string[
     activityNames[i] = name;
   }
 
-  await generationsCPU(structuresN, activityN, moleculesArray, allStructures, allInitActivities,
+  await generationsGPU(structuresN, activityN, moleculesArray, allStructures, allInitActivities,
     activityName, activities, activityNames, fragsOut.frags, meanDiffs, prediction, cores, from, to,
     rulesFrom, rulesTo, rulesFromCats, rulesToCats);
   console.timeEnd('generations');

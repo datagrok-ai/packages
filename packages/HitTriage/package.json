@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@datagrok-libraries/compute-utils": "^1.8.3",
-    "@datagrok-libraries/utils": "^4.1.24",
+    "@datagrok-libraries/utils": "^4.2.11",
     "cash-dom": "latest",
     "css-loader": "^6.5.1",
     "datagrok-api": "^1.18.4",

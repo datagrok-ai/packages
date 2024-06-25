@@ -13,7 +13,7 @@
     "directory": "packages/NLP"
   },
   "dependencies": {
-    "@datagrok-libraries/utils": "^1.15.5",
+    "@datagrok-libraries/utils": "^4.2.11",
     "aws-sdk": "^2.762.0",
     "datagrok-api": "^1.17.3",
     "stemmer": "^2.0.1",

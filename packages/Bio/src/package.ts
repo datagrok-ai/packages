@@ -3,8 +3,6 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import '@datagrok-libraries/bio/src/types/helm';
-
 import {Options} from '@datagrok-libraries/utils/src/type-declarations';
 import {DimReductionBaseEditor, PreprocessFunctionReturnType}
   from '@datagrok-libraries/ml/src/functionEditors/dimensionality-reduction-editor';
@@ -109,7 +107,7 @@ let monomerLib: IMonomerLib | null = null;
 
 //tags: init
 export async function initBio() {
-  const logPrefix = 'Bio: initBio()';
+  const logPrefix = 'Bio: _package.initBio()';
   _package.logger.debug(`${logPrefix}, start`);
   const module = await grok.functions.call('Chem:getRdKitModule');
   const t1: number = window.performance.now();
@@ -152,7 +150,7 @@ export async function initBio() {
 
   hydrophobPalette = new SeqPaletteCustom(palette);
 
-  _package.logger.debug('Bio: initBio(), completed');
+  _package.logger.debug(`${logPrefix}, end`);
 }
 
 //name: sequenceTooltip

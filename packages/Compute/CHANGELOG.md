@@ -1,5 +1,21 @@
 # Compute changelog
 
+## 1.35.4 (2024-06-25)
+
+- Inputs bugfixes
+
+## 1.35.3 (2024-06-25)
+
+- Changed inputs to use new API
+
+## 1.35.2 (2024-06-24)
+
+- RFV: Added getViewers method
+
+## 1.35.1 (2024-06-19)
+
+- Exposed testPipeline method
+
 ## 1.35.0 (2024-06-12)
 
 - Exposed ComputeAPI

@@ -41,17 +41,19 @@ sidebar_position: 1.2
 |Misc |[ChaRPy]|Fit-for-purpose|Adds two commands, "To Python script" and "To R script," to Datagrok viewers. These commands generate Python or R code for the selected viewer and execute the script to show the corresponding plot.|Beta|
 -->
 
-<!--
 ## Compute
 
 |Area <div style={{ width:125 }}></div> |Plugin| Tag <div style={{ width:110 }}></div> |Description  | Release|
 |------|-------|------------|----------------------|---|
-|General |[Compute](https://github.com/datagrok-ai/public/tree/master/packages/Compute)|Required|Provides analytical and UI blocks for scientific computing|Alpha|
-|ODE solver |[ODEs](https://github.com/datagrok-ai/public/tree/master/packages/ODEs)|Fit-for-purpose|An app for solving ordinary differential equations (ODE)|Alpha|
-|Modeling |[Bioreactors](https://github.com/datagrok-ai/public/tree/master/packages/Bioreactors)|Fit-for-purpose|Simulation of the Controlled Fab-Arm Exchange mechanism|Alpha|
+|General |[Compute](https://github.com/datagrok-ai/public/tree/master/packages/Compute)|Required|Provides analytical and UI blocks for scientific computing|Stable|
+|DiffStudio |[DiffStudio](https://github.com/datagrok-ai/public/tree/master/packages/ODEs)|Fit-for-purpose|An app for solving ordinary differential equations (ODE)|Alpha|
 
+<!----
+
+|Modeling |[Bioreactors](https://github.com/datagrok-ai/public/tree/master/packages/Bioreactors)|Fit-for-purpose|Simulation of the Controlled Fab-Arm Exchange mechanism|Alpha|
 |Modeling |SimPKPD|Fit-for-purpose|App for PKPD simulations|Labs|
--->
+
+---->
 
 ## Learn
 
@@ -86,7 +88,7 @@ sidebar_position: 1.2
 | Database search |[PubChemApi](https://github.com/datagrok-ai/public/tree/master/packages/PubChemApi)   | Optional| Webservice integration: [PubChem](https://pubchem.ncbi.nlm.nih.gov/) | Stable|
 | Database search |[Chemspace](https://github.com/datagrok-ai/public/tree/master/packages/Chemspace) | Optional| Webservice integration: [Chemspace](https://chem-space.com/)  |  Stable|
 | Misc |[EnamineStore](https://github.com/datagrok-ai/public/tree/master/packages/EnamineStore) | Optional| Webservice integration: [Enamine](https://enaminestore.com/search), a service for online shopping for chemical building blocks |  Stable|
-| Hit to Lead |[HitTriage](https://github.com/datagrok-ai/public/tree/master/packages/HitTriage)| Fit-for-purpose| Apps for virtual screening (Hit Triage) and hit design (Hit Design) | Alpha|
+| Hit to Lead |[HitTriage](https://github.com/datagrok-ai/public/tree/master/packages/HitTriage)| Fit-for-purpose| Apps for virtual screening (Hit Triage) and hit design (Hit Design) | Beta|
 <!--
 |Misc |[Chemspace](https://github.com/datagrok-ai/public/tree/master/packages/Chemspace)|Misc|Integration with the Chemspace, a service for online shopping for the chemical building blocks|Alpha|
 -->
@@ -101,6 +103,8 @@ sidebar_position: 1.2
 | SAR  | [Peptides](https://github.com/datagrok-ai/public/tree/master/packages/Peptides)| Fit-for-purpose| App for sequence-activity relationship analysis for peptides ([wiki](solutions/domains/bio/peptides-sar.md))|Beta|
 | Oligonucleotides  |[SequenceTranslator](https://github.com/datagrok-ai/public/tree/master/packages/SequenceTranslator) | Fit-for-purpose| App that converts oligonucleotides into various formats  |Beta|
 | Oligonucleotides  |[OligoBatchCalculator](https://github.com/datagrok-ai/public/tree/master/packages/OligoBatchCalculator) |Fit-for-purpose| App that calculates oligonucleotide properties |Beta|
+| ADMET | [ADMETox](https://github.com/datagrok-ai/public/tree/master/packages/ADMETox) | Optional | App that lets you evaluate ADMET properties | Alpha |
+| Docking | [Docking](https://github.com/datagrok-ai/public/tree/master/packages/Docking) | Optional | Integration with [Autodock GPU](https://catalog.ngc.nvidia.com/orgs/hpc/containers/autodock) that let's you run docking and analyze the results in Datagrok| Alpha |
 
 ### NLP
 

@@ -430,7 +430,7 @@ export class RichFunctionView extends FunctionView {
       'min-height': '50px',
     });
 
-    const experimentalDataSwitch = ui.switchInput('', this.isUploadMode.value, (v: boolean) => this.isUploadMode.next(v));
+    const experimentalDataSwitch = ui.input.toggle('', {value: this.isUploadMode.value, onValueChanged: () => this.isUploadMode.next(experimentalDataSwitch.value)});
     const uploadSub = this.isUploadMode.subscribe((newValue) => {
       experimentalDataSwitch.notify = false;
       experimentalDataSwitch.value = newValue,
@@ -722,6 +722,10 @@ export class RichFunctionView extends FunctionView {
   private showOutput() {
     ui.setDisplay(this.tabsElem.root, true);
     this._isOutputOutdated.next(false);
+  }
+
+  public getViewers(propName: string) {
+    return this.dfToViewerMapping[propName];
   }
 
   public buildOutputBlock(): HTMLElement {
@@ -1290,8 +1294,13 @@ export class RichFunctionView extends FunctionView {
     if (this.inputsOverride[val.property.name])
       return this.inputsOverride[val.property.name];
 
-    if (prop.propertyType === DG.TYPE.STRING && prop.options.choices && !prop.options.propagateChoice)
-      return ui.choiceInput(prop.caption ?? prop.name, getDefaultValue(prop), JSON.parse(prop.options.choices));
+    if (prop.propertyType === DG.TYPE.STRING && prop.options.choices && !prop.options.propagateChoice) {
+      return ui.input.choice(prop.caption ?? prop.name, {
+        value: getDefaultValue(prop),
+        items: JSON.parse(prop.options.choices),
+        nullable: prop.nullable,
+      });
+    }
 
     switch (prop.propertyType as any) {
     case FILE_INPUT_TYPE:

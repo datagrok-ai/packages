@@ -1,5 +1,13 @@
 # utils changelog
 
+## 4.2.11 (2023-06-20)
+
+New tests reporting method.
+
+## 4.2.10 (2023-06-17)
+
+Fixed core tests compatibility.
+
 ## 4.2.9 (2023-06-13)
 
 Fixed viewer testing.

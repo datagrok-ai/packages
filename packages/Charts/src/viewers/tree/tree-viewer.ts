@@ -169,6 +169,11 @@ export class TreeViewer extends EChartViewer {
     this.colorColumnName = '';
 
     super.onTableAttached();
+    this.subs.push(this.dataFrame.onColumnsRemoved.subscribe((data) => {
+      const columnNamesToRemove = data.columns.map((column: DG.Column) => column.name);
+      this.hierarchyColumnNames = this.hierarchyColumnNames.filter((columnName) => !columnNamesToRemove.includes(columnName));
+      this.render();
+    }));
     this.initChartEventListeners();
     this.helpUrl = 'https://datagrok.ai/help/visualize/viewers/tree';
   }
@@ -201,6 +206,8 @@ export class TreeViewer extends EChartViewer {
   }
 
   render() {
+    if (this.hierarchyColumnNames?.some((colName) => !this.dataFrame.columns.names().includes(colName)))
+      this.hierarchyColumnNames = this.hierarchyColumnNames.filter((value) => this.dataFrame.columns.names().includes(value));
     if (this.hierarchyColumnNames == null || this.hierarchyColumnNames.length === 0)
       return;
 

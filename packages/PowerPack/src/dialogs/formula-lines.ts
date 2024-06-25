@@ -327,9 +327,13 @@ class Preview {
         const yCol = this.dataFrame.columns.toList()
           .find((col) => col.name != src.props.xColumnName && yCols.some((n) => col.name.includes(n)));
         this._scrAxes = {x: src.props.xColumnName, y: yCol === undefined ? src.props.xColumnName : yCol.name};
+      } else if (src.getOptions()['type'] === DG.VIEWER.TRELLIS_PLOT) {
+        this.dataFrame = src.dataFrame!;
+        const innerLook = src.getOptions()['look'];
+        this._scrAxes = {y: innerLook['yColumnName'], x: innerLook['xColumnName']};
       } else {
         this.dataFrame = src.dataFrame!;
-        this._scrAxes = { y: src.props.yColumnName, x: src.props.xColumnName };
+        this._scrAxes = {y: src.props.yColumnName, x: src.props.xColumnName};
       }
     } else
       throw 'Host is not DataFrame or Viewer.';
@@ -347,12 +351,12 @@ class Preview {
         legendVisibility: DG.VisibilityMode.Never,
         xAxisHeight: 25,
       });
-    else
+    else {
       this.viewer = DG.Viewer.scatterPlot(this.dataFrame, {
-        yAxisType: src instanceof DG.Viewer ? src.props.yAxisType : 'linear',
-        xAxisType: src instanceof DG.Viewer ? src.props.xAxisType : 'linear',
-        invertXAxis: src instanceof DG.Viewer ? src.props.invertXAxis : false,
-        invertYAxis: src instanceof DG.Viewer && src.getOptions()['type'] != DG.VIEWER.LINE_CHART ?
+        yAxisType: src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.SCATTER_PLOT ? src.props.yAxisType : 'linear',
+        xAxisType: src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.SCATTER_PLOT ? src.props.xAxisType : 'linear',
+        invertXAxis: src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.SCATTER_PLOT ? src.props.invertXAxis : false,
+        invertYAxis: src instanceof DG.Viewer && src.getOptions()['type'] == DG.VIEWER.SCATTER_PLOT ?
           src.props.invertYAxis : false,
         showDataframeFormulaLines: false,
         showViewerFormulaLines: true,
@@ -368,6 +372,7 @@ class Preview {
         legendVisibility: DG.VisibilityMode.Never,
         xAxisHeight: 25,
       });
+    }
 
     /**
      * Creates special context menu for preview Scatter Plot.

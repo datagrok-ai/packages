@@ -1,5 +1,17 @@
 # DevTools changelog
 
+## 1.3.46 (2024-06-26)
+
+### Bug Fixes
+
+* TM: init compute package
+
+## 1.3.45 (2024-06-17)
+
+### Bug fixes
+
+* Core tests compatibility fix
+
 ## 1.3.43 (2024-04-02)
 
 ### Bug fixes
@@ -67,7 +79,7 @@
 * GROK-13293: DevTools: Copy names in TM
 * GROK-13342: Resurrect test tracking system
 * GROK-12613: Signature editor refactoring
-         
+
 ### Bug Fixes
 
 * GROK-13232: Test Manager: bugs

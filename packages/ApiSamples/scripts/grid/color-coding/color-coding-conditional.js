@@ -1,10 +1,8 @@
 let t = grok.data.demo.demog();
 
-t.col('height').tags[DG.TAGS.COLOR_CODING_TYPE] = 'Conditional';
-t.col('height').tags[DG.TAGS.COLOR_CODING_CONDITIONAL] = `{"20-170":"#00FF00","170-190":"#220505"}`;
+t.col('height').meta.colors.setConditional({"20-170": "#00FF00", "170-190": "#220505"});
 
-t.col('age').tags[DG.TAGS.COLOR_CODING_TYPE] = 'Linear';
-t.col('age').tags[DG.TAGS.COLOR_CODING_LINEAR] = `[${DG.Color.orange}, ${DG.Color.green}]`;
+t.col('age').meta.colors.setLinear([DG.Color.orange, DG.Color.green]);
 
 grok.shell.info(`Column 'subj' color coding: ${t.col('subj').meta.colors.getType()}`);     // Off
 grok.shell.info(`Column 'height' color coding: ${t.col('height').meta.colors.getType()}`); // Conditional

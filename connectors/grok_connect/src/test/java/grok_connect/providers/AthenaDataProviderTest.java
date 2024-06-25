@@ -2,12 +2,12 @@ package grok_connect.providers;
 
 import grok_connect.connectors_info.Credentials;
 import grok_connect.connectors_info.DataConnection;
-import grok_connect.connectors_info.DataProvider;
 import grok_connect.connectors_info.DbCredentials;
 import grok_connect.connectors_info.FuncCall;
 import grok_connect.providers.utils.DataFrameComparator;
 import grok_connect.providers.utils.NamedArgumentConverter;
 import grok_connect.providers.utils.Provider;
+import grok_connect.utils.GrokConnectException;
 import grok_connect.utils.ProviderManager;
 import grok_connect.utils.SettingsManager;
 import org.junit.jupiter.api.Assertions;
@@ -55,17 +55,14 @@ class AthenaDataProviderTest {
     @DisplayName("Tests of testConnection(DataConnection conn)")
     @Test
     public void testConnection() {
-        String expected = DataProvider.CONN_AVAILABLE;
-        String actual = Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
     }
 
     @DisplayName("Test of testConnection(DataConnection conn) when no credentials provided")
     @Test
     public void testConnection_notOk() {
         connection.credentials = null;
-        String result = Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
-        Assertions.assertTrue(result.startsWith("ERROR"));
+        Assertions.assertThrows(GrokConnectException.class, () -> provider.testConnection(connection));
     }
 
     @DisplayName("Test of getSchemas() method with correct DataConnection")

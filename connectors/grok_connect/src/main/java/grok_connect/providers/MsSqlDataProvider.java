@@ -1,9 +1,7 @@
 package grok_connect.providers;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,9 +73,6 @@ public class MsSqlDataProvider extends JdbcDataProvider {
     public String getConnectionString(DataConnection conn) {
         String connString = super.getConnectionString(conn);
         connString = connString.endsWith(";") ? connString : connString + ";";
-        if (conn.credentials.getLogin() == null || conn.credentials.getPassword() == null) {
-            throw new RuntimeException("Login or password can't be blank");
-        }
         return connString;
     }
 
@@ -92,8 +87,8 @@ public class MsSqlDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchema(DataConnection connection, String schema, String table)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame getSchema(DataConnection connection, String schema, String table) throws QueryCancelledByUser,
+            GrokConnectException {
         FuncCall queryRun = new FuncCall();
         queryRun.func = new DataQuery();
         String db = connection.getDb();

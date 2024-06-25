@@ -1,11 +1,9 @@
 package grok_connect.providers;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,39 +100,46 @@ public class PIDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public DataFrame getSchemas(DataConnection connection) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
-        DataFrame result = new DataFrame();
-        Column tableSchema = new StringColumn();
-        tableSchema.name = "table_schema";
-        result.addColumn(tableSchema);
-        Connection dbConnection = getConnection(connection);
-        ResultSet catalogs = dbConnection.getMetaData().getCatalogs();
-        while (catalogs .next())
-            result.addRow(catalogs.getString(CATALOG_NAME_INDEX));
-        return result;
+    public DataFrame getSchemas(DataConnection connection) throws QueryCancelledByUser, GrokConnectException {
+        try (Connection dbConnection = getConnection(connection);
+             ResultSet catalogs = dbConnection.getMetaData().getCatalogs()) {
+            DataFrame result = new DataFrame();
+            Column tableSchema = new StringColumn();
+            tableSchema.name = "table_schema";
+            result.addColumn(tableSchema);
+            while (catalogs .next())
+                result.addRow(catalogs.getString(CATALOG_NAME_INDEX));
+            return result;
+        } catch (SQLException e) {
+            throw new GrokConnectException(e);
+        }
     }
 
     @Override
-    public DataFrame getSchema(DataConnection connection, String schema, String table) throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
-        DataFrame result = new DataFrame();
-        Column tableSchema = new StringColumn();
-        tableSchema.name = "table_schema";
-        Column tableNameColumn = new StringColumn();
-        tableNameColumn.name = "table_name";
-        Column columnName = new StringColumn();
-        columnName.name = "column_name";
-        Column dataType = new StringColumn();
-        dataType.name = "data_type";
-        result.addColumn(tableSchema);
-        result.addColumn(tableNameColumn);
-        result.addColumn(columnName);
-        result.addColumn(dataType);
-        Connection dbConnection = getConnection(connection);
-        ResultSet columns = dbConnection.getMetaData().getColumns(schema, null, table, null);
-        while (columns.next())
-            result.addRow(columns.getString(CATALOG_NAME_INDEX), columns.getString(TABLE_NAME_INDEX),
-                    columns.getString(COLUMN_NAME_INDEX), columns.getString(DATA_TYPE_NAME_INDEX));
-        return result;
+    public DataFrame getSchema(DataConnection connection, String schema, String table) throws
+            QueryCancelledByUser, GrokConnectException {
+        try (Connection dbConnection = getConnection(connection);
+             ResultSet columns = dbConnection.getMetaData().getColumns(schema, null, table, null)) {
+            DataFrame result = new DataFrame();
+            Column tableSchema = new StringColumn();
+            tableSchema.name = "table_schema";
+            Column tableNameColumn = new StringColumn();
+            tableNameColumn.name = "table_name";
+            Column columnName = new StringColumn();
+            columnName.name = "column_name";
+            Column dataType = new StringColumn();
+            dataType.name = "data_type";
+            result.addColumn(tableSchema);
+            result.addColumn(tableNameColumn);
+            result.addColumn(columnName);
+            result.addColumn(dataType);
+            while (columns.next())
+                result.addRow(columns.getString(CATALOG_NAME_INDEX), columns.getString(TABLE_NAME_INDEX),
+                        columns.getString(COLUMN_NAME_INDEX), columns.getString(DATA_TYPE_NAME_INDEX));
+            return result;
+        } catch (SQLException e) {
+            throw new GrokConnectException(e);
+        }
     }
 
     @Override

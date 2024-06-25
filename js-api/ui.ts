@@ -908,7 +908,7 @@ export namespace input {
     return _create(d4.InputType.Columns, name, options);
   }
 
-  export function table(name: string, options?: IChoiceInputInitOptions<DataFrame[]>): InputBase<DataFrame> {
+  export function table(name: string, options?: IChoiceInputInitOptions<DataFrame>): InputBase<DataFrame> {
     return _create(d4.InputType.Table, name, options);
   }
 

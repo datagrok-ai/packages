@@ -11,6 +11,7 @@ import {PipelineRuntime} from './runtime/PipelineRuntime';
 import {PipelineGlobalState} from './runtime/PipelineGlobalState';
 import {HookSpec, CompositionPipelineView, StepSpec} from './view/CompositionPipelineView';
 import {RFVPopup} from './view/RFVPopup';
+import {RichFunctionView} from '../../function-views';
 
 
 type ItemsToMerge = {
@@ -168,7 +169,7 @@ export class CompositionPipeline {
               const action = this.rt!.getAction(keyToPath(conf.id));
               return ui.button(action.actionName, action.action);
             });
-            const view = controller.getView(keyToPath(viewKey))!;
+            const view = controller.getView(keyToPath(viewKey))! as RichFunctionView;
             view.setAdditionalButtons(btns);
           }
         },

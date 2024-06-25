@@ -3,7 +3,6 @@ package grok_connect.providers;
 import grok_connect.GrokConnect;
 import grok_connect.connectors_info.Credentials;
 import grok_connect.connectors_info.DataConnection;
-import grok_connect.connectors_info.DataProvider;
 import grok_connect.connectors_info.DbCredentials;
 import grok_connect.connectors_info.FuncCall;
 import grok_connect.providers.utils.DataFrameComparator;
@@ -79,9 +78,7 @@ class Neo4jDataProviderTest {
     @DisplayName("Tests of testConnection(DataConnection conn)")
     @Test
     public void testConnection() {
-        String expected = DataProvider.CONN_AVAILABLE;
-        String actual = Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
-        Assertions.assertEquals(expected, actual);
+        Assertions.assertDoesNotThrow(() -> provider.testConnection(connection));
     }
 
     @DisplayName("Parameters support")

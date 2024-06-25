@@ -8,8 +8,8 @@ To get you started, we've prepared the following resources:
 
 * **Help pages**: Read on a topic
 * **Demo app**: [Run an app](https://public.datagrok.ai/browse/tutorials.demoapp) to interactively explore Datagrok features and capabilities
-* **Interactive tutorials**: Complete at [public.datagrok.ai](https://public.datagrok.ai) or your corporate instance (requires the [Tutorials package](https://github.com/datagrok-ai/public/tree/master/packages/Tutorials)).
-* **Webinars and short product demos**: Watch on youtube
+* **Interactive tutorials**: Complete at [public.datagrok.ai](https://public.datagrok.ai/browse/tutorials.trackoverview) or your corporate instance (requires the [Tutorials package](https://github.com/datagrok-ai/public/tree/master/packages/Tutorials)).
+* **Webinars and short product demos**: [Datagrok YouTube channel](https://www.youtube.com/@Datagrok)
 * **Demo datasets**: See what else you can do: drag and drop your dataset or use ours (**Sidebar > Browse (<FAIcon icon="fa-solid fa-compass"/>) > Files > Demo Files**)
 
 ## Orient yourself
@@ -60,10 +60,8 @@ To get you started, we've prepared the following resources:
 
 <h5>Complete tutorials</h5>
 
-|Tutorial <div style={{ width:245 }}></div>  |   Description <div style={{ width:530 }}></div> |
-|-----------------------|-----------|
-|<h5>[Data connectors](https://public.datagrok.ai/apps/tutorials/Tutorials/DataAccess/DataConnectors)</h5>  |<li>Connect to a database</li><li>Create a database query</li>|
-|<h5>[Dashboards](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/Dashboards)</h5>  |<li>Connect to a database</li><li>Create a parameterized query</li><li>Run a query and set up visualizations in the **Table View**</li><li>Save as dynamic dashboard</li><li>Interact with dynamic dashboard</li>| 
+* [Data connectors](https://public.datagrok.ai/apps/tutorials/Tutorials/DataAccess/DataConnectors): Connect to a database, create a database query
+* [Dashboards](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/Dashboards): Create an interactive dashboard based on a parameterized query 
 
 <h5>Dive in</h5>
 
@@ -89,13 +87,12 @@ To get you started, we've prepared the following resources:
 
 <h5>Complete tutorials</h5>
 
-|Tutorial <div style={{ width:240 }}></div>  |   Description <div style={{ width:535 }}></div> |
-|-----------------------|-----------|
-|[Viewers](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/Viewers) |<li> Add viewers</li><li>Understand viewer interaction</li><li>Change viewer properties</li><li>Clone a viewer</li><li>Copy settings from one viewer and apply to another</li><br/>|
-|[Embedded viewers](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/EmbeddedViewers) |<li>Use viewers in a tooltip</li><li>Switch viewers in a trellis plot</li>| 
-|[Grid](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/GridCustomization) |<li>Navigate</li><li>Edit rows</li><li>Select rows and columns</li><li>Sort, reorder, resize columns</li><li>Color-code columns</li><br/> | 
-|[Scatterplot](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/ScatterPlot) |<li>Specify data columns for axes and markers</li><li>Zoom in/out</li><li>Select</li><li>Interaction with other viewers</li><br/>| 
-|[Filters](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/Filters)  |<li>Profile a dataset using filters</li><li>Work with category filters</li><li>Work with numeric filters</li><li>Save and restore filter states</li><br/>|
+* [Viewers](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/Viewers): Create, setup, interact, clone
+* [Embedded viewers](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/EmbeddedViewers): Use viewers in tooltips and trellis plots
+* [Grid](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/GridCustomization): Navigate, edit, select, sort, resize, color-code
+* [Scatterplot](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/ScatterPlot): Customize, select, interact
+* [Filters](https://public.datagrok.ai/apps/tutorials/Tutorials/ExploratoryDataAnalysis/Filters): Profile and filter a dataset
+
 
 <!---
 
@@ -137,10 +134,8 @@ Planned:
 
 <h5>Complete tutorials</h5>
 
-|Tutorial   <div style={{ width:310 }}></div>  | Description <div style={{ width:200 }}></div> |
-|-----------------------|--------------|
-|[Calculated columns](https://public.datagrok.ai/apps/tutorials/Tutorials/Datatransformation/CalculatedColumns) | <li>Add calculated columns</li><li>Edit formulas in calculated columns</li><li>Format values</li> |
-|[Data aggregation](https://public.datagrok.ai/apps/tutorials/Tutorials/Datatransformation/DataAggregation) | <li>Aggregate rows</li><li>Pivot rows</li><li>Select and filter rows in the source table using aggregated rows</li> |
+* [Calculated columns](https://public.datagrok.ai/apps/tutorials/Tutorials/Datatransformation/CalculatedColumns): Derive columns, edit formulas, format values
+* [Data aggregation](https://public.datagrok.ai/apps/tutorials/Tutorials/Datatransformation/DataAggregation): Aggregate rows, navigate
 
 <h5>Dive in</h5>
 
@@ -165,12 +160,10 @@ Planned:
 
 <h5>Complete tutorials</h5>
 
-|Tutorial <div style={{ width:245 }}></div>  |   Description <div style={{ width:530 }}></div> |
-|-------------------------|--------------|
-|[Substructure search and filtering](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/SubstructureSearchandFiltering)|Search and filter a dataset by substructure. |
-|[Similarity and diversity search](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/SimilarityandDiversitySearch) | <li>Add a a table with the most diverse structures in your dataset</li><li>Add a table with structures similar to your reference molecule</li>  | 
-|[Activity cliffs](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/ActivityCliffs) |Run activity cliffs and explore cliff pairs on a scatterplot. |
-|[R-groups analysis](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/R-GroupsAnalysis)  |Decompose molecules into core and R-groups and analyze the results on a trellis plot. | 
+* [Substructure search and filtering](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/SubstructureSearchandFiltering)
+* [Similarity and diversity search](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/SimilarityandDiversitySearch)  
+* [Activity cliffs](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/ActivityCliffs) 
+* [R-groups analysis](https://public.datagrok.ai/apps/tutorials/Tutorials/Cheminformatics/R-GroupsAnalysis) 
 
 <!----
 
@@ -192,8 +185,6 @@ Planned
 
 <h5>Complete tutorials</h5>
 
-|Tutorial <div style={{ width:245 }}></div>  |   Description <div style={{ width:530 }}></div> |
-|-----------------------|--------------|
-|[Multivariate analysis](https://public.datagrok.ai/apps/tutorials/Tutorials/MachineLearning/MultivariateAnalysis)        | <li>Run multivariate analysis</li><li>Explore a set of produced visualizations</li>|
+* [Multivariate analysis](https://public.datagrok.ai/apps/tutorials/Tutorials/MachineLearning/MultivariateAnalysis)
 
 

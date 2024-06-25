@@ -38,11 +38,14 @@ To connect to your file storage, follow these steps:
 1. Go to **Data** > **Files**.
 1. Open the **New file share** dialog (**Toolbox** > **Actions** > **New file
    share**). Alternatively, click the **New file share** icon on the **Menu
-   Riboon**.
+   Ribbon**.
 1. In the dialog, choose the data source from the **Data Source** dropdown. The
    dialog updates with connection-specific parameters.
 1. Set the parameters.
 1. Click **TEST** to test the connection, then click **OK** to save it.
+
+This file share will only be available to you, until you 
+[share it](#file-sharing-and-access-control) with others users or groups.
 
 ![File share connection parameters](img/add-a-file-share.gif)
 
@@ -124,25 +127,6 @@ To learn how searching works in Datagrok, see [Smart search](../../datagrok/navi
 
 :::
 -->
-
-## Importing text
-
-Datagrok supports text-to-tabular-data conversion for delimiter-separated files
-with an option to manually edit or customize data during import. To use this
-feature, open the [Text Import Manager](https://public.datagrok.ai/text). To do
-this, open **Browse** and click the **Open text** icon on its **Top Menu**. Load your file or paste
-text directly into the editor area. Here you can change the data as needed.
-Adjust default import parameters like delimiters, decimal separators, and header
-settings in the **Toolbox** on the left. By default, changes are automatically
-applied and displayed in the **Preview**, which updates as you modify the data.
-To manually sync edits, disable the **Auto Sync** checkbox and use the **Sync**
-button.
-
-When satisfied with the data, click **Done** to open the dataframe in Datagrok.
-From there, you can export it, make further edits, save it as a project, or
-share with others via URL.
-
-![Text Manager](img/text-manager.gif)
 
 ## File Manager
 
@@ -273,66 +257,22 @@ displays the augmented file preview and the number of detected cell segments.
 
 ## File sharing and access control
 
-You can share files in two ways: by sharing the actual file (or folder), or by
-sharing an URL that points to it. To share an URL, open the file in Datagrok and
-copy the URL from the address bar. To access the file from the link provided,
-users must have permissions to open it. Once the file is open, users can
-download the file and then upload it to their **Home** directory or 
-[save the file as a project](../../datagrok/concepts/project/project.md). The URL links never
-expire and can't be revoked.
+Datagrok lets you control who can access file shares, and grant them read or write privileges.
+You can share folders, including the root share, but not individual files.
+To share a folder, right-click on it, select "Share folder", specify users or groups,
+and the privilege (View / Edit). Once the folder is shared, it appears in the recipient's 
+**Files** tree under Browse.
 
-:::tip
+The specified privilege allows the grantee do the following:
 
-For tabular formats, you can create dynamic dashboards and share them with
-others via URL or reference them on external websites. To learn more about
-dynamic data updates, see 
-[Dynamic data](../../datagrok/navigation/basic-tasks/basic-tasks.md#dynamic-data).
+* _Can view_: View, open, and download. 
+* _Can edit_: Everything under "view", plus rename, edit, delete, and reshare
 
-:::
+![Share a folder](img/share-the-folder.gif)
 
-Another option is to share directly in Datagrok by creating a _file share_ and
-specifying access privileges for each shared item, such as separate files and
-subfolders. Once the item is shared, it appears in the recipient's **File
-Manager**. When using this method, you have several options:
-
-* Share a _connection_ (root folder) to give access to the entire directory.
-* Share a _folder_ to give access to the content of individual folders in your directory.
-<!--* Share a _file_ to limit access to individual files within a folder.-->
-
-To share, follow these steps:
-
-1. Right-click the item you want to share and select **Share...** from its context menu. The **Share...** dialog opens.
-1. In the identity/email field, start typing a person's name, username, email, or group name, and pick from the list of matching identities.
-1. From the respective dropdowns, select access privileges for either or both: (1) the connection and (2) individual
-   files/folders. You can select any or all of the following options:
-
-    * _Can view_: Users can view, open, and download
-    * _Can edit_: Users can rename, edit, delete, and reshare with any other user or group.
-
-    :::caution
-
-    A file's _name_ and _namespace_ are encoded within the URL. When you rename
-    a file (or its location), the link changes accordingly, which may cause
-    broken URL links, script errors, and similar issues.
-
-    :::
-
-1. Optional. Enter a description in the text field provided. You may also notify
-   the users you share with. If you don't want to send a notification, clear the
-   **Send notification** checkbox.
-
-  :::note
-
-  To send an email notification, enter the user's email in the identity/email
-  field. The email notification contains a link to the shared item and entered
-  description. If you enter a user or group name, they will be notified via the
-  Datagrok interface.
-
-  :::
-
-1. Click **OK** to share. Once shared, the shared item appears in the recipient's **File Manager**.
-
-   ![Share a folder](img/share-the-folder.gif)
+You can also share the folder's URL from the address bar with other users. This won't
+give them the necessary privilege, but it might be a convenient way of sharing links
+with people who already have proper privileges.
 
 :::tip
 

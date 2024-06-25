@@ -15,7 +15,7 @@
   "dependencies": {
     "@types/react-dom": "^18.2.0",
     "datagrok-api": "^1.15.0",
-    "@datagrok-libraries/utils": "^1.19.3",
+    "@datagrok-libraries/utils": "^4.2.11",
     "file-loader": "^6.2.0",
     "ketcher-core": "^2.15.0",
     "ketcher-react": "^2.15.0",

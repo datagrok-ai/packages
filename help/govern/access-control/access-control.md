@@ -13,13 +13,12 @@ Datagrok provides robust security through its authentication, authorization, and
 
 ## Authentication
 
-_Authentication_ is the critical first step where users verify their identities by providing credentials. Datagrok supports the following authentication method:
+_Authentication_ is verification of identity by providing credentials. Datagrok supports the following authentication methods:
 
-* **Internal (login/password)**: Users sign in with a username and password
-* **OAuth**: Allows signing in using Google, Facebook, GitHub, or OpenID accounts
-* **Single Sign-On (SSO)**: For enterprise customers, Datagrok accommodates
-  custom SSO through customer-specific integrations
-* **OpenID**: Allows signing in using OpenID providers like Azure AD 
+* **Internal (login/password)**: Sign in with a username and password
+* **OAuth**: Sign in using Google, Facebook, GitHub, or OpenID accounts
+* **Single Sign-On (SSO)**: Custom SSO for enterprise customers
+* **OpenID**: Sign in using OpenID providers like Azure AD 
 
 You can enable all methods separately or combined. After successful
 authentication, Datagrok issues a session token for subsequent API calls,
@@ -29,17 +28,15 @@ To set up authentication, go to **Sidebar > Settings (<FAIcon icon="fa-solid fa-
 
 :::danger
 
-If you plan to disable the login/password authentication (for example, after
-setting up the SSO), the platform will no longer check passwords and usernames.
+If you disable the login/password authentication (for example, after
+setting up the SSO), the platform will no longer accept logging in with the username/password, so 
+be careful to not lock yourself out and make sure SSO works.We recommend to check that SSO works by signing into Datagrok
+using incognito mode before disabling the login/password authentication. 
+
+If you don't provide a functional alternative before disabling the login/password authentication, 
+this may require a platform redeployment to regain access.
 
 <img src={IntAuth} width="200" />
-
-To ensure there are no login disruptions, we recommend signing into Datagrok
-using incognito mode before disabling this feature. This will helps you to verify
-that the new authentication method is working properly. If you don't ensure a
-functional alternative before disabling the login/password authentication, this may cause
-access issues, potentially requiring a platform redeployment to
-regain access.
 
 :::
 
@@ -91,7 +88,7 @@ set for a parent group. However, circular membership is forbidden.
 :::note
 
 To fully control access to external data sources (like [file shares](../../access/files/files.md) or
-[databases](../../access/databases/databases.md)), you can also associate groups
+[databases](../../access/databases/databases.md)), you can also associate groups with
 [credentials](#credentials-management-system)
 
 :::
@@ -138,11 +135,8 @@ See this sample:
 * [Open in public repository](https://github.com/datagrok-ai/public/blob/master/packages/ApiSamples/scripts/misc/package-credentials.js)
 * [Open in Datagrok](https://public.datagrok.ai/e/ApiSamples:PackageCredentials).
 
-To add credentials from the UI:
+To add credentials from the UI: 
 
-1. On the Sidebar, click **Browse** (<FAIcon icon="fa-solid fa-compass"/>). A Browse view opens.
-1. In the **Browse** tree, expand **Platform**  and click **Connections** or **Plugins** to open the corresponding entity view.
-1. In the entity view, find the entity you want and right-click it to open the context menu.
 1. From the context menu, select **Credentials...**. The **Manage credentials** dialog opens.
 1. In the dialog, click the group and enter appropriate credentials in the fields provided.
        >_Note:_ The dialog only shows the [groups](users-and-groups.md#groups) you belong to. To assign credentials for the **All users** group, you must have permissions to edit the connection. To assign credentials for other groups, you must both have permissions to edit the connection and be that group's admin.

@@ -31,7 +31,7 @@ export async function splitToMonomersUI(table: DG.DataFrame, seqCol: DG.Column<s
     colNameRe.lastIndex = 0;
     const ma = srcName.match(colNameRe);
     if (!ma) return srcName;
-    return `${ma[1]} (${parseInt(ma[2] ?? 0) + 1})`;
+    return `${ma[1]} (${parseInt(ma[2] ?? '0') + 1})`;
   };
 
   // if (tempDf.columns.length === 0) return;

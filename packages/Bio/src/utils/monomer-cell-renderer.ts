@@ -2,10 +2,10 @@ import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
 
+import {PolymerType} from '@datagrok-libraries/bio/src/helm/types';
 import {ALPHABET, getPaletteByType, monomerToShort} from '@datagrok-libraries/bio/src/utils/macromolecule';
 import {TAGS as bioTAGS} from '@datagrok-libraries/bio/src/utils/macromolecule/consts';
 import {MonomerWorks} from '@datagrok-libraries/bio/src/monomer-works/monomer-works';
-import {PolymerType} from '@datagrok-libraries/bio/src/types';
 
 import * as C from './constants';
 import {getMonomerLib} from '../package';

@@ -904,6 +904,8 @@ export interface ILineChartSettings {
   /// Requires *Multi Axis* to be enabled
   addLinesToLegend: boolean;
 
+  autoAdjustMultiAxisLegendPosition: boolean;
+
   multiAxisLegendPosition: keyof typeof FlexExtendedPosition;
 
   innerChartMarginTop: number;
@@ -1201,6 +1203,18 @@ export interface IDensityPlotSettings {
 
   showYAxis: boolean;
 
+  xAxisType: keyof typeof AxisType;
+
+  yAxisType: keyof typeof AxisType;
+
+  invertXAxis: boolean;
+
+  invertYAxis: boolean;
+
+  allowZoom: boolean;
+
+  binToRange: boolean;
+
   xBins: number;
 
   yBins: number;
@@ -1279,15 +1293,32 @@ export interface IBoxPlotSettings {
   /// See also *Bin Color*.
   binColorAggrType: string;
 
+  showColorSelector: boolean;
+
   /// Column to color-code markers.
   markerColor: string;
   markerColorColumnName: string;
+
+  markers: string;
+  markersColumnName: string;
+
+  markerMinSize: number;
+
+  markerMaxSize: number;
+
+  showSizeSelector: boolean;
+
+  markerSizeColumnName: string;
 
   markerType: string;
 
   markerSize: number;
 
   markerOpacity: number;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexPosition;
 
   showMeanCross: boolean;
 
@@ -1311,6 +1342,8 @@ export interface IBoxPlotSettings {
   showPValue: boolean;
 
   showMouseOverPoint: boolean;
+
+  showMouseOverRowGroup: boolean;
 
   statistics: Array<string>;
 

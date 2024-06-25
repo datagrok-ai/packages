@@ -1,0 +1,8 @@
+[submodule "external/JSDraw.Lite"]
+	path = external/JSDraw.Lite
+	url = https://github.com/datagrok-ai/JSDraw.Lite.git
+	branch = master
+[submodule "external/HELMWebEditor"]
+	path = external/HELMWebEditor
+	url = https://github.com/datagrok-ai/HELMWebEditor.git
+	branch = master

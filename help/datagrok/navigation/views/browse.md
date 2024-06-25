@@ -37,7 +37,7 @@ preview, manage, and access anything in Datagrok. To open **Browse**, click the 
 Above the **Scratchpad**, is a **Top Menu**. From here, you can do the following:
 
 * Open the [Home Page view](#home-page) (<FAIcon icon="fa-solid fa-house" size="1x"/>)
-* Upload a file from your local drive (<FAIcon icon="fa-regular fa-folder-open" size="1x"/>)
+* Open a file from your local drive (<FAIcon icon="fa-regular fa-folder-open" size="1x"/>)
 * [Import text](../../../access/files/files.md) (<FAIcon icon="fa-regular fa-file-lines" size="1x"/>)
 * Toggle the **Browse** view (<FAIcon icon="fa-solid fa-folder-tree" size="1x"/>)
 * Refresh the **Browse** view (<FAIcon icon="fa-solid fa-arrows-rotate" size="1x"/>)
@@ -49,7 +49,6 @@ For active [views](#entity-views), you may also see view-specific options, such 
 Within the **Browse** tree:
 * Click an object to open its [view](#entity-views) and update [Context Panel](../panels/panels.md#context-panel) and [Context Help](../panels/panels.md#context-help) with entity-specific information.
 * Double click an object to open it.
-  >Note: Double clicking a [project](../../concepts/project/project.md) opens all entities in it.
 * Right click an object to access context commands like _delete_ or _share_.
 
 Use the up/down (↑↓) keys to navigate and the left/right (←→) keys to expand a tree node.
@@ -73,18 +72,15 @@ the change.
 
 :::caution
 
-**My stuff** and **Namespaces** are _projects_. Moving entities between projects 
+Moving entities between projects 
 impacts their hierarchy, names, and privileges. [Learn more about moving entities between projects](../../concepts/project/project.md#moving-entities-between-projects).
 
 :::
 
 ## Entity search
 
-Instead of navigating the **Browse** tree, you can search for a specific
-[entity](../../concepts/objects.md) using a search bar at the top of the **Browse** tree or within an [Entity gallery view](#entity-views). 
-
-The search allows free-text input. Typing a single string prompts the search
-engine to filter entities by name. You can also search by the entity's metadata,
+Use the search bar on top to filter the content in the Browse tree. In addition to searching by name,
+you can search by the entity's metadata,
 like [tags](../../../govern/catalog/tags.md),
 [parameters](../../concepts/objects.md#parameters), and
 [properties](../../concepts/objects.md#properties). For example, entering
@@ -137,30 +133,25 @@ author.joined > -5d
 
 ## Scratchpad
 
-**Scratchpad** (<FAIcon icon="fa-solid fa-display"/>) is located in the upper
-section of the **Browse** view and is used to manage and save your work on tables and visualizations. 
-
-When you open a table in Datagrok, it's loaded in your browser and appears on the
-**Scratchpad**:
-
-* Newly created tables (e.g., those generated from queries or opened files) are placed inside **New project** until you save them to the server.
-* Existing tables open together with their projects, visible within those projects on the **Scratchpad**.
+**Scratchpad** (<FAIcon icon="fa-solid fa-display"/>) contains objects that have not been saved as 
+part of the project yet. For instance, when you open a CSV file from the local drive, it appears in 
+the Scratchpad.
 
 ![](img/scratchpad-open-entities.gif)
 
 All open entities are stored in your browser's memory. If
 you refresh or close your browser without saving your work to the server, you will lose it.
 
-### Uploading changes
+### Saving changes
 
 When you upload an entity to the server, it needs to be assigned to a project.
 By default, newly created entities are saved to your personal project under **My
-stuff**. For changes to entities that belong to existing projects, you have [several saving options](../basic-tasks/basic-tasks.md#save). 
+stuff**. For changes to entities that belong to existing projects, you have [several saving options](../basic-tasks/basic-tasks.md#save-and-share-a-table). 
 
 Post-upload, the **SAVE** button on the **Scratchpad** and the
 [Table View](table-view.md) appear greyed out, indicating there are no unsaved changes.
-Though the **SAVE** button turns grey, it remains clickable. We recommend that
-you always click it and upload your changes to the server before closing a table or a **Table View**.
+Though the **SAVE** button turns grey, you can still click it to access additional
+options, such as cloning a project, or saving just your personal view customizations.
 
 <!---Update based on the latest changes from A.Paramonov
 
@@ -197,7 +188,7 @@ size="1x"/>) icon**.
 
 Similar to a Windows Explorer, clicking an entity in the **Browse** tree opens an
 entity-specific view alongside it. These views vary depending on what you click.
-For example, clicking a file shows its contents, while clicking an entity gallery like **Layouts**, shows all entities of that type.
+For example, clicking a file shows its contents, while clicking an entity gallery like **Layouts** shows all entities of that type.
 
 Here are a few examples.
 
@@ -289,6 +280,14 @@ a widget or adjust its settings using the [Context Panel](../panels/panels.md#co
 You can customize the **Home Page** programmatically.
 
 :::
+
+## Importing text
+
+You can parse delimiter-separated text to table by clicking on the "Open text" icon on top.
+Paste your text or edit it right there, adjust the import parameter until you get it right, 
+and click "DONE" to open the resulting table in the workspace. 
+
+![Text Manager](img/text-manager.gif)
 
 <!--TODO: Add more info on how the search works here. Also, add a link wrt how to customize the home page programmatically -->
 

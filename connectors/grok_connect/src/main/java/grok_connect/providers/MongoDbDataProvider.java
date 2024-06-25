@@ -41,28 +41,28 @@ public class MongoDbDataProvider extends JdbcDataProvider {
 
     @Override
     public DataFrame execute(FuncCall queryRun)
-            throws ClassNotFoundException, SQLException, GrokConnectException, QueryCancelledByUser {
+            throws GrokConnectException, QueryCancelledByUser {
         DataQuery dataQuery = queryRun.func;
-        Connection connection = getConnection(dataQuery.connection);
-        ResultSet resultSet = getResultSet(queryRun, connection, logger, 1);
-        ResultSetManager resultSetManager = getResultSetManager();
-        resultSetManager.init(resultSet.getMetaData(), 100);
-        return getResultSetSubDf(queryRun, resultSet, resultSetManager,-1, 1, logger, 0, false);
-    }
-
-    @Override
-    public ResultSet getResultSet(FuncCall queryRun, Connection connection, Logger queryLogger, int fetchSize) throws QueryCancelledByUser, SQLException {
-        try {
-            PreparedStatement statement = connection.prepareStatement(queryRun.func.query);
-            return statement.executeQuery();
+        try (Connection connection = getConnection(dataQuery.connection);
+             ResultSet resultSet = getResultSet(queryRun, connection, logger, 1)) {
+            ResultSetManager resultSetManager = getResultSetManager();
+            resultSetManager.init(resultSet.getMetaData(), 100);
+            return getResultSetSubDf(queryRun, resultSet, resultSetManager,-1, 1, logger,
+                    0, false);
         } catch (SQLException e) {
-            throw new RuntimeException("Something went wrong when getting resultSet", e);
+            throw new GrokConnectException(e);
         }
     }
 
     @Override
+    public ResultSet getResultSet(FuncCall queryRun, Connection connection, Logger queryLogger, int fetchSize) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(queryRun.func.query);
+        return statement.executeQuery();
+    }
+
+    @Override
     public DataFrame getResultSetSubDf(FuncCall queryRun, ResultSet resultSet, ResultSetManager resultSetManager, int maxIterations, int columnCount,
-                                       Logger queryLogger, int operationNumber, boolean dryRun) throws SQLException, QueryCancelledByUser {
+                                       Logger queryLogger, int operationNumber, boolean dryRun) throws SQLException {
         while (resultSet.next()) {
             Object object = resultSet.getObject(OBJECT_INDEX);
             resultSetManager.processValue(object, OBJECT_INDEX, queryLogger);

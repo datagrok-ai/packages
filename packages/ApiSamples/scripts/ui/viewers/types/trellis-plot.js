@@ -2,4 +2,16 @@
 
 let view = grok.shell.addTableView(grok.data.demo.demog());
 
-view.trellisPlot();
+view.addViewer(DG.VIEWER.TRELLIS_PLOT, {
+  "viewerType": "Histogram",
+  "xColumnNames": [
+    "site"
+  ],
+  "yColumnNames": [
+    "race"
+  ],
+  "innerViewerLook": {
+    "#type": "HistogramLook",
+    "valueColumnName": "age"
+  }
+});

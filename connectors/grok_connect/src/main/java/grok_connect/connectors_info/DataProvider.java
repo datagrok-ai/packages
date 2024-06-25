@@ -23,16 +23,15 @@ public abstract class DataProvider
 
     public abstract boolean autoInterpolation();
 
-    public abstract DataFrame execute(FuncCall queryRun)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException;
+    public abstract DataFrame execute(FuncCall queryRun) throws QueryCancelledByUser, GrokConnectException;
 
     public DataFrame getSchemas(DataConnection dataConnection)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+            throws QueryCancelledByUser, GrokConnectException {
         throw new UnsupportedOperationException();
     }
 
     public DataFrame getSchema(DataConnection dataConnection, String schema, String table)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+            throws QueryCancelledByUser, GrokConnectException {
         throw new UnsupportedOperationException();
     }
 
@@ -85,11 +84,10 @@ public abstract class DataProvider
         return query;
     }
 
-    public abstract String testConnection(DataConnection conn) throws ClassNotFoundException, SQLException;
+    public abstract void testConnection(DataConnection conn) throws GrokConnectException;
 
 
-    public DataFrame queryTable(DataConnection conn, TableQuery query)
-            throws ClassNotFoundException, SQLException, ParseException, IOException, QueryCancelledByUser, GrokConnectException {
+    public DataFrame queryTable(DataConnection conn, TableQuery query) throws QueryCancelledByUser, GrokConnectException {
         throw new UnsupportedOperationException();
     }
 

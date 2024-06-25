@@ -1,6 +1,7 @@
 name: JS API
 on:
   workflow_dispatch: { }
+
   push:
     paths:
       - 'js-api/**'
@@ -161,6 +162,7 @@ jobs:
             .github
             docker
             packages/ApiTests
+            docusaurus
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -168,6 +170,7 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
           cache-dependency-path: |
+            docusaurus/package-lock.json
             js-api/package-lock.json
       - name: Upgrade npm
         run: npm install -g npm@x
@@ -313,7 +316,7 @@ jobs:
           channel_id=$(echo "$SLACK_ID" | jq -r .\"${{ github.actor }}\")
           echo "::add-mask::$channel_id"
           echo SLACK_CHANNEL=$channel_id >> $GITHUB_ENV
-          
+
           header="GitHub <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.workflow }} ${{ github.run_number }}> failed tests:"
           echo SLACK_MESSAGE_HEADER=$header >> $GITHUB_ENV
           context="*Branch:* <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|${{ github.ref_name }}>\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|$(echo ${{ github.sha }} | cut -c1-8) $(git log --format=%B -n 1 ${{ github.sha }} | head -n1 | sed -e 's/"/\\"/g')>"
@@ -360,7 +363,7 @@ jobs:
             }
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACKBOT_TOKEN }}
-
+#
       - name: npm publish
         id: publish
         run: |
@@ -373,6 +376,37 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: needs.version.outputs.changed_version == 'true'
+      - name: Commit js-api version json for compatibility-tool
+        if: ${{ steps.publish.outcome == 'success' }}
+        working-directory: docusaurus
+        run: |
+          npm install
+          version=${{ needs.version.outputs.current_version }}
+          npx ts-node parser.ts $version         
+          if [ -n "$(git status -s static/versions)" ]; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git pull
+            git add ./static/versions
+            git commit -m 'GitHub Actions: js-api version updated by Compatibility tool
+
+            Workflow ${{ github.workflow }} ${{ github.run_number }}
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+            count=0
+            until git push; do
+              exit=$?
+              wait=$((2 ** count))
+              count=$((count + 1))
+              if [ $count -lt "10" ]; then
+                echo "Retry $count/$retries exited $exit, retrying 'git push' in $wait seconds..."
+                sleep $wait
+                git pull --rebase
+              else
+                echo "Retry $count/$retries exited $exit, no more retries left for 'git push'."
+                exit $exit
+              fi
+            done
+          fi
       - name: Slack Notification
         uses: act10ns/slack@v2.1.0
         with:
@@ -380,6 +414,7 @@ jobs:
           steps: ${{ toJson(steps) }}
           config: ".github/config/slack.yml"
           webhook-url: ${{ secrets.SLACK_WEBHOOK_REPORT }}
+
       - name: Commit package-lock.json
         continue-on-error: true
         if: github.ref == 'refs/heads/master' && needs.version.outputs.changed_version == 'true'

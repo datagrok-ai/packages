@@ -59,7 +59,7 @@ options:
 
 The options depend on your needs and privileges.
 
-[Learn how to save entities to projects](../../navigation/basic-tasks/basic-tasks.md#save).
+[Learn how to save entities to projects](../../navigation/basic-tasks/basic-tasks.md#save-and-share-a-table).
 
 ## Moving entities between projects
 

@@ -11,7 +11,7 @@
     "datagrok-api": "^1.16.5",
     "cash-dom": "latest",
     "dayjs": "latest",
-    "@datagrok-libraries/utils": "latest",
+    "@datagrok-libraries/utils": "^4.2.11",
     "pdfjs-dist": "3.8.162",
     "docx-preview": "^0.1.18"
   },

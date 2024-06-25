@@ -1,5 +1,9 @@
 # ml changelog
 
+## 6.6.12 (2024-06-24)
+
+Fix activity cliffs styles
+
 ## 6.6.11 (2024-06-11)
 
 * Fix dialog styles

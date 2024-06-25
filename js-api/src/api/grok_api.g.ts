@@ -17,6 +17,8 @@ export interface IDartApi {
   grok_List_Add(x: any, element: any): any;
   grok_List_Sort(x: any): any;
   grok_List_Remove(x: any, element: any): any;
+  grok_JSON_encode(o: any): any;
+  grok_JSON_decode(s: String): any;
   grok_JS_To_Map(js: any): any;
   grok_Complete(c: any, result: any): any;
   grok_CompleteError(c: any, result: any): any;

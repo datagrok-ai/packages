@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "description": "",
   "dependencies": {
-    "@datagrok-libraries/utils": "latest",
+    "@datagrok-libraries/utils": "^4.2.11",
     "@datagrok-libraries/webcomponents": "^0.0.2",
     "cash-dom": "latest",
     "datagrok-api": "latest",

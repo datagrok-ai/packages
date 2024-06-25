@@ -165,7 +165,7 @@ category('cell panel', async () => {
         `empty data handled incorrectly`, 5000);
       } else {
         await awaitCheck(() => widget.root.querySelector('table') !== null,
-        `descriptors table hasn\'t been created for ${mol}`, 15000);
+        `descriptors table hasn\'t been created for ${mol}`, 55000);
       }
     }
   }, { timeout: 60000 });

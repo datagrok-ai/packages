@@ -2,17 +2,9 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import './helm';
-import * as org from 'org';
-import PolymerType = org.helm.PolymerType;
-import HelmType = org.helm.HelmType;
-import MonomerType = org.helm.MonomerType;
-import WebEditorMonomer = org.helm.WebEditorMonomer;
-
-export {WebEditorMonomer, PolymerType, HelmType, MonomerType};
-
 import {Observable} from 'rxjs';
 
+import {IWebEditorMonomer, MonomerType, PolymerType} from '../helm/types';
 import {
   HELM_REQUIRED_FIELD as REQ,
   HELM_RGROUP_FIELDS as RGP, HELM_OPTIONAL_FIELDS as OPT, HELM_POLYMER_TYPE,
@@ -42,7 +34,7 @@ export type Monomer = {
   [OPT.META]?: { [property: string]: any },
 
   lib?: IMonomerLib,
-  wem?: WebEditorMonomer,
+  wem?: IWebEditorMonomer,
 };
 
 export type MonomerLibSummaryType = { [polymerType: string]: number };
@@ -51,7 +43,8 @@ export interface IMonomerLib {
   get source(): string | undefined;
   get error(): string | undefined;
 
-  getMonomer(polymerType: PolymerType, monomerSymbol: string): Monomer | null;
+  /* Gets library monomer for sequence monomer */
+  getMonomer(polymerType: PolymerType | null, monomerSymbol: string): Monomer | null;
   addMissingMonomer(polymerType: PolymerType, monomerSymbol: string): Monomer;
   getMonomerMolsByPolymerType(polymerType: PolymerType): { [monomerSymbol: string]: string } | null;
   getMonomerSymbolsByRGroup(rGroupNumber: number, polymerType: PolymerType, element?: string): string[];

@@ -16,7 +16,7 @@
     "directory": "packages/PowerPack"
   },
   "dependencies": {
-    "@datagrok-libraries/utils": "^4.1.28",
+    "@datagrok-libraries/utils": "^4.2.11",
     "cash-dom": "latest",
     "datagrok-api": "^1.19.0",
     "dayjs": "^1.11.7",

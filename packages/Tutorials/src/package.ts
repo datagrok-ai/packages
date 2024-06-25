@@ -233,7 +233,6 @@ export async function _pieChartDemo() {
 //name: trellisPlotDemo
 //description: Trellis Charts are useful for finding the structure and patterns in complex data. A Trellis Chart is a layout of smaller charts in a grid with consistent scales. Each smaller chart represents rows that belong to a corresponding category. The grid layout looks similar to a garden trellis, hence the name Trellis Chart.
 //meta.demoPath: Visualization | Data separation | Trellis Plot
-//meta.demoSkip: skip
 export async function _trellisPlotDemo() {
   await viewerDemo(DG.VIEWER.TRELLIS_PLOT);
 }
@@ -297,7 +296,6 @@ export async function _statisticsDemo() {
 //name: correlationPlotDemo
 //description: A quick way to assess correlations between all columns at once. Cells are color-coded by the Pearson correlation coefficient or Spearman's rank correlation coefficient . Histograms along the diagonal show the corresponding distribution. Hover over the cell to see the corresponding scatter plot. The grid is sortable. Select columns in the view by selecting corresponding rows.
 //meta.demoPath: Visualization | Statistical |Correlation Plot
-//meta.demoSkip: skip
 export async function _correlationPlotDemo() {
   await viewerDemo(DG.VIEWER.CORR_PLOT);
 }
@@ -326,7 +324,6 @@ export async function _markupDemo() {
 //name: tileViewerDemo
 //description: Visualizes rows as a collection of forms that are positioned as tiles.
 //meta.demoPath: Visualization | General | Tile Viewer
-//meta.demoSkip: skip
 export async function _tileViewerDemo() {
   await viewerDemo(DG.VIEWER.TILE_VIEWER);
 }
@@ -341,7 +338,6 @@ export async function _formDemo() {
 //name: shapeMapDemo
 //description: Shows a map that is applicable for the specified dataset. Typically, it would represent a geographical area (countries, states, counties, etc), but it also supports arbitrary shapes (such as a store floor plan, brain regions, or EEG electrodes).
 //meta.demoPath: Visualization | Geographical | Shape Map
-//meta.demoSkip: skip
 export async function _shapeMapDemo() {
   await viewerDemo(DG.VIEWER.SHAPE_MAP);
 }

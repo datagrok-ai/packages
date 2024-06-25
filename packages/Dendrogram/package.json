@@ -12,7 +12,7 @@
     "@datagrok-libraries/gridext": "^1.3.71",
     "@datagrok-libraries/math": "^1.1.3",
     "@datagrok-libraries/ml": "^6.6.4",
-    "@datagrok-libraries/utils": "^4.2.2",
+    "@datagrok-libraries/utils": "^4.2.11",
     "cash-dom": "latest",
     "datagrok-api": "^1.18.0",
     "dayjs": "latest",

@@ -2,8 +2,6 @@
 
 ## 2.0.1 (2024-06-12)
 
-*Dependency: datagarok-api >= 1.18.0*
-
 ### Features
 
 * Reporting app

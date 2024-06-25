@@ -3,8 +3,8 @@ import path from 'path';
 import walk from 'ignore-walk';
 import * as utils from '../utils/utils';
 import * as color from '../utils/color-utils';
-import {FuncMetadata, FuncParam, FuncValidator, ValidationResult} from '../utils/interfaces';
-import {PackageFile} from '../utils/interfaces';
+import { FuncMetadata, FuncParam, FuncValidator, ValidationResult } from '../utils/interfaces';
+import { PackageFile } from '../utils/interfaces';
 import * as testUtils from '../utils/test-utils';
 
 
@@ -26,27 +26,27 @@ export function check(args: CheckArgs): boolean {
 }
 
 function runChecks(packagePath: string): boolean {
-  const files = walk.sync({path: packagePath, ignoreFiles: ['.npmignore', '.gitignore']});
+  const files = walk.sync({ path: packagePath, ignoreFiles: ['.npmignore', '.gitignore'] });
   const jsTsFiles = files.filter((f) => !f.startsWith('dist/') && (f.endsWith('.js') || f.endsWith('.ts')));
   const packageFiles = ['src/package.ts', 'src/detectors.ts', 'src/package.js', 'src/detectors.js',
     'src/package-test.ts', 'src/package-test.js', 'package.js', 'detectors.js'];
   const funcFiles = jsTsFiles.filter((f) => packageFiles.includes(f));
   const warnings: string[] = [];
   const packageFilePath = path.join(packagePath, 'package.json');
-  const json: PackageFile = JSON.parse(fs.readFileSync(packageFilePath, {encoding: 'utf-8'}));
+  const json: PackageFile = JSON.parse(fs.readFileSync(packageFilePath, { encoding: 'utf-8' }));
 
   const webpackConfigPath = path.join(packagePath, 'webpack.config.js');
   const isWebpack = fs.existsSync(webpackConfigPath);
   let externals: { [key: string]: string } | null = null;
   if (isWebpack) {
-    const content = fs.readFileSync(webpackConfigPath, {encoding: 'utf-8'});
+    const content = fs.readFileSync(webpackConfigPath, { encoding: 'utf-8' });
     externals = extractExternals(content);
     if (externals)
       warnings.push(...checkImportStatements(packagePath, jsTsFiles, externals));
   }
-
+  warnings.push(...checkSourceMap(packagePath));
   warnings.push(...checkFuncSignatures(packagePath, funcFiles));
-  warnings.push(...checkPackageFile(packagePath, json, {isWebpack, externals}));
+  warnings.push(...checkPackageFile(packagePath, json, { isWebpack, externals }));
   warnings.push(...checkChangelog(packagePath, json));
 
   if (warnings.length) {
@@ -79,7 +79,7 @@ function runChecksRec(dir: string): boolean {
   return false;
 }
 
-export function extractExternals(config: string): {}|null {
+export function extractExternals(config: string): {} | null {
   const externalsRegex = /(?<=externals)\s*:\s*(\{[\S\s]*?\})/;
   const match = config.match(externalsRegex);
   if (match) {
@@ -114,11 +114,11 @@ export function checkImportStatements(packagePath: string, files: string[], exte
     const message = value ? '' : 'Pay attention to file ' + file + ': import statement `' +
       s + '` differs from the path given in the webpack config as an external module. ' +
       'It can increase the bundle size.';
-    return {value, message};
+    return { value, message };
   }
 
   for (const file of files) {
-    const content = fs.readFileSync(path.join(packagePath, file), {encoding: 'utf-8'});
+    const content = fs.readFileSync(path.join(packagePath, file), { encoding: 'utf-8' });
     const matchedImports = content.match(importRegex);
     if (matchedImports) {
       for (const match of matchedImports) {
@@ -135,7 +135,7 @@ export function checkImportStatements(packagePath: string, files: string[], exte
 export function checkFuncSignatures(packagePath: string, files: string[]): string[] {
   const warnings: string[] = [];
   const checkFunctions: { [role: string]: FuncValidator } = {
-    app: ({name}: {name?: string}) => {
+    app: ({ name }: { name?: string }) => {
       let value = true;
       let message = '';
 
@@ -151,9 +151,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         }
       }
 
-      return {value, message};
+      return { value, message };
     },
-    semTypeDetector: ({inputs, outputs}: {inputs: FuncParam[], outputs: FuncParam[]}) => {
+    semTypeDetector: ({ inputs, outputs }: { inputs: FuncParam[], outputs: FuncParam[] }) => {
       let value = true;
       let message = '';
 
@@ -167,9 +167,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         message += 'Semantic type detectors must have one output of type "string"\n';
       }
 
-      return {value, message};
+      return { value, message };
     },
-    cellRenderer: ({inputs, outputs}: {inputs: FuncParam[], outputs: FuncParam[]}) => {
+    cellRenderer: ({ inputs, outputs }: { inputs: FuncParam[], outputs: FuncParam[] }) => {
       let value = true;
       let message = '';
 
@@ -183,9 +183,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         message += 'Cell renderer functions must have one output of type "grid_cell_renderer"\n';
       }
 
-      return {value, message};
+      return { value, message };
     },
-    viewer: ({inputs, outputs}: {inputs: FuncParam[], outputs: FuncParam[]}) => {
+    viewer: ({ inputs, outputs }: { inputs: FuncParam[], outputs: FuncParam[] }) => {
       let value = true;
       let message = '';
 
@@ -199,9 +199,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         message += 'Viewers must have one output of type "viewer"\n';
       }
 
-      return {value, message};
+      return { value, message };
     },
-    fileViewer: ({inputs, outputs, tags}: {inputs: FuncParam[], outputs: FuncParam[], tags?: string[]}) => {
+    fileViewer: ({ inputs, outputs, tags }: { inputs: FuncParam[], outputs: FuncParam[], tags?: string[] }) => {
       let value = true;
       let message = '';
 
@@ -221,9 +221,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         message += 'File viewers must have one output of type "view"\n';
       }
 
-      return {value, message};
+      return { value, message };
     },
-    fileExporter: ({description}: {description?: string}) => {
+    fileExporter: ({ description }: { description?: string }) => {
       let value = true;
       let message = '';
 
@@ -232,9 +232,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         message += 'File exporters should have a description parameter\n';
       }
 
-      return {value, message};
+      return { value, message };
     },
-    packageSettingsEditor: ({outputs}: {outputs: FuncParam[]}) => {
+    packageSettingsEditor: ({ outputs }: { outputs: FuncParam[] }) => {
       let value = true;
       let message = '';
 
@@ -243,9 +243,9 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         message += 'Package settings editors must have one output of type "widget"\n';
       }
 
-      return {value, message};
+      return { value, message };
     },
-    params: ({inputs, outputs}: {inputs: FuncParam[], outputs: FuncParam[]}) => {
+    params: ({ inputs, outputs }: { inputs: FuncParam[], outputs: FuncParam[] }) => {
       let value = true;
       let message = '';
 
@@ -262,20 +262,20 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
         }
       }
 
-      return {value, message};
+      return { value, message };
     },
   };
   const functionRoles = Object.keys(checkFunctions);
 
   for (const file of files) {
-    const content = fs.readFileSync(path.join(packagePath, file), {encoding: 'utf-8'});
+    const content = fs.readFileSync(path.join(packagePath, file), { encoding: 'utf-8' });
     const functions = getFuncMetadata(content);
     for (const f of functions) {
       const paramsCheck = checkFunctions.params(f);
       if (!paramsCheck.value)
         warnings.push(`File ${file}, function ${f.name}:\n${paramsCheck.message}`);
       const roles = functionRoles.filter((role) => f.tags?.includes(role));
-      if (roles.length > 1) 
+      if (roles.length > 1)
         warnings.push(`File ${file}, function ${f.name}: several function roles are used (${roles.join(', ')})`);
       else if (roles.length === 1) {
         const vr = checkFunctions[roles[0]](f);
@@ -288,16 +288,18 @@ export function checkFuncSignatures(packagePath: string, files: string[]): strin
   return warnings;
 }
 
-const sharedLibExternals: {[lib: string]: {}} = {
-  'common/html2canvas.min.js': {'exceljs': 'ExcelJS'},
-  'common/exceljs.min.js': {'html2canvas': 'html2canvas'},
-  'common/ngl_viewer/ngl.js': {'NGL': 'NGL'},
-  'common/openchemlib-full.js': {'openchemlib/full': 'OCL'},
-  'common/codemirror/codemirror.js': {'codemirror': 'CodeMirror'},
+const sharedLibExternals: { [lib: string]: {} } = {
+  'common/html2canvas.min.js': { 'exceljs': 'ExcelJS' },
+  'common/exceljs.min.js': { 'html2canvas': 'html2canvas' },
+  'common/ngl_viewer/ngl.js': { 'NGL': 'NGL' },
+  'common/openchemlib-full.js': { 'openchemlib/full': 'OCL' },
+  'common/codemirror/codemirror.js': { 'codemirror': 'CodeMirror' },
 };
 
-export function checkPackageFile(packagePath: string, json: PackageFile, options?: { externals?:
-  { [key: string]: string } | null, isWebpack?: boolean }): string[] {
+export function checkPackageFile(packagePath: string, json: PackageFile, options?: {
+  externals?:
+  { [key: string]: string } | null, isWebpack?: boolean
+}): string[] {
   const warnings: string[] = [];
   const isPublicPackage = path.basename(path.dirname(packagePath)) === 'packages' &&
     path.basename(path.dirname(path.dirname(packagePath))) === 'public';
@@ -327,7 +329,7 @@ export function checkPackageFile(packagePath: string, json: PackageFile, options
 
   const api = json.dependencies?.['datagrok-api'];
   if (api) {
-    if (api === '../../js-api') {} else if (api === 'latest')
+    if (api === '../../js-api') { } else if (api === 'latest')
       warnings.push('File "package.json": you should specify Datagrok API version constraint (for example ^1.16.0, >=1.16.0).');
     else if (!/^(\^|>|<|~).+/.test(api))
       warnings.push('File "package.json": Datagrok API version should starts with > | >= | ~ | ^ | < | <=');
@@ -352,13 +354,13 @@ export function checkPackageFile(packagePath: string, json: PackageFile, options
                 warnings.push(`Webpack config parsing: Consider adding source "${source}" to webpack externals:\n` +
                   `'${lib}': '${name}'\n`);
               }
-            } else 
+            } else
               warnings.push(`File "package.json": source "${source}" not in the list of shared libraries`);
-            
+
           } else {
             warnings.push('Webpack config parsing: External modules not found.\n' +
               `Consider adding source "${source}" to webpack externals` + (source in sharedLibExternals ? ':\n' +
-              `'${Object.keys(sharedLibExternals[source])[0]}': '${Object.values(sharedLibExternals[source])[0]}'\n` : ''));
+                `'${Object.keys(sharedLibExternals[source])[0]}': '${Object.values(sharedLibExternals[source])[0]}'\n` : ''));
           }
         }
         continue;
@@ -375,12 +377,12 @@ export function checkPackageFile(packagePath: string, json: PackageFile, options
   return warnings;
 }
 
-export function checkChangelog(packagePath: string, json: PackageFile) {
+export function checkChangelog(packagePath: string, json: PackageFile): string[] {
   if (json.servicePackage) return [];
   const warnings: string[] = [];
   let clf: string;
   try {
-    clf = fs.readFileSync(path.join(packagePath, 'CHANGELOG.md'), {encoding: 'utf-8'});
+    clf = fs.readFileSync(path.join(packagePath, 'CHANGELOG.md'), { encoding: 'utf-8' });
   } catch (e) {
     return ['CHANGELOG.md file does not exist\n'];
   }
@@ -404,6 +406,32 @@ export function checkChangelog(packagePath: string, json: PackageFile) {
   return warnings;
 }
 
+export function checkSourceMap(packagePath: string): string[] {
+  const warnings: string[] = [];
+  const tsconfigFilePath = path.join(packagePath, 'tsconfig.json');
+  const webpackConfigFilePath = path.join(packagePath, 'webpack.config.js');
+
+  if (fs.existsSync(tsconfigFilePath) && fs.existsSync(webpackConfigFilePath)) {
+    const configJson: string = fs.readFileSync(tsconfigFilePath, { encoding: 'utf-8' }); // cant convert to json because file contains comments
+
+    if (!(new RegExp('"sourceMap"\\s*:\\s*true')).test(configJson))
+      warnings.push('ts config doesnt contain source map');
+
+    const webpackConfigJson: string = fs.readFileSync(webpackConfigFilePath, { encoding: 'utf-8' }); // cant convert to json because file contains comments
+
+    if (!(new RegExp(`devtool\\s*:\\s*'source-map'`)).test(webpackConfigJson))
+      warnings.push('webpack config doesnt contain source map');
+
+    if (!fs.existsSync(packagePath + '/dist/package.js'))
+      warnings.push('dist\\package.js file doesnt exists');
+
+    if (!fs.existsSync(packagePath + '/dist/package-test.js'))
+      warnings.push('dist\\package-test.js file doesnt exists');
+
+  }
+  return warnings;
+}
+
 function warn(warnings: string[]): void {
   warnings.forEach((w) => color.warn(w));
 }
@@ -411,7 +439,7 @@ function warn(warnings: string[]): void {
 function getFuncMetadata(script: string): FuncMetadata[] {
   const funcData: FuncMetadata[] = [];
   let isHeader = false;
-  let data: FuncMetadata = {name: '', inputs: [], outputs: []};
+  let data: FuncMetadata = { name: '', inputs: [], outputs: [] };
 
   for (const line of script.split('\n')) {
     if (!line)
@@ -427,9 +455,9 @@ function getFuncMetadata(script: string): FuncMetadata[] {
       else if (param === 'description')
         data.description = match[2];
       else if (param === 'input')
-        data.inputs.push({type: match[2], name: match[3]});
+        data.inputs.push({ type: match[2], name: match[3] });
       else if (param === 'output')
-        data.outputs.push({type: match[2], name: match[3]});
+        data.outputs.push({ type: match[2], name: match[3] });
       else if (param === 'tags')
         data.tags = match.input && match[3] ? match.input.split(':')[1].split(',').map((t) => t.trim()) : [match[2]];
     }
@@ -438,7 +466,7 @@ function getFuncMetadata(script: string): FuncMetadata[] {
       if (nm && !match) {
         data.name = data.name || nm[1];
         funcData.push(data);
-        data = {name: '', inputs: [], outputs: []};
+        data = { name: '', inputs: [], outputs: [] };
         isHeader = false;
       }
     }

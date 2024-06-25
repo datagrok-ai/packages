@@ -1,6 +1,7 @@
 package grok_connect.utils;
 
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.sql.Connection;
@@ -58,26 +59,33 @@ public class ConnectionPool {
                 SettingsManager.getInstance().getSettings().connectionPoolTimerRate);
     }
 
-    public Connection getConnection(String url, java.util.Properties properties, String driverClassName) throws GrokConnectException, SQLException {
-        LOGGER.debug("getConnection was called for driver {} with url {}", driverClassName, url);
-        if (url == null || properties == null || driverClassName == null)
-            throw new GrokConnectException("Connection parameters are null");
-        String key = url + properties + driverClassName;
-        synchronized(this) {
-            if (!connectionPool.containsKey(key)) {
-                LOGGER.debug("Creating new pool");
-                connectionPool.put(key, new HikariDataSourceInformation(url, properties, driverClassName));
+    public Connection getConnection(String url, java.util.Properties properties, String driverClassName)
+            throws GrokConnectException {
+        try {
+            LOGGER.debug("getConnection was called for driver {} with url {}", driverClassName, url);
+            if (url == null || properties == null || driverClassName == null)
+                throw new GrokConnectException("Connection parameters are null");
+            String key = url + properties + driverClassName;
+            synchronized(this) {
+                if (!connectionPool.containsKey(key)) {
+                    LOGGER.debug("Creating new pool");
+                    connectionPool.put(key, new HikariDataSourceInformation(url, properties, driverClassName));
+                }
+                HikariDataSource hikariDataSource = connectionPool.get(key).hikariDataSource;
+                LOGGER.debug("Pool {} active connections count: {}", hikariDataSource.getPoolName(),
+                        hikariDataSource.getHikariPoolMXBean().getActiveConnections());
+                LOGGER.debug("Pool {} idle connections count: {}", hikariDataSource.getPoolName(),
+                        hikariDataSource.getHikariPoolMXBean().getIdleConnections());
+                LOGGER.debug("Pool {} total connections count: {}", hikariDataSource.getPoolName(),
+                        hikariDataSource.getHikariPoolMXBean().getTotalConnections());
+                LOGGER.debug("Pool {} threads awaiting connection count: {}", hikariDataSource.getPoolName(),
+                        hikariDataSource.getHikariPoolMXBean().getThreadsAwaitingConnection());
+                return hikariDataSource.getConnection();
             }
-            HikariDataSource hikariDataSource = connectionPool.get(key).hikariDataSource;
-            LOGGER.debug("Pool {} active connections count: {}", hikariDataSource.getPoolName(),
-                    hikariDataSource.getHikariPoolMXBean().getActiveConnections());
-            LOGGER.debug("Pool {} idle connections count: {}", hikariDataSource.getPoolName(),
-                    hikariDataSource.getHikariPoolMXBean().getIdleConnections());
-            LOGGER.debug("Pool {} total connections count: {}", hikariDataSource.getPoolName(),
-                    hikariDataSource.getHikariPoolMXBean().getTotalConnections());
-            LOGGER.debug("Pool {} threads awaiting connection count: {}", hikariDataSource.getPoolName(),
-                    hikariDataSource.getHikariPoolMXBean().getThreadsAwaitingConnection());
-            return hikariDataSource.getConnection();
+        } catch (SQLException e) {
+            throw new GrokConnectException(e);
+        } catch (HikariPool.PoolInitializationException e) {
+            throw new GrokConnectException(e.getCause());
         }
     }
 

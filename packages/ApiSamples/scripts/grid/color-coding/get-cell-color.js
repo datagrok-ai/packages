@@ -1,15 +1,13 @@
 let t = grok.data.demo.demog();
 
 // Conditional color-coding for numerical columns
-t.col('height').tags['.color-coding-type'] = 'Conditional';
-t.col('height').tags['.color-coding-conditional'] = `{"20-170":"#00FF00","170-190":"#220505"}`;
+t.col('height').meta.colors.setConditional({"20-170": "#00FF00", "170-190": "#220505"});
 
 // Linear color-coding for numerical columns
-t.col('age').tags['.color-coding-type'] = 'Linear';
+t.col('age').meta.colors.setLinear();
 
 // Categorical color-coding for string columns
-t.col('race').tags['.color-coding-type'] = 'Categorical';
-t.col('race').tags['.category-colors'] = `{"Asian":4278190335,"Black":4286578816}`;
+t.col('race').meta.colors.setCategorical({"Asian": 4278190335, "Black": 4286578816});
 
 let v = grok.shell.addTableView(t);
 

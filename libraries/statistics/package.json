@@ -8,7 +8,7 @@
   "description": "Statistics utilities",
   "dependencies": {
     "datagrok-api": "^1.18.0",
-    "@datagrok-libraries/utils": "^4.1.45",
+    "@datagrok-libraries/utils": "^4.2.11",
     "cash-dom": "^8.0.0",
     "jstat": "^1.9.6",
     "dayjs": "^1.11.7"
