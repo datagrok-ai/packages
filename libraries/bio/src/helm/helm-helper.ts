@@ -5,9 +5,8 @@ import * as grok from 'datagrok-api/grok';
 import type {App} from '@datagrok-libraries/helm-web-editor/helm/App';
 import {Atom, HelmType, IHelmWebEditor, IWebEditorMonomer} from './types';
 import {IMonomerLib} from '../types/index';
+import {GetMonomerFunc} from '../helm/types';
 
-export type GetMonomerResType = IWebEditorMonomer | null;
-export type GetMonomerFunc = (a: Atom<HelmType> | HelmType, name?: string) => GetMonomerResType;
 
 export interface IHelmHelper {
   createHelmWebEditor(): IHelmWebEditor;

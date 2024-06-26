@@ -1130,12 +1130,14 @@ export class RichFunctionView extends FunctionView {
   }
 
   public getParamChanges<T = any>(name: string): Observable<T | null> {
-    const ptype = this.funcCall['inputParams'][name] ? 'inputParams' : 'outputParams';
     return this.funcCallReplaced.pipe(
       startWith(null),
       filter(() => !!this.funcCall),
-      switchMap(() => this.funcCall[ptype][name].onChanged.pipe(startWith(null))),
-      map(() => this.funcCall[ptype][name].value as T),
+      map(() => this.funcCall['inputParams'][name] ? 'inputParams' : 'outputParams'),
+      switchMap((ptype) => this.funcCall[ptype][name].onChanged.pipe(
+        startWith(null),
+        map(() => this.funcCall[ptype][name].value as T),
+      )),
     );
   }
 

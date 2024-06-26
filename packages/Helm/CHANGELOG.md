@@ -1,5 +1,18 @@
 # Helm changelog
 
+## 2.3.0 (2024-06-24)
+
+Use forked JSDraw.Lite and HELMWebEditor
+
+### Bug fixes
+
+* Add test for helm-web-editor
+* Add test parseHelm without DOM
+* Add test seq properties widget for fasta RNA
+* GROK-15994: Color missing monomers
+* Fix cell renderer to invalidate on lib changed
+* Fix dojo load and patch
+
 ## 2.2.2 (2024-05-16)
 
 Fix seq properties widget, warning for too long seq, test

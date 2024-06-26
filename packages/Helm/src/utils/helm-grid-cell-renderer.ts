@@ -2,9 +2,9 @@ import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
 
-import * as JSDraw2 from 'JSDraw2';
 import wu from 'wu';
 
+import {HelmType, Mol} from '@datagrok-libraries/bio/src/helm/types';
 import {
   CellRendererBackAsyncBase, RenderServiceBase
 } from '@datagrok-libraries/bio/src/utils/cell-renderer-async-base';
@@ -49,6 +49,13 @@ export class HelmGridCellRendererBack extends CellRendererBackAsyncBase<HelmProp
     tableCol: DG.Column<string>,
   ) {
     super(gridCol, tableCol, new WrapLogger(_package.logger) /* _package.logger */, true);
+
+    const monomerLib = getMonomerLib();
+    if (!monomerLib)
+      throw new Error('Helm package is not initialized yet.');
+    this.subs.push(monomerLib.onChanged.subscribe(() => {
+      this.reset();
+    }));
   }
 
   protected override reset(): void {
@@ -134,7 +141,7 @@ export class HelmGridCellRendererBack extends CellRendererBackAsyncBase<HelmProp
     const argsX = (e.offsetX - gcb.x) * dpr;
     const argsY = (e.offsetY - gcb.y) * dpr;
 
-    const editorMol: JSDraw2.IEditorMol | null = aux.mol;
+    const editorMol: Mol<HelmType> | null = aux.mol;
     if (!editorMol) {
       this.logger.warning(`${logPrefix}, editorMol of the cell not found.`);
       return; // The gridCell is not rendered yet

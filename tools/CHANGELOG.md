@@ -1,5 +1,12 @@
 # Datagrok-tools changelog
 
+
+## 4.13.4 (2024-06-25)
+
+### Bug Fixes
+
+* Check source maps fixes 
+
 ## 4.13.3 (2024-06-21)
 
 ### Features

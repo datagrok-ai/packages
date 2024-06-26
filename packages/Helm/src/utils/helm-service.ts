@@ -2,25 +2,26 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import * as org from 'org';
-import * as scil from 'scil';
-import * as JSDraw2 from 'JSDraw2';
-
 import $ from 'cash-dom';
 import {Subject, Unsubscribable} from 'rxjs';
 
 import {errInfo} from '@datagrok-libraries/bio/src/utils/err-info';
 import {IMonomerLib} from '@datagrok-libraries/bio/src/types/index';
+import {Editor, HelmType} from '@datagrok-libraries/bio/src/helm/types';
 import {RenderTask} from '@datagrok-libraries/bio/src/utils/cell-renderer-async-base';
 import {HelmAux, HelmProps, HelmServiceBase} from '@datagrok-libraries/bio/src/viewers/helm-service';
 import {svgToImage} from '@datagrok-libraries/utils/src/svg';
 
+import {JSDraw2HelmModule} from '../types';
+
 import {_package} from '../package';
+
+declare const JSDraw2: JSDraw2HelmModule;
 
 export class HelmService extends HelmServiceBase {
   private readonly hostDiv: HTMLDivElement;
 
-  private editor!: JSDraw2.Editor;
+  private editor!: Editor<HelmType>;
   private image: HTMLImageElement | null = null;
 
   constructor() {

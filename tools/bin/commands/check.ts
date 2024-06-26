@@ -419,7 +419,7 @@ export function checkSourceMap(packagePath: string): string[] {
 
     const webpackConfigJson: string = fs.readFileSync(webpackConfigFilePath, { encoding: 'utf-8' }); // cant convert to json because file contains comments
 
-    if (!(new RegExp(`devtool\\s*:\\s*'source-map'`)).test(webpackConfigJson))
+    if (!(new RegExp(`devtool\\s*:\\s*(([^\\n]*\\?[^\\n]*source-map[^\\n]*:[^\\n]*source-map[^\\n]*)|('source-map'))\\n`)).test(webpackConfigJson))
       warnings.push('webpack config doesnt contain source map');
 
     if (!fs.existsSync(packagePath + '/dist/package.js'))

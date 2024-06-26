@@ -5,7 +5,8 @@
 import {RDModule} from '@datagrok-libraries/chem-meta/src/rdkit-api';
 import * as DG from 'datagrok-api/dg';
 import {
-  ALIGN_BY_SCAFFOLD_TAG, FILTER_SCAFFOLD_TAG, HIGHLIGHT_BY_SCAFFOLD_COL, HIGHLIGHT_BY_SCAFFOLD_TAG, PARENT_MOL_COL,
+  ALIGN_BY_SCAFFOLD_TAG, FILTER_SCAFFOLD_TAG, HIGHLIGHT_BY_SCAFFOLD_COL,
+  HIGHLIGHT_BY_SCAFFOLD_TAG, MIN_MOL_IMAGE_SIZE, PARENT_MOL_COL,
   REGENERATE_COORDS, SCAFFOLD_COL, SCAFFOLD_TREE_HIGHLIGHT, SUBSTRUCT_COL,
 } from '../constants';
 import {hexToPercentRgb} from '../utils/chem-common';
@@ -362,6 +363,9 @@ M  END
       w = h - w;
       h -= w;
     }
+    if (Math.floor(w) < MIN_MOL_IMAGE_SIZE || Math.floor(h) < MIN_MOL_IMAGE_SIZE)
+      return;
+
     const imageData = this._fetchRender(w, h, molString, scaffolds,
       molRegenerateCoords, scaffoldRegenerateCoords,
       alignByFirstSubstructure, details, substructureObj);

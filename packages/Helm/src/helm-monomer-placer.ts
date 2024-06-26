@@ -2,27 +2,25 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import * as org from 'org';
-import * as JSDraw2 from 'JSDraw2';
 import wu from 'wu';
 
-import {IMonomerLib, Monomer} from '@datagrok-libraries/bio/src/types/index';
+import {HelmType, Mol, PolymerType} from '@datagrok-libraries/bio/src/helm/types';
+
 import {CellRendererBackBase} from '@datagrok-libraries/bio/src/utils/cell-renderer-back-base';
-import {IEditorMol} from '@datagrok-libraries/bio/src/types/helm-web-editor';
 
 import {getParts, parseHelm} from './utils';
 
 import {_package, getMonomerLib} from './package';
 
 export interface ISeqMonomer {
-  polymerType: org.helm.PolymerType;
+  polymerType: PolymerType;
   symbol: string;
 }
 
 export class HelmMonomerPlacer extends CellRendererBackBase<string> {
   private _allPartsList: (string[] | null)[];
   private _lengthsList: (number[] | null)[];
-  private _editorMolList: (JSDraw2.IEditorMol | null)[];
+  private _editorMolList: (Mol<HelmType> | null)[];
 
   public monomerCharWidth: number = 7;
   public leftPadding: number = 5;
@@ -38,7 +36,7 @@ export class HelmMonomerPlacer extends CellRendererBackBase<string> {
   protected override reset(): void {
     this._allPartsList = new Array<string[] | null>(this.tableCol.length).fill(null);
     this._lengthsList = new Array<number[] | null>(this.tableCol.length).fill(null);
-    this._editorMolList = new Array<JSDraw2.IEditorMol | null>(this.tableCol.length).fill(null);
+    this._editorMolList = new Array<Mol<HelmType> | null>(this.tableCol.length).fill(null);
   }
 
   /** Skips cell for the fallback rendering */
@@ -84,11 +82,11 @@ export class HelmMonomerPlacer extends CellRendererBackBase<string> {
     this.invalidateGrid();
   }
 
-  public setEditorMol(tableRowIndex: number, editorMol: JSDraw2.IEditorMol) {
+  public setEditorMol(tableRowIndex: number, editorMol: Mol<HelmType>) {
     this._editorMolList![tableRowIndex] = editorMol.clone(false);
   }
 
-  public getEditorMol(tableRowIndex: number): JSDraw2.IEditorMol | null {
+  public getEditorMol(tableRowIndex: number): Mol<HelmType> | null {
     return this._editorMolList![tableRowIndex];
   }
 }

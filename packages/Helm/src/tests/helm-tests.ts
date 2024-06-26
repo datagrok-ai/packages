@@ -51,7 +51,7 @@ category('Helm', () => {
   // });
 
   const complexMonomers = [
-    // tests parsing of complex monomemer in square brackets like [L-hArg(Et,Et)]
+    // tests parsing of complex monomer in square brackets like [L-hArg(Et,Et)]
     'PEPTIDE1{[L-hArg(Et,Et)].E.F.G}|PEPTIDE2{C.E}$PEPTIDE1,PEPTIDE2,2:R3-1:R1$$$V2.0',
     // tests parsing of complex monomer and one as a side chain as well
     'PEPTIDE1{[L-hArg(Et,Et)]([L-hArg(Et,Et)]).E.F.G}$$$$',

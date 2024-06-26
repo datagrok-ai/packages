@@ -1,5 +1,9 @@
 # Bio changelog
 
+## 2.13.1 (2024-06-25)
+
+Bump dependencies versions JSDraw.Lite and HELMWebEditor
+
 ## 2.13.0 (2024-06-24)
 
 ### Bug fixes

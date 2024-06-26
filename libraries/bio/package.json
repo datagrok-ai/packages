@@ -8,7 +8,7 @@
     "access": "public"
   },
   "friendlyName": "Datagrok bio library",
-  "version": "5.42.1",
+  "version": "5.42.2",
   "description": "Bio utilities, types supporting Macromolecule, Molecule3D data",
   "dependencies": {
     "@datagrok-libraries/gridext": "^1.3.71",
@@ -26,8 +26,8 @@
     "wu": "latest"
   },
   "devDependencies": {
-    "@datagrok-libraries/helm-web-editor": "^1.1.4",
-    "@datagrok-libraries/js-draw-lite": "^0.0.2",
+    "@datagrok-libraries/helm-web-editor": "^1.1.5",
+    "@datagrok-libraries/js-draw-lite": "^0.0.3",
     "@types/signals": "1.0.1",
     "@types/three": "^0.159.0",
     "@types/uuid": "^9.0.1",

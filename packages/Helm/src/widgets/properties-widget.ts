@@ -7,7 +7,10 @@ import $ from 'cash-dom';
 import {SeqHandler} from '@datagrok-libraries/bio/src/utils/seq-handler';
 import {NOTATION} from '@datagrok-libraries/bio/src/utils/macromolecule';
 
+import {JSDraw2HelmModule} from '../types';
 import {removeGapsFromHelm} from '../utils';
+
+declare const JSDraw2: JSDraw2HelmModule;
 
 export class SeqPropertiesError extends Error {
   constructor(message?: string, options?: ErrorOptions) {
@@ -31,7 +34,7 @@ export function getPropertiesDict(seq: string, sh: SeqHandler): {} {
 
     const formula = editor.getFormula(true);
     const molWeight = Math.round(editor.getMolWeight() * 100) / 100;
-    const coef = Math.round(editor.getExtinctionCoefficient(true) * 100) / 100;
+    const coef = Math.round(editor.getExtinctionCoefficient() * 100) / 100;
     return {
       'formula': formula.replace(/<sub>/g, '').replace(/<\/sub>/g, ''),
       'molecular weight': molWeight,
@@ -53,6 +56,7 @@ export function getPropertiesWidget(value: DG.SemanticValue): DG.Widget {
     );
   } catch (err: any) {
     if (err instanceof SeqPropertiesError) {
+      // Display warning from err.message
       return new DG.Widget(ui.divText(err.message));
     }
     throw err;

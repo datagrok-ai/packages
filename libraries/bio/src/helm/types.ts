@@ -13,7 +13,9 @@ import type {Mol} from '@datagrok-libraries/js-draw-lite/src/Mol';
 import type {Editor} from '@datagrok-libraries/js-draw-lite/src/JSDraw.Editor';
 
 import type {App} from '@datagrok-libraries/helm-web-editor/helm/App';
-import type {IOrgHelmWebEditor, IOrgHelmMonomers} from '@datagrok-libraries/helm-web-editor/src/types/org-helm';
+import type {
+  IOrgHelmWebEditor, IOrgHelmMonomers, GetMonomerFunc, GetMonomerResType
+} from '@datagrok-libraries/helm-web-editor/src/types/org-helm';
 import type {HweWindow} from '@datagrok-libraries/helm-web-editor/src/types';
 
 import type {JSDraw2ModuleType, ScilModuleType} from '@datagrok-libraries/js-draw-lite/src/types';
@@ -24,7 +26,10 @@ import type {DojoType, DojoxType} from '@datagrok-libraries/js-draw-lite/src/typ
 export {HelmType, PolymerType, MonomerType, WebEditorRGroups};
 export {Atom, IJsAtom, Bond, Mol, Editor};
 
-export {IWebEditorMonomer, IMonomerColors, IOrgHelmWebEditor, IOrgHelmMonomers, App, Monomers};
+export {
+  IWebEditorMonomer, IMonomerColors, IOrgHelmWebEditor, IOrgHelmMonomers, App,
+  Monomers, GetMonomerFunc, GetMonomerResType
+};
 
 export {DojoType, DojoxType};
 export {HweWindow, ScilModuleType, JSDraw2ModuleType, OrgType};

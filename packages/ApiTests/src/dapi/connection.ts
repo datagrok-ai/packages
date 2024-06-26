@@ -53,6 +53,67 @@ category('Dapi: connection', () => {
   }, {skipReason: 'GROK-11670'});
 });
 
+category('Dapi: connection cache', () => {
+  const testFilePath1: string = 'System:AppData/ApiTests/test_files.txt';
+  const testFilePath2: string = 'System:AppData/ApiTests/renamed_test_files.txt';
+
+  before(async () => {
+    const connection: DG.DataConnection = await grok.dapi.connections.filter(`name="AppData"`).first();
+    await grok.functions.call('DropConnectionCache', {connection: connection});
+  });
+
+  test('Invalidation, performance', async () => {
+    // write file to trigger cache bump
+    await grok.dapi
+      .files.writeAsText(testFilePath1, 'Hello World!');
+    // measure first execution time
+    let start = Date.now();
+    let list = await grok.dapi.files.list('System:AppData/ApiTests');
+    const first = Date.now() - start;
+    // check if cache was bumped
+    expect(list.some((f) => f.name === 'test_files.txt'));
+    const second = await getExecutionTime(async () => {
+      await grok.dapi.files.list('System:AppData/ApiTests');
+    });
+    // second execution should be faster
+    expect(second * 10 < first);
+
+    // cache should be bumped after renaming
+    await grok.dapi.files.rename(testFilePath1,
+      testFilePath2);
+    list = await grok.dapi.files.list('System:AppData/ApiTests');
+    expect(list.some((f) => f.name === 'renamed_test_files.txt'));
+
+    // cache should be bumped after delete
+    await grok.dapi.files.delete(testFilePath2);
+    list = await grok.dapi.files.list('System:AppData/ApiTests');
+    expect(list.every((f) => f.name !== 'renamed_test_files.txt'));
+  }, {skipReason: 'GROK-15408'});
+
+  test('Performance: read csv', async () => {
+    const connection: DG.DataConnection = await grok.dapi.connections.filter(`name="AppData"`).first();
+    if (!(connection.parameters.get('cacheResults') ?? false))
+      return;
+    const first = await getExecutionTime(async () => {
+      await grok.dapi.files.readCsv('System:AppData/ApiTests/datasets/demog.csv')
+    });
+    const second = await getExecutionTime(async () => {
+      await grok.dapi.files.readCsv('System:AppData/ApiTests/datasets/demog.csv')
+    });
+    // second execution should be faster
+    expect(second * 10 < first);
+  }, {skipReason: 'GROK-15408'});
+
+  after(async () => {
+    try {
+      await grok.dapi.files.delete(testFilePath1);
+    } catch (_) {}
+    try {
+      await grok.dapi.files.delete(testFilePath2);
+    } catch (_) {}
+  });
+});
+
 category('Dapi: TableQuery', () => {
   let dc: DG.DataConnection;
   const tableName = 'public.orders';
@@ -216,3 +277,9 @@ category('Dapi: TableQueryBuilder', () => {
   });
 });
 */
+
+async function getExecutionTime(f: () => any) {
+  const start = Date.now();
+  await f();
+  return Date.now() - start;
+}

@@ -1,5 +1,9 @@
 # compute-utils changelog
 
+## 1.35.5 (2024-06-26)
+
+- getParamChanges fixed empty FuncCall error
+
 ## 1.35.4 (2024-06-25)
 
 - Inputs bugfixes
@@ -189,7 +193,7 @@
 ### Features
 
 - RFV: Now supports readme files via `meta.readme` tag
-- Wizard: Now support help panel state saving 
+- Wizard: Now support help panel state saving
 
 ## 1.24.1 (2024-03-02)
 

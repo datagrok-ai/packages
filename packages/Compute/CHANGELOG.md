@@ -1,5 +1,9 @@
 # Compute changelog
 
+## 1.35.5 (2024-06-26)
+
+- getParamChanges fixed empty FuncCall error
+
 ## 1.35.4 (2024-06-25)
 
 - Inputs bugfixes
@@ -292,7 +296,7 @@
 
 - RFV: Added input form adaptiveness
 - RFV: Renamed validator tag to `validatorFunc`
-- RFV: Added `nullable` tag for inputs 
+- RFV: Added `nullable` tag for inputs
 
 ## 1.17.3 (2023-11-22)
 

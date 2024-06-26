@@ -3,6 +3,7 @@ import { Fingerprint } from "./utils/chem-common";
 export const V2000_ATOM_NAME_POS = 30;
 export const V2000_ATOM_NAME_LEN = 3;
 export const SUBSTRUCT_COL = 'substruct-col';
+export const MIN_MOL_IMAGE_SIZE = 5;
 
 /** A list of chemical elements in periodic table order */
 export const elementsTable: Array<string> = [

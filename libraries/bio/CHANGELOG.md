@@ -1,5 +1,9 @@
 # bio changelog
 
+## 5.42.2 (2024-06-25)
+
+Bump dependencies versions JSDraw.Lite and HELMWebEditor
+
 ## 5.42.1 (2024-06-24)
 
 Fix for JSDraw types
