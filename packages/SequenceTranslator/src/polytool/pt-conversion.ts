@@ -11,6 +11,7 @@ export const RULES_HETERODIMER = '($2)';
 
 function addCommonTags(col: DG.Column): void {
   col.setTag('quality', DG.SEMTYPE.MACROMOLECULE);
+  // TODO: Use constants from bio lib for tag names
   col.setTag('aligned', ALIGNMENT.SEQ);
   col.setTag('alphabet', ALPHABET.PT);
 }

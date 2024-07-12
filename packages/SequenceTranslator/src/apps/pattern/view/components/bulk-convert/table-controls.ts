@@ -1,4 +1,7 @@
+import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
+import * as DG from 'datagrok-api/dg';
+
 import '../../style.css';
 
 import {EventBus} from '../../../model/event-bus';
@@ -34,5 +37,12 @@ export class TableControlsManager {
 
   private processConvertButtonClick(): void {
     bulkTranslate(this.eventBus);
+    const df = this.eventBus.getTableSelection();
+    for (const view of grok.shell.views) {
+      if (view instanceof DG.TableView && view.dataFrame.id === df!.id) {
+        grok.shell.v = view;
+        break;
+      }
+    }
   }
 }
