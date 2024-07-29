@@ -1093,8 +1093,10 @@ export class FileSource {
    * @param {FileInfo | string} file
    * @param {Array<number>} blob
    * @returns {Promise} */
-  write(file: FileInfo | string, blob: number[]): Promise<void> {
-    return api.grok_Dapi_UserFiles_Write(file, blob);
+  write(file: FileInfo | string, blob?: number[]): Promise<void> {
+    if (!blob && ((file instanceof FileInfo && !file.data) || typeof file === 'string'))
+      throw new Error('blob parameter should be presented');
+    return api.grok_Dapi_UserFiles_Write(toDart(file), blob ?? (file as FileInfo).data);
   }
 
   /** Writes a text file.

@@ -75,9 +75,7 @@ export function dummyPackageFunction(a: number, b: number) {
 //output: int count 
 //output: dataframe tableOut
 export function dummyDataFrameFunction(table: DG.DataFrame) {
-  const count = table.rowCount;
-  const tableOut = table;
-  return {tableOut, count};
+  return {'tableOut': table, 'count': table.rowCount};
 }
 
 //name: testStringAsync
