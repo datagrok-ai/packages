@@ -17,7 +17,7 @@ category('Dapi: files', () => {
   test('exists', async () => {
     if (!await grok.dapi.files.exists(testTextFilePath))
       throw new Error('File doesn\'t exist');
-  });
+  }, {stressTest: true});
 
   test('write/read text', async () => {
     const filePath = filePrefix + 'Dapi. files - write, read text.txt';
@@ -30,7 +30,7 @@ category('Dapi: files', () => {
     } finally {
       await grok.dapi.files.delete(filePath);
     }
-  });
+  }, {stressTest: true});
 
   test('write/read blob', async () => {
     const filePath = filePrefix + 'Dapi. files - write, read blob.txt';
@@ -43,18 +43,18 @@ category('Dapi: files', () => {
     } finally {
       await grok.dapi.files.delete(filePath);
     }
-  });
+  }, {stressTest: true});
 
   test('search', async () => {
     if ((await grok.dapi.files.list(filePrefix, false, testTextFileName)).length !== 1)
       throw new Error('Can\'t find the file');
-  });
+  }, {stressTest: true});
 
   test('package files', async () => {
     const files = await _package.files.list('datasets', false, 'csv');
     expect(files.length > 0, true);
     files.every((f) => expect(f.extension, 'csv'));
-  });
+  }, {stressTest: true});
 
   // test('move', async () => {
   //     let fileName = 'move.txt';
@@ -86,13 +86,13 @@ category('Dapi: files', () => {
       if (await grok.dapi.files.exists(filePath))
         await grok.dapi.files.delete(filePath);
     }
-  });
+  }, {stressTest: true});
 
   test('readBinaryDataFrames', async () => {
     const dfList = await _package.files.readBinaryDataFrames('datasets/country-languages.d42');
     expect(dfList.length, 1);
     expect(dfList[0] instanceof DG.DataFrame, true);
-  });
+  }, {stressTest: true});
 
   test('writeBinaryDataFrames', async () => {
     const df = grok.data.demo.demog(10);
@@ -109,7 +109,7 @@ category('Dapi: files', () => {
     const files = await _package.files.list('datasets', true, 'demog.csv');
     const res = await _package.files.readAsText(files[0]);
     expect(!!res);
-  });
+  }, {stressTest: true});
 
   after(async () => {
     await grok.dapi.files.delete(testTextFilePath);

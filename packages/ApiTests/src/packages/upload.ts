@@ -44,5 +44,5 @@ category('Packages', () => {
       expectTable(await query.apply(), DG.DataFrame.fromCsv(test2));
       expect((await grok.dapi.scripts.filter('package.name = "Test"').allPackageVersions().list()).length, 1);
     }
-  });
+  }, {stressTest: true});
 });

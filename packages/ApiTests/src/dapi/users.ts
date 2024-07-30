@@ -6,9 +6,9 @@ import * as grok from 'datagrok-api/grok';
 category('Dapi: users', () => {
   test('current', async () => {
     await grok.dapi.users.current();
-  });
+  }, {stressTest: true});
 
   test('current session', async () => {
     await grok.dapi.users.currentSession();
-  });
+  }, {stressTest: true});
 });

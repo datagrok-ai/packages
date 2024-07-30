@@ -11,13 +11,13 @@ category('Files: OpenFile', () => {
     const df: DG.DataFrame = await grok.functions.call('OpenFile', {'fullPath': 'System:DemoFiles/chem/zbb/99_p0_ph7.csv'});
     expect(df.name, '99_p0_ph7', 'Table name differs');
     expect(df.rowCount, 574356);
-  });
+  }, {stressTest: true});
 
   test('Open small csv', async () => {
     const df: DG.DataFrame = await grok.functions.call('OpenFile', {'fullPath': 'System:DemoFiles/cars.csv'});
     expect(df.name, 'cars', 'Table name differs');
     expect(df.rowCount, 30);
-  });
+  }, {stressTest: true});
 
   test('Project with big table csv', async () => {
     const df: DG.DataFrame = await grok.functions.call('OpenFile', {'fullPath': 'System:DemoFiles/chem/zbb/99_p0_ph7.csv'});
@@ -39,6 +39,6 @@ category('Files: OpenFile', () => {
     expect(grok.shell.project?.name, project.name);
     grok.shell.closeAll();
     await grok.dapi.projects.delete(await grok.dapi.projects.filter(project.name).first());
-  }, {timeout: 120000});
+  }, {timeout: 120000, stressTest: true});
 });
 

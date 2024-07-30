@@ -34,7 +34,7 @@ category('ML', () => {
     expect(resultDf.getCol('age').isNone(1192), false);
     expect(resultDf.getCol('height').isNone(2220), false);
     expect(resultDf.getCol('weight').isNone(2221), false);
-  });
+  }, {stressTest: true});
 
   test('Random Data', async () => {
     const seed = 42;
@@ -53,5 +53,5 @@ category('ML', () => {
     const binomialCol = data.getCol('binomial');
     expect(binomialCol.stats.min >= 0 && binomialCol.stats.max <= 100, true);
     expect(68 <= binomialCol.stats.avg && binomialCol.stats.avg <= 72, true);
-  });
+  }, {stressTest: true});
 });

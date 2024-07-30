@@ -64,7 +64,7 @@ category('Dapi: sticky meta', () => {
 
   test('save values', async () => {
     await grok.dapi.stickyMeta.setAllValues(schema, col, valDf);
-  });
+  }, {stressTest: true});
 
   test('get values', async () => {
     var col = DG.Column.string('key', 1);
@@ -73,5 +73,5 @@ category('Dapi: sticky meta', () => {
     expect(df.columns.length, schema.properties.length);  
     expect(df.col(property.name)?.name ?? "", property.name);
     expect(df.col(property.name)?.get(0), value);
-  });
+  }, {stressTest: true});
 });

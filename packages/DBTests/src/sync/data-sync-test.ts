@@ -9,5 +9,5 @@ category('data sync', () => {
     await awaitCheck(() => grok.shell.tv?.table?.name === 'PostgresqlTableWide', 'Query first batch timeout', 30000);
     grok.shell.closeTable(grok.shell.tv!.table!);
     grok.shell.tv?.close();
-  });
+  }, {stressTest: true});
 });

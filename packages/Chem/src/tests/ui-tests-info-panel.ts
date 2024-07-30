@@ -205,7 +205,7 @@ category('UI info panel', () => {
     await awaitCheck(() => (desc.nextSibling as HTMLElement).querySelector('table') !== null,
       'descriptors table hasn\'t been created', 20000);
     desc?.click(); await delay(100);
-  });
+  }, {stressTest: true});
 
   after(async () => {
     grok.shell.closeAll();

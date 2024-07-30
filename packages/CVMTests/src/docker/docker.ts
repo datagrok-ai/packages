@@ -10,7 +10,7 @@ category('Packages: Docker', () => {
     if (!container.status.startsWith('stopped'))
       await grok.dapi.docker.dockerContainers.stop(container.id, true);
     await testResponse(container.id);
-  }, {timeout: 60000});
+  }, {timeout: 60000, stressTest: true});
 
   test('Get response: Incorrect', async () => {
     const incorrectId = crypto.randomUUID();
@@ -29,7 +29,7 @@ category('Packages: Docker', () => {
     // response from server, container status is stopped
     expect(response.status, 400);
     await grok.dapi.docker.dockerContainers.run(container.id);
-  }, {timeout: 60000});
+  }, {timeout: 60000, stressTest: true});
 
   test('Container timeout', async () => {
     let container = await grok.dapi.docker.dockerContainers.filter(containerOnDemandName).first();
@@ -37,7 +37,7 @@ category('Packages: Docker', () => {
     await delay(70000);
     container = await grok.dapi.docker.dockerContainers.filter(containerOnDemandName).first();
     expect(container.status.startsWith('stopped'), true);
-  }, {timeout: 120000});
+  }, {timeout: 120000, stressTest: true});
 
   test('Get container logs: Incorrect', async () => {
     const incorrectId = crypto.randomUUID();
@@ -50,7 +50,7 @@ category('Packages: Docker', () => {
     await expectExceptionAsync(async () => {
       await grok.dapi.docker.dockerContainers.getContainerLogs(incorrectId);
     });
-  });
+  }, {stressTest: true});
 });
 
 async function testResponse(containerId: string): Promise<void> {

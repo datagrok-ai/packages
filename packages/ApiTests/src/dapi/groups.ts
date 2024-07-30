@@ -14,7 +14,7 @@ category('Dapi: groups', () => {
 
   test('find group', async () => {
     expect((await grok.dapi.groups.filter('unexisting group').first()) == undefined);
-  });
+  }, {stressTest: true});
 
   test('create group', async () => {
     let localTestGroup = null as any;
@@ -24,7 +24,7 @@ category('Dapi: groups', () => {
     } finally {
       await grok.dapi.groups.delete(localTestGroup);
     }
-  });
+  }, {stressTest: true});
 
   test('create subgroup', async () => {
     let subgroup = null as any;
@@ -35,7 +35,7 @@ category('Dapi: groups', () => {
     } finally {
       await grok.dapi.groups.delete(subgroup);
     }
-  });
+  }, {stressTest: true});
 
   test('include member', async () => {
     let subgroup = null as any;
@@ -64,7 +64,7 @@ category('Dapi: groups', () => {
       await grok.dapi.groups.delete(demoGroup);
       await grok.dapi.groups.delete(subgroup);
     }
-  });
+  }, {stressTest: true});
 
   test('delete group', async () => {
     const localTestGroupName = 'js-api-test-group1';
@@ -72,7 +72,7 @@ category('Dapi: groups', () => {
     expect((await grok.dapi.groups.filter(localTestGroupName).first())?.name, localTestGroupName);
     await grok.dapi.groups.delete(localTestGroup);
     expect((await grok.dapi.groups.filter(localTestGroupName).first()) == undefined);
-  });
+  }, {stressTest: true});
 
   after(async () => {
     await grok.dapi.groups.delete(testGroup);

@@ -10,7 +10,7 @@ category('Dapi: user data storage', () => {
     const value = 'value';
     await grok.dapi.userDataStorage.postValue(storageName, key, value);
     expect(await grok.dapi.userDataStorage.getValue(storageName, key), value);
-  });
+  }, {stressTest: true});
 
   test('post and get map', async () => {
     const storageName = 'js-api-storage-name2';
@@ -18,7 +18,7 @@ category('Dapi: user data storage', () => {
     await grok.dapi.userDataStorage.post(storageName, value);
     const receivedValue = await grok.dapi.userDataStorage.get(storageName);
     expect(JSON.stringify(receivedValue), JSON.stringify(value));
-  });
+  }, {stressTest: true});
 
   test('put', async () => {
     const storageName = 'js-api-storage-name3';
@@ -31,7 +31,7 @@ category('Dapi: user data storage', () => {
     await grok.dapi.userDataStorage.put(storageName, value2);
     const receivedValue = await grok.dapi.userDataStorage.get(storageName);
     expectObject(receivedValue, value2);
-  });
+  }, {stressTest: true});
 
   test('delete', async () => {
     const storageName = 'js-api-storage-name4';
@@ -43,5 +43,5 @@ category('Dapi: user data storage', () => {
 
     const receivedValue = await grok.dapi.userDataStorage.getValue(storageName, key);
     expect(receivedValue == undefined);
-  });
+  }, {stressTest: true});
 });

@@ -9,5 +9,5 @@ category('Dapi: tables', () => {
     df.name = 'dataframe';
     const id = await grok.dapi.tables.uploadDataFrame(df);
     await grok.dapi.tables.getTable(id);
-  });
+  }, {stressTest: true});
 });

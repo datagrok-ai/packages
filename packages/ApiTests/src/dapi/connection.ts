@@ -33,7 +33,7 @@ category('Dapi: connection', () => {
 
     await grok.dapi.connections.delete(dc);
     expect(await grok.dapi.connections.find(dc.id) == undefined);
-  });
+  }, {stressTest: true});
 
   test('JS postprocess', async () => {
     const script = `

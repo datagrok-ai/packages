@@ -42,7 +42,7 @@
     "@datagrok-libraries/chem-meta": "^1.2.4",
     "@datagrok-libraries/ml": "^6.6.14",
     "@datagrok-libraries/math": "^1.1.10",
-    "@datagrok-libraries/utils": "^4.2.14",
+    "@datagrok-libraries/utils": "../../libraries/utils",
     "@datagrok-libraries/tutorials": "^1.3.6",
     "@types/pako": "^2.0.3",
     "typescript-lru-cache": "latest",

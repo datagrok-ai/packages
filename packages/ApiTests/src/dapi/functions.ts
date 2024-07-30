@@ -22,7 +22,7 @@ category('Dapi: functions calls', async () => {
     funcCall.newId();
     const savedFuncCall = await GDF.calls.save(funcCall);
     expect(savedFuncCall.inputs['x'], funcCall.inputs['x']);
-  });
+  }, {stressTest: true});
 
   test('save & get author', async () => {
     const func: DG.Func = await grok.functions.eval('Sin');
@@ -48,7 +48,7 @@ category('Dapi: functions calls', async () => {
 
     expectTable(funcCall.inputs['table'], await grok.dapi.tables.getTable(loadedInputTableId));
     expectTable(funcCall.outputs['tableOut'], await grok.dapi.tables.getTable(loadedOutputTableId));
-  });
+  }, {stressTest: true});
 
   test('save with fileInfo', async () => {
     const func = await grok.functions.eval('ApiTests:FileFuncTest');
@@ -62,7 +62,7 @@ category('Dapi: functions calls', async () => {
     expect(savedParam.property.propertyType, DG.TYPE.FILE);
     expect(savedParam.value /* id of fileInfo */, fileInfo.id /* id is added during grok.dapi.files.write */);
     expect(await grok.dapi.files.readAsText(savedParam.value)/* read by id */, 'Hello world!');
-  });
+  }, {stressTest: true});
 
   test('save options', async () => {
     const func: DG.Func = await grok.functions.eval('Sin');
@@ -71,7 +71,7 @@ category('Dapi: functions calls', async () => {
     funcCall.options['testName'] = 'testValue';
     const savedFuncCall = await GDF.calls.save(funcCall);
     expect(savedFuncCall.options['testName'], 'testValue');
-  });
+  }, {stressTest: true});
 
   test('save parentFunccall', async () => {
     const func: DG.Func = await grok.functions.eval('Sin');

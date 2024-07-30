@@ -27,14 +27,14 @@ category('chemprop', () => {
     binBlob = await file?.async('uint8array')!;
         
     expect(file !== null, true);
-  });
+  }, {stressTest: true});
 
   test('applyModel', async () => {
     const smilesColumn = table.columns.byName('canonical_smiles');
     const column = await applyModelChemprop(binBlob, DG.DataFrame.fromColumns([smilesColumn]).toCsv());
         
     expect(column.length, 30);
-  });
+  }, {stressTest: true});
 });
 
 function getParameterValues() {

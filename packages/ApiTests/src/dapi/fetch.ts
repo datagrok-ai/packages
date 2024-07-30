@@ -17,7 +17,7 @@ category('Dapi: fetch', () => {
 
     if (!res.ok)
       throw new Error('Post failed');
-  });
+  }, {stressTest: true});
 
   test('get', async () => {
     const url = 'https://dev.datagrok.ai/demo/demog.csv';
@@ -29,5 +29,5 @@ category('Dapi: fetch', () => {
       throw new Error('Response text is empty');
 
     DG.DataFrame.fromCsv(resText);
-  });
+  }, {stressTest: true});
 });

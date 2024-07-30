@@ -41,6 +41,7 @@ export interface TestOptions {
   skipReason?: string;
   isAggregated?: boolean;
   benchmark?: boolean;
+  stressTest?: boolean;
 }
 
 export interface CategoryOptions {

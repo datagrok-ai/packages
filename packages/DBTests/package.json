@@ -9,7 +9,7 @@
   },
   "servicePackage": true,
   "dependencies": {
-    "@datagrok-libraries/utils": "^4.2.13",
+    "@datagrok-libraries/utils": "../../libraries/utils",
     "cash-dom": "latest",
     "datagrok-api": "^1.17.0",
     "dayjs": "latest"
