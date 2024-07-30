@@ -15,7 +15,7 @@ import * as testUtils from '../utils/test-utils';
 export function test(args: TestArgs): boolean {
   const options = Object.keys(args).slice(1);
   const commandOptions = ['host', 'package', 'csv', 'gui', 'catchUnhandled', 'platform', 'core',
-    'report', 'skip-build', 'skip-publish', 'path', 'record', 'verbose', 'benchmark', 'category'];
+    'report', 'skip-build', 'skip-publish', 'path', 'record', 'verbose', 'benchmark', 'category', 'test'];
   const nArgs = args['_'].length;
   const curDir = process.cwd();
   const grokDir = path.join(os.homedir(), '.grok');
@@ -48,6 +48,11 @@ export function test(args: TestArgs): boolean {
   let categoryToCheck: string | undefined = undefined;
   if (args.category) {
     categoryToCheck = args.category.toString();
+  }
+
+  let testToCheck: string | undefined = undefined;
+  if (args.category && args.test) {
+    testToCheck = args.test.toString();
   }
 
   if (args.package) {
@@ -146,7 +151,7 @@ export function test(args: TestArgs): boolean {
 
     function runTest(timeout: number, options: {
       path?: string, catchUnhandled?: boolean, core?: boolean,
-      report?: boolean, record?: boolean, verbose?: boolean, benchmark?: boolean, platform?: boolean, category?:string
+      report?: boolean, record?: boolean, verbose?: boolean, benchmark?: boolean, platform?: boolean, category?:string, test?:string
     } = {}): Promise<resultObject> {
       return testUtils.timeout(async () => {
         const consoleLogOutputDir = './test-console-output.log';
@@ -180,7 +185,8 @@ export function test(args: TestArgs): boolean {
               verbose?: boolean
             } = {
               testContext: testContext,
-              category: options.category
+              category: options.category,
+              test: options.test
             };
             if (options.path) {
               const split = options.path.split(' -- ');
@@ -260,11 +266,11 @@ export function test(args: TestArgs): boolean {
         color.error('Initialization failed.');
         throw e;
       }
-      
+
       const r = await runTest(7200000, {
         path: args.path, verbose: args.verbose, platform: args.platform,
         catchUnhandled: args.catchUnhandled, report: args.report, record: args.record, benchmark: args.benchmark,
-        core: args.core, category: categoryToCheck
+        core: args.core, category: categoryToCheck, test: testToCheck
       });
 
       if (r.csv && args.csv) {
@@ -303,6 +309,7 @@ export function test(args: TestArgs): boolean {
 interface TestArgs {
   _: string[],
   category?: any,
+  test?: any,
   path?: string,
   host?: string,
   package?: string,

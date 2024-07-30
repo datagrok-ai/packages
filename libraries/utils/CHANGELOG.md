@@ -1,5 +1,9 @@
 # utils changelog
 
+## 4.2.14 (2024-07-29)
+
+Fixed setting lines width, color and opacity in ScatterPlotLinesRenderer
+
 ## 4.2.13 (2024-07-15)
 
 Added benchmark flag to category options

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as DG from 'datagrok-api/dg';
 import * as C from './constants';
 import * as type from './types';
@@ -89,18 +90,27 @@ export function calculateCliffsStatistics(
  * @param [options] - Options for the algorithm.
  * @param [options.isFiltered] - Whether the dataframe is filtered.
  * @param [options.columns] - Columns to consider when calculating statistics.
+ * @param [options.target] - Target column and category to consider.
+ * @param [options.aggValue] - Column and aggregation type to consider instead of count.
  * @return - Statistics for each monomer position.
  */
 export function calculateMonomerPositionStatistics(activityCol: DG.Column<number>, filter: DG.BitSet,
   positionColumns: DG.Column<string>[], options: {
     isFiltered?: boolean,
-    columns?: string[]
+    columns?: string[],
+    target?: {
+      col: DG.Column<string>,
+      cat: string,
+    },
+    aggValue?: {
+      col: DG.Column,
+      type: DG.AGG
+    }
   } = {}): MonomerPositionStats {
   options.isFiltered ??= false;
   const monomerPositionObject = {general: {}} as MonomerPositionStats & { general: SummaryStats };
   let activityColData: Float64Array = activityCol.getRawData() as Float64Array;
   let sourceDfLen = activityCol.length;
-
   if (options.isFiltered) {
     sourceDfLen = filter.trueCount;
     const tempActivityData = new Float64Array(sourceDfLen);
@@ -111,9 +121,15 @@ export function calculateMonomerPositionStatistics(activityCol: DG.Column<number
 
     activityColData = tempActivityData;
     positionColumns = DG.DataFrame.fromColumns(positionColumns).clone(filter).columns.toList();
+    if (options.target)
+      options.target.col = options.target.col.clone(filter);
+    if (options.aggValue)
+      options.aggValue.col = options.aggValue.col.clone(filter);
   }
   options.columns ??= positionColumns.map((col) => col.name);
-
+  const targetColIndexes = options.target?.col?.getRawData();
+  const targetColCat = options.target?.col.categories;
+  const targetIndex = options.target?.cat ? targetColCat?.indexOf(options.target.cat) : -1;
   for (const posCol of positionColumns) {
     if (!options.columns.includes(posCol.name))
       continue;
@@ -131,13 +147,13 @@ export function calculateMonomerPositionStatistics(activityCol: DG.Column<number
 
       const boolArray: boolean[] = new Array(sourceDfLen).fill(false);
       for (let i = 0; i < sourceDfLen; ++i) {
-        if (posColData[i] === categoryIndex)
+        if (posColData[i] === categoryIndex && (!targetColIndexes || targetIndex === -1 || targetColIndexes[i] === targetIndex))
           boolArray[i] = true;
       }
       const bitArray = BitArray.fromValues(boolArray);
-      const stats = bitArray.allFalse || bitArray.allTrue ?
-        {count: sourceDfLen, meanDifference: 0, ratio: 1.0, pValue: null, mask: bitArray, mean: activityCol.stats.avg} :
-        getStats(activityColData, bitArray);
+      if (bitArray.allFalse)
+        continue;
+      const stats = getStats(activityColData, bitArray, options.aggValue);
       currentPositionObject[monomer] = stats;
       getSummaryStats(currentPositionObject.general, stats);
     }

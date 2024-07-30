@@ -51,7 +51,6 @@ async function openDemoData(chosenFile: string): Promise<void> {
 }
 
 //name: Peptides
-//tags: app
 //output: view v
 export function Peptides(): DG.View {
   const appHeader = u2.appHeader({

@@ -675,6 +675,7 @@ export class LogoSummaryTable extends DG.JsViewer implements ILogoSummaryTable {
               showBinSelector: false,
               backColor: DG.Color.toHtml(DG.Color.white),
               xAxisHeight: 1,
+              showSplitSelector: false,
             });
             viewer.root.style.width = 'auto';
             distCache.set(currentRowIdx, viewer);

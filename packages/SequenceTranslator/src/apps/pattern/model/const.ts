@@ -57,6 +57,12 @@ export namespace LEGEND_SETTINGS_KEYS {
 export namespace PATTERN_RECORD_KEYS {
   export const PATTERN_CONFIG = 'patternConfig';
   export const AUTHOR_ID = 'authorID';
+  export const DATE = 'date';
+}
+
+export namespace DATE_KEYS {
+  export const CREATE = 'create';
+  export const MODIFY = 'modify';
 }
 
 export const GRAPH_SETTINGS_KEY_LIST = [
@@ -70,11 +76,6 @@ export const LEGEND_SETTINGS_KEY_LIST = [
   LEGEND_SETTINGS_KEYS.PATTERN_NAME,
   LEGEND_SETTINGS_KEYS.PATTERN_COMMENT,
   LEGEND_SETTINGS_KEYS.NUCLEOTIDES_WITH_NUMERIC_LABELS
-];
-
-export const PATTERN_RECORD_KEY_LIST = [
-  PATTERN_RECORD_KEYS.PATTERN_CONFIG,
-  PATTERN_RECORD_KEYS.AUTHOR_ID
 ];
 
 export const EXAMPLE_PATTERN_CONFIG =
@@ -119,3 +120,5 @@ export const EXAMPLE_PATTERN_CONFIG =
   },
   'authorID': ''
 };
+
+export const DEFAULT_DATE = '2024-01-01T18:00:00.000Z';

@@ -109,8 +109,10 @@ export async function runKNNImputer(df?: DG.DataFrame): Promise<void> {
 
   // Distance components
   let distType = DISTANCE_TYPE.EUCLIDEAN;
-  const distTypeInput: DG.ChoiceInput<DISTANCE_TYPE> = ui.input.choice(TITLE.DISTANCE, {value: distType,
-    items: [DISTANCE_TYPE.EUCLIDEAN, DISTANCE_TYPE.MANHATTAN], onValueChanged: () => distType = distTypeInput.value ?? DISTANCE_TYPE.EUCLIDEAN}) as DG.ChoiceInput<DISTANCE_TYPE>;
+  const distTypeInput: DG.ChoiceInput<DISTANCE_TYPE> = ui.input.choice(TITLE.DISTANCE, {
+    value: distType,
+    items: [DISTANCE_TYPE.EUCLIDEAN, DISTANCE_TYPE.MANHATTAN],
+    onValueChanged: () => distType = distTypeInput.value ?? DISTANCE_TYPE.EUCLIDEAN}) as DG.ChoiceInput<DISTANCE_TYPE>;
   distTypeInput.setTooltip(HINT.DISTANCE);
 
   // Target columns components (cols with missing values to be imputed)
@@ -193,8 +195,15 @@ export async function runKNNImputer(df?: DG.DataFrame): Promise<void> {
     distTypeInput.root.hidden = true; // this input will be used further
 
     // The following should provide a slider (see th bug https://reddata.atlassian.net/browse/GROK-14431)
-    // @ts-ignore
-    const prop = DG.Property.fromOptions({'name': name, 'inputType': 'Float', 'min': 0, 'max': 10, 'showSlider': true, 'step': 1});
+    const prop = DG.Property.fromOptions({
+      'name': name,
+      'inputType': 'Float',
+      'min': 0,
+      'max': 10,
+      // @ts-ignore
+      'showSlider': true,
+      'step': 1,
+    });
     const weightInput = ui.input.forProperty(prop);
     weightInput.value = settings.defaultWeight;
     weightInput.onChanged(() => {
@@ -239,7 +248,8 @@ export async function runKNNImputer(df?: DG.DataFrame): Promise<void> {
     .onOK(() => {
       okClicked = true;
       dlg.close();
-      availableFeatureColsNames.filter((name) => !selectedFeatureColNames.includes(name)).forEach((name) => featuresMetrics.delete(name));
+      availableFeatureColsNames.filter((name) => !selectedFeatureColNames.includes(name))
+        .forEach((name) => featuresMetrics.delete(name));
 
       try {
         const failedToImpute = impute(df!, targetColNames, featuresMetrics, misValsInds, distType, neighbors, inPlace);
@@ -256,5 +266,5 @@ export async function runKNNImputer(df?: DG.DataFrame): Promise<void> {
       }
     }).onClose.subscribe(() => !okClicked && reject());
 
-    return promise;
+  return promise;
 } // runKNNImputer

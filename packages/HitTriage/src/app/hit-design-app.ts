@@ -182,6 +182,29 @@ export class HitDesignApp extends HitAppBase<HitDesignTemplate> {
     this._designViewName = this.campaign?.name ?? this._designViewName;
     view.name = this._designViewName;
     this.processedValues = this.dataFrame!.getCol(this.molColName).toList();
+
+    const performSingleCellCalculations = async (newValueIdx: number, newValue?: string) => {
+      const computeObj = this.template!.compute;
+      if (!newValue || newValue === '')
+        return;
+
+      const calcDf =
+              await calculateSingleCellValues(
+                newValue, computeObj.descriptors.args, computeObj.functions, computeObj.scripts, computeObj.queries);
+
+      for (const col of calcDf.columns.toList()) {
+        if (col.name === HitDesignMolColName) continue;
+        if (!this.dataFrame!.columns.contains(col.name)) {
+          const newCol = this.dataFrame!.columns.addNew(col.name, col.type);
+          newCol.semType = col.semType;
+        }
+            this.dataFrame!.col(col.name)!.set(newValueIdx, col.get(0), false);
+      }
+          this.dataFrame!.fireValuesChanged();
+          this.saveCampaign(undefined, false);
+    };
+
+
     setTimeout(async () => {
       view._onAdded();
       await new Promise((r) => setTimeout(r, 1000)); // needed for substruct filter
@@ -249,7 +272,7 @@ export class HitDesignApp extends HitAppBase<HitDesignTemplate> {
             return;
           if (!viewer.tableView || viewer.tableView.id !== view.id)
             return;
-          if (args?.args?.item?.tableColumn?.name !== this.molColName)
+          if (args?.args?.item?.tableColumn?.name !== this.molColName || !args?.args?.item?.isTableCell)
             return;
           const menu: DG.Menu = args?.args?.menu;
           if (!menu)
@@ -275,6 +298,18 @@ export class HitDesignApp extends HitAppBase<HitDesignTemplate> {
               console.error(e);
             }
           });
+
+          const cellIndex = args?.args?.item?.tableRowIndex;
+          const cellValue = args?.args?.item?.cell?.value;
+          if (cellValue && (cellIndex ?? -1) > -1) {
+            menu.item('Re-Run Calculations', async () => {
+              try {
+                await performSingleCellCalculations(cellIndex, cellValue);
+              } catch (e) {
+                console.error(e);
+              }
+            });
+          }
         } catch (e: any) {
           grok.log.error(e);
         }
@@ -290,14 +325,26 @@ export class HitDesignApp extends HitAppBase<HitDesignTemplate> {
           const newValue = gc.cell.value;
           const newValueIdx = gc.tableRowIndex!;
           let newVid = this.dataFrame!.col(ViDColName)?.get(newValueIdx);
+          let foundMatch = false;
           // try to find existing molecule
           if (newValue) {
             try {
-              const sims = await grok.chem.getSimilarities(gc.tableColumn, newValue);
-              if (sims?.length === this.dataFrame!.rowCount) {
-                for (let i = 0; i < sims.length; i++) {
-                  if (sims.get(i) === 1 && i !== newValueIdx && this.dataFrame!.col(ViDColName)?.get(i)) {
+              const canonicals = gc.tableColumn.toList().map((cv) => {
+                try {
+                  return grok.chem.convert(cv, grok.chem.Notation.Unknown, grok.chem.Notation.Smiles);
+                } catch (e) {
+                  return '';
+                }
+              },
+              );
+              const canonicalNewValue =
+                grok.chem.convert(newValue, grok.chem.Notation.Unknown, grok.chem.Notation.Smiles);
+              if (canonicals?.length === this.dataFrame!.rowCount) {
+                for (let i = 0; i < canonicals.length; i++) {
+                  if (canonicals[i] === canonicalNewValue &&
+                      i !== newValueIdx && this.dataFrame!.col(ViDColName)?.get(i)) {
                     newVid = this.dataFrame!.col(ViDColName)?.get(i);
+                    foundMatch = true;
                     break;
                   }
                 }
@@ -307,7 +354,7 @@ export class HitDesignApp extends HitAppBase<HitDesignTemplate> {
             }
           }
           // if the vid was duplicated, generate a new one
-          if (this.duplicateVidCache &&
+          if (this.duplicateVidCache && !foundMatch &&
             this.duplicateVidCache.valueCounts[this.duplicateVidCache.indexes[newValueIdx]] > 1)
             newVid = null;
 
@@ -316,25 +363,7 @@ export class HitDesignApp extends HitAppBase<HitDesignTemplate> {
 
           this.dataFrame!.col(ViDColName)!.set(newValueIdx, newVid, false);
 
-
-          const computeObj = this.template!.compute;
-          if (!newValue || newValue === '')
-            return;
-
-          const calcDf =
-              await calculateSingleCellValues(
-                newValue, computeObj.descriptors.args, computeObj.functions, computeObj.scripts, computeObj.queries);
-
-          for (const col of calcDf.columns.toList()) {
-            if (col.name === HitDesignMolColName) continue;
-            if (!this.dataFrame!.columns.contains(col.name)) {
-              const newCol = this.dataFrame!.columns.addNew(col.name, col.type);
-              newCol.semType = col.semType;
-            }
-            this.dataFrame!.col(col.name)!.set(newValueIdx, col.get(0), false);
-          }
-          this.dataFrame!.fireValuesChanged();
-          this.saveCampaign(undefined, false);
+          performSingleCellCalculations(newValueIdx, newValue);
         } catch (e) {
           console.error(e);
         }

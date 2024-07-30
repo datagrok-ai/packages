@@ -14,6 +14,8 @@ category('Benchmarks: Detectors', () => {
     test(d.friendlyName, async () => {
       const res: any = [];
       let start: number;
+      await d.package.load({ file: 'package.js'});
+      await d.package.load({ file: d.options.file});
       for (const col of cols.slice()) {
         start = Date.now();
         await d.apply({col: col});

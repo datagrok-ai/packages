@@ -1,5 +1,9 @@
 # Bio changelog
 
+## 2.13.6 (2024-07-29)
+
+* SequenceChemSimilarity: warning in case reference monomer not found in monomer library
+
 ## 2.13.5 (2024-07-23)
 
 ### Bug fixes

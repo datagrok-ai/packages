@@ -1,5 +1,15 @@
 # Sequence Translator changelog
 
+## 1.3.10 (2024-07-29)
+
+### Features
+
+* Add 'Create/Modified' date metadata to patterns
+
+### Bug fixes
+
+* Load new patterns upon saving / overwriting
+
 ## 1.3.9 (2024-07-23)
 
 * Dependency: datgarok-api >= 1.20.0

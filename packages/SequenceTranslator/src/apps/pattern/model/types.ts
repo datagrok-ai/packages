@@ -1,11 +1,7 @@
-/* Do not change these import lines to match external modules in webpack configuration */
-import * as grok from 'datagrok-api/grok';
-import * as ui from 'datagrok-api/ui';
-import * as DG from 'datagrok-api/dg';
-
 import {
   TERMINI, STRANDS,
-  GRAPH_SETTINGS_KEYS as G, LEGEND_SETTINGS_KEYS as L, PATTERN_RECORD_KEYS as R
+  GRAPH_SETTINGS_KEYS as G, LEGEND_SETTINGS_KEYS as L, PATTERN_RECORD_KEYS as R,
+  DATE_KEYS as D
 } from './const';
 
 export type StrandType = typeof STRANDS[number];
@@ -30,9 +26,15 @@ export type PatternLegendSettings = {
 
 export type PatternConfiguration = PatternGraphSettings & PatternLegendSettings;
 
+type DateRecord = {
+  [D.CREATE]?: string,
+  [D.MODIFY]: string;
+}
+
 export type PatternConfigRecord = {
   [R.PATTERN_CONFIG]: PatternConfiguration,
   [R.AUTHOR_ID]: string,
+  [R.DATE]?: DateRecord
 }
 
 export class PatternNameExistsError extends Error {

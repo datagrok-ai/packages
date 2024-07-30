@@ -243,8 +243,8 @@ function cliffsPairsWidgetParts(table: DG.DataFrame, options: MutationCliffsOpti
     pairsGrid.root.style.setProperty('width', '100%');
     uniqueSequencesGrid.root.style.removeProperty('width');
     uniqueSequencesGrid.root.style.setProperty('width', '100%');
-    pairsGrid.root.style.height = 'unset';
-    uniqueSequencesGrid.root.style.height = 'unset';
+    pairsGrid.root.style.minHeight = '250px';
+    uniqueSequencesGrid.root.style.minHeight = '250px';
   }, 200);
 
   return {pairsGrid, uniqueSequencesGrid, aminoToInput};

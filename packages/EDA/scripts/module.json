@@ -1,7 +1,7 @@
 {
     "name": "EDA",    
     "folder": "../wasm",
-    "source": ["pcaExport.cpp", "PCA/PCA.cpp", "plsExport.cpp", "PLS/PLS.cpp", "svmApi.cpp", "regression-api.cpp"],    
+    "source": ["pcaExport.cpp", "PCA/PCA.cpp", "plsExport.cpp", "PLS/PLS.cpp", "svmApi.cpp", "regression-api.cpp", "softmax-api.cpp"],
     "optimizationMode": "-O3",    
     "packageFile": "../src/package.ts",
     "packageJsonFile": "../package.json",    

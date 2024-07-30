@@ -118,16 +118,17 @@ export function getActivityDistribution(
  * @param options.fractionDigits - Number of fraction digits for stats values
  * @return - Stats table map
  */
-export function getStatsTableMap(stats: StatsItem, options: { fractionDigits?: number } = {}): StringDictionary {
+export function getStatsTableMap(stats: StatsItem,
+  options: { fractionDigits?: number } = {},
+): StringDictionary {
   options.fractionDigits ??= 3;
   const tableMap: StringDictionary = {
-    'Count': `${stats.count} (${stats.ratio.toFixed(options.fractionDigits)}%)`,
+    'Count': `${stats.count} (${(stats.ratio * 100).toFixed(options.fractionDigits)}%)`,
     'Mean difference': stats.meanDifference.toFixed(options.fractionDigits),
     'Mean activity': stats.mean.toFixed(options.fractionDigits),
   };
-  if (stats.pValue !== null)
+  if (stats.pValue != null)
     tableMap['p-value'] = stats.pValue < 0.01 ? '<0.01' : stats.pValue.toFixed(options.fractionDigits);
-
 
   return tableMap;
 }

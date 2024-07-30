@@ -13,6 +13,7 @@ export type StatsItem = {
   ratio: number,
   mask: BitArray,
   mean: number,
+  aggValue?: number,
 };
 
 export type PositionStats = { [monomer: string]: StatsItem } & { general: SummaryStats };
@@ -42,18 +43,23 @@ export type AggregationColumns = { [col: string]: DG.AggregationType };
  * @param bitArray - Bit array to use for the calculation.
  * @return - Statistics for the given data and bit array.
  */
-export function getStats(data: RawData | number[], bitArray: BitArray): StatsItem {
+export function getStats(data: RawData | number[], bitArray: BitArray,
+  aggData?: {col: DG.Column, type: DG.AGG}): StatsItem {
   if (data.length !== bitArray.length && data.some((v, i) => i >= bitArray.length ? v !== 0 : false))
     throw new Error('PeptidesError: Data and bit array have different lengths');
 
-
-  if (bitArray.trueCount() === 0)
-    throw new Error('PeptidesError: One of the samples is empty');
-
-
   const selected = new Float32Array(bitArray.trueCount());
   const rest = new Float32Array(bitArray.falseCount());
-
+  let aggValue: number | undefined;
+  if (aggData) {
+    try {
+      aggValue = DG.DataFrame.fromColumns([aggData.col])
+        .clone(DG.BitSet.fromBytes(bitArray.buffer.buffer, bitArray.length)).col(aggData.col.name)
+        ?.aggregate(aggData.type);
+    } catch (e) {
+      console.error(e);
+    }
+  }
   let selectedIndex = 0;
   let restIndex = 0;
   for (let i = 0; i < bitArray.length; ++i) {
@@ -63,9 +69,9 @@ export function getStats(data: RawData | number[], bitArray: BitArray): StatsIte
       rest[restIndex++] = data[i];
   }
 
-  const selectedMean = selected.reduce((a, b) => a + b, 0) / selected.length;
-  if (selected.length === 1 || rest.length === 1) {
-    const restMean = rest.reduce((a, b) => a + b, 0) / rest.length;
+  const selectedMean = selected.reduce((a, b) => a + b, 0) / Math.max(selected.length, 1);
+  if (selected.length < 2 || rest.length < 2) {
+    const restMean = rest.reduce((a, b) => a + b, 0) / Math.max(rest.length, 1);
     return {
       count: selected.length,
       pValue: null,
@@ -73,6 +79,7 @@ export function getStats(data: RawData | number[], bitArray: BitArray): StatsIte
       meanDifference: selectedMean - restMean,
       ratio: selected.length / (bitArray.length),
       mask: bitArray,
+      aggValue,
     };
   }
 
@@ -85,6 +92,7 @@ export function getStats(data: RawData | number[], bitArray: BitArray): StatsIte
     meanDifference: currentMeanDiff,
     ratio: selected.length / (bitArray.length),
     mask: bitArray,
+    aggValue,
   };
 }
 

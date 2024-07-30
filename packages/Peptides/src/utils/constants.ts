@@ -47,6 +47,8 @@ export enum TAGS {
   POSITION_COL = 'isPositionCol',
   M_P_STATS_CACHE = '.MPStatsCache',
   INVARIANT_MAP_COLOR_CACHE = '.InvariantMapColorCache',
+  INVARIANT_MAP_COLOR_MAX_CACHE = '.InvariantMapColorMaxCache',
+  INVARIANT_MAP_COLOR_MIN_CACHE = '.InvariantMapColorMinCache',
 }
 
 export enum SEM_TYPES {

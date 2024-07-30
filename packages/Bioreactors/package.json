@@ -1,7 +1,7 @@
 {
     "name": "@datagrok/bioreactors",
     "friendlyName": "Bioreactor",
-    "version": "1.1.8",
+    "version": "1.1.9",
     "description": "Simulation of controlled fab-arm exchange mechanism",
     "dependencies": {
       "datagrok-api": "^1.15.0",

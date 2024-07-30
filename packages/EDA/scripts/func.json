@@ -1,1 +1,664 @@
-{"pcaExport.cpp": {"principalComponentAnalysis": {"arguments": {"columns": {"type": "floatColumns"}, "componentsCount": {"type": "num"}, "centerNum": {"type": "num"}, "scaleNum": {"type": "num"}, "components": {"type": "newFloatColumns", "numOfRows": {"ref": "columns", "value": "numOfRows"}, "numOfColumns": {"ref": "componentsCount", "value": "data"}}}, "output": {"type": "tableFromColumns", "source": "components"}, "annotation": ["//name: principalComponentAnalysis", "//input: dataframe table", "//input: column_list columns", "//input: int componentsCount", "//input: int centerNum", "//input: int scaleNum", "//output: dataframe result "], "prototype": "principalComponentAnalysis(table, columns, componentsCount, centerNum, scaleNum)", "prototypeForWebWorker": "principalComponentAnalysisInWebWorker(table, columns, componentsCount, centerNum, scaleNum)", "callArgs": "[columns, componentsCount, centerNum, scaleNum]"}, "error": {"arguments": {"col1": {"type": "floatColumn"}, "col2": {"type": "floatColumn"}}, "output": {"type": "double", "source": "_callResult"}, "annotation": ["//name: error", "//input: dataframe df", "//input: column col1", "//input: column col2", "//output: double mad "], "prototype": "error(df, col1, col2)", "prototypeForWebWorker": "errorInWebWorker(df, col1, col2)", "callArgs": "[col1, col2]"}}, "PCA/PCA.cpp": {}, "plsExport.cpp": {"partialLeastSquareRegression": {"arguments": {"features": {"type": "floatColumns"}, "predict": {"type": "floatColumn"}, "componentsCount": {"type": "num"}, "prediction": {"type": "newFloatColumn", "numOfRows": {"ref": "predict", "value": "numOfRows"}}, "regressionCoefficients": {"type": "newFloatColumn", "numOfRows": {"ref": "features", "value": "numOfColumns"}}, "tScores": {"type": "newFloatColumns", "numOfRows": {"ref": "predict", "value": "numOfRows"}, "numOfColumns": {"ref": "componentsCount", "value": "data"}}, "uScores": {"type": "newFloatColumns", "numOfRows": {"ref": "predict", "value": "numOfRows"}, "numOfColumns": {"ref": "componentsCount", "value": "data"}}, "xLoadings": {"type": "newFloatColumns", "numOfRows": {"ref": "features", "value": "numOfColumns"}, "numOfColumns": {"ref": "componentsCount", "value": "data"}}, "yLoadings": {"type": "newFloatColumn", "numOfRows": {"ref": "componentsCount", "value": "data"}}}, "output": {"type": "objects", "source": "['prediction', 'regressionCoefficients', 'tScores', 'uScores', 'xLoadings', 'yLoadings']"}, "annotation": ["//name: partialLeastSquareRegression", "//input: dataframe table", "//input: column_list features", "//input: column predict", "//input: int componentsCount"], "prototype": "partialLeastSquareRegression(table, features, predict, componentsCount)", "prototypeForWebWorker": "partialLeastSquareRegressionInWebWorker(table, features, predict, componentsCount)", "callArgs": "[features, predict, componentsCount]"}}, "PLS/PLS.cpp": {}, "svmApi.cpp": {"generateDataset": {"arguments": {"kernel": {"type": "num"}, "kernelParams": {"type": "floatColumn"}, "samplesCount": {"type": "num"}, "featuresCount": {"type": "num"}, "min": {"type": "num"}, "max": {"type": "num"}, "violatorsPercentage": {"type": "num"}, "dataset": {"type": "newFloatColumns", "numOfRows": {"ref": "samplesCount", "value": "data"}, "numOfColumns": {"ref": "featuresCount", "value": "data"}}, "labels": {"type": "newFloatColumn", "numOfRows": {"ref": "samplesCount", "value": "data"}}}, "output": {"type": "objects", "source": "['dataset', 'labels']"}, "annotation": ["//name: generateDataset", "//input: int kernel", "//input: column kernelParams", "//input: int samplesCount", "//input: int featuresCount", "//input: double min", "//input: double max", "//input: double violatorsPercentage"], "prototype": "generateDataset(kernel, kernelParams, samplesCount, featuresCount, min, max, violatorsPercentage)", "prototypeForWebWorker": "generateDatasetInWebWorker(kernel, kernelParams, samplesCount, featuresCount, min, max, violatorsPercentage)", "callArgs": "[kernel, kernelParams, samplesCount, featuresCount, min, max, violatorsPercentage]"}, "normalizeDataset": {"arguments": {"data": {"type": "floatColumns"}, "normalizedData": {"type": "newFloatColumns", "numOfRows": {"ref": "data", "value": "numOfColumns"}, "numOfColumns": {"ref": "data", "value": "numOfRows"}}, "means": {"type": "newFloatColumn", "numOfRows": {"ref": "data", "value": "numOfColumns"}}, "stdDevs": {"type": "newFloatColumn", "numOfRows": {"ref": "data", "value": "numOfColumns"}}}, "output": {"type": "objects", "source": "['normalizedData', 'means', 'stdDevs']"}, "annotation": ["//name: normalizeDataset", "//input: column_list data"], "prototype": "normalizeDataset(data)", "prototypeForWebWorker": "normalizeDatasetInWebWorker(data)", "callArgs": "[data]"}, "trainLSSVM": {"arguments": {"gamma": {"type": "num"}, "kernel": {"type": "num"}, "kernelParams": {"type": "floatColumn"}, "modelParamsCount": {"type": "num"}, "precomputedWeightsCount": {"type": "num"}, "dataset": {"type": "floatColumns"}, "labels": {"type": "floatColumn"}, "normalizedData": {"type": "newFloatColumns", "numOfRows": {"ref": "dataset", "value": "numOfColumns"}, "numOfColumns": {"ref": "dataset", "value": "numOfRows"}}, "means": {"type": "newFloatColumn", "numOfRows": {"ref": "dataset", "value": "numOfColumns"}}, "stdDevs": {"type": "newFloatColumn", "numOfRows": {"ref": "dataset", "value": "numOfColumns"}}, "modelParams": {"type": "newFloatColumn", "numOfRows": {"ref": "modelParamsCount", "value": "data"}}, "precomputedWeights": {"type": "newFloatColumn", "numOfRows": {"ref": "precomputedWeightsCount", "value": "data"}}}, "output": {"type": "objects", "source": "['normalizedData', 'means', 'stdDevs', 'modelParams', 'precomputedWeights']"}, "annotation": ["//name: trainLSSVM", "//input: double gamma", "//input: int kernel", "//input: column kernelParams", "//input: int modelParamsCount", "//input: int precomputedWeightsCount", "//input: column_list dataset", "//input: column labels"], "prototype": "trainLSSVM(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, dataset, labels)", "prototypeForWebWorker": "trainLSSVMInWebWorker(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, dataset, labels)", "callArgs": "[gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, dataset, labels]"}, "predictByLSSVM": {"arguments": {"kernel": {"type": "num"}, "kernelParams": {"type": "floatColumn"}, "normalizedData": {"type": "floatColumns"}, "labels": {"type": "floatColumn"}, "means": {"type": "floatColumn"}, "stdDevs": {"type": "floatColumn"}, "modelParams": {"type": "floatColumn"}, "precomputedWeights": {"type": "floatColumn"}, "targetData": {"type": "floatColumns"}, "prediction": {"type": "newFloatColumn", "numOfRows": {"ref": "targetData", "value": "numOfRows"}}}, "output": {"type": "column", "source": "prediction"}, "annotation": ["//name: predictByLSSVM", "//input: int kernel", "//input: column kernelParams", "//input: column_list normalizedData", "//input: column labels", "//input: column means", "//input: column stdDevs", "//input: column modelParams", "//input: column precomputedWeights", "//input: column_list targetData", "//output: column prediction"], "prototype": "predictByLSSVM(kernel, kernelParams, normalizedData, labels, means, stdDevs, modelParams, precomputedWeights, targetData)", "prototypeForWebWorker": "predictByLSSVMInWebWorker(kernel, kernelParams, normalizedData, labels, means, stdDevs, modelParams, precomputedWeights, targetData)", "callArgs": "[kernel, kernelParams, normalizedData, labels, means, stdDevs, modelParams, precomputedWeights, targetData]"}, "trainAndAnalyzeLSSVM": {"arguments": {"gamma": {"type": "num"}, "kernel": {"type": "num"}, "kernelParams": {"type": "floatColumn"}, "modelParamsCount": {"type": "num"}, "precomputedWeightsCount": {"type": "num"}, "confusionMatrixElementsCount": {"type": "num"}, "dataset": {"type": "floatColumns"}, "labels": {"type": "floatColumn"}, "normalizedData": {"type": "newFloatColumns", "numOfRows": {"ref": "dataset", "value": "numOfColumns"}, "numOfColumns": {"ref": "dataset", "value": "numOfRows"}}, "means": {"type": "newFloatColumn", "numOfRows": {"ref": "dataset", "value": "numOfColumns"}}, "stdDevs": {"type": "newFloatColumn", "numOfRows": {"ref": "dataset", "value": "numOfColumns"}}, "modelParams": {"type": "newFloatColumn", "numOfRows": {"ref": "modelParamsCount", "value": "data"}}, "precomputedWeights": {"type": "newFloatColumn", "numOfRows": {"ref": "precomputedWeightsCount", "value": "data"}}, "predictedLabels": {"type": "newFloatColumn", "numOfRows": {"ref": "dataset", "value": "numOfRows"}}, "correctness": {"type": "newFloatColumn", "numOfRows": {"ref": "dataset", "value": "numOfRows"}}, "consfusionMatrix": {"type": "newIntColumn", "numOfRows": {"ref": "confusionMatrixElementsCount", "value": "data"}}}, "output": {"type": "objects", "source": "['normalizedData', 'means', 'stdDevs', 'modelParams', 'precomputedWeights', 'predictedLabels', 'correctness', 'consfusionMatrix']"}, "annotation": ["//name: trainAndAnalyzeLSSVM", "//input: double gamma", "//input: int kernel", "//input: column kernelParams", "//input: int modelParamsCount", "//input: int precomputedWeightsCount", "//input: int confusionMatrixElementsCount", "//input: column_list dataset", "//input: column labels"], "prototype": "trainAndAnalyzeLSSVM(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, confusionMatrixElementsCount, dataset, labels)", "prototypeForWebWorker": "trainAndAnalyzeLSSVMInWebWorker(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, confusionMatrixElementsCount, dataset, labels)", "callArgs": "[gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, confusionMatrixElementsCount, dataset, labels]"}}, "regression-api.cpp": {"fitLinearRegressionParamsWithDataNormalizing": {"arguments": {"features": {"type": "floatColumns"}, "featureAvgs": {"type": "floatColumn"}, "featureStdDevs": {"type": "floatColumn"}, "targets": {"type": "floatColumn"}, "targetsAvg": {"type": "num"}, "targetsStdDev": {"type": "num"}, "paramsCount": {"type": "num"}, "params": {"type": "newFloatColumn", "numOfRows": {"ref": "paramsCount", "value": "data"}}}, "output": {"type": "column", "source": "params"}, "annotation": ["//name: fitLinearRegressionParamsWithDataNormalizing", "//input: column_list features", "//input: column featureAvgs", "//input: column featureStdDevs", "//input: column targets", "//input: double targetsAvg", "//input: double targetsStdDev", "//input: int paramsCount", "//output: column params"], "prototype": "fitLinearRegressionParamsWithDataNormalizing(features, featureAvgs, featureStdDevs, targets, targetsAvg, targetsStdDev, paramsCount)", "prototypeForWebWorker": "fitLinearRegressionParamsWithDataNormalizingInWebWorker(features, featureAvgs, featureStdDevs, targets, targetsAvg, targetsStdDev, paramsCount)", "callArgs": "[features, featureAvgs, featureStdDevs, targets, targetsAvg, targetsStdDev, paramsCount]"}, "fitLinearRegressionParams": {"arguments": {"features": {"type": "floatColumns"}, "targets": {"type": "floatColumn"}, "paramsCount": {"type": "num"}, "params": {"type": "newFloatColumn", "numOfRows": {"ref": "paramsCount", "value": "data"}}}, "output": {"type": "column", "source": "params"}, "annotation": ["//name: fitLinearRegressionParams", "//input: column_list features", "//input: column targets", "//input: int paramsCount", "//output: column params"], "prototype": "fitLinearRegressionParams(features, targets, paramsCount)", "prototypeForWebWorker": "fitLinearRegressionParamsInWebWorker(features, targets, paramsCount)", "callArgs": "[features, targets, paramsCount]"}}}
+{
+    "pcaExport.cpp": {
+        "principalComponentAnalysis": {
+            "arguments": {
+                "columns": {
+                    "type": "floatColumns"
+                },
+                "componentsCount": {
+                    "type": "num"
+                },
+                "centerNum": {
+                    "type": "num"
+                },
+                "scaleNum": {
+                    "type": "num"
+                },
+                "components": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "columns",
+                        "value": "numOfRows"
+                    },
+                    "numOfColumns": {
+                        "ref": "componentsCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "tableFromColumns",
+                "source": "components"
+            },
+            "annotation": [
+                "//name: principalComponentAnalysis",
+                "//input: dataframe table",
+                "//input: column_list columns",
+                "//input: int componentsCount",
+                "//input: int centerNum",
+                "//input: int scaleNum",
+                "//output: dataframe result "
+            ],
+            "prototype": "principalComponentAnalysis(table, columns, componentsCount, centerNum, scaleNum)",
+            "prototypeForWebWorker": "principalComponentAnalysisInWebWorker(table, columns, componentsCount, centerNum, scaleNum)",
+            "callArgs": "[columns, componentsCount, centerNum, scaleNum]"
+        },
+        "error": {
+            "arguments": {
+                "col1": {
+                    "type": "floatColumn"
+                },
+                "col2": {
+                    "type": "floatColumn"
+                }
+            },
+            "output": {
+                "type": "double",
+                "source": "_callResult"
+            },
+            "annotation": [
+                "//name: error",
+                "//input: dataframe df",
+                "//input: column col1",
+                "//input: column col2",
+                "//output: double mad "
+            ],
+            "prototype": "error(df, col1, col2)",
+            "prototypeForWebWorker": "errorInWebWorker(df, col1, col2)",
+            "callArgs": "[col1, col2]"
+        }
+    },
+    "PCA/PCA.cpp": {},
+    "plsExport.cpp": {
+        "partialLeastSquareRegression": {
+            "arguments": {
+                "features": {
+                    "type": "floatColumns"
+                },
+                "predict": {
+                    "type": "floatColumn"
+                },
+                "componentsCount": {
+                    "type": "num"
+                },
+                "prediction": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "predict",
+                        "value": "numOfRows"
+                    }
+                },
+                "regressionCoefficients": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "features",
+                        "value": "numOfColumns"
+                    }
+                },
+                "tScores": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "predict",
+                        "value": "numOfRows"
+                    },
+                    "numOfColumns": {
+                        "ref": "componentsCount",
+                        "value": "data"
+                    }
+                },
+                "uScores": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "predict",
+                        "value": "numOfRows"
+                    },
+                    "numOfColumns": {
+                        "ref": "componentsCount",
+                        "value": "data"
+                    }
+                },
+                "xLoadings": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "features",
+                        "value": "numOfColumns"
+                    },
+                    "numOfColumns": {
+                        "ref": "componentsCount",
+                        "value": "data"
+                    }
+                },
+                "yLoadings": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "componentsCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "objects",
+                "source": "['prediction', 'regressionCoefficients', 'tScores', 'uScores', 'xLoadings', 'yLoadings']"
+            },
+            "annotation": [
+                "//name: partialLeastSquareRegression",
+                "//input: dataframe table",
+                "//input: column_list features",
+                "//input: column predict",
+                "//input: int componentsCount"
+            ],
+            "prototype": "partialLeastSquareRegression(table, features, predict, componentsCount)",
+            "prototypeForWebWorker": "partialLeastSquareRegressionInWebWorker(table, features, predict, componentsCount)",
+            "callArgs": "[features, predict, componentsCount]"
+        }
+    },
+    "PLS/PLS.cpp": {},
+    "svmApi.cpp": {
+        "generateDataset": {
+            "arguments": {
+                "kernel": {
+                    "type": "num"
+                },
+                "kernelParams": {
+                    "type": "floatColumn"
+                },
+                "samplesCount": {
+                    "type": "num"
+                },
+                "featuresCount": {
+                    "type": "num"
+                },
+                "min": {
+                    "type": "num"
+                },
+                "max": {
+                    "type": "num"
+                },
+                "violatorsPercentage": {
+                    "type": "num"
+                },
+                "dataset": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "samplesCount",
+                        "value": "data"
+                    },
+                    "numOfColumns": {
+                        "ref": "featuresCount",
+                        "value": "data"
+                    }
+                },
+                "labels": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "samplesCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "objects",
+                "source": "['dataset', 'labels']"
+            },
+            "annotation": [
+                "//name: generateDataset",
+                "//input: int kernel",
+                "//input: column kernelParams",
+                "//input: int samplesCount",
+                "//input: int featuresCount",
+                "//input: double min",
+                "//input: double max",
+                "//input: double violatorsPercentage"
+            ],
+            "prototype": "generateDataset(kernel, kernelParams, samplesCount, featuresCount, min, max, violatorsPercentage)",
+            "prototypeForWebWorker": "generateDatasetInWebWorker(kernel, kernelParams, samplesCount, featuresCount, min, max, violatorsPercentage)",
+            "callArgs": "[kernel, kernelParams, samplesCount, featuresCount, min, max, violatorsPercentage]"
+        },
+        "normalizeDataset": {
+            "arguments": {
+                "data": {
+                    "type": "floatColumns"
+                },
+                "normalizedData": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "data",
+                        "value": "numOfColumns"
+                    },
+                    "numOfColumns": {
+                        "ref": "data",
+                        "value": "numOfRows"
+                    }
+                },
+                "means": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "data",
+                        "value": "numOfColumns"
+                    }
+                },
+                "stdDevs": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "data",
+                        "value": "numOfColumns"
+                    }
+                }
+            },
+            "output": {
+                "type": "objects",
+                "source": "['normalizedData', 'means', 'stdDevs']"
+            },
+            "annotation": [
+                "//name: normalizeDataset",
+                "//input: column_list data"
+            ],
+            "prototype": "normalizeDataset(data)",
+            "prototypeForWebWorker": "normalizeDatasetInWebWorker(data)",
+            "callArgs": "[data]"
+        },
+        "trainLSSVM": {
+            "arguments": {
+                "gamma": {
+                    "type": "num"
+                },
+                "kernel": {
+                    "type": "num"
+                },
+                "kernelParams": {
+                    "type": "floatColumn"
+                },
+                "modelParamsCount": {
+                    "type": "num"
+                },
+                "precomputedWeightsCount": {
+                    "type": "num"
+                },
+                "dataset": {
+                    "type": "floatColumns"
+                },
+                "labels": {
+                    "type": "floatColumn"
+                },
+                "normalizedData": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfColumns"
+                    },
+                    "numOfColumns": {
+                        "ref": "dataset",
+                        "value": "numOfRows"
+                    }
+                },
+                "means": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfColumns"
+                    }
+                },
+                "stdDevs": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfColumns"
+                    }
+                },
+                "modelParams": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "modelParamsCount",
+                        "value": "data"
+                    }
+                },
+                "precomputedWeights": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "precomputedWeightsCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "objects",
+                "source": "['normalizedData', 'means', 'stdDevs', 'modelParams', 'precomputedWeights']"
+            },
+            "annotation": [
+                "//name: trainLSSVM",
+                "//input: double gamma",
+                "//input: int kernel",
+                "//input: column kernelParams",
+                "//input: int modelParamsCount",
+                "//input: int precomputedWeightsCount",
+                "//input: column_list dataset",
+                "//input: column labels"
+            ],
+            "prototype": "trainLSSVM(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, dataset, labels)",
+            "prototypeForWebWorker": "trainLSSVMInWebWorker(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, dataset, labels)",
+            "callArgs": "[gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, dataset, labels]"
+        },
+        "predictByLSSVM": {
+            "arguments": {
+                "kernel": {
+                    "type": "num"
+                },
+                "kernelParams": {
+                    "type": "floatColumn"
+                },
+                "normalizedData": {
+                    "type": "floatColumns"
+                },
+                "labels": {
+                    "type": "floatColumn"
+                },
+                "means": {
+                    "type": "floatColumn"
+                },
+                "stdDevs": {
+                    "type": "floatColumn"
+                },
+                "modelParams": {
+                    "type": "floatColumn"
+                },
+                "precomputedWeights": {
+                    "type": "floatColumn"
+                },
+                "targetData": {
+                    "type": "floatColumns"
+                },
+                "prediction": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "targetData",
+                        "value": "numOfRows"
+                    }
+                }
+            },
+            "output": {
+                "type": "column",
+                "source": "prediction"
+            },
+            "annotation": [
+                "//name: predictByLSSVM",
+                "//input: int kernel",
+                "//input: column kernelParams",
+                "//input: column_list normalizedData",
+                "//input: column labels",
+                "//input: column means",
+                "//input: column stdDevs",
+                "//input: column modelParams",
+                "//input: column precomputedWeights",
+                "//input: column_list targetData",
+                "//output: column prediction"
+            ],
+            "prototype": "predictByLSSVM(kernel, kernelParams, normalizedData, labels, means, stdDevs, modelParams, precomputedWeights, targetData)",
+            "prototypeForWebWorker": "predictByLSSVMInWebWorker(kernel, kernelParams, normalizedData, labels, means, stdDevs, modelParams, precomputedWeights, targetData)",
+            "callArgs": "[kernel, kernelParams, normalizedData, labels, means, stdDevs, modelParams, precomputedWeights, targetData]"
+        },
+        "trainAndAnalyzeLSSVM": {
+            "arguments": {
+                "gamma": {
+                    "type": "num"
+                },
+                "kernel": {
+                    "type": "num"
+                },
+                "kernelParams": {
+                    "type": "floatColumn"
+                },
+                "modelParamsCount": {
+                    "type": "num"
+                },
+                "precomputedWeightsCount": {
+                    "type": "num"
+                },
+                "confusionMatrixElementsCount": {
+                    "type": "num"
+                },
+                "dataset": {
+                    "type": "floatColumns"
+                },
+                "labels": {
+                    "type": "floatColumn"
+                },
+                "normalizedData": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfColumns"
+                    },
+                    "numOfColumns": {
+                        "ref": "dataset",
+                        "value": "numOfRows"
+                    }
+                },
+                "means": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfColumns"
+                    }
+                },
+                "stdDevs": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfColumns"
+                    }
+                },
+                "modelParams": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "modelParamsCount",
+                        "value": "data"
+                    }
+                },
+                "precomputedWeights": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "precomputedWeightsCount",
+                        "value": "data"
+                    }
+                },
+                "predictedLabels": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfRows"
+                    }
+                },
+                "correctness": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "dataset",
+                        "value": "numOfRows"
+                    }
+                },
+                "consfusionMatrix": {
+                    "type": "newIntColumn",
+                    "numOfRows": {
+                        "ref": "confusionMatrixElementsCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "objects",
+                "source": "['normalizedData', 'means', 'stdDevs', 'modelParams', 'precomputedWeights', 'predictedLabels', 'correctness', 'consfusionMatrix']"
+            },
+            "annotation": [
+                "//name: trainAndAnalyzeLSSVM",
+                "//input: double gamma",
+                "//input: int kernel",
+                "//input: column kernelParams",
+                "//input: int modelParamsCount",
+                "//input: int precomputedWeightsCount",
+                "//input: int confusionMatrixElementsCount",
+                "//input: column_list dataset",
+                "//input: column labels"
+            ],
+            "prototype": "trainAndAnalyzeLSSVM(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, confusionMatrixElementsCount, dataset, labels)",
+            "prototypeForWebWorker": "trainAndAnalyzeLSSVMInWebWorker(gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, confusionMatrixElementsCount, dataset, labels)",
+            "callArgs": "[gamma, kernel, kernelParams, modelParamsCount, precomputedWeightsCount, confusionMatrixElementsCount, dataset, labels]"
+        }
+    },
+    "regression-api.cpp": {
+        "fitLinearRegressionParamsWithDataNormalizing": {
+            "arguments": {
+                "features": {
+                    "type": "floatColumns"
+                },
+                "featureAvgs": {
+                    "type": "floatColumn"
+                },
+                "featureStdDevs": {
+                    "type": "floatColumn"
+                },
+                "targets": {
+                    "type": "floatColumn"
+                },
+                "targetsAvg": {
+                    "type": "num"
+                },
+                "targetsStdDev": {
+                    "type": "num"
+                },
+                "paramsCount": {
+                    "type": "num"
+                },
+                "params": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "paramsCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "column",
+                "source": "params"
+            },
+            "annotation": [
+                "//name: fitLinearRegressionParamsWithDataNormalizing",
+                "//input: column_list features",
+                "//input: column featureAvgs",
+                "//input: column featureStdDevs",
+                "//input: column targets",
+                "//input: double targetsAvg",
+                "//input: double targetsStdDev",
+                "//input: int paramsCount",
+                "//output: column params"
+            ],
+            "prototype": "fitLinearRegressionParamsWithDataNormalizing(features, featureAvgs, featureStdDevs, targets, targetsAvg, targetsStdDev, paramsCount)",
+            "prototypeForWebWorker": "fitLinearRegressionParamsWithDataNormalizingInWebWorker(features, featureAvgs, featureStdDevs, targets, targetsAvg, targetsStdDev, paramsCount)",
+            "callArgs": "[features, featureAvgs, featureStdDevs, targets, targetsAvg, targetsStdDev, paramsCount]"
+        },
+        "fitLinearRegressionParams": {
+            "arguments": {
+                "features": {
+                    "type": "floatColumns"
+                },
+                "targets": {
+                    "type": "floatColumn"
+                },
+                "paramsCount": {
+                    "type": "num"
+                },
+                "params": {
+                    "type": "newFloatColumn",
+                    "numOfRows": {
+                        "ref": "paramsCount",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "column",
+                "source": "params"
+            },
+            "annotation": [
+                "//name: fitLinearRegressionParams",
+                "//input: column_list features",
+                "//input: column targets",
+                "//input: int paramsCount",
+                "//output: column params"
+            ],
+            "prototype": "fitLinearRegressionParams(features, targets, paramsCount)",
+            "prototypeForWebWorker": "fitLinearRegressionParamsInWebWorker(features, targets, paramsCount)",
+            "callArgs": "[features, targets, paramsCount]"
+        }
+    },
+    "softmax-api.cpp": {
+        "fitSoftmax": {
+            "arguments": {
+                "features": {
+                    "type": "floatColumns"
+                },
+                "featureAvgs": {
+                    "type": "floatColumn"
+                },
+                "featureStdDevs": {
+                    "type": "floatColumn"
+                },
+                "targets": {
+                    "type": "intColumn"
+                },
+                "classesCount": {
+                    "type": "num"
+                },
+                "iterCount": {
+                    "type": "num"
+                },
+                "learningRate": {
+                    "type": "num"
+                },
+                "penalty": {
+                    "type": "num"
+                },
+                "tolerance": {
+                    "type": "num"
+                },
+                "paramsRows": {
+                    "type": "num"
+                },
+                "paramsCols": {
+                    "type": "num"
+                },
+                "params": {
+                    "type": "newFloatColumns",
+                    "numOfRows": {
+                        "ref": "paramsRows",
+                        "value": "data"
+                    },
+                    "numOfColumns": {
+                        "ref": "paramsCols",
+                        "value": "data"
+                    }
+                }
+            },
+            "output": {
+                "type": "tableFromColumns",
+                "source": "params"
+            },
+            "annotation": [
+                "//name: fitSoftmax",
+                "//input: column_list features",
+                "//input: column featureAvgs",
+                "//input: column featureStdDevs",
+                "//input: column targets",
+                "//input: int classesCount",
+                "//input: int iterCount",
+                "//input: double learningRate",
+                "//input: double penalty",
+                "//input: double tolerance",
+                "//input: int paramsRows",
+                "//input: int paramsCols",
+                "//output: dataframe result "
+            ],
+            "prototype": "fitSoftmax(features, featureAvgs, featureStdDevs, targets, classesCount, iterCount, learningRate, penalty, tolerance, paramsRows, paramsCols)",
+            "prototypeForWebWorker": "fitSoftmaxInWebWorker(features, featureAvgs, featureStdDevs, targets, classesCount, iterCount, learningRate, penalty, tolerance, paramsRows, paramsCols)",
+            "callArgs": "[features, featureAvgs, featureStdDevs, targets, classesCount, iterCount, learningRate, penalty, tolerance, paramsRows, paramsCols]"
+        }
+    }
+}

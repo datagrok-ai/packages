@@ -185,12 +185,12 @@ export async function _demoSimilarityDiversitySearch(): Promise<void> {
 
 
 export async function _demoMMPA(): Promise<void> {
-  const tv = await openMoleculeDataset('demo_files/mmp_20k.csv');
+  const tv = await openMoleculeDataset('demo_files/mmp_demo.csv');
   await mmpAnalysis(tv.dataFrame, tv.dataFrame.col('smiles')!,
-    tv.dataFrame.clone().columns.remove('smiles'), 0.9);
+    tv.dataFrame.clone().columns.remove('smiles').remove('CMPD_CHEMBLID'), 0.5);
   grok.shell.windows.showHelp = true;
   //@ts-ignore
-  grok.shell.windows.help.showHelp('/help/datagrok/solutions/domains/chem/chem#matched-molecular-pairs');
+  //grok.shell.windows.help.showHelp('/help/datagrok/solutions/domains/chem/#matched-molecular-pairs');
 }
 
 

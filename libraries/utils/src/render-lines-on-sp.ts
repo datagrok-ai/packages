@@ -117,7 +117,7 @@ export class ScatterPlotLinesRenderer {
 
   renderLines(): void {
     const spLook = this.sp.getOptions().look;
-    const individualLineStyles = this.lines.colors || this.lines.width || this.lines.opacities || this.lines.drawArrowsArr;
+    const individualLineStyles = this.lines.colors || this.lines.widths || this.lines.opacities || this.lines.drawArrowsArr;
     if (!individualLineStyles) {
       this.ctx.lineWidth = this.lines.width ?? 1;
       this.ctx.strokeStyle = `rgba(${this.lines.color ?? '0,128,0'},${this.lines.opacity ?? 1})`;
@@ -138,10 +138,10 @@ export class ScatterPlotLinesRenderer {
         this.ctx.beginPath();
         if (aX && aY && bX && bY && Math.hypot(bX! - aX!, bY! - aY!) / minAxis > 0.01) {
           if (individualLineStyles) {
-            const color = this.lines.colors?.[i] ? this.lines.colors?.[i] : '0,128,0';
-            const opacity = this.lines.opacities?.[i] ? this.lines.opacities?.[i] : 1;
+            const color = this.lines.colors?.[i] ? this.lines.colors?.[i] : this.lines.color ?? '0,128,0';
+            const opacity = this.lines.opacities?.[i] ? this.lines.opacities?.[i] : this.lines.opacity ?? 1;
             this.ctx.strokeStyle = `rgba(${color},${opacity})`;
-            this.ctx.lineWidth = this.lines.widths?.[i] ? this.lines.widths?.[i] : 1;
+            this.ctx.lineWidth = this.lines.widths?.[i] ? this.lines.widths?.[i] : this.lines.width ?? 1;
           }
           if (i === this._currentLineIdx)
             this.toggleCurrentLineStyle(true);

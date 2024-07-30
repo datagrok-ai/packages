@@ -1,6 +1,13 @@
 # Datagrok-tools changelog
 
 
+## 4.13.10 (2024-07-29)
+
+### Bug Fixes
+
+* Added ability to select test by args variable 
+
+
 ## 4.13.9 (2024-07-29)
 
 ### Bug Fixes

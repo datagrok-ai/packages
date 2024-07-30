@@ -216,6 +216,8 @@ export async function sequenceChemSimilarity(
     const referenceMonomerCanonical = position < referenceSequence.length ?
       referenceSequence.getCanonical(position) : GAP_SYMBOL;
     const referenceMol = monomerLib.getMonomer('PEPTIDE', referenceMonomerCanonical)?.smiles ?? '';
+    if (!referenceMol)
+      grok.shell.warning(`Reference monomer ${referenceMonomerCanonical} not found in monomer library`);
 
     const monomerCol = positionColumns[position];
     const monomerColData = monomerCol.getRawData() as Uint32Array;
@@ -232,13 +234,15 @@ export async function sequenceChemSimilarity(
     const similarityCol: DG.Column<number> | null = (await grok.chem.getSimilarities(molCol, referenceMol))!;
     const similarityColData: Float32Array | null = similarityCol ? (similarityCol.getRawData() as Float32Array) : null;
 
-    for (let rowIdx = 0; rowIdx < rowCount; ++rowIdx) {
-      const monomerCategoryIdx = monomerColData[rowIdx];
-      if (referenceMonomerCanonical !== GAP_SYMBOL && monomerCategoryIdx !== emptyCategoryIdx) {
-        totalSimilarity[rowIdx] += similarityColData![monomerCategoryIdx];
-      } else if (referenceMonomerCanonical === GAP_SYMBOL && monomerCategoryIdx === emptyCategoryIdx) {
-        totalSimilarity[rowIdx] += 1;
-      } // Do not increase similarity on mismatch score/penalty equals 0;
+    if (similarityColData) {
+      for (let rowIdx = 0; rowIdx < rowCount; ++rowIdx) {
+        const monomerCategoryIdx = monomerColData[rowIdx];
+        if (referenceMonomerCanonical !== GAP_SYMBOL && monomerCategoryIdx !== emptyCategoryIdx) {
+          totalSimilarity[rowIdx] += similarityColData![monomerCategoryIdx];
+        } else if (referenceMonomerCanonical === GAP_SYMBOL && monomerCategoryIdx === emptyCategoryIdx) {
+          totalSimilarity[rowIdx] += 1;
+        } // Do not increase similarity on mismatch score/penalty equals 0;
+      }
     }
   }
 

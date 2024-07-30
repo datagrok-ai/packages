@@ -135,9 +135,9 @@ function createLines(variates: number, activityPairsIdxs: BitArray[],
     from: pointsFrom,
     to: pointsTo,
     drawArrows: true,
-    opacity: 0.5,
     colors: colors,
     arrowSize: 10,
+    width: 0.5,
   };
 
   return {linesIdxs, lines, linesActivityCorrespondance};

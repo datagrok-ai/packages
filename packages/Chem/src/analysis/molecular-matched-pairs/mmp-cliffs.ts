@@ -41,7 +41,7 @@ export function getMmpScatterPlot(
 
   for (let i = 0; i < maxActs.length; i ++) {
     const actName = mmpInput.activities.byIndex(i).name;
-    const sliderInput = ui.input.slider(mmpInput.activities.byIndex(i).name, {value: 0, min: 0, max: maxActs[i]});
+    const sliderInput = ui.input.slider(mmpInput.activities.byIndex(i).name, {value: maxActs[i]/2, min: 0, max: maxActs[i]});
     const sliderInputValueDiv = ui.divText(sliderInput.stringValue, 'ui-input-description');
     sliderInput.addOptions(sliderInputValueDiv);
     sliderInput.root.classList.add('mmpa-slider-input');

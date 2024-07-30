@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import * as ui from 'datagrok-api/ui';
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
@@ -11,7 +12,7 @@ import wu from 'wu';
 import {getTreeHelperInstance} from '../package';
 import {
   MmDistanceFunctionsNames,
-  MmDistanceFunctionsNames as distFNames
+  MmDistanceFunctionsNames as distFNames,
 } from '@datagrok-libraries/ml/src/macromolecule-distance-functions';
 
 type PaneInputs = { [paneName: string]: DG.InputBase[] };
@@ -130,7 +131,7 @@ export function getSettingsDialog(model: PeptidesModel): SettingsElements {
       }
       if (result.showSequenceSpace === settings?.showSequenceSpace)
         delete result.showSequenceSpace;
-  }});
+    }});
   clusterMaxActivity.setTooltip('Show cluster max activity viewer');
   dendrogram.setTooltip('Show dendrogram viewer');
   dendrogram.enabled = getTreeHelperInstance() !== null;
@@ -215,7 +216,7 @@ export function getSettingsDialog(model: PeptidesModel): SettingsElements {
   // SEQ SPACE INPUTS
   const distanceFunctionInput: DG.ChoiceInput<MmDistanceFunctionsNames> = ui.input.choice(SEQUENCE_SPACE_INPUTS.DISTANCE_FUNCTION,
     {value: seqSpaceParams.distanceF, items: [distFNames.NEEDLEMANN_WUNSCH, distFNames.HAMMING, distFNames.LEVENSHTEIN, distFNames.MONOMER_CHEMICAL_DISTANCE],
-    onValueChanged: () => onSeqSpaceParamsChange('distanceF', distanceFunctionInput.value)}) as DG.ChoiceInput<MmDistanceFunctionsNames>
+      onValueChanged: () => onSeqSpaceParamsChange('distanceF', distanceFunctionInput.value)}) as DG.ChoiceInput<MmDistanceFunctionsNames>;
   distanceFunctionInput.setTooltip('Distance function for sequences');
   const gapOpenInput = ui.input.float(SEQUENCE_SPACE_INPUTS.GAP_OPEN, {value: seqSpaceParams.gapOpen,
     onValueChanged: () => onSeqSpaceParamsChange('gapOpen', gapOpenInput.value)});
@@ -276,7 +277,7 @@ export function getSettingsDialog(model: PeptidesModel): SettingsElements {
 
   const mclDistanceFunctionInput: DG.ChoiceInput<MmDistanceFunctionsNames> = ui.input.choice(MCL_INPUTS.DISTANCE_FUNCTION,
     {value: mclParams.distanceF, items: [distFNames.NEEDLEMANN_WUNSCH, distFNames.MONOMER_CHEMICAL_DISTANCE, distFNames.HAMMING, distFNames.LEVENSHTEIN],
-    onValueChanged: () => onMCLParamsChange('distanceF', mclDistanceFunctionInput.value)}) as DG.ChoiceInput<MmDistanceFunctionsNames>;
+      onValueChanged: () => onMCLParamsChange('distanceF', mclDistanceFunctionInput.value)}) as DG.ChoiceInput<MmDistanceFunctionsNames>;
   const mclGapOpenInput = ui.input.float(MCL_INPUTS.GAP_OPEN, {value: mclParams.gapOpen,
     onValueChanged: () => onMCLParamsChange('gapOpen', mclGapOpenInput.value)});
   const mclGapExtendInput = ui.input.float(MCL_INPUTS.GAP_EXTEND, {value: mclParams.gapExtend,

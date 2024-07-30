@@ -1,7 +1,7 @@
 {
     "name": "@datagrok/eda",
     "friendlyName": "EDA",
-    "version": "1.1.28",
+    "version": "1.1.29",
     "description": "Exploratory Data Analysis Tools",
     "dependencies": {
         "@datagrok-libraries/math": "^1.1.10",
@@ -25,14 +25,14 @@
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.32.0",
         "@typescript-eslint/parser": "^5.32.0",
+        "css-loader": "latest",
         "eslint": "^8.21.0",
         "eslint-config-google": "^0.14.0",
+        "style-loader": "latest",
         "ts-loader": "latest",
         "typescript": "latest",
         "webpack": "latest",
-        "webpack-cli": "latest",
-        "css-loader": "latest",
-        "style-loader": "latest"
+        "webpack-cli": "latest"
     },
     "scripts": {
         "link-all": "npm link datagrok-api @datagrok-libraries/utils @datagrok-libraries/tutorials",

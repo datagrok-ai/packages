@@ -7,6 +7,7 @@ import {PatternExistsError, PatternNameExistsError} from '../../model/types';
 import {SvgDisplayManager} from '../svg-utils/svg-display-manager';
 import {NumericLabelVisibilityControls} from './numeric-label-visibility-controls';
 import {TranslationExamplesBlock} from './translation-examples-block';
+import {DEFAULT_DATE, PATTERN_RECORD_KEYS as P, DATE_KEYS as D, LEGEND_SETTINGS_KEYS as L} from '../../model/const';
 
 export class PatternAppRightSection {
   private svgDisplay: HTMLDivElement;
@@ -44,6 +45,7 @@ export class PatternAppRightSection {
       this.createSavePatternButton(),
       this.createDownloadPngButton(),
       this.createShareLinkButton(),
+      this.createInfoButton(),
     ], {style: {gap: '12px', marginTop: '12px'}});
   }
 
@@ -53,6 +55,53 @@ export class PatternAppRightSection {
     ui.tooltip.bind(svgDownloadButton, 'Download pattern as PNG');
 
     return svgDownloadButton;
+  }
+
+  private createInfoButton(): HTMLButtonElement {
+    const shareLinkButton = ui.button(
+      ui.iconFA('info-circle'),
+      () => this.openInfoDialog()
+    );
+
+    this.eventBus.patternHasUnsavedChanges$.subscribe((hasUnsavedChanges: boolean) => {
+      shareLinkButton.disabled = hasUnsavedChanges;
+    });
+
+    ui.tooltip.bind(shareLinkButton, 'View pattern metadata');
+    return shareLinkButton;
+  }
+
+  private async openInfoDialog() {
+    let author = this.dataManager.getCurrentUserName();
+    let patternName = this.dataManager.getDefaultPatternName();
+    let createDate = DEFAULT_DATE;
+    let modifyDate = DEFAULT_DATE;
+    const hash = new URLSearchParams(window.location.search).get('pattern');
+    if (hash !== null) {
+      const record = await this.dataManager.getPatternRecordByHash(hash);
+      if (record !== null) {
+        const authorID = record[P.AUTHOR_ID];
+        const userFriendlyName = (await grok.dapi.users.find(authorID)).friendlyName;
+        author = userFriendlyName;
+        patternName = record[P.PATTERN_CONFIG][L.PATTERN_NAME];
+        if (record[P.DATE] !== undefined) {
+          const create = record[P.DATE][D.CREATE];
+          if (create !== undefined)
+            createDate = create;
+          const modify = record[P.DATE][D.MODIFY];
+          if (modify !== undefined)
+            modifyDate = modify;
+        }
+      }
+    }
+
+    const message = ui.divV([
+      ui.divText(`Author: ${author}`),
+      ui.divText(`Pattern Name: ${patternName}`),
+      ui.divText(`Created: ${new Date(createDate).toLocaleString()}`),
+      ui.divText(`Modified: ${new Date(modifyDate).toLocaleString()}`),
+    ]);
+    grok.shell.info(message);
   }
 
   private createShareLinkButton(): HTMLButtonElement {

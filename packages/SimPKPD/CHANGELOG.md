@@ -1,5 +1,13 @@
 # SimPKPD changelog
 
+## 1.0.12 (2024-07-29)
+
+Fixed demo application
+
+## 1.0.11 (2024-05-01)
+
+Prevented viewer blinking
+
 ## 1.0.10 (2024-05-01)
 
 Added the fitting feature

@@ -1,6 +1,12 @@
 # bio changelog
 
-## 5.42.5 (WIP)
+## 5.42.6 (2024-07-29)
+
+### Features
+
+* sequenceChemSimilarity: warning in case reference monomer not found in monomer library
+
+## 5.42.5 (2024-07-23)
 
 ### Features
 

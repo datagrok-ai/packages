@@ -1,5 +1,9 @@
 # Bioreactors changelog
 
+## 1.1.9 (2023-07-29)
+
+Fixed demo app
+
 ## 1.1.8 (2023-05-01)
 
 Updated functions annotations:

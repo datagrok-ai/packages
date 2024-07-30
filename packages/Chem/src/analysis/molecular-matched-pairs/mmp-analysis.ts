@@ -175,13 +175,14 @@ export class MatchedMolecularPairsViewer extends DG.JsViewer {
           from: this.lines!.from,
           to: this.lines!.to,
           drawArrows: true,
-          opacity: 0.5,
           colors: colors,
           arrowSize: 10,
+          skipMultiLineCalculation: true,
+          width: 0.5
         };
 
         this.lines = lines;
-        this.linesRenderer!.updateLines(lines);
+        this.linesRenderer!.linesToRender = lines;
 
         //refresh trellis plot
         const schemes = new Array<any>(colorInputs.length);
@@ -210,7 +211,7 @@ export class MatchedMolecularPairsViewer extends DG.JsViewer {
 
     this.linesRenderer = linesEditor;
 
-    this.refilterCliffs(sliderInputs.map((si) => si.value), activeInputs.map((ai) => ai.value), false);
+    this.refilterCliffs(sliderInputs.map((si) => si.value), activeInputs.map((ai) => ai.value), true);
 
     return ui.box(cliffs);
   }

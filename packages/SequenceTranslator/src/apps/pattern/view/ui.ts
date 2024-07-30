@@ -55,7 +55,7 @@ async function getInitialPatternRecord(
     return dataManager.getDefaultPatternRecord();
   }
 
-  let initialPatternRecord = await dataManager.getPatternRecord(patternHash);
+  let initialPatternRecord = await dataManager.getPatternRecordByHash(patternHash);
   if (!initialPatternRecord) {
     urlRouter.clearPatternURL();
     initialPatternRecord = dataManager.getDefaultPatternRecord();

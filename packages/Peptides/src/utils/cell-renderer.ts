@@ -146,13 +146,21 @@ export function renderInvariantMapCell(canvasContext: CanvasRenderingContext2D, 
   // 255 and its contrast color would be black, which is not visible on blue (color code) background. The full number
   // is actually 4278190335.
   color = DG.Color.fromHtml(DG.Color.toHtml(setAlpha(color, 255)));
+  let renderedValue = cellValue.toFixed(2);
+  if (renderedValue.endsWith('.00'))
+    renderedValue = cellValue.toFixed(0);
+  if (renderedValue.endsWith('0') && renderedValue.includes('.'))
+    renderedValue = cellValue.toFixed(1);
+
+  const fontSize = Math.min(13, Math.floor(bounds.width / 40 / renderedValue.length * 6 * 13));
+
   canvasContext.fillStyle = DG.Color.toHtml(color);
   canvasContext.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
-  canvasContext.font = '13px Roboto, Roboto Local, sans-serif';
+  canvasContext.font = `${fontSize}px Roboto, Roboto Local, sans-serif`;
   canvasContext.textAlign = 'center';
   canvasContext.textBaseline = 'middle';
   canvasContext.fillStyle = DG.Color.toHtml(DG.Color.getContrastColor(color));
-  canvasContext.fillText(cellValue.toString(), bounds.x + (bounds.width / 2), bounds.y + (bounds.height / 2),
+  canvasContext.fillText(renderedValue, bounds.x + (bounds.width / 2), bounds.y + (bounds.height / 2),
     bounds.width);
 
   const monomerSelection = invariantMapSelection[currentPosition];

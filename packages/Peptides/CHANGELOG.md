@@ -1,5 +1,18 @@
 # Peptides changelog
 
+## 1.17.24 (2024-07-29)
+
+Fix invariant map values rendering
+
+## 1.17.23 (2024-07-29)
+
+Added options to invariant map:
+* split selection for targets
+* coloring options via aggregation
+* value aggregation
+* tooltips
+* improved stability
+
 ## 1.17.22 (2024-07-22)
 
 Fix Active peptide selection viewer failing on frame attached.

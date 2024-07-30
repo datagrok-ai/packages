@@ -116,7 +116,7 @@ export async function demoBioreactor(): Promise<any>  {
     
   const openModelFunc: DG.Func = await grok.functions.eval('Compute:openModelFromFuncall');
   const openModelFuncCall = openModelFunc.prepare({'funccall': doeSimpleFuncCall});
-  openModelFuncCall.call();  
+  await openModelFuncCall.call();  
 
   showHelpPanel(); 
 }

@@ -6,15 +6,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {checkGeneratorSVMinputs} from './utils';
-import {_generateDatasetInWebWorker} from '../wasm/EDAAPI';
-
-const SVM_GEN_FEATURES_INDEX = 0;
-const SVM_GEN_LABELS_INDEX = 1;
-const SVM_FEATURE_NAME = 'Feature #';
-const SVM_LABEL_NAME = 'Label';
-
-// Returns the dataframe "cars"
+/**  Returns the dataframe "cars" */
 export function carsDataframe(): DG.DataFrame {
   return DG.DataFrame.fromColumns(
     [
@@ -37,38 +29,3 @@ export function carsDataframe(): DG.DataFrame {
       DG.Column.fromInt32Array('price', new Int32Array([16500, 17710, 16430, 6575, 7957, 6229, 7129, 8845, 6785, 35550, 7395, 31600, 16503, 5389, 7349, 7299, 6229, 13860, 37028, 12170, 7775, 5348, 7898, 9989, 10698, 7775, 13295, 12940, 19045, 22470])),
     ]);
 } // carsDataframe
-
-// Generate dataset for testing binary classifiers
-export async function testDataForBinaryClassification(kernel: number, kernelParams: Array<number>,
-  name: string, samplesCount: number, featuresCount: number, min: number,
-  max: number, violatorsPercentage: number): Promise<DG.DataFrame> {
-  // check inputs
-  checkGeneratorSVMinputs(samplesCount, featuresCount, min, max, violatorsPercentage);
-
-  // kernel params column
-  const kernelParamsCol = DG.Column.fromList('double', 'kernelParams', kernelParams);
-
-  // CALL WASM-COMPUTATIONS
-  let _output: any;
-  const _promise = _generateDatasetInWebWorker(kernel, kernelParamsCol,
-    samplesCount, featuresCount, min, max, violatorsPercentage);
-
-  await _promise.then(
-    (_result) => {_output = _result;},
-    (_error) => {throw new Error(`Error: ${_error}`);},
-  );
-
-  // Rename labels column
-  _output[SVM_GEN_LABELS_INDEX].name = SVM_LABEL_NAME;
-
-  // Rename feature columns
-  for (const col of _output[SVM_GEN_FEATURES_INDEX])
-    col.name = SVM_FEATURE_NAME + col.name;
-
-  // Create dataframe
-  const df = DG.DataFrame.fromColumns(_output[SVM_GEN_FEATURES_INDEX]);
-  df.name = name;
-  df.columns.add(_output[SVM_GEN_LABELS_INDEX]);
-
-  return df;
-} // testDataForMachineLearning
