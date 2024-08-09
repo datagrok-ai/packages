@@ -16,7 +16,7 @@ import {handleError} from './utils';
 import {defaultErrorHandler} from '../utils/err-info';
 import {getLibrariesList} from './utils';
 import {getEnumerationHelm, PT_HELM_EXAMPLE} from './pt-enumeration-helm';
-import {getEnumerationChem, PT_CHEM_EXAMPLE} from './pt-enumeration-chem';
+import {getEnumerationChem, getGroupsNumber, PT_CHEM_EXAMPLE} from './pt-enumeration-chem';
 
 const PT_ERROR_DATAFRAME = 'No dataframe with macromolecule columns open';
 const PT_WARNING_COLUMN = 'No marcomolecule column chosen!';
@@ -159,31 +159,50 @@ async function getPolyToolEnumerationHelmDialog(cell?: DG.Cell): Promise<DG.Dial
   return dialog;
 }
 
+function getInputs(rNumber: number, libList: string[]) :  DG.ChoiceInput<string | null> [] {
+  const screenLibrariesInputs: DG.ChoiceInput<string | null> [] = [];
+
+  for (let i = 0; i < rNumber; i++) {
+    const screenLibrary = ui.input.choice(`R${i + 1} library to use`, {value: null, items: libList});
+    screenLibrary.input.setAttribute('style', `min-width:250px!important;`);
+    screenLibrariesInputs.push(screenLibrary);
+  }
+
+  return screenLibrariesInputs;
+}
+
 async function getPolyToolEnumerationChemDialog(cell?: DG.Cell): Promise<DG.Dialog> {
   const [libList, helmHelper] = await Promise.all([
     getLibrariesList(), getHelmHelper()]);
 
   let molValue = PT_CHEM_EXAMPLE;//cell ? cell.value : PT_CHEM_EXAMPLE;
+  let rNumber = await getGroupsNumber(molValue);
+  let screenLibrariesInputs = getInputs(rNumber, libList);
+  let inputsDiv = ui.divV(screenLibrariesInputs);
+
   const molInput = new DG.chem.Sketcher(DG.chem.SKETCHER_MODE.EXTERNAL);
   molInput.syncCurrentObject = false;
-  // sketcher.setMolFile(col.tags[ALIGN_BY_SCAFFOLD_TAG]);
-  molInput.onChanged.subscribe((_: any) => {
+  molInput.onChanged.subscribe(async (_: any) => {
     molValue = molInput.getMolFile();
+    const rNewNumber = await getGroupsNumber(molValue);
+    screenLibrariesInputs = getInputs(rNewNumber, libList);
+    //inputsDiv = ui.divV(screenLibrariesInputs);
+    for (let i = rNumber; i < rNewNumber; i++)
+      inputsDiv.append(screenLibrariesInputs[i].root)
+
+    rNumber = rNewNumber;
+    
   });
+
   molInput.root.classList.add('ui-input-editor');
   molInput.root.style.marginTop = '3px';
   molInput.setMolFile(molValue);
-
-  //const helmInput = helmHelper.createHelmInput('Macromolecule', {value: helmValue});
-  const screenLibrary = ui.input.choice('Library to use', {value: null, items: libList});
-
   molInput.root.setAttribute('style', `min-width:250px!important;`);
   molInput.root.setAttribute('style', `max-width:250px!important;`);
-  screenLibrary.input.setAttribute('style', `min-width:250px!important;`);
 
   const div = ui.div([
     molInput.root,
-    screenLibrary.root
+    inputsDiv
   ]);
 
   const cccSubs = grok.events.onCurrentCellChanged.subscribe(() => {
@@ -205,7 +224,7 @@ async function getPolyToolEnumerationChemDialog(cell?: DG.Cell): Promise<DG.Dial
         } else if (!molString.includes('R#')) {
           grok.shell.warning('PolyTool: no R group was provided');
         } else {
-          const molecules = await getEnumerationChem(molString, screenLibrary.value!);
+          const molecules = await getEnumerationChem(molString, screenLibrariesInputs.map((sc) => sc.value!));
           const molCol = DG.Column.fromStrings('Enumerated', molecules);
           const df = DG.DataFrame.fromColumns([molCol]);
           grok.shell.addTableView(df);

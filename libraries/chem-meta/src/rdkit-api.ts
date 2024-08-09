@@ -17,6 +17,7 @@ export interface RDModule {
   MolList: MolListConstructor;
   RGroupDecomp: RGroupDecompConstructor;
   SubstructLibrary: RDSubstructLibraryConstructor;
+  link(a: RDMol, b: RDMol): RDMol;
 }
 
 export interface RGroupDecomp {
@@ -151,6 +152,7 @@ export interface RDSubstructLibrary {
   get_pattern_fp_as_uint8array(i: number): Uint8Array;
   get_matches_as_uint32array(qmol: RDMol, useChirality?: boolean, numThreads?: number, maxResults?: number): Uint32Array;
   get_mol(i: number): RDMol;
+  link(a: RDMol, b: RDMol): RDMol;
   get_matches(qmol: RDMol, useChirality?: boolean, numThreads?: number, maxResults?: number): string;
   count_matches(qmol: RDMol, useChirality?: boolean, numThreads?: number): number;
   size(): number;
