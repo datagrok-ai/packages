@@ -17,7 +17,14 @@ export interface RDModule {
   MolList: MolListConstructor;
   RGroupDecomp: RGroupDecompConstructor;
   SubstructLibrary: RDSubstructLibraryConstructor;
-  link(a: RDMol, b: RDMol): RDMol;
+  //linking fragments a and b
+  //example of details JSON.stringify({Label: 'AtomType', AtomSymbols: 'Xe,V'});
+  //field Label (AtomMapNumber, FragmentOnBonds, AtomType, AtomProperty)
+  //field AtomSymbols - just list of atoms to link and exclude like "V, Xe"
+  //field AtomProperty - string, literally anything. If property is set it will link by atom with this property
+  //field EnforceValenceRules - strict valency check, true by default
+  //field GenerateCoordinates - same as for standard mol, false by default
+  link(a: RDMol, b: RDMol, details?: string): RDMol;
 }
 
 export interface RGroupDecomp {

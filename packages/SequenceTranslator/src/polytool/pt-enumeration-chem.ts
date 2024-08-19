@@ -139,16 +139,13 @@ export async function getEnumerationChem(molString: string, screenLibraries: str
         ress2?.delete();
 
         enumerations[i] = mb;
-      } 
-      catch(err:any) {
+      } catch (err:any) {
         enumerations[i] = '';
-      }
-      finally {
+      } finally {
         //molRes?.delete();
       }
     }
   }
-  
 
   return enumerations;
 }
