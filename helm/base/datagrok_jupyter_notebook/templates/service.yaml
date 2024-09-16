@@ -1,0 +1,26 @@
+{{- if or .Values.enabled -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.container.name }}
+  labels:
+{{ include "base.defaultLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.container.ports.notebook.port  }}
+      targetPort: {{ .Values.container.ports.notebook.port }}
+      protocol: TCP
+      name: {{ .Values.container.ports.notebook.name }} 
+    - port: {{ .Values.container.ports.helper.port  }}
+      targetPort: {{ .Values.container.ports.helper.port }}
+      protocol: TCP
+      name: {{ .Values.container.ports.helper.name }} 
+  {{- with .Values.labels }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    {{- include "base.selectorLabels" . | nindent 4 }}
+
+{{- end }}

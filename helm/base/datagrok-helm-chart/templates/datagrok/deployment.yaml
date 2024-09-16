@@ -1,0 +1,78 @@
+{{- if .Values.enabled -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ include "base.defaultLabels" . | nindent 4 }}
+  name: {{ include "base.fullname" . }}
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  selector:
+    {{- with .Values.labels }}
+    matchLabels:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{ include "base.selectorLabels" . | nindent 8 }}
+  strategy:
+    type: {{ .Values.strategy_type }}
+  template:
+    metadata:
+      {{- with .Values.labels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- include "base.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+      {{- end }}
+      initContainers:
+        - name: init-wait-for-db
+          image: alpine
+          {{ $db_host := .Values.grok_parameters.dbServer }}
+          {{ $db_port := .Values.grok_parameters.dbPort }}
+          command: ["/bin/sh", "-c", "for i in $(seq 1 300); do nc -zvw1 {{ $db_host }} {{ $db_port }} && exit 0 || sleep 3; done; exit 1"]
+      containers:
+        - envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-grok-parameters-configmap             
+          image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          name: datagrok
+          ports:
+            - containerPort: {{ .Values.container.port_datagrok }}
+            - containerPort: {{ .Values.container.port_nginx }}
+          tty: true
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - mountPath: /home/grok/data
+              name: datagrok-data
+            - mountPath: /home/grok/cfg
+              name: datagrok-cfg
+      restartPolicy: Always
+      volumes:
+        - name: datagrok-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-{{ .Values.data_pvc.name }}
+        - name: datagrok-cfg
+          persistentVolumeClaim:
+            claimName: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-{{ .Values.cfg_pvc.name }}
+{{- end }}

@@ -1,0 +1,53 @@
+{{- if .Values.enabled -}}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "base.fullname" . }}
+  {{- with .Values.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{ include "base.defaultLabels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.container.port_nginx }}
+      targetPort: {{ .Values.container.port_nginx }}
+      protocol: TCP 
+      name: nginx
+    - port: {{ .Values.container.port_datagrok }}
+      targetPort: {{ .Values.container.port_datagrok }}
+      protocol: TCP
+      name: datagrok
+  {{- with .Values.labels }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- include "base.selectorLabels" . | nindent 4 }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "base.fullname" . }}-nodeport-service
+  {{- with .Values.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{ include "base.defaultLabels" . | nindent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: 8082
+      targetPort: 8082
+      protocol: TCP
+      name: http
+  {{- with .Values.labels }}
+  selector:
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- include "base.selectorLabels" . | nindent 4 }}
+{{- end }}
+

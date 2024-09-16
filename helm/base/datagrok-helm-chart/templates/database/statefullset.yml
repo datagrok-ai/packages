@@ -1,0 +1,85 @@
+{{- if .Values.enabled -}}
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "base.fullname" . }}-db
+  {{- with .Values.database.statefulset.pod.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    {{ include "base.defaultLabels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.database.statefulset.replicas }}
+  serviceName: {{ include "base.fullname" . }}-db
+  minReadySeconds: {{ .Values.database.statefulset.minReadySeconds }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+  updateStrategy: 
+    type: "RollingUpdate"
+  selector:
+    {{- with .Values.database.statefulset.pod.labels }}
+    matchLabels:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+      {{ include "base.selectorLabels" . | nindent 8 }}
+  template:
+    metadata:
+      {{- with .Values.database.statefulset.pod.labels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{ include "base.selectorLabels" . | nindent 8 }}
+      {{- with .Values.database.statefulset.pod.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }} 
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.database.statefulset.pod.terminationGracePeriodSeconds }}
+      initContainers:
+        - name: init-permissions
+          image: busybox                # Use a lightweight image like BusyBox
+          command:
+            - sh
+            - -c
+            - |
+              chown -R 999:999 /var/lib/postgresql/data
+          securityContext:
+            runAsUser: 0                # Run as root to change permissions
+            runAsGroup: 0
+          volumeMounts:
+            - mountPath: {{ .Values.database.statefulset.pod.container.volume.path }}
+              name: {{ .Values.database.volumeClaimTemplates.name }}
+      containers:
+        - name: {{ include "base.fullname" . }}-{{ .Values.database.statefulset.pod.container.name }}
+          image: {{ .Values.database.statefulset.pod.container.image }}:{{ .Values.database.statefulset.pod.container.tag }}
+          {{- with .Values.database.statefulset.pod.container.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          imagePullPolicy: Always
+          ports:
+          - name: http
+            containerPort: {{ .Values.database.statefulset.pod.container.port  }}
+            protocol: TCP
+          args: {{ .Values.database.statefulset.pod.container.args }}
+          {{- if .Values.database.statefulset.pod.container.args }}
+          args: {{ .Values.database.statefulset.pod.container.args | toYaml | nindent 12 }}
+          {{- end }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-db-configmap
+          volumeMounts:
+            - mountPath: {{ .Values.database.statefulset.pod.container.volume.path }}
+              name: {{ .Values.database.volumeClaimTemplates.name }}
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.database.volumeClaimTemplates.name }}
+      spec:
+        accessModes: {{ .Values.database.volumeClaimTemplates.accessMode }}
+        storageClassName: {{ .Values.database.volumeClaimTemplates.storageClassName | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.database.volumeClaimTemplates.storage }}
+{{- end }}

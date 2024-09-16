@@ -1,0 +1,55 @@
+{{- if .Values.enabled -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "base.fullname" . }}-{{ .Values.container.name }}
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ include "base.defaultLabels" . | nindent 4 }} 
+  
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    {{- with .Values.labels }}
+    matchLabels:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- include "base.selectorLabels" . | nindent 8 }}
+  strategy:
+    type: {{ .Values.strategy_type}}
+  template:
+    metadata:
+      {{- with .Values.labels }}
+      labels:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- include "base.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - image: {{ .Values.container.image }}:{{ .Values.container.tag }}
+          imagePullPolicy: {{ .Values.container.imagePullPolicy }}
+          name: {{ .Values.container.name }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          ports:
+            - containerPort: {{ .Values.container.ports.notebook.port }}
+            - containerPort: {{ .Values.container.ports.helper.port }}
+      restartPolicy: {{ .Values.restartPolicy }}
+ 
+{{- end }}
+
+    

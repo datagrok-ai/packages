@@ -1,0 +1,129 @@
+networkPolicy:
+  enabled: false
+
+enabled: true
+local: true
+labels:
+  service: datagrok
+cfg_pvc:
+  name: cfg
+  accessModes: ReadWriteOnce
+  storage: 5Gi
+  storage_class: standard
+data_pvc:
+  name: data
+  accessModes: ReadWriteOnce
+  storage: 50Gi
+  storage_class: standard
+replicas: 1
+revisionHistoryLimit: 10
+strategy_type: RollingUpdate
+imagePullSecrets: ""
+imagePullPolicy: Always
+image:
+  name: datagrok/datagrok
+  tag: latest
+container:
+  tag: latest
+  name: datagrok
+  port_nginx: 8080
+  port_datagrok: 8082
+service:
+  type: ClusterIP
+grok_parameters:
+  deployDemo: false
+  dbServer: database
+  db: datagrok
+  dbAdminLogin: postgres
+  dbAdminPassword: postgres
+  dbLogin: dg
+  dbPassword: dg
+  adminPassword: admin
+  adminDevKey: admin
+  dbPort: 5432
+  isolatesCount: 2
+
+livenessProbe:
+  httpGet:
+    path: /api/admin/health
+    port: 8080
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20 # default
+readinessProbe:
+  httpGet:
+    path: /api/admin/health
+    port: 8080
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20
+startupProbe:
+  httpGet:
+    path: /api/admin/health
+    port: 8080
+  failureThreshold: 90
+  periodSeconds: 30
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  annotations: { }
+  tls: { }
+  local:
+    enabled: true
+    hosts:
+      - host: datagrok.internal
+        paths:
+          - path: /
+            backend:
+              serviceName: datagrok
+              servicePort: 8080
+  hosts:
+    - host: datagrok.ai
+      paths:
+        - path: /
+          backend:
+            serviceName: datagrok
+            servicePort: 8080
+database:
+  enabled: true
+  name: database
+  configmap:
+    POSTGRES_DB: "postgres"
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "postgres"
+  service:
+    type: ClusterIP
+  statefulset:
+    minReadySeconds: 10
+    replicas: 1
+    pod:
+      labels:
+        service: db
+      terminationGracePeriodSeconds: 10
+      container:
+        name: database
+        image: postgres
+        imagePullPolicy: Always
+        tag: 12
+        port: 5432
+        volume:
+          path: /var/lib/postgresql/data
+        args: ['-c', 'max_connections=200']
+        securityContext:
+          runAsUser: 999                   # PostgreSQL's default user ID
+          runAsGroup: 999                  # PostgreSQL's default group ID
+          allowPrivilegeEscalation: false             # PostgreSQL's default group ID
+
+  volumeClaimTemplates:
+    name: db-data
+    accessMode: [ "ReadWriteOnce" ]
+    storageClassName: standard
+    storage: 60Gi
+    reclaimPolicy: Retain
+datagrok_grok_spawner: {}
+datagrok_grok_connect: {}
+datagrok_jkg: {}
+datagrok_jupyter_notebook: {}
+# mount secret as a volume
+#mountSecrets:
+#  secret_name: mount_path

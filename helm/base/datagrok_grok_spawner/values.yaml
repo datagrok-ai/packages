@@ -1,0 +1,95 @@
+enabled: true
+restartPolicy: Always
+labels:
+  service: grok-spawner
+strategy_type: RollingUpdate
+container:
+  name: grok-spawner
+  image: docker-registry.datagrok.ai/datagrok/grok_spawner
+  tag: test-local
+  port: 8000
+  imagePullPolicy: Never
+service:
+  type: ClusterIP
+livenessProbe:
+  httpGet:
+    path: /info
+    port: 8000
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20 # default
+readinessProbe:
+  httpGet:
+    path: /info
+    port: 8000
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20
+startupProbe:
+  httpGet:
+    path: /info
+    port: 8000
+  failureThreshold: 90
+  periodSeconds: 30
+secrets:
+  argocd:
+    enabled: false
+  registry:
+    dockerconfigjson: '{"auths": {"registry.minikube:80": {"auth": "YWRtaW46ZGF0YWdyb2s="}}}'
+    configjson: '{"auths": {"registry.minikube:80": {"auth": "YWRtaW46ZGF0YWdyb2s="}}}'
+  minio: {}
+  spawner:
+    apiKey: test-x-api-key
+  certs: {}
+configmap:
+  environment: 'default'
+  database_deployment_mode: 'kubernetes'
+  cvm_deployment_mode: 'kubernetes'
+  datagrok_deployment_mode: 'kubernetes'
+  docker_registry_url: "registry.minikube:80"
+env:
+  GROK_SPAWNER_CONFIGURATION: configuration.yaml
+  X_API_KEY:
+    valueFrom:
+      secretKeyRef:
+        name: spawner
+        key: apiKey
+volumes: [ ]
+volumeMounts: [ ]
+
+certDir: "/etc/grok_spawner/certs"
+minio:
+  image:
+    registry: docker.io
+    repository: bitnami/minio
+    tag: 2024.7.15-debian-12-r0
+  clientImage:
+    registry: docker.io
+    repository: bitnami/minio-client
+    tag: 2024.7.15-debian-12-r0
+    digest: ""
+  auth:
+    rootUser: admin
+    rootPassword: admin123
+
+  defaultBuckets: "datagrok"
+
+  containerPorts:
+    api: 9000
+    console: 9001
+  service:
+    type: ClusterIP
+    ports:
+      api: 9000
+      console: 9001
+    nodePorts:
+      api: ""
+      console: ""
+  ingress: {}
+  persistence:
+    enabled: true
+    storageClass: "standard"
+    mountPath: /bitnami/minio/data
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi

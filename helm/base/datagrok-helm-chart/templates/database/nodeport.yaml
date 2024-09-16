@@ -1,0 +1,22 @@
+{{- if and .Values.enabled .Values.database.statefulset.pod.container.nodePort -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.database.name }}-nodeport #{{ include "base.fullname" . }}-db-service
+  {{- with .Values.database.statefulset.pod.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{ include "base.selectorLabels" . | indent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{ .Values.database.statefulset.pod.container.port  }}
+      targetPort: {{ .Values.database.statefulset.pod.container.port  }}
+      nodePort: {{ .Values.database.statefulset.pod.container.nodePort }}
+  {{- with .Values.database.statefulset.pod.labels }}
+  selector:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
+    {{- include "base.selectorLabels" . | nindent 4 }}
+{{- end }}

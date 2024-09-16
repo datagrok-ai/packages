@@ -1,0 +1,29 @@
+helm:
+  parameters:
+  - name: datagrok/datagrok
+    value: datagrok/datagrok
+    forcestring: true
+  - name: image.name
+    value: datagrok/datagrok
+    forcestring: true
+  - name: image.tag
+    value: latest@sha256:58a181baf66d096d8d25afda078708a479fc54553ec6d6ea0ac6ab2a5eff82a6
+    forcestring: true
+  - name: datagrok_grok_connect.container.image
+    value: datagrok/grok_connect
+    forcestring: true
+  - name: datagrok_grok_connect.container.tag
+    value: bleeding-edge@sha256:81caa8bf4cac9cfd16c23ae2ebc66ca9811e5f879c7fc437601640d18ae8c52f
+    forcestring: true
+  - name: datagrok_jkg.container.image
+    value: datagrok/jupyter_kernel_gateway
+    forcestring: true
+  - name: datagrok_jkg.container.tag
+    value: latest@sha256:eb9077396ce755b711d9d7eeb3b5306ae5b17a47004070e3dcb096fec08906bc
+    forcestring: true
+  - name: datagrok_jupyter_notebook.container.image
+    value: datagrok/jupyter_notebook
+    forcestring: true
+  - name: datagrok_jupyter_notebook.container.tag
+    value: latest@sha256:436ba5d6afbf680f82a9dfcb2c6d92cfaf80908c24172d5a7b863838d689f6cf
+    forcestring: true

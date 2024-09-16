@@ -1,0 +1,83 @@
+{{- if .Values.enabled -}}
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- with .Values.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ include "base.defaultLabels" . | nindent 4 }}
+  name: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-{{ .Values.data_pvc.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - {{ .Values.cfg_pvc.accessModes | quote }}
+  {{- if .Values.data_pvc.path }}
+  volumeName: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-pv-{{ .Values.data_pvc.name }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.data_pvc.storage }}
+  storageClassName: {{ .Values.data_pvc.storage_class }}
+
+---
+{{- if .Values.data_pvc.path }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-pv-{{ .Values.data_pvc.name }}
+spec:
+  capacity:
+    storage: {{ .Values.data_pvc.storage }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.data_pvc.storage_class }}
+  claimRef:
+    namespace: {{ .Release.Namespace }}
+    name: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-{{ .Values.data_pvc.name }}
+  hostPath:
+    path: {{ .Values.data_pvc.path }}
+{{- end }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- with .Values.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{ include "base.defaultLabels" . | nindent 4 }}
+  name: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-{{ .Values.cfg_pvc.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  accessModes:
+    - {{ .Values.cfg_pvc.accessModes | quote }}
+  {{- if .Values.cfg_pvc.path }}
+  volumeName: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-pv-{{ .Values.cfg_pvc.name }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.cfg_pvc.storage }}
+  storageClassName: {{ .Values.cfg_pvc.storage_class }}
+---
+{{- if .Values.cfg_pvc.path }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-pv-{{ .Values.cfg_pvc.name }}
+spec:
+  capacity:
+    storage: {{ .Values.cfg_pvc.storage }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.cfg_pvc.storage_class }}
+  claimRef:
+    namespace: {{ .Release.Namespace }}
+    name: {{ .Release.Namespace}}-{{ include "base.fullname" . }}-{{ .Values.cfg_pvc.name }}
+  hostPath:
+    path: {{ .Values.cfg_pvc.path }}
+{{- end }}
+{{- end }}

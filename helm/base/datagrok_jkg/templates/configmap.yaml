@@ -1,0 +1,53 @@
+{{- if .Values.enabled -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-jkg-grok-parameters-configmap
+data: 
+  {{ $len := sub (len .Values.grok_parameters) 1 }}
+  {{ $count := 1 }}
+  {{ $list := list }}
+  GROK_PARAMETERS: |-
+    {
+      {{ range $key, $value := .Values.grok_parameters }}
+      {{ if le $count $len }}
+        {{- if kindIs "string" $value }}
+          {{- $key | quote | indent 2 }}: {{ $value | quote }},
+        {{- else }}
+          {{- if eq $key "capabilities" }}
+            {{- $lastIndex := sub (len $value) 1 }}
+            {{- range $index, $list_value := $value }}
+              {{- $list = append $list (printf "%q" $list_value) }}
+              {{- if ne $index $lastIndex }}
+                {{- $list = append $list "," }}
+              {{- end }}
+            {{- end }}
+            {{- $key | quote | indent 2 }}: {{ $list }},
+          {{- else }}
+            {{- $key | quote | indent 2 }}: {{ $value }},
+          {{- end }}
+        {{- end }}
+        {{- $count = add $count 1 }}
+      {{- else }}
+        {{- if kindIs "string" $value }}
+          {{- $key | quote | indent 2 }}: {{ $value | quote }}
+        {{- else }}
+          {{- if eq $key "capabilities" }}
+            {{- $lastIndex := sub (len $value) 1 }}
+            {{- range $index, $list_value := $value }}
+              {{- $list = append $list (printf "%q" $list_value) }}
+              {{- if ne $index $lastIndex }}
+                {{- $list = append $list "," }}
+              {{- end }}
+            {{- end }}
+            {{- $key | quote | indent 2 }}: {{ $list }}
+          {{- else }}
+            {{- $key | quote | indent 2 }}: {{ $value }}
+          {{- end }}
+        {{- end }}
+        {{- $count = add $count 1 }}
+      {{- end }}
+      {{- end }}
+      }
+{{- end }}

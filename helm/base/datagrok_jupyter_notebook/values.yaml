@@ -1,0 +1,40 @@
+enabled: true
+
+replicas: 1
+restartPolicy: Always
+labels:
+  service: jupyter-notebook
+strategy_type: RollingUpdate
+container:
+  name: jupyter-notebook
+  image: datagrok/jupyter_notebook
+  tag: latest
+  ports:
+    notebook:
+      name: notebook
+      port: 8889
+    helper:
+      name: helper
+      port: 5005
+service:
+  type: ClusterIP
+livenessProbe:
+  httpGet:
+    path: /notebook/helper/info
+    port: 5005
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20 # default
+readinessProbe:
+  httpGet:
+    path: /notebook/helper/info
+    port: 5005
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20
+startupProbe:
+  httpGet:
+    path: /notebook/helper/info
+    port: 5005
+  failureThreshold: 90
+  periodSeconds: 30

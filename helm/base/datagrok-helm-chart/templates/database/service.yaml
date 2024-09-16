@@ -1,0 +1,24 @@
+{{- if .Values.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.database.name }} #{{ include "base.fullname" . }}-db-service
+  {{- with .Values.database.statefulset.pod.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{ include "base.selectorLabels" . | indent 4 }}
+spec:
+  type: {{ .Values.database.service.type }}
+  ports:
+    - port: {{ .Values.database.statefulset.pod.container.port  }}
+      targetPort: {{ .Values.database.statefulset.pod.container.port  }}
+      protocol: TCP
+      name: http
+  {{- with .Values.database.statefulset.pod.labels }}
+  selector:
+    {{- toYaml . | nindent 4}}
+  {{- end }}
+    {{- include "base.selectorLabels" . | nindent 4 }}
+    
+{{- end }}

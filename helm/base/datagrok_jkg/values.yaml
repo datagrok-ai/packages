@@ -1,0 +1,52 @@
+
+enabled: true
+restartPolicy: Always
+labels:
+  service: jkg
+strategy_type: RollingUpdate
+container:
+  name: jkg
+  image: datagrok/jupyter_kernel_gateway
+  tag: latest
+  ports:
+    jupyter: 
+      name: jupyter
+      port: 8888
+    helper: 
+      name: helper
+      port: 5005
+service:
+  type: ClusterIP
+livenessProbe:
+  httpGet:
+    path: /jupyter/helper/info
+    port: 5005
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20 # default
+readinessProbe:
+  httpGet:
+    path: /jupyter/helper/info
+    port: 5005
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20
+startupProbe:
+  httpGet:
+    path: /jupyter/helper/info
+    port: 5005
+  failureThreshold: 90
+  periodSeconds: 30
+grok_parameters:
+  dbServer: "database"
+  dbPort: "5432"
+  db: "datagrok"
+  dbLogin: "dg"
+  dbPassword: "dg"
+  isolatesCount: 1
+  deployDemo: false
+  deployTestDemo: false
+  datlasApiUrl: "http://datagrok:8082"
+  jupyterToken: "4b8ed936cf61a1c5e37a8b3a845599941c272de6e29330a0"
+  capabilities: 
+    - "jupyter"

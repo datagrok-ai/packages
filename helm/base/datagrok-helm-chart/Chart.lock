@@ -1,0 +1,15 @@
+dependencies:
+- name: datagrok_grok_connect
+  repository: http://nexus.datagrok.internal/repository/datagrok
+  version: 0.2.0
+- name: datagrok_h2o
+  repository: http://nexus.datagrok.internal/repository/datagrok
+  version: 0.2.0
+- name: datagrok_jkg
+  repository: http://nexus.datagrok.internal/repository/datagrok
+  version: 0.3.0
+- name: datagrok_jupyter_notebook
+  repository: http://nexus.datagrok.internal/repository/datagrok
+  version: 0.2.0
+digest: sha256:d64897adb8537207528e11bab9d86c43d156a9ebf7482a23c490c2bf8f2e8128
+generated: "2024-05-10T12:21:34.048634394+03:00"

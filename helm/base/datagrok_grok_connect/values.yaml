@@ -1,0 +1,34 @@
+
+
+enabled: true
+restartPolicy: Always
+labels:
+  service: grok-connect
+strategy_type: RollingUpdate
+container:
+  name: grok-connect
+  image: datagrok/grok_connect
+  tag: latest
+  port: 1234
+service:
+  type: ClusterIP
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 1234
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20 # default
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 1234
+  failureThreshold: 3
+  timeoutSeconds: 10
+  periodSeconds: 20
+startupProbe:
+  httpGet:
+    path: /health
+    port: 1234
+  failureThreshold: 90
+  periodSeconds: 30
