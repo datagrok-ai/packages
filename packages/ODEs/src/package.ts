@@ -11,6 +11,9 @@ import {DiffStudio} from './app';
 
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel} from './demo-models';
 
+import {DiffStudioTutorial} from './tutorials/quick-start';
+import {Track} from '@datagrok-libraries/tutorials/src/track';
+
 export const _package = new DG.Package();
 
 //name: info
@@ -205,4 +208,22 @@ export async function demoSimPKPD(): Promise<any> {
   await openModelFuncCall.call();
 
   showPkPdHelpPanel();
+}
+
+//tags: track
+//help-url: https://datagrok.ai/help/compute
+//output: object track
+//meta.name: Compute
+export function registerTrack() {
+  return new Track('Compute', [], 'https://datagrok.ai/help/compute');
+}
+
+//tags: tutorial
+//meta.icon: images/diff-studio-tutorial.png
+//meta.name: Diff Studio
+//meta.track: Compute
+//description: In-browser solver of ordinary differential equations
+//output: object tutorial
+export function registerTutorial() {
+  return new DiffStudioTutorial();
 }
