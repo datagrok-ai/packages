@@ -1,10 +1,11 @@
 {
   "name": "@datagrok-misc/eslint-config",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Common config for all Datagrok packages",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\"",
+    "lint": "eslint",
+    "lint-fix": "eslint --fix"
   },
   "repository": {
     "type": "git",
@@ -23,14 +24,19 @@
     "url": "https://github.com/datagrok-ai/public/issues"
   },
   "homepage": "https://github.com/datagrok-ai/public/misc/eslint-config#readme",
-  "peerDependencies": {
-    "eslint": "^8.49.0",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0"
-  },
   "dependencies": {
-    "eslint-config-google": "^0.14.0",
-    "@typescript-eslint/eslint-plugin": "^7.16.0",
-    "@typescript-eslint/parser": "^7.16.0"
+    "@eslint/js": "^9.10.0",
+    "commander": "^12.1.0",
+    "eslint": "^9.10.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "prettier": "^3.3.3",
+    "typescript-eslint": "^8.4.0"
+  },
+  "bin": {
+    "eslint-config": "./bin/setup.mjs"
+  },
+  "exports": {
+    "./javascript": "./javascript.mjs",
+    "./typescript": "./typescript.mjs"
   }
 }
