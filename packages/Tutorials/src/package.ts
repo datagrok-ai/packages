@@ -6,6 +6,7 @@ import {chem} from './tracks/chem';
 import {eda} from './tracks/eda';
 import {da} from './tracks/data-access';
 import {ml} from './tracks/ml';
+import {compute} from './tracks/compute';
 import {dataTransformation} from './tracks/transform';
 import {TutorialWidget} from './widget';
 import '../css/tutorial.css';
@@ -141,6 +142,7 @@ function setProperties(properties: { [propertyName: string]: boolean }): void {
     'cheminformaticsTrack': chem,
     'dataAccessTrack': da,
     'dataTransformation': dataTransformation,
+    'computeTrack': compute,
   };
 
   for (const property in properties) {
@@ -157,6 +159,7 @@ function setPath(path: string, tutorialRunners: TutorialRunner[]): void {
     'ml': ml,
     'chem': chem,
     'access': da,
+    'compute': compute,
   };
 
   if (pathParts.length !== 6)

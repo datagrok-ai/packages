@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/tutorials",
   "friendlyName": "Tutorials",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "author": {
     "name": "Dmytro Kovalyov",
     "email": "dkovalyov@datagrok.ai"
@@ -83,6 +83,12 @@
     },
     {
       "name": "dataTransformation",
+      "propertyType": "bool",
+      "defaultValue": true,
+      "nullable": false
+    },
+    {
+      "name": "computeTrack",
       "propertyType": "bool",
       "defaultValue": true,
       "nullable": false
