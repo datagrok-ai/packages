@@ -79,4 +79,65 @@ export namespace decorators {
   }) {
     return function(constructor: Function) {};
   }
+
+  /** A function that registers [DG.FUNC_TYPES.FILE_EXPORTER](https://datagrok.ai/js-api/modules/dg#func_types).
+   * @param name - function name in UI.
+   * @param description - function description in UI.
+   * @param extension - exported file extension.
+   * 
+   * See also: {@link https://datagrok.ai/help/develop/how-to/file-exporters}
+   */
+  export function fileExporter(options?: {
+    name?: string,
+    description?: string,
+    extension: string,
+  }) {
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {};
+  }
+
+  /** A function that registers [DG.FUNC_TYPES.FILE_IMPORTER](https://datagrok.ai/js-api/modules/dg#func_types).
+   * @param name - function name in UI.
+   * @param description - function description in UI.
+   * @param extensions - supported file format or a list of formats.
+   * @param inputType - file content type: "string" | "list". Default is "string".
+   * Specify only if a list of bytes is expected as an input.
+   * 
+   * See also: {@link https://datagrok.ai/help/develop/how-to/file-handlers}
+   */
+  export function fileImporter(options?: {
+    name?: string,
+    description?: string,
+    extensions: string | string[],
+    inputType?: string,
+  }) {
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {};
+  }
+
+  /** A function that registers [DG.FUNC_TYPES.FILE_VIEWER](https://datagrok.ai/js-api/modules/dg#func_types).
+   * @param name - function name in UI.
+   * @param description - function description in UI.
+   * @param extensions - supported file format or a list of formats.
+   * 
+   * See also: {@link https://datagrok.ai/help/develop/how-to/create-custom-file-viewers}
+   */
+  export function fileViewer(options?: {
+    name?: string,
+    description?: string,
+    extensions: string | string[],
+  }) {
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {};
+  }
+
+  /** A function that registers [DG.FUNC_TYPES.PACKAGE_SETTINGS_EDITOR](https://datagrok.ai/js-api/modules/dg#func_types).
+   * @param name - function name in UI.
+   * @param description - function description in UI.
+   * 
+   * See also: {@link https://datagrok.ai/help/develop/how-to/custom-package-settings-editors}
+   */
+  export function settingsEditor(options?: {
+    name?: string,
+    description?: string,
+  }) {
+    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {};
+  }
 }
