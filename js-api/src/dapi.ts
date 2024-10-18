@@ -897,7 +897,7 @@ export class DockerDataSource {
     return new DockerContainersDataSource(api.grok_Dapi_DockerContainers());
   }
 
-  getServiceLogs(serviceName: string, limit: number): Promise<DataFrame> {
+  getServiceLogs(serviceName: string, limit: number): Promise<string> {
     return api.grok_Dapi_DockersDataSource_GetServiceLogs(serviceName, limit);
   }
 
