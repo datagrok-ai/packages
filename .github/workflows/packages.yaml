@@ -126,7 +126,7 @@ jobs:
                 if [[ $npm_version != ${current_version} ]]; then
                   if [ "$(awk -F. '{print $1}' <<<$current_version)" -gt "0" ]; then
                     if [[ $unpublished_deps == "" ]]; then
-                      if [[ '${{ github.ref }}' == 'refs/heads/master' ]]; then
+                      if [[ '${{ github.ref }}' == 'refs/heads/dkovalyov/GROK-16670/pin-column-issue' ]]; then
                         publish="publish"
                         MATRIX_PUBLISH_JSON+=", \"publish\": \"publish\""
                         job_name+=' and publish to NPM'
