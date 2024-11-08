@@ -453,7 +453,7 @@ jobs:
         env:
           DEV_TEST_DEV_KEY: ${{ secrets.DEV_TEST_DEV_KEY }}
           TEST_TEST_DEV_KEY: ${{ secrets.TEST_TEST_DEV_KEY }}
-        timeout-minutes: 20
+        timeout-minutes: 10
         run: |
           if [[ "${{ steps.datagrok-image.outputs.alias }}" == "test" ]]; then
             key="$TEST_TEST_DEV_KEY"
@@ -475,6 +475,7 @@ jobs:
               sleep 1
               echo -e "\nContainer for ${{ matrix.package }} did not start yet..."
               docker ps -a
+              docker logs --tail 30 datagrok-grok_spawner-1
               echo -e "\nRetrying 'docker ps'..."
             done
           fi
