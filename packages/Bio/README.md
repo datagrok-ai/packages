@@ -2,7 +2,7 @@
 
 Bio is a bioinformatics support [package](https://datagrok.ai/help/develop/#packages) for the
 [Datagrok](https://datagrok.ai) platform with an extensive toolset supporting SAR analysis for small molecules
-and antibodies.
+and antibodies. 
 
 ## Notations
 

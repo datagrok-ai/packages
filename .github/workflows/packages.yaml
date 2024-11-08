@@ -129,7 +129,7 @@ jobs:
                 if [[ $npm_version != ${current_version} ]]; then
                   if [ "$(awk -F. '{print $1}' <<<$current_version)" -gt "0" ]; then
                     if [[ $unpublished_deps == "" ]]; then
-                      if [[ '${{ github.ref }}' == 'refs/heads/master' ]]; then
+                      if [[ '${{ github.ref }}' == 'refs/heads/vhlushchenko/NOSTORY/packages_docker-wait_timeout' ]]; then
                         publish="publish"
                         MATRIX_PUBLISH_JSON+=", \"publish\": \"publish\""
                         job_name+=' and publish to NPM'
@@ -474,6 +474,7 @@ jobs:
             do
               sleep 1
               echo -e "\nContainer for ${{ matrix.package }} did not start yet..."
+              docker ps -a
               echo -e "\nRetrying 'docker ps'..."
             done
           fi
@@ -506,180 +507,180 @@ jobs:
           echo "::error title=${{ matrix.package }}: failed tests::Check job output for details"
           echo "status=error" >> $GITHUB_OUTPUT
 
-      - name: Get docker image version
-        if: matrix.build_docker == 'true'
-        id: docker_name_ver
-        working-directory: packages/${{ matrix.package }}
-        run: |
-          image_ver=$(jq -r .version package.json)
-          if [[ "${{ matrix.publish }}" != "publish" ]]; then
-            image_ver+="-${{ steps.info.outputs.commit_sha }}"
-          fi
-          echo "image_ver=$image_ver" >> $GITHUB_OUTPUT
-          echo "package_name=$(jq -r .name package.json | sed -e 's,@datagrok/,,g')" >> $GITHUB_OUTPUT
+#      - name: Get docker image version
+#        if: matrix.build_docker == 'true'
+#        id: docker_name_ver
+#        working-directory: packages/${{ matrix.package }}
+#        run: |
+#          image_ver=$(jq -r .version package.json)
+#          if [[ "${{ matrix.publish }}" != "publish" ]]; then
+#            image_ver+="-${{ steps.info.outputs.commit_sha }}"
+#          fi
+#          echo "image_ver=$image_ver" >> $GITHUB_OUTPUT
+#          echo "package_name=$(jq -r .name package.json | sed -e 's,@datagrok/,,g')" >> $GITHUB_OUTPUT
+#
+#      - name: Login to DockerHub
+#        uses: docker/login-action@v3
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_TOKEN }}
+#        if: steps.docker_name_ver.outcome == 'success'
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-        if: steps.docker_name_ver.outcome == 'success'
+#      - name: Build package Docker image
+#        if: steps.docker_name_ver.outcome == 'success'
+#        id: build-docker
+#        run: |
+#          for dockerfile in $(echo -e ${{ matrix.docker }}); do
+#            image_name=${{ steps.docker_name_ver.outputs.package_name }}
+#            if [[ $(dirname $dockerfile) != *"dockerfiles" ]]; then
+#              image_name+="-$(dirname $dockerfile | awk -F/ '{print $NF}')"
+#            fi
+#            cache_args="--cache-from type=registry,ref=datagrok/${image_name}:cache"
+#            if [ '${{ github.ref }}' == 'refs/heads/master' ]; then
+#              cache_args+=" --cache-to type=registry,ref=datagrok/${image_name}:cache"
+#            fi
+#            docker buildx create --use
+#            docker buildx build $(dirname $dockerfile) --load \
+#              --tag datagrok/${image_name}:${{ steps.docker_name_ver.outputs.image_ver }} \
+#               $cache_args
+#            images+=" datagrok/${image_name}:${{ steps.docker_name_ver.outputs.image_ver }}"
+#          done
+#          echo "images=$images" >> $GITHUB_OUTPUT
 
-      - name: Build package Docker image
-        if: steps.docker_name_ver.outcome == 'success'
-        id: build-docker
-        run: |
-          for dockerfile in $(echo -e ${{ matrix.docker }}); do
-            image_name=${{ steps.docker_name_ver.outputs.package_name }}
-            if [[ $(dirname $dockerfile) != *"dockerfiles" ]]; then
-              image_name+="-$(dirname $dockerfile | awk -F/ '{print $NF}')"
-            fi
-            cache_args="--cache-from type=registry,ref=datagrok/${image_name}:cache"
-            if [ '${{ github.ref }}' == 'refs/heads/master' ]; then
-              cache_args+=" --cache-to type=registry,ref=datagrok/${image_name}:cache"
-            fi
-            docker buildx create --use
-            docker buildx build $(dirname $dockerfile) --load \
-              --tag datagrok/${image_name}:${{ steps.docker_name_ver.outputs.image_ver }} \
-               $cache_args
-            images+=" datagrok/${image_name}:${{ steps.docker_name_ver.outputs.image_ver }}"
-          done
-          echo "images=$images" >> $GITHUB_OUTPUT
+#      - name: General checks
+#        run: |
+#          if [[ "$(jq '.name' package.json | sed -E 's/(^"|"$)//g')" != "@datagrok/"* ]]; then
+#            echo "::error title=${{ matrix.package }}: failed properties check::Package should be in '@datagrok' scope. Change package name to '@datagrok/<name>' in ${{ matrix.package }}/package.json"
+#            exit 1
+#          fi
+#          if [ ! -z "$(jq '. | select( has("beta") == true ).beta' package.json)" ]; then
+#            echo "::error title=${{ matrix.package }}: failed properties check::Remove beta property in ${{ matrix.package }}/package.json. It is deprecated."
+#            exit 1
+#          fi
+#        id: gen_checks
+#        working-directory: packages/${{ matrix.package }}
+#
+#      - run: grok check
+#        if: ${{ !contains(matrix.package, 'Tests') && !contains(matrix.package, 'Meta') && matrix.beta != 'true' }}
+#        id: check
+#        working-directory: packages/${{ matrix.package }}
 
-      - name: General checks
-        run: |
-          if [[ "$(jq '.name' package.json | sed -E 's/(^"|"$)//g')" != "@datagrok/"* ]]; then
-            echo "::error title=${{ matrix.package }}: failed properties check::Package should be in '@datagrok' scope. Change package name to '@datagrok/<name>' in ${{ matrix.package }}/package.json"
-            exit 1
-          fi
-          if [ ! -z "$(jq '. | select( has("beta") == true ).beta' package.json)" ]; then
-            echo "::error title=${{ matrix.package }}: failed properties check::Remove beta property in ${{ matrix.package }}/package.json. It is deprecated."
-            exit 1
-          fi
-        id: gen_checks
-        working-directory: packages/${{ matrix.package }}
+#      - name: Publish to npm
+#        run: npm publish --access public
+#        id: publish
+#        working-directory: packages/${{ matrix.package }}
+#        env:
+#          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+#        if: matrix.publish == 'publish' && (steps.build.outcome == 'success' || steps.build.outcome == 'skipped') && steps.gen_checks.outcome == 'success' && (steps.check.outcome == 'success' || steps.check.outcome == 'skipped') && steps.install.outcome == 'success' && (steps.test-package.outcome == 'success' || steps.test-package.outcome == 'skipped' || (contains(matrix.package, 'Tests') || matrix.package == 'Chemspace'))
 
-      - run: grok check
-        if: ${{ !contains(matrix.package, 'Tests') && !contains(matrix.package, 'Meta') && matrix.beta != 'true' }}
-        id: check
-        working-directory: packages/${{ matrix.package }}
-
-      - name: Publish to npm
-        run: npm publish --access public
-        id: publish
-        working-directory: packages/${{ matrix.package }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        if: matrix.publish == 'publish' && (steps.build.outcome == 'success' || steps.build.outcome == 'skipped') && steps.gen_checks.outcome == 'success' && (steps.check.outcome == 'success' || steps.check.outcome == 'skipped') && steps.install.outcome == 'success' && (steps.test-package.outcome == 'success' || steps.test-package.outcome == 'skipped' || (contains(matrix.package, 'Tests') || matrix.package == 'Chemspace'))
-
-      - name: Get actors slack
-        id: actor
-        uses: ./.github/actions/slack-user-action
-        with:
-          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
-          email-mapping: ${{ secrets.EMAIL_SLACK_ID }}
-      - name: Get owner email
-        run: echo "owner=$(jq -r .author.email package.json)" >> $GITHUB_OUTPUT
-        id: owner-email
-        working-directory: packages/${{ matrix.package }}
-      - name: Get owners slack
-        id: owner
-        uses: ./.github/actions/slack-user-action
-        with:
-          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
-          emails: ${{ steps.owner-email.outputs.owner }}
-      - name: Get QA slack
-        id: qa
-        uses: ./.github/actions/slack-user-action
-        if: ${{ (matrix.package == 'Tutorials' || matrix.package == 'Chem' || matrix.package == 'DiffStidio' || matrix.package == 'PowerPack') }}
-        with:
-          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
-          emails: "opavlenko@datagrok.ai"
-      - name: Prepare Slack Message
-        id: slack-prepare
-        if: ${{ steps.publish.outcome == 'success' && !contains(matrix.package, 'Meta') }}
-        shell: bash
-        run: |
-          mentions=$(echo -e "${{ steps.actor.outputs.user-ids }}\n${{ steps.owner.outputs.user-ids }}\n${{ steps.qa.outputs.user-ids }}" | sort -u)
-          header="Package *${{ matrix.package }}* version *${{ matrix.version }}* published to <https://www.npmjs.com/package/$(jq -r .name "packages/${{ matrix.package }}/package.json")/v/${{ matrix.version }}|NPM>\n$(for value in $mentions; do echo -n "<@$value> "; done) FYI"
-          echo "SLACK_MESSAGE_HEADER=$header" >> $GITHUB_ENV
-
-      - name: Send to Slack
-        id: slack
-        if: steps.slack-prepare.outcome == 'success'
-        uses: ./.github/actions/slack-post-action
-        with:
-          channel: '#build'
-          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
-          message: ${{ env.SLACK_MESSAGE_HEADER }}
-
-      - name: Save package Docker image to tar archive
-        if: steps.build-docker.outcome == 'success' && (steps.publish.outcome == 'failure' || steps.publish.outcome == 'skipped')
-        id: save-docker
-        run: |
-          docker save -o /tmp/${{ matrix.package }}.docker.tar ${{ steps.build-docker.outputs.images }}
-
-      - uses: actions/upload-artifact@v4
-        if: steps.save-docker.outcome == 'success'
-        with:
-          path: /tmp/${{ matrix.package }}.docker.tar
-          name: ${{ matrix.package }}.docker.tar
-          retention-days: 14
-          if-no-files-found: warn
-
-      - name: Publish package Docker image
-        if: steps.publish.outcome == 'success' && steps.build-docker.outcome == 'success'
-        id: publish-docker
-        run: |
-          for image in $(echo -e ${{ steps.build-docker.outputs.images }}); do
-            docker push $image
-          done
-
-      - name: Commit package-lock.json
-        id: git
-        continue-on-error: true
-        if: steps.publish.outcome == 'success' || steps.package-lock.outcome == 'success'
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git pull
-          continue=false
-          if [ -n "$(git status -s packages/${{ matrix.package }}/package-lock.json)" ]; then
-            git add packages/${{ matrix.package }}/package-lock.json
-            skip_ci=""
-            if [ ${{ github.ref }} == 'refs/heads/master' ]; then
-              skip_ci="[skip ci]"
-            fi
-            git commit -m "GitHub Actions: Update packages/${{ matrix.package }}/package-lock.json $skip_ci
-
-            Workflow ${{ github.workflow }} ${{ github.run_number }}
-            https://github.com/datagrok-ai/public/actions/runs/${{ github.run_id }}"
-            continue=true
-          fi
-          if [[ "${continue}" == "true" ]]; then
-            count=0
-            retries=10
-            until git push; do
-              exit=$?
-              wait=$((2 ** count))
-              count=$((count + 1))
-              if [ $count -lt "$retries" ]; then
-                echo "Retry $count/$retries exited $exit, retrying 'git push' in $wait seconds..."
-                sleep $wait
-                git pull --rebase
-              else
-                echo "Retry $count/$retries exited $exit, no more retries left for 'git push'."
-                exit $exit
-              fi
-            done
-          fi
-
-      - name: Trigger help update
-        continue-on-error: true
-        if: steps.publish.outcome == 'success'
-        run: gh workflow run docusaurus.yaml --ref ${{ github.ref }}
-        env:
-          GH_TOKEN: ${{ github.token }}
+#      - name: Get actors slack
+#        id: actor
+#        uses: ./.github/actions/slack-user-action
+#        with:
+#          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
+#          email-mapping: ${{ secrets.EMAIL_SLACK_ID }}
+#      - name: Get owner email
+#        run: echo "owner=$(jq -r .author.email package.json)" >> $GITHUB_OUTPUT
+#        id: owner-email
+#        working-directory: packages/${{ matrix.package }}
+#      - name: Get owners slack
+#        id: owner
+#        uses: ./.github/actions/slack-user-action
+#        with:
+#          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
+#          emails: ${{ steps.owner-email.outputs.owner }}
+#      - name: Get QA slack
+#        id: qa
+#        uses: ./.github/actions/slack-user-action
+#        if: ${{ (matrix.package == 'Tutorials' || matrix.package == 'Chem' || matrix.package == 'DiffStidio' || matrix.package == 'PowerPack') }}
+#        with:
+#          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
+#          emails: "opavlenko@datagrok.ai"
+#      - name: Prepare Slack Message
+#        id: slack-prepare
+#        if: ${{ steps.publish.outcome == 'success' && !contains(matrix.package, 'Meta') }}
+#        shell: bash
+#        run: |
+#          mentions=$(echo -e "${{ steps.actor.outputs.user-ids }}\n${{ steps.owner.outputs.user-ids }}\n${{ steps.qa.outputs.user-ids }}" | sort -u)
+#          header="Package *${{ matrix.package }}* version *${{ matrix.version }}* published to <https://www.npmjs.com/package/$(jq -r .name "packages/${{ matrix.package }}/package.json")/v/${{ matrix.version }}|NPM>\n$(for value in $mentions; do echo -n "<@$value> "; done) FYI"
+#          echo "SLACK_MESSAGE_HEADER=$header" >> $GITHUB_ENV
+#
+#      - name: Send to Slack
+#        id: slack
+#        if: steps.slack-prepare.outcome == 'success'
+#        uses: ./.github/actions/slack-post-action
+#        with:
+#          channel: '#build'
+#          slack-token: ${{ secrets.SLACKBOT_TOKEN }}
+#          message: ${{ env.SLACK_MESSAGE_HEADER }}
+#
+#      - name: Save package Docker image to tar archive
+#        if: steps.build-docker.outcome == 'success' && (steps.publish.outcome == 'failure' || steps.publish.outcome == 'skipped')
+#        id: save-docker
+#        run: |
+#          docker save -o /tmp/${{ matrix.package }}.docker.tar ${{ steps.build-docker.outputs.images }}
+#
+#      - uses: actions/upload-artifact@v4
+#        if: steps.save-docker.outcome == 'success'
+#        with:
+#          path: /tmp/${{ matrix.package }}.docker.tar
+#          name: ${{ matrix.package }}.docker.tar
+#          retention-days: 14
+#          if-no-files-found: warn
+#
+#      - name: Publish package Docker image
+#        if: steps.publish.outcome == 'success' && steps.build-docker.outcome == 'success'
+#        id: publish-docker
+#        run: |
+#          for image in $(echo -e ${{ steps.build-docker.outputs.images }}); do
+#            docker push $image
+#          done
+#
+#      - name: Commit package-lock.json
+#        id: git
+#        continue-on-error: true
+#        if: steps.publish.outcome == 'success' || steps.package-lock.outcome == 'success'
+#        run: |
+#          git config --global user.name 'github-actions[bot]'
+#          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+#          git pull
+#          continue=false
+#          if [ -n "$(git status -s packages/${{ matrix.package }}/package-lock.json)" ]; then
+#            git add packages/${{ matrix.package }}/package-lock.json
+#            skip_ci=""
+#            if [ ${{ github.ref }} == 'refs/heads/master' ]; then
+#              skip_ci="[skip ci]"
+#            fi
+#            git commit -m "GitHub Actions: Update packages/${{ matrix.package }}/package-lock.json $skip_ci
+#
+#            Workflow ${{ github.workflow }} ${{ github.run_number }}
+#            https://github.com/datagrok-ai/public/actions/runs/${{ github.run_id }}"
+#            continue=true
+#          fi
+#          if [[ "${continue}" == "true" ]]; then
+#            count=0
+#            retries=10
+#            until git push; do
+#              exit=$?
+#              wait=$((2 ** count))
+#              count=$((count + 1))
+#              if [ $count -lt "$retries" ]; then
+#                echo "Retry $count/$retries exited $exit, retrying 'git push' in $wait seconds..."
+#                sleep $wait
+#                git pull --rebase
+#              else
+#                echo "Retry $count/$retries exited $exit, no more retries left for 'git push'."
+#                exit $exit
+#              fi
+#            done
+#          fi
+#
+#      - name: Trigger help update
+#        continue-on-error: true
+#        if: steps.publish.outcome == 'success'
+#        run: gh workflow run docusaurus.yaml --ref ${{ github.ref }}
+#        env:
+#          GH_TOKEN: ${{ github.token }}
 
 #      - name: Slack Notification
 #        uses: act10ns/slack@v2.1.0

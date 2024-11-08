@@ -1,7 +1,7 @@
 services:
   datagrok:
     privileged: true
-    image: datagrok/datagrok:${DATAGROK_VERSION:-latest}
+    image: datagrok/datagrok:bleeding-edge
     environment:
       GROK_PARAMETERS: |
         {
@@ -33,7 +33,7 @@ services:
     profiles: [ "all", "datagrok" ]
 
   grok_spawner:
-    image: datagrok/grok_spawner:${GROK_SPAWNER_VERSION:-latest}
+    image: datagrok/grok_spawner:bleeding-edge
     user: root
     environment:
       X_API_KEY: test-x-api-key
@@ -52,6 +52,7 @@ services:
 
   grok_connect:
     image: datagrok/grok_connect:${GROK_CONNECT_VERSION:-latest}
+    platform: linux/amd64
     networks:
       datagrok:
         aliases:
@@ -83,7 +84,7 @@ services:
     profiles: [ "all", "cvm", "jupyter_notebook", "notebook" ]
 
   jupyter_kernel_gateway:
-    image: datagrok/jupyter_kernel_gateway:${GROK_JUPYTER_KERNEL_GATEWAY_VERSION:-latest}
+    image: datagrok/jupyter_kernel_gateway:bleeding-edge
     networks:
       datagrok:
         aliases:
