@@ -470,19 +470,15 @@ jobs:
             echo -e "\nRetrying '/api/docker/containers'..."
           done
           if [[ "${{ steps.datagrok-image.outputs.apiUrl }}" == *"127.0.0.1"* ]]; then
-            if [[ $(jq -r '.on_demand' packages/${{ matrix.package }}/dockerfiles/container.json) == "true" ]]; then
-              until .github/scripts/check-output.sh "docker ps" '${{ matrix.package }}'
-                do
-                  sleep 1
-                  echo -e "\nContainer for ${{ matrix.package }} did not start yet..."
-                  echo -e "\nmatrix.package = ${{ matrix.package }}"
-                  docker ps -a
-                  docker logs --tail 30 datagrok-grok_spawner-1
-                  echo -e "\nRetrying 'docker ps'..."
-                done
-              else
-              echo false
-              fi           
+            until .github/scripts/check-output.sh "docker ps" '${{ matrix.package }}'
+            do
+              sleep 1
+              echo -e "\nContainer for ${{ matrix.package }} did not start yet..."
+              echo -e "\nmatrix.package = ${{ matrix.package }}"
+              docker ps -a
+              docker logs --tail 30 datagrok-grok_spawner-1
+              echo -e "\nRetrying 'docker ps'..."
+            done
           fi
       - name: Test Package
         if: ${{ matrix.test == 'test' }}
