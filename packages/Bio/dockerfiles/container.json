@@ -1,6 +1,6 @@
 {
   "cpu": 1,
   "memory": 1024,
-  "on_demand": true, 
+  "on_demand":  true,
   "timeout_minutes": 30
 }
