@@ -123,12 +123,18 @@ Save and [Run](#run-the-script) the script. Datagrok will automatically create t
 
 ![Input form for script](_pics/input-form.png)
 
-
 ## Add outputs
 
 It is time to add actual calculations and specify the expected outputs.
-Add the actual calculation in the script body,  
-and specify the outputs of the script in the [header](#review-the-script-header):
+
+Datagrok automatically injects *input* parameters' values before the script starts
+and captures *output* parameters' values when the script finishes.
+Datagrok natively supports standard scalar data types:
+`int`, `double`, `bool`, `string`.
+For tabilar datatypes, see the section [Process a dataframe](#process-a-dataframe).
+
+Add the actual calculation in the script body, and specify the outputs of the script in the [header](#review-the-script-header).
+
 
 ```mdx-code-block
 <Tabs>
@@ -210,10 +216,21 @@ change input headers as follows:
 
 ![customized-forms](_pics/customized-forms.png)
 
+:::tip Pro tip
+
+Depending on the metadata associated with the parameters, the editor can be
+enriched by [validators](../../datagrok/concepts/functions/func-params-annotation.md#validation), [choices](../../datagrok/concepts/functions/func-params-annotation.md#choices),
+and [suggestions](../../datagrok/concepts/functions/func-params-annotation.md#autocomplete). Validators, choices, and suggestions are
+[functions](../../datagrok/concepts/functions/functions.md), that means they can be implemented in different ways
+(database query, script, etc.), and reused.
+
+:::
+
 
 ## Process a dataframe
 
-You could also process complex data structures such as dataframes (basically, data tables).
+For table data, Datagrok supports **Dataframe** as input/output parameters.
+
 Change the script header to have:
 - single input of the `dataframe` type and 
 - single output of `int` type.
@@ -256,21 +273,15 @@ let cellCount = myData.rowCount * myData.columns.length;
 Run this script and provide any dataframe as the input.
 You can use any dataframe formerly opened in Datagrok, 
 upload file from your local machine, 
-or 
+or use any dataframe from the Datagrok server.
 
 You will get the result in the **Variables** panel:
 
 ![template-script-output](_pics/template-script-output.png)
 
-:::tip Pro tip
+To learn more about using complex data types in scripts, see the 
+[Enhance input/output parameters](scripting-features/scripting-features.md#enhance-inputoutput-parameters) section.
 
-Depending on the metadata associated with the parameters, the editor can be
-enriched by [validators](../../datagrok/concepts/functions/func-params-annotation.md#validation), [choices](../../datagrok/concepts/functions/func-params-annotation.md#choices),
-and [suggestions](../../datagrok/concepts/functions/func-params-annotation.md#autocomplete). Validators, choices, and suggestions are
-[functions](../../datagrok/concepts/functions/functions.md), that means they can be implemented in different ways
-(database query, script, etc.), and reused.
-
-:::
 
 ## Handle an error
 
