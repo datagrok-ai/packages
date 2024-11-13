@@ -77,3 +77,4 @@
 .icon-sort-down:before { content: '\f0dd'; } /* '' */
 .icon-mouse-pointer:before { content: '\f245'; } /* '' */
 .icon-merge:before { content: '\26AF'; }
+.icon-shortest-path:before { content: ' \1F3F3'; }

@@ -21,7 +21,7 @@ class ButtonPanel extends Component {
             onClick={() => this.props.map.findAndHighlightShortest()}
             title={"Find Shortest path"}
           >
-            <i className='icon-merge' />
+            <i className='icon-shortest-path' />
           </button>
         </li>
         <li>
