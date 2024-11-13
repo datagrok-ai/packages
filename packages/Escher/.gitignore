@@ -1,0 +1,35 @@
+*.log
+.DS_Store
+*.pyc
+.#*
+TAGS
+Escher.egg-info/
+.ipynb_checkpoints/
+lib/
+build/
+_build/
+env/
+commonjs/
+envset/
+.cache/
+*.tar.gz
+*.whl
+.tmp/
+
+# built files
+dist/
+coverage/
+.nyc_output/
+
+# npm and yarn
+package-lock.json
+node_modules/
+.yarnclean
+.mypy_cache/
+/TODO.txt
+
+# docs
+docs/iJO1366.json
+docs/e_coli_core.json
+docs/iAB_RBC_283.json
+docs/example_map.html

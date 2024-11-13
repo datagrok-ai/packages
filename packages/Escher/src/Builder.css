@@ -1,0 +1,153 @@
+/* Containers */
+
+/* The top level container for an Escher Builder */
+.escher-container {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  background-color: #F3F3F3;
+  text-align: center;
+  position: relative;
+  font-size: 14px;
+  color: #333333;
+}
+
+/* Applied to the body when Escher fills the screen. This stops browser from
+showing scroll-end animations. */
+html.fill-screen {
+  height: 100%;
+  width: 100%;
+}
+body.fill-screen {
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+/* Applied to top level container (generally .escher-container) when Escher
+fills the screen. These make sure Escher completely fills the screen, even after
+resizes. */
+.fill-screen-div {
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1000;
+}
+
+/* The zoom container classes. */
+.escher-container .escher-zoom-container,
+.escher-container .escher-3d-transform-container,
+.escher-container svg.escher-svg {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+}
+
+/* SVG text should not be selectable */
+.escher-container svg text {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Status */
+.escher-container #status {
+  position:absolute;
+  bottom:10px;
+  left: 20px;
+  color: red;
+  background-color: white;
+  font-size: 16px
+}
+
+/* Search & Menu */
+.escher-container .search-menu-container {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  margin: 0;
+  text-align: center;
+  pointer-events: none;
+}
+.escher-container .search-menu-container-inline {
+  box-sizing: border-box;
+  width: 320px;
+  display: inline-block;
+  text-align: left;
+  pointer-events: auto;
+}
+@media (min-width: 550px) {
+  .escher-container .search-menu-container-inline {
+    width: 410px;
+  }
+}
+
+/* Reaction input */
+.escher-container #rxn-input {
+  z-index: 10;
+  width: 200px;
+}
+.escher-container .input-close-button {
+  position: absolute;
+  right: 0px;
+  width: 18px;
+  bottom: 0px;
+  padding: 0px;
+  border-width: 0px;
+  margin: 0px;
+  background: none;
+  font-size: 20px;
+  font-weight: normal;
+  top: -8px;
+}
+.escher-container .input-close-button:hover {
+  color: #ff3333;
+  font-weight: bold;
+}
+
+/* text edit input */
+.escher-container #text-edit-input input {
+  width: 500px;
+  border: 1px solid #cccccc;
+  font-size: 22px;
+}
+
+.escher-container #tooltip-container {
+  -ms-touch-action: none;
+  touch-action: none;
+}
+
+/* Buttons */
+.escher-container .btn {
+  color: white!important;
+  border: 1px solid #2E2F2F;
+  background-image: linear-gradient(#4F5151, #474949 6%, #3F4141);
+  background-color: white;
+  cursor: pointer;
+}
+
+.escher-container .btn:active {
+  background-image: linear-gradient(#3F4141, #474949 6%, #4F5151);
+}
+
+.escher-container g.reaction path.segment {
+  
+  stroke-width: 6px;
+}
+
+.escher-container g.segment-group.shortest-path path.segment {
+  stroke: rgb(0, 255, 21);
+  stroke-width: 10px;
+}
+
+.escher-container g.segment-group.shortest-path path.arrowhead {
+  fill: rgb(0, 255, 21);
+}

@@ -1,0 +1,90 @@
+.escher-container .picker {
+  top: 35px;
+  margin-left: -7px;
+  position: absolute;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.escher-container .pickerBox {
+  position: absolute;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.375);
+  width: 14px;
+  height: 35px;
+  top: -35px
+}
+
+.escher-container .scaleTrack .rightOptions {
+  position: absolute;
+  left: -76px;
+}
+
+.escher-container .pickerOptions {
+  box-shadow: 0 2px 14px #c5c5c5;
+  margin-top: 1px;
+  display: inline-flex;
+  flex-direction: column;
+  width: 90px;
+}
+
+.escher-container .pickerOptions * {
+  font-size: 12px;
+}
+
+.escher-container .pickerOptions .option {
+  padding: 3px 0px;
+}
+
+.escher-container .pickerOptions .typePicker {
+  width: 20px;
+  position: absolute;
+  left: 70px;
+  top: 1px;
+  right: 0px;
+  height: 14px;
+  background-color: rgb(232, 232, 232);
+}
+
+.escher-container .pickerOptions .colorOptions {
+  display: inline-flex;
+}
+
+.escher-container .colorOptions .colorText {
+  padding: 3px 0px;
+  width: 100%;
+}
+
+.escher-container .colorOptions .colorWheel {
+  padding: 0px;
+  position: absolute;
+  right: 0;
+  height: 24px;
+  width: 21px;
+  border: 1px solid black;
+}
+
+.escher-container .picker .trashDiv {
+  position: absolute;
+  top: -56px;
+  font-size: 17px;
+}
+
+.escher-container .picker .trashDiv * {
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.escher-container .picker .icon-trash-empty {
+  margin: -5px;
+}
+
+.escher-container .scaleEditor :disabled {
+  background: #f1ecfa;
+}
+
+.escher-container .scaleEditor input[type=color]:disabled {
+  margin-top: 1px;
+}

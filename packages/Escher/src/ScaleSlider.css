@@ -1,0 +1,86 @@
+.escher-container .scaleEditor * {
+  font-size: 12px;
+  color: #777;
+  box-sizing: border-box;
+}
+
+.escher-container .scaleEditor {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.escher-container .scaleTrack {
+  position: relative;
+  display: flex;
+  height: 30px;
+  margin-bottom: 9px;
+  margin-top: 30px;
+  margin-left: 55px;
+  font-size: 15px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.escher-container .scaleTrack.disabled {
+  background: #f1ecfa;
+  color: #b19ec0;
+  padding: 4px 0;
+  justify-content: center;
+}
+
+.escher-container .gradient {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.escher-container .scaleLabels {
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 12px;
+}
+
+.escher-container .scaleLabels label {
+  margin-bottom: 6px;
+}
+
+.escher-container .noDataStyle {
+  position: relative;
+  margin-top: 20px;
+}
+
+.escher-container .noDataStyle .styleHeader {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.escher-container .noDataStyle label {
+  margin-right: 5px;
+}
+
+.escher-container .noDataStyle input[type=text] {
+  margin-right: 10px;
+  padding: 3px 0px;
+  width: 86px;
+}
+
+.escher-container .noDataStyle input[type=color] {
+  position: absolute;
+  padding: 0px;
+  border: 1px solid black;
+  left: 103px;
+  height: 24px;
+  width: 21px;
+}
+
+.escher-container .scaleEditor .icon-plus {
+  cursor: pointer;
+  position: absolute;
+  font-size: 14px;
+  right: 19px;
+}

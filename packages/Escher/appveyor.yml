@@ -1,0 +1,23 @@
+environment:
+  matrix:
+    - python: 'C:\\Python37-x64'
+
+install:
+  # Add python to PATH
+  - 'SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%'
+  - python --version
+  # Install python packages
+  - python -m pip install --upgrade pip
+  - cd py
+  - python -m pip install -e .
+  - cd ..
+
+build: off
+
+test_script:
+  - cd py
+  - python -m pytest
+  - cd ..
+
+artifacts:
+  - path: py\dist\*

@@ -1,0 +1,58 @@
+.escher-container .default-tooltip {
+  box-sizing: border-box;
+  min-width: 300px;
+  min-height: 100px;
+  border-radius: 2px;
+  border: 1px solid #b58787;
+  padding: 7px;
+  background-color: #fff;
+  text-align: left;
+  font-size: 16px;
+  font-family: sans-serif;
+  color: #111;
+  box-shadow: 4px 6px 20px 0px rgba(0, 0, 0, 0.4);
+}
+
+.escher-container .default-tooltip .id{
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.escher-container .default-tooltip button {
+  border-radius: 3px;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  margin-top: 4px;
+  font-size: 16px;
+  padding: 3px 6px;
+}
+
+.escher-container .default-tooltip .top-right {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+.escher-container .default-tooltip .top-right * {
+  float: right;
+  text-align: right;
+}
+
+.escher-container .default-tooltip .top-right a {
+  font-size: 11px;
+  color: #999;
+  cursor: pointer;
+}
+.escher-container .default-tooltip .top-right a:hover {
+  color: #444;
+  text-decoration: underline;
+}
+
+.escher-container .default-tooltip .type-label {
+  font-size: 15px;
+  color: #d27066;
+  background-color: #ffeded;
+  border-radius: 2px;
+  margin: 0 0 0 10px;
+  padding: 0 5px;
+}

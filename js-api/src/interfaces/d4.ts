@@ -1674,6 +1674,8 @@ export interface ISummarySettings {
 
   invertColorScheme: boolean;
 
+  useBarAxis: boolean;
+
   allowDynamicMenus: boolean;
 
   // Properties common for all viewers

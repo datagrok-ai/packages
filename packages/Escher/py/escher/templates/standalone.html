@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Escher Builder</title>
+
+    <script src="{{escher_url}}"></script>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, height=device-height,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui"/>
+  </head>
+  <body>
+    <div style="height: 100%; width: 100%;" id="map-container"></div>
+
+    <script>
+     /* Data from python */
+     var data = get_data();
+     escher.Builder(data.map_data, data.model_data, data.embedded_css,
+                    escher.libs.d3_select('#map-container'), data.options);
+
+     function b64DecodeUnicode(str) {
+       return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+       }).join(''))
+     }
+
+     // Put this at the end so Chrome doesn't cut off the code above.
+     function get_data() {
+       /** Return the data passed in by the Python module. */
+       const data = {
+         // defaults
+         map_data: null,
+         model_data: null,
+         embedded_css: null,
+         options: {
+           fill_screen: true,
+         }
+       };
+       {% if map_data_json_b64 != None %}
+       data.map_data = JSON.parse(b64DecodeUnicode('{{ map_data_json_b64 }}'));
+       {% endif %}
+       {% if model_data_json_b64 != None %}
+       data.model_data = JSON.parse(b64DecodeUnicode('{{ model_data_json_b64 }}'));
+       {% endif %}
+       {% if embedded_css_b64 != None %}
+       data.embedded_css = b64DecodeUnicode('{{ embedded_css_b64 }}');
+       {% endif %}
+       {% if options_json_b64 != None %}
+       const newOptions = JSON.parse(b64DecodeUnicode('{{options_json_b64}}'));
+       data.options = Object.assign({}, data.options, newOptions);
+       {% endif %}
+       return data;
+     }
+    </script>
+  </body>
+</html>
