@@ -83,7 +83,7 @@ services:
     profiles: [ "all", "cvm", "jupyter_notebook", "notebook" ]
 
   jupyter_kernel_gateway:
-    image: datagrok/jupyter_kernel_gateway:${GROK_JUPYTER_KERNEL_GATEWAY_VERSION:-bleeding-edge-cuda}
+    image: datagrok/jupyter_kernel_gateway:${GROK_JUPYTER_KERNEL_GATEWAY_VERSION:-latest}
     networks:
       datagrok:
         aliases:
@@ -91,23 +91,23 @@ services:
     environment:
       GROK_PARAMETERS: |
         {
-          "dbServer": "host.docker.internal",
+          "dbServer": "database",
           "dbPort": "5432",
           "db": "datagrok",
-          "dbLogin": "datagrok",
-          "dbPassword": "123",
+          "dbLogin": "dg",
+          "dbPassword": "dg",
           "isolatesCount": 1,
           "deployDemo": false,
           "deployTestDemo": false,
-          "datlasApiUrl": "http://host.docker.internal:8082",
+          "datlasApiUrl": "http://datagrok:8082",
           "jupyterToken": "4b8ed936cf61a1c5e37a8b3a845599941c272de6e29330a0",
           "capabilities": ["jupyter"]
         }
     restart: unless-stopped
-#    depends_on:
-#      db:
-#        condition: service_healthy
-#        restart: false
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: false
     profiles: [ "all", "cvm", "scripting", "jupyter_kernel_gateway", "jkg" ]
 
   db:
