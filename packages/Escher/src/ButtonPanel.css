@@ -80,3 +80,18 @@
 .escher-container .button-panel [class^='icon-'] {
   font-size: 23px;
 }
+
+.escher-container .kth-reaction-arrows {
+  display: flex;
+    width: 40px;
+    flex-direction: row;
+}
+
+.escher-container .kth-reaction-arrows button.btn {
+  width: 20px;
+  height: 20px;
+}
+
+.escher-container .kth-reaction-arrows button.btn i {
+  font-size: 12px;
+}

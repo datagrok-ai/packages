@@ -13,7 +13,7 @@ import SearchIndex from './SearchIndex'
 import bacon from 'baconjs'
 import _ from 'underscore'
 import { select as d3Select } from 'd3-selection'
-import {findShortestPath,getReactionPathSegments} from './algo';
+import {findShortestPath,getReactionPathSegments, findKthShortestPath} from './algo';
 
 function _on_array (fn) {
   return function (array) { return fn.apply(null, array) }
@@ -2465,16 +2465,27 @@ export default class Map {
     }
   }
 
-
-  findAndHighlightShortest() {
-    this.unhighlight();
+  findAndHighlightShortest(inc = 0) {
+    
     const nodes = Array.from(new Set(Object.values(this.getSelectedNodes())
     .sort((node1, node2) => ((!!node1.selectionOrder ? node1.selectionOrder : 0) - (!!node2.selectionOrder ? node2.selectionOrder : 0)))
     .map(a => a.bigg_id)));
     if (nodes.length !== 2)
       return;
-    nodes;
-    const path = findShortestPath(this, nodes[0], nodes[1]);
+    
+    let path;
+    let k;
+    try {
+      const reactionHash = `r${nodes[0]}_r${nodes[1]}`;
+      k = inc == 0 ? 1 : Math.max(this.shortestPathInfo ? (this.shortestPathInfo.hash === reactionHash ? this.shortestPathInfo.k + inc : 1) : 1, 1);
+      path = findKthShortestPath(this, nodes[0], nodes[1], k);
+      this.shortestPathInfo = {hash: reactionHash, k};
+    } catch (e) {
+      console.error(`Error finding ${k}th shortest path`, e);
+      return;
+    }
+    this.unhighlight();
+    //const kthPath = findKthShortestPath(this, nodes[0], nodes[1], 20);
     for (let i = 0; i < path.length - 1; i++) {
       const reactionId = path[i].reaction_id;
       const firtNodeBiggId = path[i].met;

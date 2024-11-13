@@ -23,6 +23,25 @@ class ButtonPanel extends Component {
           >
             <i className='icon-shortest-path' />
           </button>
+        <div className='kth-reaction-arrows'>
+        <button
+            className='buttonGroup btn'
+            title={`Previous shortest reaction`}
+            onClick={() => this.props.map.findAndHighlightShortest(-1)}
+          >
+            <i className='icon-left-big' />
+          </button>
+
+          <button
+            className='buttonGroup btn'
+            title={`Next shortest reaction`}
+            onClick={() => this.props.map.findAndHighlightShortest(1)}
+          >
+            <i className='icon-right-big' />
+          </button>
+
+        </div>
+
         </li>
         {/*<li>*/}
         {/*  <button*/}
