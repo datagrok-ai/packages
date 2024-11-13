@@ -7,8 +7,6 @@ export function findShortestPath(map, fromNodeBiggId, toNodeBiggId) {
     // the path should only be built between primary metabolites
     const primaryMetabolitBiggIds = new Set(Object.values(map.nodes).filter((node) => node.node_type === 'metabolite' && node.node_is_primary).map((node) => node.bigg_id));
 
-    const biggIdToNodeId = {};
-
     for (const reactionId in map.reactions) {
         const reaction = map.reactions[reactionId];
         for (const metabolite of reaction.metabolites) {
@@ -62,6 +60,118 @@ export function findShortestPath(map, fromNodeBiggId, toNodeBiggId) {
         node = previous[node.met];
     }
     return path;
+}
+
+
+
+export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
+    const reactionOrder = (coef) => coef > 0 ? 1 : -1;
+    const primaryMetabolitBiggIds = new Set(Object.values(map.nodes).filter((node) => node.node_type === 'metabolite' && node.node_is_primary).map((node) => node.bigg_id));
+
+    const graph = {};
+
+    // Build the graph structure
+    for (const reactionId in map.reactions) {
+        const reaction = map.reactions[reactionId];
+        for (const metabolite of reaction.metabolites) {
+            if (metabolite.coefficient > 0 && !reaction.reversibility) continue;
+            if (!graph[metabolite.bigg_id]) graph[metabolite.bigg_id] = {};
+            const metaboliteReactionOrder = reactionOrder(metabolite.coefficient);
+            reaction.metabolites.filter((met) => met.bigg_id !== metabolite.bigg_id && reactionOrder(met.coefficient) !== metaboliteReactionOrder && primaryMetabolitBiggIds.has(met.bigg_id)).forEach((met) => {
+                graph[metabolite.bigg_id][met.bigg_id] = {coefficient: met.coefficient, reaction_id: reaction.reaction_id};
+            });
+        }
+    }
+
+    // Helper function for finding shortest path with Dijkstra's algorithm
+    function dijkstra(fromNode, toNode) {
+        const visited = {};
+        const distance= {};
+        const previous = {};
+
+        Object.values(map.nodes).filter((node) => node.node_type == 'metabolite').forEach((node) => distance[node.bigg_id] = Infinity);
+        distance[fromNode] = 0;
+        const queue = [fromNode];
+
+        while (queue.length > 0) {
+            const node = queue.sort((a, b) => distance[a] - distance[b])[0];
+            queue.splice(0, 1);
+            if (visited[node]) continue;
+            visited[node] = true;
+            if (node === toNode) break;
+
+            for (const neighbor in graph[node]) {
+                const alt = distance[node] + 1;
+                if (alt < distance[neighbor]) {
+                    distance[neighbor] = alt;
+                    previous[neighbor] = {met: node, reaction_id: graph[node][neighbor].reaction_id};
+                    queue.push(neighbor);
+                }
+            }
+        }
+
+        // Reconstruct path
+        const path = [{met: toNodeBiggId, reaction_id: null}];
+        let node = previous[toNode];
+        while (node) {
+            path.unshift(node);
+            node = previous[node.met];
+        }
+        return { path, length: distance[toNode] };
+    }
+
+    // Initialize paths list with the first shortest path
+    const paths = [];
+    const { path: shortestPath, length: shortestLength } = dijkstra(fromNodeBiggId, toNodeBiggId);
+    if (shortestPath.length === 0) return null; // No path found
+    paths.push({ path: shortestPath, length: shortestLength });
+
+    // Priority queue for candidate paths
+    const candidates = [];
+
+    for (let i = 1; i < k; i++) {
+        const lastPath = paths[i - 1].path;
+        
+        for (let j = 0; j < lastPath.length - 1; j++) {
+            const spurNode = lastPath[j].met;
+            const rootPath = lastPath.slice(0, j);
+            // Temporarily remove edges that overlap with the current path
+            const removedEdges = [];
+            for (const p of paths) {
+                if (p.path.slice(0, j).every((step, idx) => step.met === rootPath[idx].met)){
+                    const nextNode = p.path[j + 1].met;
+                    if (graph[spurNode] && graph[spurNode][nextNode]) {
+                        removedEdges.push([spurNode, nextNode, graph[spurNode][nextNode]]);
+                        delete graph[spurNode][nextNode];
+                    }
+                }
+            }
+        
+            const spurPath = dijkstra(spurNode, toNodeBiggId);
+            if (spurPath.path.length > 0) {
+                const totalPath = [...rootPath, ...spurPath.path];
+                const totalLength = rootPath.length + spurPath.length;
+                candidates.push({ path: totalPath, length: totalLength });
+            }
+
+            // Restore removed edges
+            for (const [from, to, edgeData] of removedEdges) {
+                graph[from][to] = edgeData;
+            }
+        }
+
+        if (candidates.length === 0) break;
+
+        // Sort candidates and add the shortest candidate path to paths
+        candidates.sort((a, b) => a.length - b.length);
+        const bestCandidate = candidates.shift();
+        paths.push(bestCandidate);
+
+
+    }
+
+    // Return the k-th shortest path if available
+    return paths[k - 1] ? paths[k - 1].path : null;
 }
 
 
