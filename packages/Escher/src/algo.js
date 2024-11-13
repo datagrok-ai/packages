@@ -66,8 +66,8 @@ export function findShortestPath(map, fromNodeBiggId, toNodeBiggId) {
 
 export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
     const reactionOrder = (coef) => coef > 0 ? 1 : -1;
-    const primaryMetabolitBiggIds = new Set(Object.values(map.nodes).filter((node) => node.node_type === 'metabolite' && node.node_is_primary).map((node) => node.bigg_id));
-
+    //const primaryMetabolitBiggIds = new Set(Object.values(map.nodes).filter((node) => node.node_type === 'metabolite' && node.node_is_primary).map((node) => node.bigg_id));
+    
     const graph = {};
 
     // Build the graph structure
@@ -77,7 +77,9 @@ export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
             if (metabolite.coefficient > 0 && !reaction.reversibility) continue;
             if (!graph[metabolite.bigg_id]) graph[metabolite.bigg_id] = {};
             const metaboliteReactionOrder = reactionOrder(metabolite.coefficient);
-            reaction.metabolites.filter((met) => met.bigg_id !== metabolite.bigg_id && reactionOrder(met.coefficient) !== metaboliteReactionOrder && primaryMetabolitBiggIds.has(met.bigg_id)).forEach((met) => {
+            reaction.metabolites.filter((met) => met.bigg_id !== metabolite.bigg_id && reactionOrder(met.coefficient) !== metaboliteReactionOrder
+            // && primaryMetabolitBiggIds.has(met.bigg_id)
+            ).forEach((met) => {
                 graph[metabolite.bigg_id][met.bigg_id] = {coefficient: met.coefficient, reaction_id: reaction.reaction_id};
             });
         }
@@ -102,7 +104,10 @@ export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
 
             for (const neighbor in graph[node]) {
                 const alt = distance[node] + 1;
-                if (alt < distance[neighbor]) {
+                const curReaction = graph[node][neighbor].reaction_id;
+                const curPath = getReactionPath(node);
+
+                if (alt < distance[neighbor] && !curPath.includes(curReaction)) {
                     distance[neighbor] = alt;
                     previous[neighbor] = {met: node, reaction_id: graph[node][neighbor].reaction_id};
                     queue.push(neighbor);
@@ -111,6 +116,16 @@ export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
         }
 
         // Reconstruct path
+
+        function getReactionPath(node) {
+            const path = [];
+            let n = previous[node];
+            while (n) {
+                path.unshift(n.reaction_id);
+                n = previous[n.met];
+            }
+            return path;
+        }
         const path = [{met: toNodeBiggId, reaction_id: null}];
         let node = previous[toNode];
         while (node) {
