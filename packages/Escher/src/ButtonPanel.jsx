@@ -24,15 +24,15 @@ class ButtonPanel extends Component {
             <i className='icon-shortest-path' />
           </button>
         </li>
-        <li>
-          <button
-            className='button btn'
-            onClick={() => this.props.map.mergeSelectedNodes()}
-            title={"Merge selected nodes"}
-          >
-            <i className='icon-merge' />
-          </button>
-        </li>
+        {/*<li>*/}
+        {/*  <button*/}
+        {/*    className='button btn'*/}
+        {/*    onClick={() => this.props.map.mergeSelectedNodes()}*/}
+        {/*    title={"Merge selected nodes"}*/}
+        {/*  >*/}
+        {/*    <i className='icon-merge' />*/}
+        {/*  </button>*/}
+        {/*</li>*/}
         <li>
           <button
             className='button btn'
