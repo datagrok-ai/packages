@@ -58,26 +58,26 @@ svg.escher-svg g.selected .label {
 }
 svg.escher-svg .metabolite-circle {
   stroke: rgb(162, 69, 16);
-  fill: rgb(224, 134, 91);
+  fill: rgb(255,116,0);
 }
 svg.escher-svg g.selected .metabolite-circle {
-  stroke: rgb(0, 255, 21);
+  stroke: rgb(0, 255, 255);
   stroke-width: 12px;
 }
 svg.escher-svg .segment {
-  stroke: #334E75;
+  stroke: #ab0c13;
   stroke-width: 10px;
   fill: none;
 }
 svg.escher-svg .arrowhead {
-  fill: #334E75;
+  fill: #ab0c13;
 }
 svg.escher-svg .stoichiometry-label-rect {
   fill: white;
   opacity: 0.5;
 }
 svg.escher-svg .stoichiometry-label {
-  fill: #334E75;
+  fill: #ab0c13;
   font-size: 17px;
 }
 svg.escher-svg .membrane {

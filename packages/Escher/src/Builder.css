@@ -140,14 +140,14 @@ resizes. */
 
 .escher-container g.reaction path.segment {
   
-  stroke-width: 6px;
+  stroke-width: 3px;
 }
 
 .escher-container g.segment-group.shortest-path path.segment {
-  stroke: rgb(0, 255, 21);
-  stroke-width: 10px;
+  stroke: rgb(0, 255, 255);
+  stroke-width: 12px;
 }
 
 .escher-container g.segment-group.shortest-path path.arrowhead {
-  fill: rgb(0, 255, 21);
+  fill: rgb(0, 255, 255);
 }

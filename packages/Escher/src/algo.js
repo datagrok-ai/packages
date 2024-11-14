@@ -179,8 +179,15 @@ export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
 
         // Sort candidates and add the shortest candidate path to paths
         candidates.sort((a, b) => a.length - b.length);
-        const bestCandidate = candidates.shift();
-        paths.push(bestCandidate);
+
+        const existingPathHashes = paths.map((p) => p.path.map((a) => `${a.met}-${a.reaction_id}`).join('-'));
+        const bestCandidate = candidates.filter((can) => new Set(can.path.map(a => a.reaction_id)).size === can.path.length)
+        .filter((can) => !existingPathHashes.includes(can.path.map((a) => `${a.met}-${a.reaction_id}`).join('-')))
+        .shift();
+        if (bestCandidate)
+            paths.push(bestCandidate);
+        else
+            paths.push(paths[paths.length - 1]);
 
 
     }
