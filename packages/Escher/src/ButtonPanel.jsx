@@ -49,7 +49,7 @@ class ButtonPanel extends Component {
             onClick={() => this.props.map.findKthOutOrIngoingReactions(0, true)}
             title={"Highlight outgoing reactions"}
           >
-            <i className='icon-merge' />
+            <i className='icon-arrows-outside' />
           </button>
           <div className='kth-reaction-arrows'>
         <button
@@ -78,7 +78,7 @@ class ButtonPanel extends Component {
             onClick={() => this.props.map.findKthOutOrIngoingReactions(0, false)}
             title={"Highlight ingoing reactions"}
           >
-            <i className='icon-merge' />
+            <i className='icon-arrows-inside' />
           </button>
           <div className='kth-reaction-arrows'>
         <button
