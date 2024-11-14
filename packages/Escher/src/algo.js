@@ -196,6 +196,67 @@ export function findKthShortestPath(map, fromNodeBiggId, toNodeBiggId, k = 1) {
     return paths[k - 1] ? paths[k - 1].path : null;
 }
 
+export const pathSeparatorString = '-*-*-';
+
+export function findOutGoing(map, nodeBiggId) {
+    const reactionOrder = (coef) => coef > 0 ? 1 : -1;
+    //const primaryMetabolitBiggIds = new Set(Object.values(map.nodes).filter((node) => node.node_type === 'metabolite' && node.node_is_primary).map((node) => node.bigg_id));
+    
+    const graph = {};
+
+    // Build the graph structure
+    for (const reactionId in map.reactions) {
+        const reaction = map.reactions[reactionId];
+        for (const metabolite of reaction.metabolites) {
+            if (metabolite.coefficient > 0 && !reaction.reversibility) continue;
+            if (!graph[metabolite.bigg_id]) graph[metabolite.bigg_id] = {};
+            const metaboliteReactionOrder = reactionOrder(metabolite.coefficient);
+            reaction.metabolites.filter((met) => met.bigg_id !== metabolite.bigg_id && reactionOrder(met.coefficient) !== metaboliteReactionOrder
+            // && primaryMetabolitBiggIds.has(met.bigg_id)
+            ).forEach((met) => {
+                graph[metabolite.bigg_id][met.bigg_id] = {coefficient: met.coefficient, reaction_id: reaction.reaction_id};
+            });
+        }
+    }
+    const outGoings = new Set();
+    for (const otherMet in graph[nodeBiggId] == null ? {} : graph[nodeBiggId]) {
+        outGoings.add(`${graph[nodeBiggId][otherMet].reaction_id}${pathSeparatorString}${otherMet}`);
+    }
+    return Array.from(outGoings);
+}
+
+export function findInGoing(map, nodeBiggId) {
+
+const reactionOrder = (coef) => coef > 0 ? 1 : -1;
+    //const primaryMetabolitBiggIds = new Set(Object.values(map.nodes).filter((node) => node.node_type === 'metabolite' && node.node_is_primary).map((node) => node.bigg_id));
+    
+    const graph = {};
+
+    // Build the graph structure
+    for (const reactionId in map.reactions) {
+        const reaction = map.reactions[reactionId];
+        for (const metabolite of reaction.metabolites) {
+            if (metabolite.coefficient > 0 && !reaction.reversibility) continue;
+            if (!graph[metabolite.bigg_id]) graph[metabolite.bigg_id] = {};
+            const metaboliteReactionOrder = reactionOrder(metabolite.coefficient);
+            reaction.metabolites.filter((met) => met.bigg_id !== metabolite.bigg_id && reactionOrder(met.coefficient) !== metaboliteReactionOrder
+            // && primaryMetabolitBiggIds.has(met.bigg_id)
+            ).forEach((met) => {
+                graph[metabolite.bigg_id][met.bigg_id] = {coefficient: met.coefficient, reaction_id: reaction.reaction_id};
+            });
+        }
+    }
+    const inGoing = new Set();
+    
+    
+    for (const otherMet in graph) {
+        if (!graph[otherMet][nodeBiggId]) continue;
+        const reactionInfo = graph[otherMet][nodeBiggId];
+        inGoing.add(`${reactionInfo.reaction_id}${pathSeparatorString}${otherMet}`);
+    }
+    return Array.from(inGoing);
+}
+
 
 export function getReactionPathSegments(map, fromNodeBiggId, toNodeBiggId, reactionId) {
     const reaction = map.reactions[reactionId];

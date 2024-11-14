@@ -144,10 +144,10 @@ resizes. */
 }
 
 .escher-container g.segment-group.shortest-path path.segment {
-  stroke: rgb(0, 255, 255);
-  stroke-width: 12px;
+  stroke: rgb(0, 0, 0);
+  stroke-width: 14px;
 }
 
 .escher-container g.segment-group.shortest-path path.arrowhead {
-  fill: rgb(0, 255, 255);
+  fill: rgb(0, 0, 0);
 }

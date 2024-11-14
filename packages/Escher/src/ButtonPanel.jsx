@@ -43,15 +43,63 @@ class ButtonPanel extends Component {
         </div>
 
         </li>
-        {/*<li>*/}
-        {/*  <button*/}
-        {/*    className='button btn'*/}
-        {/*    onClick={() => this.props.map.mergeSelectedNodes()}*/}
-        {/*    title={"Merge selected nodes"}*/}
-        {/*  >*/}
-        {/*    <i className='icon-merge' />*/}
-        {/*  </button>*/}
-        {/*</li>*/}
+        <li>
+          <button
+            className='button btn'
+            onClick={() => this.props.map.findKthOutOrIngoingReactions(0, true)}
+            title={"Highlight outgoing reactions"}
+          >
+            <i className='icon-merge' />
+          </button>
+          <div className='kth-reaction-arrows'>
+        <button
+            className='buttonGroup btn'
+            title={`Decrement outgoing reactions`}
+            onClick={() => this.props.map.findKthOutOrIngoingReactions(-1, true)}
+          >
+            <i className='icon-left-big' />
+          </button>
+
+          <button
+            className='buttonGroup btn'
+            title={`Increment outgoing reactions`}
+            onClick={() => this.props.map.findKthOutOrIngoingReactions(1, true)}
+          >
+            <i className='icon-right-big' />
+          </button>
+
+        </div>
+
+        </li>
+
+        <li>
+          <button
+            className='button btn'
+            onClick={() => this.props.map.findKthOutOrIngoingReactions(0, false)}
+            title={"Highlight ingoing reactions"}
+          >
+            <i className='icon-merge' />
+          </button>
+          <div className='kth-reaction-arrows'>
+        <button
+            className='buttonGroup btn'
+            title={`Decrement ingoing reactions`}
+            onClick={() => this.props.map.findKthOutOrIngoingReactions(-1, false)}
+          >
+            <i className='icon-left-big' />
+          </button>
+
+          <button
+            className='buttonGroup btn'
+            title={`Increment ingoing reactions`}
+            onClick={() => this.props.map.findKthOutOrIngoingReactions(1, false)}
+          >
+            <i className='icon-right-big' />
+          </button>
+
+        </div>
+
+        </li>
         <li>
           <button
             className='button btn'

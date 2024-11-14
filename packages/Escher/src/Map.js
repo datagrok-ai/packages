@@ -13,7 +13,7 @@ import SearchIndex from './SearchIndex'
 import bacon from 'baconjs'
 import _ from 'underscore'
 import { select as d3Select } from 'd3-selection'
-import {findShortestPath,getReactionPathSegments, findKthShortestPath} from './algo';
+import {findOutGoing, findInGoing, getReactionPathSegments, findKthShortestPath, pathSeparatorString} from './algo';
 
 function _on_array (fn) {
   return function (array) { return fn.apply(null, array) }
@@ -2499,6 +2499,61 @@ export default class Map {
     // path.filter(p => p.reaction_id != null).forEach(p => {
     //   this.sel.select(`#r${p.reaction_id}.reaction`).classed('shortest-path', true)
     // })
+
+  }
+
+  findKthOutOrIngoingReactions(inc, outGoing = true) {
+    const nodes = Array.from(new Set(Object.values(this.getSelectedNodes())))
+    if (nodes.length !== 1)
+      return;
+    let k;
+    const node = nodes[0];
+    const biggId = node.bigg_id;
+    const fromId = biggId;
+    this.unhighlight();
+
+    const getSavedInfo = () => outGoing ? this.outGoingInfo : this.inGoingInfo;
+    const setSavedInfo = (info) => outGoing ? (this.outGoingInfo = info) : (this.inGoingInfo = info);
+    const calcFunc = outGoing ? findOutGoing : findInGoing;
+    k = inc == 0 ? 1 : Math.max(getSavedInfo() ? (getSavedInfo().hash === biggId ? getSavedInfo().k + inc : 1) : 1, 1);
+    setSavedInfo({hash: biggId, k});
+    const visitedMetabolites = new Set();
+    const visitedReactions = new Set();
+    const newMetabolites = new Set();
+    // outGoing.forEach((o) => {
+    //   visitedMetabolites.add(o[1]);
+    //   visitedReactions.add(o[0]);
+    // });
+
+
+    const queue = [biggId];
+    for (let iter = 0; iter < k; iter++) {
+      newMetabolites.clear()
+      while(queue.length > 0) {
+        const currentId = queue.shift();
+        if (visitedMetabolites.has(currentId))
+          continue;
+        visitedMetabolites.add(currentId);
+        const outGoing = calcFunc(this, currentId).map(a => a.split(pathSeparatorString));
+        outGoing.forEach((o) => {
+          const reactionId = o[0];
+          const toId = o[1];
+          if (!visitedReactions.has(reactionId) && !visitedMetabolites.has(toId)) {
+            newMetabolites.add(toId);
+            const segments = getReactionPathSegments(this, currentId, toId, reactionId);
+            segments && segments.forEach((seg) => {
+              this.sel.select(`#s${seg}.segment-group`).classed('shortest-path', true)
+            })
+          }
+        })
+
+        outGoing.forEach((o) => {
+          visitedReactions.add(o[0]);
+        });
+      }
+      Array.from(newMetabolites).forEach(m => queue.push(m));
+    }
+
 
   }
 
