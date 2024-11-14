@@ -2480,6 +2480,8 @@ export default class Map {
       k = inc == 0 ? 1 : Math.max(this.shortestPathInfo ? (this.shortestPathInfo.hash === reactionHash ? this.shortestPathInfo.k + inc : 1) : 1, 1);
       path = findKthShortestPath(this, nodes[0], nodes[1], k);
       this.shortestPathInfo = {hash: reactionHash, k};
+      this.outGoingInfo = null;
+      this.inGoingInfo = null;
     } catch (e) {
       console.error(`Error finding ${k}th shortest path`, e);
       return;
@@ -2516,6 +2518,9 @@ export default class Map {
     const setSavedInfo = (info) => outGoing ? (this.outGoingInfo = info) : (this.inGoingInfo = info);
     const calcFunc = outGoing ? findOutGoing : findInGoing;
     k = inc == 0 ? 1 : Math.max(getSavedInfo() ? (getSavedInfo().hash === biggId ? getSavedInfo().k + inc : 1) : 1, 1);
+    this.outGoingInfo = null;
+    this.inGoingInfo = null;
+    this.shortestPathInfo = null;
     setSavedInfo({hash: biggId, k});
     const visitedMetabolites = new Set();
     const visitedReactions = new Set();
