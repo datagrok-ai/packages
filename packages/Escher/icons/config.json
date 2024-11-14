@@ -131,6 +131,34 @@
       "css": "sort-down",
       "code": 61661,
       "src": "fontawesome"
+    },
+    {
+      "uid": "4e9b1a78fe6f220a8950b1c2e065ddcc",
+      "css": "arrows-outside",
+      "code": 59404,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M600 500A100 100 0 1 0 400 500 100 100 0 1 0 600 500M490 400H510V200H530L500 100 470 200H490ZM490 600H510V800H530L500 900 470 800H490ZM400 490V510H200V530L100 500 200 470V490ZM600 490V510H800V530L900 500 800 470V490Z",
+        "width": 1000
+      },
+      "search": [
+        "arrows-outside"
+      ]
+    },
+    {
+      "uid": "a3862efb89add9178454e1cfb61c6413",
+      "css": "arrows-inside",
+      "code": 59405,
+      "src": "custom_icons",
+      "selected": true,
+      "svg": {
+        "path": "M600 500A100 100 0 1 0 400 500 100 100 0 1 0 600 500M490 50H510V300H530L500 400 470 300H490ZM490 950H510V700H530L500 600 470 700H490ZM50 490V510H300V530L400 500 300 470V490ZM950 490V510H700V530L600 500 700 470V490Z",
+        "width": 1000
+      },
+      "search": [
+        "arrows-inside"
+      ]
     }
   ]
 }

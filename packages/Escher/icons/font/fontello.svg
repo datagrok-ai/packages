@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg">
-<metadata>Copyright (C) 2017 by original authors @ fontello.com</metadata>
+<metadata>Copyright (C) 2024 by original authors @ fontello.com</metadata>
 <defs>
 <font id="fontello" horiz-adv-x="1000" >
 <font-face font-family="fontello" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
@@ -29,6 +29,10 @@
 <glyph glyph-name="resize-full" unicode="&#xe80a;" d="M421 261q0-7-5-13l-185-185 80-81q10-10 10-25t-10-25-25-11h-250q-15 0-25 11t-11 25v250q0 15 11 25t25 11 25-11l80-80 186 185q5 6 12 6t13-6l64-63q5-6 5-13z m436 482v-250q0-15-10-25t-26-11-25 11l-80 80-185-185q-6-6-13-6t-13 6l-64 64q-5 5-5 12t5 13l186 185-81 81q-10 10-10 25t10 25 25 11h250q15 0 26-11t10-25z" horiz-adv-x="857.1" />
 
 <glyph glyph-name="cw" unicode="&#xe80b;" d="M857 707v-250q0-14-10-25t-26-11h-250q-23 0-32 23-10 22 7 38l77 77q-82 77-194 77-58 0-111-23t-91-61-61-91-23-111 23-111 61-91 91-61 111-23q66 0 125 29t100 82q4 6 13 7 8 0 14-5l76-77q5-4 6-11t-5-13q-60-74-147-114t-182-41q-87 0-167 34t-136 92-92 137-34 166 34 166 92 137 136 92 167 34q82 0 158-31t137-88l72 72q17 18 39 8 22-9 22-33z" horiz-adv-x="857.1" />
+
+<glyph glyph-name="arrows-outside" unicode="&#xe80c;" d="M600 350a100 100 0 1 1-200 0 100 100 0 1 1 200 0m-110 100h20v200h20l-30 100-30-100h20z m0-200h20v-200h20l-30-100-30 100h20z m-90 110v-20h-200v-20l-100 30 100 30v-20z m200 0v-20h200v-20l100 30-100 30v-20z" horiz-adv-x="1000" />
+
+<glyph glyph-name="arrows-inside" unicode="&#xe80d;" d="M600 350a100 100 0 1 1-200 0 100 100 0 1 1 200 0m-110 450h20v-250h20l-30-100-30 100h20z m0-900h20v250h20l-30 100-30-100h20z m-440 460v-20h250v-20l100 30-100 30v-20z m900 0v-20h-250v-20l-100 30 100 30v-20z" horiz-adv-x="1000" />
 
 <glyph glyph-name="trash-empty" unicode="&#xe80e;" d="M286 439v-321q0-8-5-13t-13-5h-36q-8 0-13 5t-5 13v321q0 8 5 13t13 5h36q8 0 13-5t5-13z m143 0v-321q0-8-5-13t-13-5h-36q-8 0-13 5t-5 13v321q0 8 5 13t13 5h36q8 0 13-5t5-13z m142 0v-321q0-8-5-13t-12-5h-36q-8 0-13 5t-5 13v321q0 8 5 13t13 5h36q7 0 12-5t5-13z m72-404v529h-500v-529q0-12 4-22t8-15 6-5h464q2 0 6 5t8 15 4 22z m-375 601h250l-27 65q-4 5-9 6h-177q-6-1-10-6z m518-18v-36q0-8-5-13t-13-5h-54v-529q0-46-26-80t-63-34h-464q-37 0-63 33t-27 79v531h-53q-8 0-13 5t-5 13v36q0 8 5 13t13 5h172l39 93q9 21 31 35t44 15h178q23 0 44-15t30-35l39-93h173q8 0 13-5t5-13z" horiz-adv-x="785.7" />
 
