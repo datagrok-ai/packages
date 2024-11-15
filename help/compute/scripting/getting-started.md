@@ -280,7 +280,7 @@ You will get the result in the **Variables** panel:
 ![template-script-output](_pics/template-script-output.png)
 
 To learn more about using complex data types in scripts, see the 
-[Enhance input/output parameters](scripting-features/scripting-features.md#enhance-inputoutput-parameters) section.
+[Complex input/output](scripting-features/complex-input-output.md) page.
 
 
 ## Handle an error

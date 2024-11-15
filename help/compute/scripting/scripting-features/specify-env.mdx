@@ -1,5 +1,5 @@
 ---
-title: "Specify the environment"
+title: "Manage Conda environments"
 ---
 
 ```mdx-code-block
@@ -7,6 +7,8 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
+
+## Specify environment
 
 Set an `environment` parameter of the script
 to a one-liner YAML following the standard Conda YAML config (omit it's name).
@@ -50,4 +52,6 @@ For all next script runs, Datagrok will reuse this environment.
 :::
 
 Datagrok distinguishes in-place environments using *MD5 hashes* of their body strings.
-If there is a ready-to-use environment with the same environment config, Datagrok will reuse it.
+If there is a ready-to-use environment with the same environment config,
+Datagrok will reuse it.
+

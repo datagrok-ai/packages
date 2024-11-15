@@ -30,7 +30,7 @@ to enable developing, publishing, discovering, and using scientific applications
 6. [Metadata](#metadata) used by the [model browser](#model-browser)
 7. Integration options: [REST API](scripting/scripting-features/call-via-rest.md), 
    JS API,
-   [embedding as iframe](scripting/scripting-features/embed-as-iframe.mdx)
+   [embedding as iframe](scripting/advanced-scripting/embed-as-iframe.mdx)
 8. [Leveraging the platform](#leveraging-the-platform)
 9. [Logging, audit, and traceability](#logging-audit-and-traceability)
 10. [Privileges and visibility](#privileges-and-visibility)
@@ -119,8 +119,7 @@ graphics and results, and bringing it to life by making it interactive. Addition
 category, description, input type (slider/combo box/etc), and others are also taken into account.
 
 The simple examples are available in the 
-[adding viewers](scripting/scripting-features/add-viewers.mdx)
-section of the [scripting](scripting/getting-started.md) tutorial.
+[scripting](scripting/getting-started.md) tutorial.
 
 The [RichFunctionView](scripting/advanced-scripting/advanced-scripting.mdx#enabling-richfunctionview-ui-editor)
 editor allows you to create complex UI with parameter tabs and groups just by adding annotation comments.
