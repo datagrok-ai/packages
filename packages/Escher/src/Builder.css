@@ -142,12 +142,43 @@ resizes. */
   
   stroke-width: 3px;
 }
-
-.escher-container g.segment-group.shortest-path path.segment {
+/* first shortest */
+.escher-container g.segment-group.shortest-path path.segment, .escher-container g.segment-group.shortest-path-1 path.segment {
   stroke: rgb(0, 0, 0);
   stroke-width: 14px;
 }
 
-.escher-container g.segment-group.shortest-path path.arrowhead {
+.escher-container g.segment-group.shortest-path path.arrowhead, .escher-container g.segment-group.shortest-path-1 path.arrowhead {
   fill: rgb(0, 0, 0);
 }
+
+/* second shortest */
+.escher-container g.segment-group.shortest-path.shortest-path-2 path.segment {
+  stroke: rgb(59, 59, 59);
+  stroke-width: 14px;
+}
+
+.escher-container g.segment-group.shortest-path.shortest-path-2 path.arrowhead {
+  fill: rgb(59, 59, 59);
+}
+
+/* third shortest */
+.escher-container g.segment-group.shortest-path.shortest-path-3 path.segment {
+  stroke: rgb(87, 79, 79);
+  stroke-width: 14px;
+}
+
+.escher-container g.segment-group.shortest-path.shortest-path-3 path.arrowhead {
+  fill: rgb(87, 79, 79);
+}
+
+/* fourth shortest */
+.escher-container g.segment-group.shortest-path.shortest-path-4 path.segment {
+  stroke: rgb(150, 150, 150);
+  stroke-width: 14px;
+}
+
+.escher-container g.segment-group.shortest-path.shortest-path-4 path.arrowhead {
+  fill: rgb(150, 150, 150);
+}
+

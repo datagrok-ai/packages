@@ -2504,19 +2504,18 @@ export default class Map {
 
   }
 
-  findKthOutOrIngoingReactions(inc, outGoing = true) {
-    const nodes = Array.from(new Set(Object.values(this.getSelectedNodes())))
+  findKthOutOrIngoingReactions(inc, outGoingFlag = true) {
+    const nodes = Array.from(new Set(Object.values(this.getSelectedNodes()).map(a => a.bigg_id)))
     if (nodes.length !== 1)
       return;
     let k;
-    const node = nodes[0];
-    const biggId = node.bigg_id;
-    const fromId = biggId;
+    
+    const biggId = nodes[0];
     this.unhighlight();
 
-    const getSavedInfo = () => outGoing ? this.outGoingInfo : this.inGoingInfo;
-    const setSavedInfo = (info) => outGoing ? (this.outGoingInfo = info) : (this.inGoingInfo = info);
-    const calcFunc = outGoing ? findOutGoing : findInGoing;
+    const getSavedInfo = () => outGoingFlag ? this.outGoingInfo : this.inGoingInfo;
+    const setSavedInfo = (info) => outGoingFlag ? (this.outGoingInfo = info) : (this.inGoingInfo = info);
+    const calcFunc = outGoingFlag ? findOutGoing : findInGoing;
     k = inc == 0 ? 1 : Math.max(getSavedInfo() ? (getSavedInfo().hash === biggId ? getSavedInfo().k + inc : 1) : 1, 1);
     this.outGoingInfo = null;
     this.inGoingInfo = null;
@@ -2529,7 +2528,7 @@ export default class Map {
     //   visitedMetabolites.add(o[1]);
     //   visitedReactions.add(o[0]);
     // });
-
+    const sign = (num) => num >= 0 ? 1 : -1 
 
     const queue = [biggId];
     for (let iter = 0; iter < k; iter++) {
@@ -2543,17 +2542,35 @@ export default class Map {
         outGoing.forEach((o) => {
           const reactionId = o[0];
           const toId = o[1];
-          if (!visitedReactions.has(reactionId) && !visitedMetabolites.has(toId)) {
+          if (!visitedReactions.has([currentId, o[0], o[1]].join(pathSeparatorString)) && !visitedMetabolites.has(toId)) {
             newMetabolites.add(toId);
-            const segments = getReactionPathSegments(this, currentId, toId, reactionId);
-            segments && segments.forEach((seg) => {
-              this.sel.select(`#s${seg}.segment-group`).classed('shortest-path', true)
+            // what we need to do here is to go through every reaction and find ones which have from and to metabolites in correct order
+            const reactionIds = [];
+            Object.values(this.reactions).forEach((reaction) => {
+              const reactionMets = reaction.metabolites;
+              const fromMet = reactionMets.find(m => m.bigg_id === currentId);
+              const toMet = reactionMets.find(m => m.bigg_id === toId);
+              if (fromMet && toMet && (reaction.reversibility || 
+                (outGoingFlag && sign(fromMet.coefficient) === -1 && sign(toMet.coefficient) === 1) ||
+                (!outGoingFlag && sign(fromMet.coefficient) === 1 && sign(toMet.coefficient) === -1)
+              )) {
+                reactionIds.push(reaction.reaction_id);
+              }
+            });
+            reactionIds.forEach((rId) => {
+              const segments = getReactionPathSegments(this, currentId, toId, rId);
+                segments && segments.forEach((seg) => {
+              const nthShortest = Math.max(Math.min(k, 4),1);
+              this.sel.select(`#s${seg}.segment-group`).classed('shortest-path', true);
+              //.classed(`shortest-path-${nthShortest}`, true);
             })
+            })
+            
           }
         })
 
         outGoing.forEach((o) => {
-          visitedReactions.add(o[0]);
+          visitedReactions.add([currentId, o[0], o[1]].join(pathSeparatorString));
         });
       }
       Array.from(newMetabolites).forEach(m => queue.push(m));
@@ -2564,5 +2581,9 @@ export default class Map {
 
   unhighlight() {
     this.sel.selectAll('.shortest-path').classed('shortest-path', false);
+    this.sel.selectAll('.shortest-path-1').classed('shortest-path-1', false);
+    this.sel.selectAll('.shortest-path-2').classed('shortest-path-2', false);
+    this.sel.selectAll('.shortest-path-3').classed('shortest-path-3', false);
+    this.sel.selectAll('.shortest-path-4').classed('shortest-path-4', false);
   }
 }
