@@ -44,7 +44,7 @@ and then integrate them into Datagrok.
 ## Execute a script
 
 First of all, a script can be executed right from the script editor,
-as described in [run script section](datagrok-script-editor.md#find-a-script).
+as described in Run Script section.
 
 Script is Datagrok [function](../../../datagrok/concepts/functions/functions.md), 
 and can be invoked in different ways:

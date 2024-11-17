@@ -28,7 +28,7 @@ to enable developing, publishing, discovering, and using scientific applications
     [create](#creating), [deploy](#deployment), [version](#versioning), [share](#sharing), use, validate, update.
 5. Cross-language [Data access](#data-access)
 6. [Metadata](#metadata) used by the [model browser](#model-browser)
-7. Integration options: [REST API](scripting/scripting-features/call-via-rest.md), 
+7. Integration options: [REST API](scripting/advanced-scripting/call-via-rest.md), 
    JS API,
    [embedding as iframe](scripting/advanced-scripting/embed-as-iframe.mdx)
 8. [Leveraging the platform](#leveraging-the-platform)

@@ -17,7 +17,7 @@ Calling a script requires:
 This allows instantaneous deployment of scientific methods for
 external consumption. To find out how to use it:
 
-- [Find a script](../scripting-features/datagrok-script-editor.md#find-a-script)
+- Find a script
 - Press F4 to open the context panel on the right
 - Expand the `REST` pane on it
 
