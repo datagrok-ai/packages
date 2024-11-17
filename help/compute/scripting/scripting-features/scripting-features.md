@@ -18,11 +18,12 @@ Explore the following sections to earn how to:
 * [Enhance input UI](enhance-input-ui.md)
 * [Use complex input/output data types](complex-input-output)
 * [Visualize output data](visualize-output-data.md)
-* [Specify meaning of your data with semantic types](detect-semantic-type.mdx)
-* Execute, debug and share your scripts with [Datagrok script editor](datagrok-script-editor.md)
+* [Specify the meaning of your data with semantic types](detect-semantic-type.mdx)
+* Execute, debug, and share your scripts with [Datagrok script editor](datagrok-script-editor.md)
 * [Integrate your scripts in Datagrok UI](integrate-scripts-into-datagrok.mdx)
-* [Automate inputs](automate-inputs.md) with suggestions, autocompletion and validators.
+* [Automate inputs](automate-inputs.md) with suggestions, autocompletions, and validators.
 * [Manage Conda environments](specify-env.mdx)
+* [Integrate script output into Datagrok](integrate-scripts-into-datagrok.mdx)
 
 To find even more advanced options, visit the 
 [Advanced scripting](../advanced-scripting/advanced-scripting.mdx) page.
