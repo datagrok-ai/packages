@@ -195,9 +195,11 @@ class Table {
 
     this._dataFrame.onCurrentRowChanged.subscribe((_) => this._onItemChangedAction(this._currentItemIdx));
 
-    this._dataFrame.onValuesChanged.subscribe((_) => {
+    this._dataFrame.onValuesChanged.subscribe((ed) => {
       if (!this._notify)
         return;
+      if (ed.args?.indexes && ed.args.indexes.length === 1 && ed.args.indexes[0] !== -1)
+        this._currentItemIdx = ed.args.indexes[0];
       const item = this.currentItem!;
       item.title = this._dataFrame.get('title', this._currentItemIdx);
       item.formula = this._dataFrame.get('formula', this._currentItemIdx);
