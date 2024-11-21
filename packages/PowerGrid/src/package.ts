@@ -293,7 +293,9 @@ export function isWebGPUAvailable(sc: DG.ScatterPlotViewer) {
 //output: bool result
 export function isWebGPURenderValid(sc: DG.ScatterPlotViewer) {
   return sc.props.zoomAndFilter != 'pack and zoom by filter' 
-    && !sc.props.markersColumnName;
+    && !sc.props.markersColumnName
+    && !sc.props.xWhiskerMinColumnName && !sc.props.xWhiskerMaxColumnName && !sc.props.xWhiskerRangeColumnName
+    && !sc.props.yWhiskerMinColumnName && !sc.props.yWhiskerMaxColumnName && !sc.props.yWhiskerRangeColumnName;
 }
 
 export {_ImageCellRenderer};
