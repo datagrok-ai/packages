@@ -16,8 +16,8 @@ It has all the features of the [basic scripting](../scripting-features/scripting
 * [Review historical script runs](#review-and-compare-historical-script-runs)
 * [Upload external data](#upload-external-data)
 * [Provide custom docs and export](#provide-custom-docs-and-export-data)
-* Use powerful [parameter optimization](#parameter-optimization) capabilities with your script 
-  without a single new line of the code.
+* Use [model parameters optimization](#model-parameters-optimization) capabilities with your script 
+  without a single line of the code.
 * Use [helper JavaScript functions](js-helpers-with-rich-fucntion-view.md) to customize RichFucntionView behavior.
 
 :::caution Package dependency
@@ -450,7 +450,7 @@ Click on the column header with table data (e.g. `Temp. vs time`) to see conveni
 </Tabs>
 ```
 
-## Parameter optimization
+## Model parameters optimization
 
 With **RichFunctionView** you can use the powerful built-in optimization functions.
 
@@ -531,10 +531,11 @@ simulation = DG.DataFrame.fromColumns([
 ```
 
 
-### Parameter optimization
+### Parameters fitting
 
-[Parameter optimization](../../function-analysis.md#sensitivity-analysis)  
-solves an inverse problem: finding the input conditions that lead to a specified output of the model. 
+The parameters fitting solves an inverse problem to the
+[sensitivity analysis](../../function-analysis.md#sensitivity-analysis): 
+finding the input conditions that lead to a specified output of the model. 
 It computes inputs minimizing deviation measured by loss function.
 
 :::warning High-intensity computation
