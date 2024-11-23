@@ -1,6 +1,6 @@
 ---
-title: "Datagrok script editor"
-sidebar_position: 1
+title: "Work with the Datagrok script editor"
+sidebar_position: 5
 format: 'md'
 ---
 
@@ -26,13 +26,11 @@ Alternatively, you can do the following:
 When you run a script, Datagrok catches all log messages
 and displays it in the log panel below the script.
 If the script throws an unhandled exception,
-Datagrok catches it and displays an error popup.
-
-![script-exception.png](../_pics/script-exception.png)
+Datagrok catches it and displays an error popup, as shown in the 
+[handle an error](../getting-started.md#handle-an-error) section.
 
 To include additional debug information in the log,
 run the script using **Debug script** button in the ribbon menu.
-
 Alternatively, run the script normally and press the
 **Debug** button on the bottom part of the input parameter window.
 

@@ -1,6 +1,6 @@
 ---
 title: "Visualize output data"
-sidebar_position: 1
+sidebar_position: 2
 format: 'md'
 ---
 
@@ -45,7 +45,7 @@ and `Line chart` viewers on the input dataframe.
 
 ```python
 #name: Adding viewer on output dataframe
-#language: javascript
+#language: python
 #sample: demog.csv
 #input: dataframe inputDF
 #output: dataframe outputDF { viewer: Line chart | Scatter plot }
@@ -104,7 +104,7 @@ For example, the following code:
 
 ```python
 #name: Viewers customization
-#language: javascript
+#language: python
 #sample: cars.csv
 #input: dataframe inputDF
 #output: dataframe outputDF { viewer: Scatter plot(y: "model", markerType: star, markerSize: 15) | Scatter plot(showRegressionLine: true) }

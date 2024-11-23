@@ -430,7 +430,6 @@ Click on the column header with table data (e.g. `Temp. vs time`) to see conveni
 :::
 
 
-
 ```mdx-code-block
 <Tabs>
 <TabItem value="result" label="Comparison">
@@ -456,8 +455,7 @@ With **RichFunctionView** you can use the powerful built-in optimization functio
 
 ### Sensitivity analysis
 
-[Sensitivity analysis](../../function-analysis.md#sensitivity-analysis)  
-automatically runs the computation multiple times with varying inputs, 
+[Sensitivity analysis](../../function-analysis.md#sensitivity-analysis)  automatically runs the computation multiple times with varying inputs, 
 and analyzes the relationship between inputs and outputs.
 
 Enable this feature and click **<i class="fas fa-analytics"></i> SA** icon on the top panel.
@@ -544,7 +542,7 @@ Both **Sensitivity** analysis and **Parameter optimization**
 trigger many simultaneous runs of the model. 
 We recommend using these features
 on fast `Javascript` and `WebAssembly` scripts to avoid repeatable
-spin-up of heavy server-side containers.
+running of heavy server-side code.
 
 :::
 

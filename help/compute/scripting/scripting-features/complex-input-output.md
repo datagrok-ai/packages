@@ -1,6 +1,6 @@
 ---
 title: "Complex data types"
-sidebar_position: 1
+sidebar_position: 3
 format: 'md'
 ---
 
@@ -32,26 +32,9 @@ When you run the script, you will see the following dialog:
 
 ![dataframe-id-demo](../_pics/dataframeiddemo-input.png)
 
-```mdx-code-block
-</TabItem>
-<TabItem value="r" label="R">
-```
+Datagrok created the script UI,
+populated default values, and created popups with help text.
 
-```R
-#name: DataframeDemo
-#description: Adding a new column to a dataframe
-#language: r
-#tags: demo, dataframe
-#input: dataframe table [Data table]
-#input: string id_column = 'ID' [Name of ID column]
-#input: string id_prefix = 'id_' [Prefix for ID column]
-#output: dataframe new_table [New table with additional column]
-#output: int last_row [number of last row]
-
-new_table <- table
-new_table[id_column] <- paste0(id_prefix, 1:nrow(new_table))
-last_row <- nrow(new_table)
-```
 
 ```mdx-code-block
 </TabItem>
@@ -74,6 +57,30 @@ l = len(new_table)
 new_table[id_column] = [f"{id_prefix}{n:04}" for n in range(l)]
 last_row = len(new_table)
 ```
+
+
+```mdx-code-block
+</TabItem>
+<TabItem value="r" label="R">
+```
+
+
+```R
+#name: DataframeDemo
+#description: Adding a new column to a dataframe
+#language: r
+#tags: demo, dataframe
+#input: dataframe table [Data table]
+#input: string id_column = 'ID' [Name of ID column]
+#input: string id_prefix = 'id_' [Prefix for ID column]
+#output: dataframe new_table [New table with additional column]
+#output: int last_row [number of last row]
+
+new_table <- table
+new_table[id_column] <- paste0(id_prefix, 1:nrow(new_table))
+last_row <- nrow(new_table)
+```
+
 
 ```mdx-code-block
 </TabItem>
@@ -102,9 +109,6 @@ new_table.col(id_column).init((i) => `${id_prefix}${i}`);
 </Tabs>
 ```
 
-Datagrok created the script UI,
-populated default values, and created popups with help text.
-
 After running this script, Datagrok automatically opens the new dataframe.
 It will contain an additional column **ID** with the generated row ID.
 
@@ -131,7 +135,7 @@ we recommend using unique names that are distinct regardless of case.
 
 :::
 
-## Column inputs for dataframe
+### Column inputs for dataframe
 
 Datagrok provides you with data inputs to select one or multiple columns from a dataframe.
 
