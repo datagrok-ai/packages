@@ -62,7 +62,7 @@ outputDF = inputDF.copy()
 
 The default script view supports viewers for *output* dataframes only.
 You may specify viewers *input* dataframes using
-[advanced UI editor](../advanced-scripting/adding-input-viewers.mdx)
+[advanced UI editor](../advanced-scripting/rich-function-view.md#visualize-input-data)
 
 :::
 
@@ -121,7 +121,7 @@ outputDF = inputDF.copy()
 
 The default script view shows all viewers at once.
 You may divide viewers by different tabs using
-[advanced UI editor](../advanced-scripting/adding-input-viewers.mdx).
+[advanced UI editor](../advanced-scripting/rich-function-view.md#group-outputs).
 
 :::
 

@@ -52,7 +52,7 @@ Optionally: R, Julia and JavaScript.
 ## Environments
 
 Each script can be run in an isolated environment, with predefined packages configuration, same as for
-[Script Environments](scripting/under-the-hood.mdx#environment-isolation). The environment can be specified in the notebook properties.
+[Script Environments](scripting/advanced-scripting/under-the-hood.mdx#environment-isolation). The environment can be specified in the notebook properties.
 
 ## Importing notebooks
 

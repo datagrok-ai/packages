@@ -9,84 +9,19 @@ import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
 
-Use **RichFunctionView** as an advanced UI editor to create a complex full-featured interface for your script.
+This section contains advanced options for script development.
 
-It has all the features of the [basic scripting](../scripting-features/scripting-features.md). In addition, it allows you to:
+* Using the [Rich Function View](./rich-function-view.md) UI editor,
+  you can create a complex full-featured interface for your script.
+* You can [convert your script to a package fucntion](./convert-script-to-package-function.mdx),
+  and [share Python and R environments across scripts](./share-envs.mdx).
+* Some details regarding default script environments are given in the section
+  [Under the hood](./under-the-hood.mdx).
+* Advanced integration options allow you to
+  [call your script via REST](./call-via-rest.md) or [embed is as iFrame](./embed-as-iframe.mdx),
 
-Enhance inputs & outputs:
-- [Fold input categories](folded-categories.mdx)
-- [Add complex validations](validating-inputs.mdx)
-- [Use custom inputs](customize-inputs.mdx)
-- [Visualize input dataframes](adding-input-viewers.mdx)
-- [Group outputs](grouping-outputs.mdx)
 
-Review historical script runs:
-- [Save and access run history](review-history.mdx)
-- [Compare historical runs](compare-history.mdx)
-- [Customize comparison](customize-comparison.mdx)
 
-Upload external data:
-- [Upload data](upload-experimental-data.mdx)
-- [Customize data upload](customize-data-upload.mdx)
 
-Provide custom docs and export:
-- [Automatic script rerun](automatic-rerun.mdx)
-- [Export results](exporting-to-file.mdx) of script results.
-- [Add readme files](adding-readme.mdx)
 
-:::tip Ensure computations are correct
 
-Use the RichFunctionView only when you are sure that the script works as expected.
-Features of the RichFunctionView affect GUI only and do not affect computations.
-
-:::
-
-## Enabling RichFunctionView UI editor
-
-To enable **RichFunctionView**, add `editor: Compute:RichFunctionViewEditor` tag
-to your following code as it is shown:
-
-```mdx-code-block
-<Tabs>
-<TabItem value="result" label="Result" default>
-```
-
-```mdx-code-block
-<BrowserWindow bodyStyle={{'padding': '0px'}} url=''>
-```
-
-<img src={require('../_pics/rich-function-demo.gif').default} style={{'border-radius': '5px'}}/>
-
-```mdx-code-block
-</BrowserWindow>
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="python" label="Python / R / Octave / Julia">
-```
-
-```python title="Your script header"
-#editor: Compute:RichFunctionViewEditor
-```
-
-```mdx-code-block
-</TabItem>
-<TabItem value="js" label="Javascript / NodeJS">
-```
-
-```javascript title="Your script header"
-//editor: Compute:RichFunctionViewEditor
-```
-
-```mdx-code-block
-</TabItem>
-</Tabs>
-```
-
-:::caution Package dependency
-
-The `RichFunctionViewEditor` is a part of the `Compute` package.
-Ensure that the `Compute` package is installed before working with `RichFunctionViewEditor`
-
-:::
