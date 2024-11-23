@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 
 This section explains the basic concepts of scripting in Datagrok.
 Code examples are provided in **Python** and **JavaScript**,
-but the concepts apply to all supported languages..
+but the concepts apply to all supported languages.
 
 :::tip Consider JavaScript
 
@@ -65,14 +65,14 @@ By adding this annotation, you turn your script into a Datagrok function
 that seamlessly integrates with other functions and Datagrok UI components (that are also functions), 
 regardless of the language they use.
 
-To learn more about Datagrok fucntions, visit the 
+To learn more about Datagrok functions, visit the 
 [Function annotations](../../datagrok/concepts/functions/func-params-annotation) page. 
 
 The template script has the following ones:
 
 * `name: Template`: The short name of the script.
 * `description: Hello world script`: The human-readable description.
-* `language: javascript`: The script language. Supported: *R*, *Python*, *Octave*, *Julia*, *JavaScript*.
+* `language: javascript`: The script language. Supported: *Python*, *R*, *Octave*, *Julia*, *JavaScript*.
 
 
 ## Run the script
@@ -87,8 +87,8 @@ Press it to run a script. You will see the following:
 ## Add inputs
 
 Template script only shows the alert message. Let's edit the script to calculate the sum of the numeric inputs.
-Let's implement this script in Python to demonstrate Datagrok capabilities 
-in working with programming languages.
+We will implement this script in Python to demonstrate Datagrok capabilities 
+in working with different programming languages.
 
 Create a new Python script, delete the default code (we will explore it later) 
 and insert the following lines to the [header](#review-the-script-header) of the script:
@@ -97,24 +97,24 @@ and insert the following lines to the [header](#review-the-script-header) of the
 <Tabs>
 <TabItem value="python" label="Python" default>
 ```
-```python title="Two numeric inputs"
-#name: Template
-#description: Example of two numeric inputs
+```python
+#name: Calculate-sum
+#description: Calculate sum of two numeric inputs
 #language: python
 #input: int a
 #input: int b
-
 ```
 ```mdx-code-block
 </TabItem>
 <TabItem value="javascript" label="Javascript">
 ```
-
-```javascript title="Two numeric inputs in Javascript"
+```javascript
+//name: Calculate-sum
+//description: Calculate sum of two numeric inputs
+//language: javascript
 //input: int a
 //input: int b
 ```
-
 ```mdx-code-block
 </TabItem>
 </Tabs>
@@ -131,7 +131,7 @@ Datagrok automatically injects *input* parameters' values before the script star
 and captures *output* parameters' values when the script finishes.
 Datagrok natively supports standard scalar data types:
 `int`, `double`, `bool`, `string`.
-For tabilar datatypes, see the section [Process a dataframe](#process-a-dataframe).
+For tabular data, see the section [Process a dataframe](#process-a-dataframe).
 
 Add the actual calculation in the script body, and specify the outputs of the script in the [header](#review-the-script-header).
 
@@ -140,28 +140,24 @@ Add the actual calculation in the script body, and specify the outputs of the sc
 <Tabs>
 <TabItem value="python" label="Python" default>
 ```
-
-```python title="Adding outputs"
+```python
 #output: int sum
 #output: string isSuccess
 
 sum = a + b
 isSuccess = "Success!"
 ```
-
 ```mdx-code-block
 </TabItem>
 <TabItem value="javascript" label="Javascript">
 ```
-
-```javascript title="Adding outputs"
+```javascript
 //output: int sum
 //output: string isSuccess
 
 let sum = a + b;
 let isSuccess = "Success!"
 ```
-
 ```mdx-code-block
 </TabItem>
 </Tabs>
