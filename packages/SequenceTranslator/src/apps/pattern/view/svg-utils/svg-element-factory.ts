@@ -23,32 +23,43 @@ export class SVGElementFactory {
     return svgElement;
   }
 
-  createCircleElement(centerPosition: Position, radius: number, color: string): SVGCircleElement {
+  createCircleElement(centerPosition: Position, radius: number, color: string, cursor: string): SVGCircleElement {
     const circle = this.createElement('circle') as SVGCircleElement;
     this.setAttributes(circle, {
       cx: centerPosition.x,
       cy: centerPosition.y,
       r: radius,
       fill: color,
+      cursor: cursor
     });
     return circle;
   }
 
-  createTextElement(textContent: string, position: Position, fontSize: number, color: string): SVGTextElement {
+  createTextElement(textContent: string, position: Position, fontSize: number, color: string, weight: string,
+    opacity: string, cursor: string, rotate?: string, pointerEvents?: string): SVGTextElement {
     const textElement = this.createElement('text') as SVGTextElement;
     this.setAttributes(textElement, {
       'x': position.x,
       'y': position.y,
       'font-size': fontSize,
-      'font-weight': 'normal',
+      'font-weight': weight,
       'font-family': 'Arial',
       'fill': color,
+      'cursor': cursor,
+      'opacity': opacity,
     });
+     if (rotate) {
+      textElement.style.transform = rotate;
+      textElement.style.transformOrigin = 'center';
+      textElement.style.transformBox = 'fill-box';
+    }
+    if (pointerEvents)
+      textElement.style.pointerEvents = pointerEvents;
     textElement.textContent = textContent;
     return textElement;
   }
 
-  createStarElement(centerPosition: Position, color: string): SVGPolygonElement {
+  public createStarElement(centerPosition: Position, color: string, opacity: string, cursor: string): SVGPolygonElement {
     const star = this.createElement('polygon') as SVGPolygonElement;
     const points = this.computeStarVertexCoordinates(centerPosition);
     const pointsAttribute = points.map((point) => point.join(',')).join(' ');
@@ -56,6 +67,8 @@ export class SVGElementFactory {
     this.setAttributes(star, {
       points: pointsAttribute,
       fill: color,
+      'fill-opacity': opacity,
+      cursor: cursor
     });
     return star;
   }

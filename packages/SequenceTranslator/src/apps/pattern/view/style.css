@@ -3,3 +3,108 @@
 .st-pattern-text-input > textarea {
   resize: none;
 }
+
+.st-comment-input {
+  padding-left: 100px;
+}
+
+.st-strands-lengths-div {
+  padding-top: 140px;
+  gap: 15px;
+}
+
+.st-strands-lengths-div>.ui-input>.ui-input-editor {
+  width: 25px;
+}
+
+.st-toogle-as-input {
+  padding-right: 5px;
+  padding-top: 196px;
+}
+
+.st-pattern-div {
+
+}
+
+.st-pattern-name-comment-form {
+  
+}
+
+.st-load-pattern-button {
+  padding-top: 8px;
+  padding-left: 10px;
+  font-size: 16px;
+}
+
+.st-save-download-button {
+  font-size: 16px;
+}
+
+.st-numeric-label {
+
+}
+
+.st-translate-accordion {
+  width: 100%
+}
+
+.st-translate-example {
+  width: 100%;
+  resize: none;
+}
+
+.st-set-all-div {
+  align-items: baseline;
+}
+
+.st-all-pto-checkbox {
+
+}
+
+.st-strand-actions-div {
+  align-items: end;
+  padding-top: 15px;
+}
+
+.st-set-all-monomers {
+  padding-top: 8px;
+  padding-bottom: 8px
+}
+
+.edit-monomer-popup {
+  padding: 5px 5px 0 5px;
+}
+
+.edit-monomer-popup > .ui-input-choice > .ui-input-editor {
+  width: 108px;
+}
+
+.edit-terminals-field > .ui-input-text > .ui-input-editor {
+  width: 90px;
+}
+
+.add-delete-monomer-div {
+  justify-content: end;
+}
+
+.st-monomer:hover {
+  stroke: var(--grey-6);
+  stroke-width: 2px;
+}
+
+.st-pto-star:hover {
+  stroke: var(--grey-6);
+  stroke-width: 2px;
+}
+
+.st-numeric-label:hover {
+  font-weight: 900;
+}
+
+.label-inactive:hover {
+  opacity: 0.5;
+}
+
+.st-modification-label:hover {
+  font-weight: 900;
+}

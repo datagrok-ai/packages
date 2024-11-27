@@ -1,10 +1,13 @@
 /* Do not change these import lines to match external modules in webpack configuration */
 import * as DG from 'datagrok-api/dg';
+import * as grok from 'datagrok-api/grok';
+import * as ui from 'datagrok-api/ui';
+
 import * as rxjs from 'rxjs';
 import {debounceTime, throttleTime, map, skip, switchMap} from 'rxjs/operators';
 
 import {
-  GRAPH_SETTINGS_KEYS as G, LEGEND_SETTINGS_KEYS as L, PATTERN_RECORD_KEYS as R, STRAND, STRANDS, TERMINI, TERMINUS
+  GRAPH_SETTINGS_KEYS as G, LEGEND_SETTINGS_KEYS as L, MAX_SEQUENCE_LENGTH, PATTERN_RECORD_KEYS as R, STRAND, STRANDS, TERMINI, TERMINUS
 } from './const';
 import {DataManager} from './data-manager';
 import {
@@ -31,6 +34,7 @@ export class EventBus {
   private _terminalModifications: rxjs.BehaviorSubject<StrandTerminusModifications>;
   private _comment$: rxjs.BehaviorSubject<string>;
   private _modificationsWithNumericLabels$: rxjs.BehaviorSubject<string[]>;
+  private _nucleotidesWithModificationLabels$: rxjs.BehaviorSubject<string[]>;
   private _sequenceBase$: rxjs.BehaviorSubject<string>;
 
   private _patternListUpdated$ = new rxjs.Subject<void>();
@@ -51,7 +55,6 @@ export class EventBus {
 
   private _selectedStrandColumn = new rxjs.BehaviorSubject<{[strand: string]: string | null} | null>(null);
   private _selectedIdColumn = new rxjs.BehaviorSubject<string | null>(null);
-
 
   constructor(
     private dataManager: DataManager,
@@ -92,7 +95,7 @@ export class EventBus {
 
   private updateUniqueNucleotides(): void {
     const sequences = this._nucleotideSequences$.getValue();
-    const uniqueNucleotides = getUniqueNucleotides(sequences);
+    const uniqueNucleotides = getUniqueNucleotides(sequences, this.isAntisenseStrandActive());
     this._uniqueNucleotides$.next(uniqueNucleotides);
   }
 
@@ -139,6 +142,9 @@ export class EventBus {
     this._modificationsWithNumericLabels$ = new rxjs.BehaviorSubject(
       initialPattern[L.NUCLEOTIDES_WITH_NUMERIC_LABELS]
     );
+    this._nucleotidesWithModificationLabels$ = new rxjs.BehaviorSubject(
+      initialPattern[L.NUCLEOTIDES_WITH_MODIFICATION_LABELS]
+    );
     this._sequenceBase$ = new rxjs.BehaviorSubject(
       getMostFrequentNucleotide(initialPattern[G.NUCLEOTIDE_SEQUENCES])
     );
@@ -161,12 +167,27 @@ export class EventBus {
   }
 
   toggleAntisenseStrand(isActive: boolean) {
-    if (!isActive)
-      this.updateStrandLength(STRAND.ANTISENSE, 0);
-    else
-      this.updateStrandLength(STRAND.ANTISENSE, this.getNucleotideSequences()[STRAND.SENSE].length);
-
+    // if (!isActive) {
+    //   this.updateNucleotideSequences(this.getNucleotideSequences());
+    // }
+    // else
+    //   this.updateStrandLength(STRAND.ANTISENSE, this.getNucleotideSequences()[STRAND.ANTISENSE].length);
     this._isAntisenseStrandActive$.next(isActive);
+    this.updateNucleotideSequences(this.getNucleotideSequences());
+  }
+
+  toggleNumericLabels(hide: boolean, nucleotide: string) {
+    const labelledNucleotides = this.getModificationsWithNumericLabels();
+    const newArray = !hide ? labelledNucleotides.concat(nucleotide) :
+      labelledNucleotides.filter((n) => n !== nucleotide);
+    this.updateModificationsWithNumericLabels(newArray);
+  }
+
+  toggleModificationLables(hide: boolean, nucleotide: string) {
+    const labelledNucleotides = this.getNucleotidesWithModificationLabels();
+    const newArray = !hide ? labelledNucleotides.concat(nucleotide) :
+      labelledNucleotides.filter((n) => n !== nucleotide);
+    this._nucleotidesWithModificationLabels$.next(newArray);
   }
 
   getNucleotideSequences(): NucleotideSequences {
@@ -177,7 +198,8 @@ export class EventBus {
     this._nucleotideSequences$.next(nucleotideSequences);
   }
 
-  updateStrandLength(strand: StrandType, newStrandLength: number): void {
+  //if nucleotideIdx is passed - adding or removing nucleotide in the exact position
+  updateStrandLength(strand: StrandType, newStrandLength: number, nucleotideIdx?: number): void {
     const originalNucleotides = this.getNucleotideSequences()[strand];
     if (originalNucleotides.length === newStrandLength) return;
 
@@ -190,7 +212,7 @@ export class EventBus {
 
     if (originalNucleotides.length > newStrandLength) {
       const {nucleotides, ptoFlags} = StrandEditingUtils.getTruncatedStrandData(
-        originalNucleotides, originalPTOFlags, newStrandLength
+        originalNucleotides, originalPTOFlags, newStrandLength, nucleotideIdx
       );
       this.setNewStrandData(nucleotides, ptoFlags, strand);
       return;
@@ -198,7 +220,7 @@ export class EventBus {
 
     const sequenceBase = this.getSequenceBase();
     const {nucleotides, ptoFlags} = StrandEditingUtils.getExtendedStrandData(
-      originalNucleotides, originalPTOFlags, newStrandLength, sequenceBase
+      originalNucleotides, originalPTOFlags, newStrandLength, sequenceBase, nucleotideIdx
     );
     this.setNewStrandData(nucleotides, ptoFlags, strand);
   }
@@ -260,9 +282,23 @@ export class EventBus {
     return this._modificationsWithNumericLabels$.getValue();
   }
 
+  getNucleotidesWithModificationLabels(): string[] {
+    return this._nucleotidesWithModificationLabels$.getValue();
+  }
+
+
   updateModificationsWithNumericLabels(modificationsWithNumericLabels: string[]) {
     const newValue = getUniqueNucleotidesWithNumericLabels(modificationsWithNumericLabels);
     this._modificationsWithNumericLabels$.next(newValue);
+  }
+
+  get nucleotidesModificationLabelsChanged$(): rxjs.Observable<string[]> {
+    return this._nucleotidesWithModificationLabels$.asObservable();
+  }
+
+  setAllModificationLabels(flag: boolean) {
+    const newValue = flag ? getUniqueNucleotides(this._nucleotideSequences$.getValue(), this.isAntisenseStrandActive()) : [];
+    this._nucleotidesWithModificationLabels$.next(newValue);
   }
 
   get patternLoadRequested$(): rxjs.Observable<string> {
@@ -309,6 +345,12 @@ export class EventBus {
     });
     this._nucleotideSequences$.next(newNucleotideSequences);
 
+    //update modification labels
+    const labelledMOdifications = this.getNucleotidesWithModificationLabels();
+    if (labelledMOdifications.length) {
+      this._nucleotidesWithModificationLabels$.next([newNucleobase]);
+    }
+
     const labelledNucleotides = this._modificationsWithNumericLabels$.getValue();
     if (!labelledNucleotides.includes(newNucleobase))
       this.updateModificationsWithNumericLabels(labelledNucleotides.concat(newNucleobase));
@@ -322,7 +364,8 @@ export class EventBus {
       this._phosphorothioateLinkageFlags,
       this._terminalModifications,
       this._comment$.pipe(debounceTime(300)),
-      this._modificationsWithNumericLabels$
+      this._modificationsWithNumericLabels$,
+      this._nucleotidesWithModificationLabels$,
     ) as rxjs.Observable<void>;
 
     return observable;
@@ -369,6 +412,7 @@ export class EventBus {
     this._terminalModifications.next(patternConfiguration[G.STRAND_TERMINUS_MODIFICATIONS]);
     this._comment$.next(patternConfiguration[L.PATTERN_COMMENT]);
     this._modificationsWithNumericLabels$.next(patternConfiguration[L.NUCLEOTIDES_WITH_NUMERIC_LABELS]);
+    this._nucleotidesWithModificationLabels$.next(patternConfiguration[L.NUCLEOTIDES_WITH_MODIFICATION_LABELS]);
   }
 
   setLastLoadedPatternConfig(patternConfiguration: PatternConfiguration) {
@@ -386,6 +430,7 @@ export class EventBus {
       [G.STRAND_TERMINUS_MODIFICATIONS]: this.getTerminalModifications(),
       [L.PATTERN_COMMENT]: this.getComment(),
       [L.NUCLEOTIDES_WITH_NUMERIC_LABELS]: this.getModificationsWithNumericLabels(),
+      [L.NUCLEOTIDES_WITH_MODIFICATION_LABELS]: this.getNucleotidesWithModificationLabels(),
     };
   }
 
@@ -395,12 +440,41 @@ export class EventBus {
     this.updatePhosphorothioateLinkageFlags(flags);
   }
 
-  setNucleotide(strand: StrandType, index: number, value: string) {
+  setNucleotide(strand: StrandType, index: number, value: string, hideModificationLabel?: boolean) {
     const sequences = this.getNucleotideSequences();
     sequences[strand][index] = value;
+
+    //update modification labels
+    const labelledNucleotides = this.getNucleotidesWithModificationLabels();
+    if (labelledNucleotides.length && !labelledNucleotides.includes(value)) {
+      this._nucleotidesWithModificationLabels$.next(labelledNucleotides.concat(value))
+    }
+    //update numeric labels
     const labelledModifications = this.getModificationsWithNumericLabels();
     this.updateModificationsWithNumericLabels(labelledModifications.concat(value));
     this.updateNucleotideSequences(sequences);
+  }
+
+  addNucleotide(strand: StrandType, index: number) {
+    const sequences = this.getNucleotideSequences();
+    if (sequences[strand].length === MAX_SEQUENCE_LENGTH) {
+      grok.shell.warning(`Sequence length must be less than ${MAX_SEQUENCE_LENGTH + 1}`);
+      return;
+    }
+    const labelledModifications = this.getModificationsWithNumericLabels();
+    this.updateModificationsWithNumericLabels(labelledModifications.concat(this.getSequenceBase()));
+    this.updateStrandLength(strand, sequences[strand].length + 1, index);
+  }
+
+  removeNucleotide(strand: StrandType, index: number) {
+    const sequences = this.getNucleotideSequences();
+    if (sequences[strand].length === 1) {
+      grok.shell.warning(`Sequence length must be greater than 0`);
+      return;
+    }
+    const labelledModifications = this.getModificationsWithNumericLabels();
+    this.updateModificationsWithNumericLabels(labelledModifications);
+    this.updateStrandLength(strand, sequences[strand].length - 1, index);
   }
 
   get strandsUpdated$(): rxjs.Observable<void> {

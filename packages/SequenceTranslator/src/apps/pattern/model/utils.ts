@@ -2,6 +2,7 @@ import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 
 import {NucleotideSequences} from './types';
+import { STRAND } from './const';
 
 
 export function isOverhangNucleotide(nucleotide: string): boolean {
@@ -9,9 +10,14 @@ export function isOverhangNucleotide(nucleotide: string): boolean {
 }
 
 
-export function getUniqueNucleotides(sequences: NucleotideSequences): string[] {
-  const nucleotides = Object.values(sequences).flat();
-  return getUniqueSortedStrings(nucleotides);
+export function getUniqueNucleotides(sequences: NucleotideSequences, isAsActive: boolean): string[] {
+  let totalNucleotides: string[] = [];
+  for (const key of Object.keys(sequences)) {
+    if (key === STRAND.ANTISENSE && !isAsActive)
+      continue;
+    totalNucleotides = totalNucleotides.concat(sequences[key as STRAND])
+  }
+  return getUniqueSortedStrings(totalNucleotides);
 }
 
 
@@ -72,19 +78,38 @@ export namespace StrandEditingUtils {
   export function getTruncatedStrandData(
     originalNucleotides: string[],
     originalPTOFlags: boolean[],
-    newStrandLength: number
+    newStrandLength: number,
+    nucleotideIdx?: number
   ): {nucleotides: string[], ptoFlags: boolean[]} {
-    const nucleotides = originalNucleotides.slice(0, newStrandLength);
-    const ptoFlags = originalPTOFlags.slice(0, newStrandLength + 1);
-    return {nucleotides, ptoFlags};
+    //un case nucleotideIdx === 0, we also have to enter if
+    if (nucleotideIdx != undefined) {
+      const nucleotides = originalNucleotides.slice(0);
+      nucleotides.splice(nucleotideIdx, 1);
+      const ptoFlags = originalPTOFlags.slice(0);
+      ptoFlags.splice(nucleotideIdx, 1);      
+      return {nucleotides, ptoFlags};
+    } 
+    return {
+      nucleotides: originalNucleotides.slice(0, newStrandLength),
+      ptoFlags: originalPTOFlags.slice(0, newStrandLength + 1)
+    }
   }
 
   export function getExtendedStrandData(
     originalNucleotides: string[],
     originalPTOFlags: boolean[],
     newStrandLength: number,
-    sequenceBase: string
+    sequenceBase: string,
+    nucleotideIdx?: number
   ): {nucleotides: string[], ptoFlags: boolean[]} {
+    if (nucleotideIdx != undefined) {
+      const nucleotides = originalNucleotides.slice(0);
+      nucleotides.splice(nucleotideIdx + 1, 0, sequenceBase);
+      const ptoFlags = originalPTOFlags.slice(0);
+      ptoFlags.splice(nucleotideIdx + 1, 0, true);      
+      return {nucleotides, ptoFlags};
+    }
+
     const appendedNucleotidesLength = newStrandLength - originalNucleotides.length;
     const nucleotides = originalNucleotides.concat(
       new Array(newStrandLength - originalNucleotides.length).fill(sequenceBase)

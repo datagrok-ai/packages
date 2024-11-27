@@ -94,6 +94,9 @@ export class DataManager {
       return null;
     const record = await this.getPatternRecordByHash(hash);
     const config = record === null ? null : record[R.PATTERN_CONFIG] as PatternConfiguration;
+    //WARNING! Next two rows is to keep compatibility with previous versions of config (with missing NUCLEOTIDES_WITH_MODIFICATION_LABELS)
+    if (config && !config[L.NUCLEOTIDES_WITH_MODIFICATION_LABELS])
+      config[L.NUCLEOTIDES_WITH_MODIFICATION_LABELS] = [];
     return config;
   }
 

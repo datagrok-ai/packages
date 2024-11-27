@@ -15,17 +15,17 @@ export class PatternAppLeftSection {
   ) { };
 
   getLayout(): HTMLDivElement {
-    const loadControlsManager = new PatternLoadControlsManager(this.eventBus, this.dataManager);
+    //const loadControlsManager = new PatternLoadControlsManager(this.eventBus, this.dataManager);
 
     const editControlsManager = new PatternEditControlsManager(this.eventBus, this.dataManager);
     const tableControlsManager = new TableControlsManager(this.eventBus);
 
-    const loadControls = loadControlsManager.createControls();
+    //const loadControls = loadControlsManager.createControls();
     const editControls = editControlsManager.createControls();
     const tableControls = tableControlsManager.createControls();
 
-    const loadControlsContainer = ui.div(loadControls);
-    $(loadControlsContainer).css({'padding-bottom': '20px'});
+   // const loadControlsContainer = ui.div(loadControls);
+   // $(loadControlsContainer).css({'padding-bottom': '20px'});
 
     const form = ui.div([
       ...editControls,
@@ -33,7 +33,7 @@ export class PatternAppLeftSection {
     ], 'ui-form');
 
     const container = ui.div([
-      loadControlsContainer,
+     // loadControlsContainer,
       form
     ]);
     $(container).css({'padding': '25px'});

@@ -22,6 +22,7 @@ export type PatternLegendSettings = {
   [L.PATTERN_NAME]: string,
   [L.PATTERN_COMMENT]: string,
   [L.NUCLEOTIDES_WITH_NUMERIC_LABELS]: string[],
+  [L.NUCLEOTIDES_WITH_MODIFICATION_LABELS]: string[],
 }
 
 export type PatternConfiguration = PatternGraphSettings & PatternLegendSettings;

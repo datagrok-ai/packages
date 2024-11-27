@@ -46,12 +46,14 @@ export namespace GRAPH_SETTINGS_KEYS {
   export const NUCLEOTIDE_SEQUENCES = 'nucleotideSequences';
   export const PHOSPHOROTHIOATE_LINKAGE_FLAGS = 'phosphorothioateLinkageFlags';
   export const STRAND_TERMINUS_MODIFICATIONS = 'strandTerminusModifications';
+  export const MODIFICATION_LABELS_VISIBLE = 'modificationLabelsVisible';
 }
 
 export namespace LEGEND_SETTINGS_KEYS {
   export const PATTERN_NAME = 'patternName';
   export const PATTERN_COMMENT = 'patternComment';
   export const NUCLEOTIDES_WITH_NUMERIC_LABELS = 'nucleotidesWithNumericLabels';
+  export const NUCLEOTIDES_WITH_MODIFICATION_LABELS = 'nucleotidesWithModificationLabels';
 }
 
 export namespace PATTERN_RECORD_KEYS {
@@ -85,11 +87,11 @@ export const EXAMPLE_PATTERN_CONFIG =
     'isAntisenseStrandIncluded': true,
     'nucleotideSequences': {
       'SS': [
-        'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA',
+        'GNA', 'UNA', 'A', 'LNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA',
         'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA'
       ],
       'AS': [
-        'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA',
+        'GNA', 'UNA', 'A', 'LNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA',
         'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA', 'RNA'
       ]
     },
@@ -115,8 +117,9 @@ export const EXAMPLE_PATTERN_CONFIG =
     },
     'patternComment': '',
     'nucleotidesWithNumericLabels': [
-      'RNA'
-    ]
+      'RNA', 'GNA', 'UNA', 'A', 'LNA'
+    ],
+    'nucleotidesWithModificationLabels': []
   },
   'authorID': ''
 };

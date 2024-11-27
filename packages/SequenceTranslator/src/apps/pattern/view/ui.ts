@@ -32,13 +32,13 @@ async function getContent(): Promise<HTMLDivElement> {
   const eventBus = new EventBus(dataManager, initialPatternRecord);
   urlRouter.subscribeToObservables(eventBus);
 
-  const leftSection = new PatternAppLeftSection(eventBus, dataManager).getLayout();
+  //const leftSection = new PatternAppLeftSection(eventBus, dataManager).getLayout();
   const rightSection = new PatternAppRightSection(eventBus, dataManager).getLayout();
 
   const isResizeable = true;
 
   const layout = ui.splitH([
-    leftSection,
+   // leftSection,
     rightSection,
   ], {}, isResizeable);
 

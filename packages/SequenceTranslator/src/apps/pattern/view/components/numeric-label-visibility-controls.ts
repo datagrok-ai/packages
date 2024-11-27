@@ -39,7 +39,7 @@ export class NumericLabelVisibilityControls {
       (inputA, inputB) => inputA.captionLabel.textContent!.localeCompare(inputB.captionLabel.textContent!)
     );
 
-    return ui.divH(inputBases.map((input) => input.root));
+    return ui.divH(inputBases.map((input) => input.root), 'st-numeric-label');
   }
 
   private createSingleInput(nucleotide: string): BooleanInput {

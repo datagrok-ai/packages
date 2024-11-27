@@ -1,6 +1,6 @@
 import {STRAND, TERMINUS, STRAND_END} from '../../model/const';
 
-export const LEGEND_PADDING = 10;
+export const LEGEND_PADDING = 20;
 
 export const enum LUMINANCE_COEFFICIENTS {
   RED = 0.299,
@@ -24,13 +24,15 @@ export const enum SVG_CIRCLE_SIZES {
 export const enum SVG_TEXT_FONT_SIZES {
   NUCLEOBASE = 17,
   COMMENT = 15,
+  MODIFICATION_LABEL = 11,
 };
 
 export const enum SVG_ELEMENT_COLORS {
   LINKAGE_STAR = 'red',
   TEXT = 'var(--grey-6)',
   TITLE_TEXT = 'black',
-  MODIFICATION_TEXT = 'red'
+  MODIFICATION_TEXT = 'red',
+  MODIFICATION_LABEL = 'var(--grey-4)',
 };
 
 export const STRAND_END_LABEL_TEXT = {
@@ -50,6 +52,8 @@ export const NUMERIC_LABEL_POSITION_OFFSET = {
 } as const;
 
 export const DEFAULT_FONT_FAMILY = 'Arial';
+
+export const Y_POSITION_OFFSET = 15;
 
 export const Y_POSITIONS_FOR_STRAND_ELEMENTS = {
   [STRAND.SENSE]: {

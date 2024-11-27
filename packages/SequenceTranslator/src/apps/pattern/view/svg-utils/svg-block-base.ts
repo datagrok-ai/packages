@@ -14,14 +14,20 @@ export abstract class SVGBlockBase {
 
   abstract getContentHeight(): number;
 
-  shiftElements(shift: {x: number, y: number}): void {
+  shiftElements(shift: { x: number, y: number }): void {
     this.svgElements.forEach((element) => {
-      const transform = element.getAttribute('transform') || '';
-      // const match = transform.match(/translate\(([^,]+),([^,]+)\)/);
-      // const x = match ? parseFloat(match[1]) : 0;
-      // const y = match ? parseFloat(match[2]) : 0;
-      const newTransform = `translate(${shift.x},${shift.y})`;
-      element.setAttribute('transform', `${transform} ${newTransform}`);
+      if (element.getAttribute('x'))
+        element.setAttribute('x', `${parseFloat(element.getAttribute('x')!) + shift.x}`);
+      else if (element.getAttribute('cx'))
+        element.setAttribute('cx', `${parseFloat(element.getAttribute('cx')!) + shift.x}`);
+      else {
+        const points = element.getAttribute('points');
+        if (points) {
+          const starCoords = points.split(' ').map((point) => point.split(',').map((it) => parseFloat(it)));
+          const newCoords = starCoords.map((p) => `${p[0] + shift.x}, ${p[1]}`).join(' ');
+          element.setAttribute('points', newCoords);
+        }
+      }
     });
   }
 
