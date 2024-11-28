@@ -86,6 +86,12 @@
       "propertyType": "bool",
       "defaultValue": true,
       "nullable": false
+    },
+    {
+      "name": "scientificComputing",
+      "propertyType": "bool",
+      "defaultValue": true,
+      "nullable": false
     }
   ],
   "canEdit": [

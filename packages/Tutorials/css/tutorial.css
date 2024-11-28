@@ -337,3 +337,13 @@ progress[value]::-webkit-progress-value::after {
   height: 90px;
   width: 160px;
 }
+
+.tutorials-code-section {  
+  font-weight: bold;
+  text-align: center;
+  margin-left: 30px;
+}
+
+.tutorials-copy-icon {  
+  margin-left: 15px;
+}

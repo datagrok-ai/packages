@@ -7,6 +7,7 @@ import {eda} from './tracks/eda';
 import {da} from './tracks/data-access';
 import {ml} from './tracks/ml';
 import {dataTransformation} from './tracks/transform';
+import {scientificComputing} from './tracks/compute';
 import {TutorialWidget} from './widget';
 import '../css/tutorial.css';
 import {Track} from '@datagrok-libraries/tutorials/src/track';
@@ -136,6 +137,7 @@ function setProperties(properties: { [propertyName: string]: boolean }): void {
     'cheminformaticsTrack': chem,
     'dataAccessTrack': da,
     'dataTransformation': dataTransformation,
+    'scientificComputing': scientificComputing,
   };
 
   for (const property in properties) {
@@ -152,6 +154,7 @@ function setPath(path: string, tutorialRunners: TutorialRunner[]): void {
     'ml': ml,
     'chem': chem,
     'access': da,
+    'compute': scientificComputing,
   };
 
   if (pathParts.length !== 6)
