@@ -1,5 +1,6 @@
 ---
-title: "Specify the environment"
+title: "Manage Conda environments"
+sidebar_position: 8
 ---
 
 ```mdx-code-block
@@ -7,6 +8,8 @@ import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
+
+## Specify environment
 
 Set an `environment` parameter of the script
 to a one-liner YAML following the standard Conda YAML config (omit it's name).
@@ -50,4 +53,44 @@ For all next script runs, Datagrok will reuse this environment.
 :::
 
 Datagrok distinguishes in-place environments using *MD5 hashes* of their body strings.
-If there is a ready-to-use environment with the same environment config, Datagrok will reuse it.
+If there is a ready-to-use environment with the same environment config,
+Datagrok will reuse it.
+
+
+## Store the environment in a package
+
+You may store your configurations in a package's `environment` folder. They should use Conda YAML format.
+You can create an environment YAML
+[manually](https://docs.Conda.io/projects/Conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually)
+or
+[export it](https://docs.Conda.io/projects/Conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
+form your existing Conda environment.
+
+If the `environment` tag in the script header is not specified, the script uses
+[the default configuration](https://github.com/datagrok-ai/public/blob/master/environments/default.yaml).
+
+:::tip
+
+Here is an
+[example of configuration](https://github.com/datagrok-ai/public/tree/master/environments)
+for the Datagrok public repository.
+Also, a package can define its own
+configurations as well ([see examples](https://github.com/datagrok-ai/public/tree/master/packages/Demo/scripts)).
+
+:::
+
+This is how to define the "Chemprop" environment in the script header:
+
+```python
+#environment: Chemprop
+```
+
+In this case, the environment `Chemprop` should be specified in a file
+`environments/Chemprop.yaml` inside the package where this script belongs.
+
+Datagrok distinguishes package environments by their *names*.
+Datagrok will reuse a previously created environment for all subsequent runs
+with no delay.
+
+
+

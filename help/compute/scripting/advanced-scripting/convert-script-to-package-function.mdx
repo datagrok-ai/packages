@@ -1,5 +1,6 @@
 ---
 title: "Convert script to a package function"
+sidebar_position: 5
 ---
 
 ```mdx-code-block
@@ -11,6 +12,7 @@ import BrowserWindow from '@site/src/components/browser-window';
 You can convert a script to a package function to:
 - use external libraries in your code,
 - save the script in the version control system (e.g., Git).
+- Cal your script from other scripts or fucntions by a stable name.
 
 Follow these steps to achieve it:
 
@@ -28,6 +30,9 @@ Follow these steps to achieve it:
 
 1. Add your script to the package.
 
+    - For Python, R, Julia, and other server-side languages,
+    create the `scripts` folder in your package directory and place your script file in it.
+
     - If you are writing in Javascript/Typescript,
     you can convert your script to the JS function, annotate it, and add directly to `src` folder:
 
@@ -42,8 +47,6 @@ Follow these steps to achieve it:
     }
     ```
 
-    - Alternatively, create the `scripts` folder in your package directory and place your script file in it.
-    This approach works for all script languages.
 
 1. Add the application function to the `src/package.ts`:
 
@@ -73,4 +76,4 @@ Follow these steps to achieve it:
   ```shell
   npm run build && grok publish your_environment --release
   ```
-  
+

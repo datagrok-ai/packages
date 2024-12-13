@@ -6,65 +6,27 @@ title: "Scripting"
 import Card from '@site/src/components/card';
 ```
 
-Scripting is an extremely powerful concept that allows you to 
-improve your data analysis experience with Datagrok drastically.
-Scripting integrates the full suite of Datagrok's functionalities
-with thousands of statistical packages and
-visualizations available in
+## What is Datagrok scripting?
+
+Scripting is a powerful feature that enhances your data analysis experience with Datagrok.
+It combines Datagrok's full range of capabilities
+with thousands of statistical packages and visualizations available in
 [R](https://www.r-project.org/about.html), [Python](https://www.python.org),
 [Octave](https://octave.org/), [Julia](https://julialang.org), or
-[JavaScript](https://www.javascript.com).
+[JavaScript](https://www.javascript.com). You can create custom data analysis scripts, display results in
+[viewers](../../visualize/viewers/viewers.md),
+leverage [Datagrok enterprise capabilities]( ../../datagrok/concepts/functions/func-params-annotation.md),
+and more.
 
-<div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}>
+Unlike "heavy" Datagrok components, scripts can be written in any supported language,
+including Python, R, Octave, JavaScript, and SQL (for data queries). To integrate scripts with Datagrok, you only need
+[Datagrok functional annotations]( ../../datagrok/concepts/functions/func-params-annotation.md),
+without requiring knowledge of the Datagrok JavaScript API.
 
-```mdx-code-block
-<Card
-  name="Getting started"
-  description={[
-    "Create scripts", 
-    "Specify inputs", 
-    "See results",
-    "Handle errors"
-  ]}
-  button_text="Switch to tutorial"
-  url="./getting-started"
-/>
+## Where to go from here
 
-<Card
-  name="Scripting features"
-  description={[
-    "Access external sources", 
-    "Share scripts", 
-    "Enhance script UI",
-    "Visualize complex data", 
-  ]}
-  button_text="See quick guides"
-  url="./Scripting features"
-/>
-
-<Card
-  name="Advanced features"
-  description={[
-    "Export results into a file",
-    "Review computations history", 
-    "Compare historical runs",
-    "Provide context documentation",
-    "Perform sensitivity analysis", 
-  ]}
-  button_text="Add more capabilities"
-  url="./Advanced scripting"
-/>
-
-<Card
-  name="Under the hood"
-  description={[
-    "How Datagrok sees the script",
-    "Script isolation",
-    "Runtime environment reuse",
-      "Create your own script handlers"
-  ]}
-  button_text="Dive into internals"
-  url="./under-the-hood"
-/>
-```
-</div>
+* To learn the basics of scripting, start with the [Getting started with scripting](getting-started.md) section.
+* The [Scripting features](scripting-features/scripting-features.md) section demonstrates
+how to improve the UI for your scripts and visualize results in Datagrok viewers.
+* For information on creating advanced user interfaces and maximizing scripting capabilities,
+visit the [Advanced scripting](advanced-scripting/advanced-scripting.mdx) section.

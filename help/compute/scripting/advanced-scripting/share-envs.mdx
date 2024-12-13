@@ -1,5 +1,6 @@
 ---
-title: "Share environments"
+title: "Share Python and R environments"
+sidebar_position: 7
 ---
 
 ```mdx-code-block
@@ -8,9 +9,9 @@ import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
 
-### Python (using Conda)
+## Sharing a Python environment (using Conda)
 
-You may share environments by referencing them in your scripts.
+You may share Conda environments by referencing them in your scripts.
 Conda environment will be re-used by many users, which is more space- and time-efficient.
 
 To achieve it, do the following steps:
@@ -21,7 +22,7 @@ To achieve it, do the following steps:
 4. Share it with the specific group of users you want to have access to these environments.
 5. Environment will be available as `GlobalEnvs:GlobalEnvDataAnalysis`
 
-#### Conda and Pip custom repositories
+### Conda and Pip custom repositories
 
 By default, Conda uses [Conda-forge](https://Conda-forge.org/) and [PyPI](https://pypi.org/) repositories to install packages.
 You may specify your own package repositories in the environment specification.
@@ -33,7 +34,7 @@ and `https://mirrors.sustech.edu.cn/pypi/simple` as PIP repository use the follo
 #environment: channels: [http://my-repo/custom/], dependencies: [python=3.8, glom, {pip: [--index-url https://mirrors.sustech.edu.cn/pypi/simple, requests]}]
 ```
 
-#### Common issues with Conda environments
+### Common issues with Conda environments
 
 There is a [known](https://github.com/Conda/Conda/issues/8051#issuecomment-464199791)
 [issue](https://github.com/Conda/Conda/issues/8051#issuecomment-631862928)
@@ -43,7 +44,7 @@ Datagrok will interrupt Conda environment creation if it takes more than 5 minut
 
 If you encounter a timing problem, try to find an equivalent set of packages from PIP repositories.
 
-### R (using Renv)
+## Sharing R environment (using Renv)
 
 Datagrok supports [Renv](https://rstudio.github.io/renv/articles/renv.html) environments. Each R
 script has a temporary folder with a unique name. This folder becomes an

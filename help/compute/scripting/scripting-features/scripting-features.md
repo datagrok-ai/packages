@@ -10,46 +10,20 @@ import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
 
-You may customize the script view using additional GUI-related options.
-Most of them are hints to improve the interface for your scripts.
-You should list options in curly braces in corresponding header lines.
-The order of the hints makes no difference. All options are optional.
+Datagrok offers you a lot of options to enhance your scripting
+experience and let you concentrate on working with your data.
 
-Manage scripts:
+Explore the following sections to earn how to:
 
-- [Create a script](create-script.mdx)
-- [Find & run a script](find-script.mdx)
-- [Debug a script](debug-script.mdx)
-- [Share a script](sharing-script.mdx)
-- [Delete a script](delete-script.mdx)
-- [Save script in Git](convert-script-to-package-function.mdx) 
+* [Enhance input UI](enhance-input-ui.md)
+* [Use complex input/output data types](complex-input-output)
+* [Visualize output data](visualize-output-data.md)
+* [Specify the meaning of your data with semantic types](detect-semantic-type.mdx)
+* Execute, debug, and share your scripts with [Datagrok script editor](datagrok-script-editor.md)
+* [Integrate your scripts in Datagrok UI](integrate-scripts-into-datagrok.mdx)
+* [Automate inputs](automate-inputs.md) with suggestions, autocompletions, and validators.
+* [Manage Conda environments](specify-env.mdx)
+* [Integrate script output into Datagrok](integrate-scripts-into-datagrok.mdx)
 
-Enhance the input form:
-
-- [Add captions and hints](add-captions.mdx)
-- [Add units](specify-units.mdx)
-- [Autocomplete values](autocomplete-values.mdx)
-- [Group inputs](group-inputs.mdx)
-- [Precalculate the inputs](precalculate-inputs.mdx)
-- [Validate the inputs](validate-inputs.mdx)
-- [Process a dataframe](process-dataframe.mdx)
-- [Specify a dataframe column](use-column-inputs.mdx)
-- [Provide semantic type](detect-semantic-type.mdx)
-- [Process a file](use-input-file.mdx)
-
-Visualize output data:
-
-- [Add viewers for dataframe](add-viewers.mdx)
-- [Customize viewers for dataframe](customize-viewers.mdx)
-- [Return graphics as output](generate-graphics.mdx)
-- [Download output file](generate-file.mdx)
-
-Manage environments: 
-- [Provide an environment in-place](store-env-in-code.mdx)
-- [Specify an environment](specify-env.mdx)
-- [Save an environment in Git](share-envs.mdx)
-
-Integrate your scripts:
-
-- [Call via REST](call-via-rest.md)
-- [Embed as iframe](embed-as-iframe.mdx)
+To find even more advanced options, visit the 
+[Advanced scripting](../advanced-scripting/advanced-scripting.mdx) page.

@@ -1,5 +1,6 @@
 ---
-title: "Integrate into info panel"
+title: "Integrate script output into Datagrok"
+sidebar_position: 9
 ---
 
 ```mdx-code-block
@@ -8,9 +9,23 @@ import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
 
+## Integrate into info pane
+
 Add your function to the [info panel](../../../datagrok/navigation/panels/info-panels.md)
 to display custom information for your data.
 To do this, specify [semantic type](../../../govern/catalog/semantic-types.md),
 for the script input, add `panel` tag and `condition` annotation.
 Read the detailed instructions in the corresponding
 [developer's how-to sections](../../../develop/how-to/add-info-panel.md).
+
+## Integrate into the top menu
+
+To add your function to the top menu, add the `top-menu` annotation tag
+and specify the element location in the menu.
+Save your script and reload the page to see the new element in the top menu.
+
+```python title="Your function header"
+#top-menu: Bio | Generate | Sequences clusters...
+```
+
+![Scripting-Integration-TopMenu](../_pics/Scripting-Integration-TopMenu.png)

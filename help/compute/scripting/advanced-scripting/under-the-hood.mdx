@@ -1,6 +1,6 @@
 ---
 title: "Under the hood"
-sidebar_position: 5
+sidebar_position: 13
 ---
 
 ```mdx-code-block
@@ -9,19 +9,7 @@ import TabItem from '@theme/TabItem';
 import BrowserWindow from '@site/src/components/browser-window';
 ```
 
-### Turning code into a Datagrok script
-
-Briefly, you only need to do the following:
-
-* Create a new script file in the
-  [Datagrok script editor](getting-started.md)
-* Write the code in any supported language.
-* Add **header**: the set of annotation comments specifying the script language, tags,
-  input and output variables.
-
-That's all.
-
-### Runtime environment
+## Default runtime environments
 
 For each language, Datagrok uses a predefined header and creates an environment with the set of pre-installed packages.
 
@@ -107,7 +95,7 @@ import * as html2canvas from 'html2canvas';
 </Tabs>
 ```
 
-### Environment isolation
+## Environment isolation
 
 You can specify an environment for the script to use,
 including the language version and a set of libraries.
@@ -122,9 +110,10 @@ A Conda environment:
 
 Later, the script uses the pre-created environment with *no delay* for resolving dependencies.
 
-In Datagrok, Conda environment configuration can be specified either [right inside the script](scripting-features/specify-env.mdx),
-or as [part of a package](scripting-features/store-env-in-code.mdx).
+In Datagrok, Conda environment configuration can be specified either
+[right inside the script](../scripting-features/specify-env.mdx)
+or as part of a package.
 
 See also:
 
-* [Create your own script handler](../../develop/how-to/custom-script-handlers.md)
+* [Create your own script handler](../../../develop/how-to/custom-script-handlers.md)

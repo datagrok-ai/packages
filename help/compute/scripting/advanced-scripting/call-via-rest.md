@@ -1,5 +1,6 @@
 ---
 title: "Call via REST"
+sidebar_position: 9
 format: 'mdx'
 ---
 
@@ -17,7 +18,7 @@ Calling a script requires:
 This allows instantaneous deployment of scientific methods for
 external consumption. To find out how to use it:
 
-- [Find a script](find-script.mdx)
+- Find a script
 - Press F4 to open the context panel on the right
 - Expand the `REST` pane on it
 
