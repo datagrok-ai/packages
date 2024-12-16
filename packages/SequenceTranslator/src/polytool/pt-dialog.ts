@@ -305,7 +305,7 @@ export async function polyToolConvert(seqCol: DG.Column<string>,
       await grok.data.detectSemanticTypes(table);
     }
 
-    //buildMonomerHoverLink(resHelmCol, resMolCol, lib, seqHelper, rdKitModule);
+    buildMonomerHoverLink(resHelmCol, resMolCol, lib, seqHelper, rdKitModule);
     buildCyclizedMonomerHoverLink(seqCol, resHelmCol, resMolCol, lib, seqHelper, rdKitModule, positionMaps);
 
     return [resHelmCol, resMolCol];
