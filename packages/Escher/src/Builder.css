@@ -8,6 +8,7 @@
   position: relative;
   font-size: 14px;
   color: #333333;
+  
 }
 
 /* Applied to the body when Escher fills the screen. This stops browser from
@@ -47,6 +48,32 @@ resizes. */
   width: 100% !important;
   height: 100% !important;
   overflow: hidden;
+}
+
+.escher-container .escher-zoom-container {
+  height: calc(100% - 40px);
+  margin-top: 40px;
+}
+
+#selection-info-container {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: calc(calc(100% - 410px) / 2);
+  height: 40px;
+  background-color: transparent;
+  z-index: 10000;
+  text-align: left;
+  padding-top: 6px;
+  padding-left: 10px;
+  box-sizing: border-box;
+  align-content: center;
+}
+
+#selection-info-container H3 {
+  margin: 0;
+  padding: 0;
+  display: inline;
 }
 
 /* SVG text should not be selectable */

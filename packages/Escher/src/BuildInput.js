@@ -58,7 +58,7 @@ export default class BuildInput {
         const hasModel = this.reload(selectedNode, coords, false)
         if (hasModel) this.showDropdown(coords)
       }
-      this.map.unhighlight();
+      this.map.unhighlightShortestPaths();
       this.hideTarget()
     })
     map.callback_manager.set('select_selectable.input', (count, selectedNode, coords) => {
@@ -74,10 +74,11 @@ export default class BuildInput {
       }
       if (count === 1 && this.settings.get('highlight_same_nodes'))
         this.map.highlightSameNodes();
-      this.map.unhighlight();
+      this.map.selectionChanged();
+      this.map.unhighlightShortestPaths();
     })
     map.callback_manager.set('deselect_nodes', () => {
-      this.map.unhighlight();
+      this.map.unhighlightShortestPaths();
       this.direction_arrow.hide()
       this.hideDropdown()
     })

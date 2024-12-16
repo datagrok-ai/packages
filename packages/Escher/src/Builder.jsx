@@ -933,6 +933,13 @@ class Builder {
     }
   }
 
+  /**
+   * Sets the save action when the save button is clicked
+  */
+  setSaveAction (fn) {
+    this.map.saveAction = fn;
+  }
+
   _makeGeneDataObject (geneData, cobraModel, map) {
     const allReactions = {}
     if (cobraModel !== null) {
@@ -1431,6 +1438,40 @@ class Builder {
     this.passPropsButtonPanel({ isFullScreen: this.isFullScreen })
     this.passPropsMenuBar({ isFullScreen: this.isFullScreen })
   }
+
+  getSavingState() {
+    return {
+      selectedNodes: Object.keys(this.map.getSelectedNodes()),
+      lastAction: this.map.last_action,
+      mapJson: this.map.map_for_export(),
+      cobraModel: this.model_data,
+    }
+  }
+
+  // here, state is stringified JSON
+    loadSavingState(state) {
+      if (!state)
+        return;
+      state = JSON.parse(state);
+      if (!state.mapJson)
+        return;
+      if (state.cobraModel)
+        this.load_model(state.cobraModel, true);
+
+      this.load_map(state.mapJson, true);
+
+      if (state.selectedNodes) {
+        this.map.select_nodes(state.selectedNodes);
+      }
+
+      if (state.lastAction && state.lastAction.function && state.lastAction.args && state.lastAction.function in this.map) {
+        if (state.lastAction.args.length == 1) {
+          this.map[state.lastAction.function](state.lastAction.args[0]);
+        } else if (state.lastAction.args.length == 2) {
+          this.map[state.lastAction.function](state.lastAction.args[0], state.lastAction.args[1]);
+        }
+      }
+    }
 }
 
 export default utils.class_with_optional_new(Builder)

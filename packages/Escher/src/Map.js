@@ -409,7 +409,7 @@ export default class Map {
     this.draw_all_reactions(true, true); // also draw beziers
     this.draw_all_nodes(true)
     this.draw_all_text_labels();
-    this.unhighlight();
+    this.unhighlightShortestPaths();
   }
 
   /** Draw all reactions, and clear deleted reactions.
@@ -2466,6 +2466,7 @@ export default class Map {
   }
 
   findAndHighlightShortest(inc = 0) {
+    this.last_action = null;
     
     const nodes = Array.from(new Set(Object.values(this.getSelectedNodes())
     .sort((node1, node2) => ((!!node1.selectionOrder ? node1.selectionOrder : 0) - (!!node2.selectionOrder ? node2.selectionOrder : 0)))
@@ -2477,7 +2478,9 @@ export default class Map {
     let k;
     try {
       const reactionHash = `r${nodes[0]}_r${nodes[1]}`;
-      k = inc == 0 ? 1 : Math.max(this.shortestPathInfo ? (this.shortestPathInfo.hash === reactionHash ? this.shortestPathInfo.k + inc : 1) : 1, 1);
+      k = typeof inc === 'string' ? Number.parseInt(inc) : inc == 0 ? 1 : Math.max(this.shortestPathInfo ? (this.shortestPathInfo.hash === reactionHash ? this.shortestPathInfo.k + inc : 1) : 1, 1);
+      if (k === 0)
+        k = 1;
       path = findKthShortestPath(this, nodes[0], nodes[1], k);
       this.shortestPathInfo = {hash: reactionHash, k};
       this.outGoingInfo = null;
@@ -2486,7 +2489,7 @@ export default class Map {
       console.error(`Error finding ${k}th shortest path`, e);
       return;
     }
-    this.unhighlight();
+    this.unhighlightShortestPaths();
     //const kthPath = findKthShortestPath(this, nodes[0], nodes[1], 20);
     for (let i = 0; i < path.length - 1; i++) {
       const reactionId = path[i].reaction_id;
@@ -2501,22 +2504,29 @@ export default class Map {
     // path.filter(p => p.reaction_id != null).forEach(p => {
     //   this.sel.select(`#r${p.reaction_id}.reaction`).classed('shortest-path', true)
     // })
-
+    this.last_action = {
+      function: 'findAndHighlightShortest',
+      args: [k.toString()]
+    }
   }
 
   findKthOutOrIngoingReactions(inc, outGoingFlag = true) {
+    this.last_action = null;
     const nodes = Array.from(new Set(Object.values(this.getSelectedNodes()).map(a => a.bigg_id)))
     if (nodes.length !== 1)
       return;
     let k;
     
     const biggId = nodes[0];
-    this.unhighlight();
+    this.unhighlightShortestPaths();
 
     const getSavedInfo = () => outGoingFlag ? this.outGoingInfo : this.inGoingInfo;
     const setSavedInfo = (info) => outGoingFlag ? (this.outGoingInfo = info) : (this.inGoingInfo = info);
     const calcFunc = outGoingFlag ? findOutGoing : findInGoing;
-    k = inc == 0 ? 1 : Math.max(getSavedInfo() ? (getSavedInfo().hash === biggId ? getSavedInfo().k + inc : 1) : 1, 1);
+    // If you want to set k explicitely, pass inc as string
+    k = typeof inc === 'string' ? Number.parseInt(inc) : inc == 0 ? 1 : Math.max(getSavedInfo() ? (getSavedInfo().hash === biggId ? getSavedInfo().k + inc : 1) : 1, 1);
+    if (k === 0)
+      k = 1;
     this.outGoingInfo = null;
     this.inGoingInfo = null;
     this.shortestPathInfo = null;
@@ -2576,14 +2586,49 @@ export default class Map {
       Array.from(newMetabolites).forEach(m => queue.push(m));
     }
 
+    this.last_action = {
+      function: 'findKthOutOrIngoingReactions',
+      args: [k.toString(), outGoingFlag]
+    }
+  }
+
+  select_nodes(nodeIds) {
+    nodeIds.filter((id) => id && id.toString()).forEach((id) => this.sel.selectAll('#n'+id.toString()).classed('selected', true));
+  }
+
+  selectionChanged() {
+    // handle different things when selection changes
+    const element = document.getElementById('selection-info-container');
+    const prefix = 'Selected: ';
+    if (!element)
+      return;
+    const nodes = Array.from(new Set(Object.values(this.getSelectedNodes())
+    .sort((node1, node2) => ((!!node1.selectionOrder ? node1.selectionOrder : 0) - (!!node2.selectionOrder ? node2.selectionOrder : 0)))
+    .map(a => a.bigg_id)));
+
+    if (nodes.length === 0) {
+      element.innerHTML = '';
+      return;
+    }
+    if (nodes.length === 1) {
+      element.innerHTML = `<h3>${prefix}${nodes[0]}</h3>`;
+      return;
+    }
+    if (nodes.length === 2) {
+      element.innerHTML = `<h3>${prefix}${nodes[0]} - ${nodes[1]}</h3>`;
+      return;
+    }
+
+    element.innerHTML = ``;
 
   }
 
-  unhighlight() {
+  unhighlightShortestPaths() {
     this.sel.selectAll('.shortest-path').classed('shortest-path', false);
     this.sel.selectAll('.shortest-path-1').classed('shortest-path-1', false);
     this.sel.selectAll('.shortest-path-2').classed('shortest-path-2', false);
     this.sel.selectAll('.shortest-path-3').classed('shortest-path-3', false);
     this.sel.selectAll('.shortest-path-4').classed('shortest-path-4', false);
+    this.last_action = null;
   }
 }
