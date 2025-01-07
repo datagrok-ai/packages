@@ -16,6 +16,7 @@ Commands:
     publish   Upload a package
     test      Run package tests
     testAll      Run packages tests
+    publishBranch    Publish packages to npm from a specific git branch
 
 To get help on a particular command, use:
     grok <command> --help

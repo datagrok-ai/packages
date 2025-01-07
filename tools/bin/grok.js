@@ -15,6 +15,7 @@ const commands = {
   publish: require('./commands/publish').publish,
   test: require('./commands/test').test,
   testall: require('./commands/test-all').testAll, 
+  branch: require('./commands/branch').publishBranch,
 };
 
 const command = argv['_'][0];
@@ -35,7 +36,6 @@ if (command in commands) {
   }
 } else 
   console.log(help.help);
-
 
 function exitWithCode(code) {
   console.log(`Exiting with code ${code}`);
