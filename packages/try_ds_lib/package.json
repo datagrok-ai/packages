@@ -8,7 +8,7 @@
     "cash-dom": "latest",
     "dayjs": "latest",
     "@datagrok-libraries/utils": "latest",
-    "diff-studio-utils": "../try-ds"
+    "@datagrok-libraries/diff-studio-utils": "../../libraries/diff-studio-utils"
   },
   "devDependencies": {
     "datagrok-tools": "latest",

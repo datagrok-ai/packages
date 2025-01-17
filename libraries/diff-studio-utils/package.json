@@ -1,5 +1,5 @@
 {
-  "name": "diff-studio-utils",  
+  "name": "@datagrok-libraries/diff-studio-utils",  
   "author": {
     "name": "Viktor Makarichev",
     "email": "vmakarichev@datagrok.ai"

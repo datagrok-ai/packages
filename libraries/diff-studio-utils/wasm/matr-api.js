@@ -1,4 +1,4 @@
-import {exportMatrOper} from './matrix-operations';
+import {exportMatrOper} from './matrix-operations.js';
 
 export async function invMatr(matr) {
     let wasmInstance = await exportMatrOper();
