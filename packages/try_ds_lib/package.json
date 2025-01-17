@@ -1,0 +1,41 @@
+{
+  "name": "try_ds_lib",
+  "friendlyName": "try_ds_lib",
+  "version": "0.0.1",
+  "description": "",
+  "dependencies": {
+    "datagrok-api": "latest",
+    "cash-dom": "latest",
+    "dayjs": "latest",
+    "@datagrok-libraries/utils": "latest",
+    "diff-studio-utils": "../try-ds"
+  },
+  "devDependencies": {
+    "datagrok-tools": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "source-map-loader": "^4.0.1",
+    "file-loader": "^6.2.0"
+  },
+  "scripts": {
+    "link-all": "grok link",
+    "debug-try_ds_lib": "webpack && grok publish",
+    "release-try_ds_lib": "webpack && grok publish --release",
+    "build-try_ds_lib": "webpack",
+    "build": "webpack",
+    "debug-try_ds_lib-dev": "webpack && grok publish dev",
+    "release-try_ds_lib-dev": "webpack && grok publish dev --release",
+    "debug-try_ds_lib-local": "webpack && grok publish local",
+    "release-try_ds_lib-local": "webpack && grok publish local --release",
+    "debug-try_ds_lib-release-ec2.datagrok.ai": "webpack && grok publish release-ec2.datagrok.ai",
+    "release-try_ds_lib-release-ec2.datagrok.ai": "webpack && grok publish release-ec2.datagrok.ai --release"
+  },
+  "canEdit": [
+    "Developers"
+  ],
+  "canView": [
+    "All users"
+  ]
+}
