@@ -8,16 +8,17 @@
     "cash-dom": "latest",
     "dayjs": "latest",
     "@datagrok-libraries/utils": "latest",
-    "@datagrok-libraries/diff-studio-utils": "../../libraries/diff-studio-utils"
+    "@datagrok-libraries/diff-studio-utils": "../../libraries/diff-studio-utils",
+    "source-map-loader": "^5.0.0",
+    "ts-loader": "^9.5.1",
+    "file-loader": "^6.2.0"
   },
   "devDependencies": {
     "datagrok-tools": "latest",
     "webpack": "latest",
     "webpack-cli": "latest",
     "ts-loader": "latest",
-    "typescript": "latest",
-    "source-map-loader": "^4.0.1",
-    "file-loader": "^6.2.0"
+    "typescript": "latest"
   },
   "scripts": {
     "link-all": "grok link",
