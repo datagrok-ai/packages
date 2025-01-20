@@ -9,10 +9,10 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {inverseMatrix, memAlloc, memFree} from '../../wasm/matrix-operations-api';
 import {ODEs, max, abs, SAFETY, PSHRNK, PSGROW, REDUCE_COEF, GROW_COEF,
   ERR_CONTR, TINY, EPS, tDerivative, jacobian, ERROR_MSG} from './solver-defs';
 import {Callback} from './callbacks/callback-base';
+import {luDecomp, luSolve} from './lu-tools';
 
 // Quantities used in Rosenbrock method (see [1], [2] for more details)
 const D = 1.0 - Math.sqrt(2.0) / 2.0;
@@ -75,9 +75,7 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
   const yTemp = new Float64Array(dim);
   const yErr = new Float64Array(dim);
 
-  const wasmMemory = memAlloc(dimSquared);
-  const W = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
-  const invW = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
+  const W = new Float64Array(dimSquared);
 
   const f0 = new Float64Array(dim);
   const k1 = new Float64Array(dim);
@@ -91,8 +89,11 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
   const f0Buf = new Float64Array(dim);
   const f1Buf = new Float64Array(dim);
   let hd = 0;
-  let sum = 0;
   let hDivNum = 0;
+
+  const L = new Float64Array(dimSquared);
+  const U = new Float64Array(dimSquared);
+  const luBuf = new Float64Array(dim);
 
   // 1. SOLUTION AT THE POINT t0
   tArr[0] = t0;
@@ -138,21 +139,17 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dimSquared; ++i)
         W[i] = I[i] - hd * W[i];
 
-      // invW = W.inverse();
-      inverseMatrix(W, dim, invW);
+      // compute LU-decomposition
+      luDecomp(W, L, U, dim);
 
-      // k1 = invW * (f0 + hdT);
+      // invW = W.inverse();
+      //inverseMatrix(W, dim, invW);
+
+      // compute k1: solve the system W * k1 = f0 + hdT
       for (let i = 0; i < dim; ++i)
         f0Buf[i] = f0[i] + hdT[i];
 
-      for (let i = 0; i < dim; ++i) {
-        sum = 0;
-
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * f0Buf[j];
-
-        k1[i] = sum;
-      }
+      luSolve(L, U, f0Buf, luBuf, k1, dim);
 
       hDivNum = 0.5 * h;
 
@@ -163,18 +160,14 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       // f1 = f(t + 0.5 * h, yDer);
       f(t + hDivNum, yDer, f1);
 
-      // k2 = invW * (f1 - k1) + k1;
+      // compute k2: solve the system W * (k2 - k1) = f1 - k1
       for (let i = 0; i < dim; ++i)
         f1Buf[i] = f1[i] - k1[i];
 
-      for (let i = 0; i < dim; ++i) {
-        sum = k1[i];
+      luSolve(L, U, f1Buf, luBuf, k2, dim);
 
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * f1Buf[j];
-
-        k2[i] = sum;
-      }
+      for (let i = 0; i < dim; ++i)
+        k2[i] = k2[i] + k1[i];
 
       // yOut = y + k2 * h; <--> yTemp
       for (let i = 0; i < dim; ++i)
@@ -183,18 +176,11 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       // f2 = f(t + h, yOut);
       f(t + h, yTemp, f2);
 
-      // k3 = invW * (f2 - e32 * (k2 - f1) - 2.0 * (k1 - f0) + hdT);
+      // compute k3: solve the system W * k3 = f2 - e32 * (k2 - f1) - 2.0 * (k1 - f0) + hdT
       for (let i = 0; i < dim; ++i)
         f1Buf[i] = f2[i] - E32 * (k2[i] - f1[i]) - 2.0 * (k1[i] - f0[i]) + hdT[i];
 
-      for (let i = 0; i < dim; ++i) {
-        sum = 0;
-
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * f1Buf[j];
-
-        k3[i] = sum;
-      }
+      luSolve(L, U, f1Buf, luBuf, k3, dim);
 
       // yErr = (k1 - 2.0 * k2 + k3) * h / 6;
       hDivNum = h / 6;
@@ -213,11 +199,8 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
         hTemp = SAFETY * h * errmax**PSHRNK;
         h = max(hTemp, REDUCE_COEF * h);
         tNew = t + h;
-        if (tNew == t) {
-          memFree(wasmMemory.off1);
-          memFree(wasmMemory.off2);
+        if (tNew == t)
           throw new Error(ERROR_MSG.MRT_FAILS);
-        }
       } else {
         if (errmax > ERR_CONTR)
           hNext = SAFETY * h * errmax**PSGROW;
@@ -262,10 +245,6 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
 
   for (let i = 0; i < dim; ++i)
     yArrs[i][rowCount - 1] = y[i];
-
-  // 4. Free wasm buffer
-  memFree(wasmMemory.off1);
-  memFree(wasmMemory.off2);
 
   //@ts-ignore
   const solutionDf = DG.DataFrame.fromColumns([DG.Column.fromFloat64Array(odes.arg.name, tArr)]);

@@ -12,6 +12,7 @@ import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
+import {luDecomp, luSolve} from './solver-tools/lu-tools';
 
 export const _package = new DG.Package();
 
@@ -266,4 +267,32 @@ export async function solveODE(problem: string): Promise<DG.DataFrame> {
   await call.call();
 
   return call.outputs[DF_NAME];
+}
+
+
+//top-menu: ML | Try LU...
+//name: LU
+export async function lu() {
+  const A = new Float64Array([
+    2, 3, 5,
+    4, -5, 2,
+    1, 2, 3,
+  ]);
+
+  const b = new Float64Array([
+    10,
+    1,
+    6,
+  ]);
+
+  const L = new Float64Array(3 * 3);
+  const U = new Float64Array(3 * 3);
+
+  const x = new Float64Array(3);
+  const y = new Float64Array(3);
+
+  luDecomp(A, L, U, 3);
+  luSolve(L, U, b, y, x, 3);
+
+  console.log(x);
 }
