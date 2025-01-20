@@ -61,3 +61,15 @@ export function luSolve(L: Float64Array, U: Float64Array, b: Float64Array, y: Fl
     x[i] = (y[i] - sumUx) / U[i * n + i];
   }
 } // luSolve
+
+/** Solve Ax = b for 1D & 2D cases */
+export function solve1d2d(A: Float64Array, b: Float64Array, x: Float64Array) {
+  if (x.length === 1) {
+    x[0] = b[0] / A[0];
+    return;
+  }
+
+  const delta = A[0] * A[3] - A[1] * A[2];
+  x[0] = (b[0] * A[3] - b[1] * A[1]) / delta;
+  x[1] = (A[0] * b[1] - A[2] * b[0]) / delta;
+}

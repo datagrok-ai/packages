@@ -12,7 +12,6 @@ import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
-import {luDecomp, luSolve} from './solver-tools/lu-tools';
 
 export const _package = new DG.Package();
 

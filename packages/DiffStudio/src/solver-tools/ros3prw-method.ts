@@ -10,7 +10,7 @@ import * as DG from 'datagrok-api/dg';
 import {ODEs, max, abs, SAFETY, PSHRNK, PSGROW, REDUCE_COEF, GROW_COEF,
   ERR_CONTR, TINY, EPS, tDerivative, jacobian, ERROR_MSG} from './solver-defs';
 import {Callback} from './callbacks/callback-base';
-import {luDecomp, luSolve} from './lu-tools';
+import {luDecomp, luSolve} from './lin-alg-tools';
 
 // The method specific constants (see Table 2 [1])
 const GAMMA = 0.78867513459481287;

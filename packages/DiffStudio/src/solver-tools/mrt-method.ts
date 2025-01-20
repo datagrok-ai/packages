@@ -12,7 +12,7 @@ import * as DG from 'datagrok-api/dg';
 import {ODEs, max, abs, SAFETY, PSHRNK, PSGROW, REDUCE_COEF, GROW_COEF,
   ERR_CONTR, TINY, EPS, tDerivative, jacobian, ERROR_MSG} from './solver-defs';
 import {Callback} from './callbacks/callback-base';
-import {luDecomp, luSolve} from './lu-tools';
+import {luDecomp, luSolve, solve1d2d} from './lin-alg-tools';
 
 // Quantities used in Rosenbrock method (see [1], [2] for more details)
 const D = 1.0 - Math.sqrt(2.0) / 2.0;
@@ -94,6 +94,7 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
   const L = new Float64Array(dimSquared);
   const U = new Float64Array(dimSquared);
   const luBuf = new Float64Array(dim);
+  const isMultiDim = dim > 2;
 
   // 1. SOLUTION AT THE POINT t0
   tArr[0] = t0;
@@ -140,7 +141,8 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
         W[i] = I[i] - hd * W[i];
 
       // compute LU-decomposition
-      luDecomp(W, L, U, dim);
+      if (isMultiDim)
+        luDecomp(W, L, U, dim);
 
       // invW = W.inverse();
       //inverseMatrix(W, dim, invW);
@@ -149,7 +151,10 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         f0Buf[i] = f0[i] + hdT[i];
 
-      luSolve(L, U, f0Buf, luBuf, k1, dim);
+      if (isMultiDim)
+        luSolve(L, U, f0Buf, luBuf, k1, dim);
+      else
+        solve1d2d(W, f0Buf, k1);
 
       hDivNum = 0.5 * h;
 
@@ -164,7 +169,10 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         f1Buf[i] = f1[i] - k1[i];
 
-      luSolve(L, U, f1Buf, luBuf, k2, dim);
+      if (isMultiDim)
+        luSolve(L, U, f1Buf, luBuf, k2, dim);
+      else
+        solve1d2d(W, f1Buf, k2);
 
       for (let i = 0; i < dim; ++i)
         k2[i] = k2[i] + k1[i];
@@ -180,7 +188,10 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         f1Buf[i] = f2[i] - E32 * (k2[i] - f1[i]) - 2.0 * (k1[i] - f0[i]) + hdT[i];
 
-      luSolve(L, U, f1Buf, luBuf, k3, dim);
+      if (isMultiDim)
+        luSolve(L, U, f1Buf, luBuf, k3, dim);
+      else
+        solve1d2d(W, f1Buf, k3);
 
       // yErr = (k1 - 2.0 * k2 + k3) * h / 6;
       hDivNum = h / 6;
