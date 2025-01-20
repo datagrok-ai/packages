@@ -7,7 +7,6 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-//import {inverseMatrix, memAlloc, memFree} from '../../wasm/matrix-operations-api';
 import {ODEs, max, abs, SAFETY, PSHRNK, PSGROW, REDUCE_COEF, GROW_COEF,
   ERR_CONTR, TINY, EPS, tDerivative, jacobian, ERROR_MSG} from './solver-defs';
 import {Callback} from './callbacks/callback-base';
@@ -62,7 +61,7 @@ const R_3 = B_3 - B_HAT_3;
 const R_4 = B_4 - B_HAT_4;
 
 
-/** Solve initial value problem using the ROS3Pw method [5]. */
+/** Solve initial value problem using the ROS34PRw method [5]. */
 export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
   /** right-hand side of the IVP solved */
   const f = odes.func;
@@ -119,10 +118,7 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
   const yTemp = new Float64Array(dim);
   const yErr = new Float64Array(dim);
 
-  //const wasmMemory = memAlloc(dimSquared);
-  //const W = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
   const W = new Float64Array(dimSquared);
-  //const invW = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
 
   const k1 = new Float64Array(dim);
   const k2 = new Float64Array(dim);
@@ -132,7 +128,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
 
   const f0Buf = new Float64Array(dim);
   const f1Buf = new Float64Array(dim);
-  //let sum = 0;
 
   let hByGamma = 0;
   const fBuf = new Float64Array(dim);
@@ -182,7 +177,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dimSquared; ++i)
         W[i] = I[i] - hByGamma * W[i];
 
-      //inverseMatrix(W, dim, invW);
       luDecomp(W, L, U, dim);
 
       // 3) Scale dF/dt: HT = j * T
@@ -197,15 +191,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         bBuf[i] = fBuf[i] + GAMMA * HT[i];
 
       luSolve(L, U, bBuf, luBuf, k1, dim);
-
-      /*for (let i = 0; i < dim; ++i) {
-        sum = 0;
-
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * (fBuf[j] + GAMMA * HT[j]);
-
-        k1[i] = sum;
-      }*/
 
       // 6) F2 = F(t + alpha2 * h, y + alpha21 * k1)   <-- Fbuf
       for (let i = 0; i < dim; ++i)
@@ -226,15 +211,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         k2[i] -= kBuf[i];
 
-      /*for (let i = 0; i < dim; ++i) {
-        sum = 0;
-
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * (fBuf[j] + kBuf[j] + GAMMA_2 * HT[j]);
-
-        k2[i] = sum - kBuf[i];
-      }*/
-
       // 9) F3 = F(t + alpha3 * h, y + h * (alpha31 * k1 + alpha32 * k2))  <-- Fbuf
       for (let i = 0; i < dim; ++i)
         kBuf[i] = y[i] + h * 0.5 * (k1[i] + k2[i]);
@@ -253,15 +229,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
 
       for (let i = 0; i < dim; ++i)
         k3[i] -= kBuf[i];
-
-      /*for (let i = 0; i < dim; ++i) {
-        sum = 0;
-
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * (fBuf[j] + kBuf[j] + GAMMA_3 * HT[j]);
-
-        k3[i] = sum - kBuf[i];
-      }*/
 
       // 12) F4 = F(t + alpha4 * h, y + h * (alpha41 * k1 + alpha42 * k2 + alpha43 * k3))  <-- Fbuf
       for (let i = 0; i < dim; ++i)
@@ -282,15 +249,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         k4[i] -= kBuf[i];
 
-      // for (let i = 0; i < dim; ++i) {
-      //   sum = 0;
-
-      //   for (let j = 0; j < dim; ++j)
-      //     sum += invW[j + i * dim] * (fBuf[j] + kBuf[j] + GAMMA_4 * HT[j]);
-
-      //   k4[i] = sum - kBuf[i];
-      // }
-
       // 15) yNext = y + h * (b1 * k1 + b2 * k2 + b3 * k3  + b4 * k4)   <-- yTemp
       for (let i = 0; i < dim; ++i)
         yTemp[i] = y[i] + h * (B_1 * k1[i] + B_2 * k2[i] + B_3 * k3[i] + B_4 * k4[i]);
@@ -310,11 +268,8 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         hTemp = SAFETY * h * errmax**PSHRNK;
         h = max(hTemp, REDUCE_COEF * h);
         tNew = t + h;
-        if (tNew == t) {
-          //memFree(wasmMemory.off1);
-          //memFree(wasmMemory.off2);
+        if (tNew == t)
           throw new Error(ERROR_MSG.ROS34PRW_FAILS);
-        }
       } else {
         if (errmax > ERR_CONTR)
           hNext = SAFETY * h * errmax**PSGROW;
@@ -360,10 +315,6 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
   for (let i = 0; i < dim; ++i)
     yArrs[i][rowCount - 1] = y[i];
 
-  // 4. Free wasm buffer
-  //memFree(wasmMemory.off1);
-  //memFree(wasmMemory.off2);
-
   //@ts-ignore
   const solutionDf = DG.DataFrame.fromColumns([DG.Column.fromFloat64Array(odes.arg.name, tArr)]);
 
@@ -372,4 +323,4 @@ export function ros34prw(odes: ODEs, callback?: Callback): DG.DataFrame {
   solutionDf.name = odes.name;
 
   return solutionDf;
-} // ros3pw
+} // ros34prw
