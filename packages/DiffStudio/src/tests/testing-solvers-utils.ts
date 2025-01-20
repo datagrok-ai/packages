@@ -28,7 +28,7 @@ const stiffTest = {
     output[0] = -5 * y[0] + 3 * y[1];
     output[1] = 100 * y[0] - 301 * y[1];
   },
-  tolerance: 0.00005,
+  tolerance: 0.0000005,
   solutionColNames: [NAMES.X, NAMES.Y],
 };
 

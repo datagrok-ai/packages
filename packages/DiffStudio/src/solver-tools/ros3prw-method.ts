@@ -7,10 +7,11 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {inverseMatrix, memAlloc, memFree} from '../../wasm/matrix-operations-api';
+//import {inverseMatrix, memAlloc, memFree} from '../../wasm/matrix-operations-api';
 import {ODEs, max, abs, SAFETY, PSHRNK, PSGROW, REDUCE_COEF, GROW_COEF,
   ERR_CONTR, TINY, EPS, tDerivative, jacobian, ERROR_MSG} from './solver-defs';
 import {Callback} from './callbacks/callback-base';
+import {luDecomp, luSolve} from './lu-tools';
 
 // The method specific constants (see Table 2 [1])
 const GAMMA = 0.78867513459481287;
@@ -46,6 +47,7 @@ const R_3 = B_3 - B_HAT_3;
 
 /** Solve initial value problem using the ROS3Pw method [5]. */
 export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
+  //console.log('ROS3Pw');
   /** right-hand side of the IVP solved */
   const f = odes.func;
 
@@ -101,9 +103,10 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
   const yTemp = new Float64Array(dim);
   const yErr = new Float64Array(dim);
 
-  const wasmMemory = memAlloc(dimSquared);
-  const W = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
-  const invW = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
+  //const wasmMemory = memAlloc(dimSquared);
+  //const W = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
+  const W = new Float64Array(dimSquared);
+  //const invW = new Float64Array(wasmMemory.buf, wasmMemory.off1, dimSquared);
 
   const k1 = new Float64Array(dim);
   const k2 = new Float64Array(dim);
@@ -112,11 +115,16 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
 
   const f0Buf = new Float64Array(dim);
   const f1Buf = new Float64Array(dim);
-  let sum = 0;
+  //let sum = 0;
 
   let hByGamma = 0;
   const fBuf = new Float64Array(dim);
   const kBuf = new Float64Array(dim);
+
+  const L = new Float64Array(dimSquared);
+  const U = new Float64Array(dimSquared);
+  const luBuf = new Float64Array(dim);
+  const bBuf = new Float64Array(dim);
 
   // 1. SOLUTION AT THE POINT t0
   tArr[0] = t0;
@@ -157,7 +165,8 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dimSquared; ++i)
         W[i] = I[i] - hByGamma * W[i];
 
-      inverseMatrix(W, dim, invW);
+      //inverseMatrix(W, dim, invW);
+      luDecomp(W, L, U, dim);
 
       // 3) Scale dF/dt: HT = j * T
       for (let i = 0; i < dim; ++i)
@@ -167,14 +176,19 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       f(t, y, fBuf);
 
       // 5) k1 = W_inv * (F1 + gamma * HT)
-      for (let i = 0; i < dim; ++i) {
+      for (let i = 0; i < dim; ++i)
+        bBuf[i] = fBuf[i] + GAMMA * HT[i];
+
+      luSolve(L, U, bBuf, luBuf, k1, dim);
+
+      /*for (let i = 0; i < dim; ++i) {
         sum = 0;
 
         for (let j = 0; j < dim; ++j)
           sum += invW[j + i * dim] * (fBuf[j] + GAMMA * HT[j]);
 
         k1[i] = sum;
-      }
+      }*/
 
       // 6) F2 = F(t + alpha2 * h, y + alpha21 * k1)   <-- Fbuf
       for (let i = 0; i < dim; ++i)
@@ -187,14 +201,22 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         kBuf[i] = GAMMA_21_SCALED * k1[i];
 
       // 8) k2 = W_inv * [Fbuf + kBuf + gamma2 * HT] - kBuf
-      for (let i = 0; i < dim; ++i) {
+      for (let i = 0; i < dim; ++i)
+        bBuf[i] = fBuf[i] + kBuf[i] + GAMMA_2 * HT[i];
+
+      luSolve(L, U, bBuf, luBuf, k2, dim);
+
+      for (let i = 0; i < dim; ++i)
+        k2[i] = k2[i] - kBuf[i];
+
+      /*for (let i = 0; i < dim; ++i) {
         sum = 0;
 
         for (let j = 0; j < dim; ++j)
           sum += invW[j + i * dim] * (fBuf[j] + kBuf[j] + GAMMA_2 * HT[j]);
 
         k2[i] = sum - kBuf[i];
-      }
+      }*/
 
       // 9) F3 = F(t + alpha3 * h, y + h * (alpha31 * k1 + alpha32 * k2))  <-- Fbuf
       for (let i = 0; i < dim; ++i)
@@ -207,14 +229,22 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         kBuf[i] = GAMMA_31_SCALED * k1[i] + GAMMA_32_SCALED * k2[i];
 
       // 11) k3 = W_inv * (F3 + kBuf + gamma3 * HT) - kBuf
-      for (let i = 0; i < dim; ++i) {
-        sum = 0;
+      for (let i = 0; i < dim; ++i)
+        bBuf[i] = fBuf[i] + kBuf[i] + GAMMA_3 * HT[i];
 
-        for (let j = 0; j < dim; ++j)
-          sum += invW[j + i * dim] * (fBuf[j] + kBuf[j] + GAMMA_3 * HT[j]);
+      luSolve(L, U, bBuf, luBuf, k3, dim);
 
-        k3[i] = sum - kBuf[i];
-      }
+      for (let i = 0; i < dim; ++i)
+        k3[i] = k3[i] - kBuf[i];
+
+      // for (let i = 0; i < dim; ++i) {
+      //   sum = 0;
+
+      //   for (let j = 0; j < dim; ++j)
+      //     sum += invW[j + i * dim] * (fBuf[j] + kBuf[j] + GAMMA_3 * HT[j]);
+
+      //   k3[i] = sum - kBuf[i];
+      // }
 
       // 12) yNext = y + h * (b1 * k1 + b2 * k2 + b3 * k3)   <-- yTemp
       for (let i = 0; i < dim; ++i)
@@ -236,8 +266,8 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         h = max(hTemp, REDUCE_COEF * h);
         tNew = t + h;
         if (tNew == t) {
-          memFree(wasmMemory.off1);
-          memFree(wasmMemory.off2);
+          //memFree(wasmMemory.off1);
+          //memFree(wasmMemory.off2);
           throw new Error(ERROR_MSG.ROS3PRW_FAILS);
         }
       } else {
@@ -286,8 +316,8 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
     yArrs[i][rowCount - 1] = y[i];
 
   // 4. Free wasm buffer
-  memFree(wasmMemory.off1);
-  memFree(wasmMemory.off2);
+  //memFree(wasmMemory.off1);
+  //memFree(wasmMemory.off2);
 
   //@ts-ignore
   const solutionDf = DG.DataFrame.fromColumns([DG.Column.fromFloat64Array(odes.arg.name, tArr)]);
