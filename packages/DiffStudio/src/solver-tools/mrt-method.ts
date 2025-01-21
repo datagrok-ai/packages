@@ -94,7 +94,7 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
   const L = new Float64Array(dimSquared);
   const U = new Float64Array(dimSquared);
   const luBuf = new Float64Array(dim);
-  const isMultiDim = dim > 2;
+  const toUseLU = dim > 2;
 
   // 1. SOLUTION AT THE POINT t0
   tArr[0] = t0;
@@ -141,17 +141,14 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
         W[i] = I[i] - hd * W[i];
 
       // compute LU-decomposition
-      if (isMultiDim)
+      if (toUseLU)
         luDecomp(W, L, U, dim);
-
-      // invW = W.inverse();
-      //inverseMatrix(W, dim, invW);
 
       // compute k1: solve the system W * k1 = f0 + hdT
       for (let i = 0; i < dim; ++i)
         f0Buf[i] = f0[i] + hdT[i];
 
-      if (isMultiDim)
+      if (toUseLU)
         luSolve(L, U, f0Buf, luBuf, k1, dim);
       else
         solve1d2d(W, f0Buf, k1);
@@ -169,7 +166,7 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         f1Buf[i] = f1[i] - k1[i];
 
-      if (isMultiDim)
+      if (toUseLU)
         luSolve(L, U, f1Buf, luBuf, k2, dim);
       else
         solve1d2d(W, f1Buf, k2);
@@ -188,7 +185,7 @@ export function mrt(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         f1Buf[i] = f2[i] - E32 * (k2[i] - f1[i]) - 2.0 * (k1[i] - f0[i]) + hdT[i];
 
-      if (isMultiDim)
+      if (toUseLU)
         luSolve(L, U, f1Buf, luBuf, k3, dim);
       else
         solve1d2d(W, f1Buf, k3);

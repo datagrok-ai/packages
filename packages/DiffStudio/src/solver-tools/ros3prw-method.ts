@@ -10,7 +10,7 @@ import * as DG from 'datagrok-api/dg';
 import {ODEs, max, abs, SAFETY, PSHRNK, PSGROW, REDUCE_COEF, GROW_COEF,
   ERR_CONTR, TINY, EPS, tDerivative, jacobian, ERROR_MSG} from './solver-defs';
 import {Callback} from './callbacks/callback-base';
-import {luDecomp, luSolve} from './lin-alg-tools';
+import {luDecomp, luSolve, solve1d2d} from './lin-alg-tools';
 
 // The method specific constants (see Table 2 [1])
 const GAMMA = 0.78867513459481287;
@@ -119,6 +119,7 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
   const U = new Float64Array(dimSquared);
   const luBuf = new Float64Array(dim);
   const bBuf = new Float64Array(dim);
+  const toUseLU = dim > 2;
 
   // 1. SOLUTION AT THE POINT t0
   tArr[0] = t0;
@@ -159,7 +160,8 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dimSquared; ++i)
         W[i] = I[i] - hByGamma * W[i];
 
-      luDecomp(W, L, U, dim);
+      if (toUseLU)
+        luDecomp(W, L, U, dim);
 
       // 3) Scale dF/dt: HT = j * T
       for (let i = 0; i < dim; ++i)
@@ -172,7 +174,11 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         bBuf[i] = fBuf[i] + GAMMA * HT[i];
 
-      luSolve(L, U, bBuf, luBuf, k1, dim);
+      //luSolve(L, U, bBuf, luBuf, k1, dim);
+      if (toUseLU)
+        luSolve(L, U, bBuf, luBuf, k1, dim);
+      else
+        solve1d2d(W, bBuf, k1);
 
       // 6) F2 = F(t + alpha2 * h, y + alpha21 * k1)   <-- Fbuf
       for (let i = 0; i < dim; ++i)
@@ -188,7 +194,11 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         bBuf[i] = fBuf[i] + kBuf[i] + GAMMA_2 * HT[i];
 
-      luSolve(L, U, bBuf, luBuf, k2, dim);
+      //luSolve(L, U, bBuf, luBuf, k2, dim);
+      if (toUseLU)
+        luSolve(L, U, bBuf, luBuf, k2, dim);
+      else
+        solve1d2d(W, bBuf, k2);
 
       for (let i = 0; i < dim; ++i)
         k2[i] = k2[i] - kBuf[i];
@@ -207,7 +217,11 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         bBuf[i] = fBuf[i] + kBuf[i] + GAMMA_3 * HT[i];
 
-      luSolve(L, U, bBuf, luBuf, k3, dim);
+      //luSolve(L, U, bBuf, luBuf, k3, dim);
+      if (toUseLU)
+        luSolve(L, U, bBuf, luBuf, k3, dim);
+      else
+        solve1d2d(W, bBuf, k3);
 
       for (let i = 0; i < dim; ++i)
         k3[i] = k3[i] - kBuf[i];
