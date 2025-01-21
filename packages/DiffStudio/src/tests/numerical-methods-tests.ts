@@ -11,7 +11,7 @@ import {mrt} from '../solver-tools/mrt-method';
 import {ros3prw} from '../solver-tools/ros3prw-method';
 import {ros34prw} from '../solver-tools/ros34prw-method';
 
-import {evaluateMethod} from './testing-solvers-utils';
+import {correctnessProblems, getError} from './correctness-utils';
 import {problems} from './performance-problems';
 
 const TIMEOUT = 4000;
@@ -20,20 +20,23 @@ const MIN_ROWS = 1000;
 
 const methods = new Map([
   ['MRT', mrt],
-  ['ROSP3PRw', ros3prw],
-  ['ROSP34PRw', ros34prw],
+  ['ROS3PRw', ros3prw],
+  ['ROS34PRw', ros34prw],
 ]);
 
 // Correctness tests
 category('Correctness', () => {
-  methods.forEach((method, name) => test(`The ${name} method`, async () => {
-    const error = evaluateMethod(method);
-    expect(
-      error < TINY,
-      true,
-      `The ${name} method failed, too big error: ${error}; expected: < ${TINY}`,
-    );
-  }, {timeout: TIMEOUT}));
+  methods.forEach((method, name) => {
+    correctnessProblems.forEach((problem) => test(`Method: ${name}, problem: ${problem.odes.name}`, async () => {
+      const error = getError(method, problem);
+      console.log(`Method: ${name}, problem: ${problem.odes.name}, ERROR: ${error}`);
+      expect(
+        error < TINY,
+        true,
+        `The ${name} method failed to solve "${problem.odes.name}", too big error: ${error}; expected: < ${TINY}`,
+      );
+    }, {timeout: TIMEOUT}));
+  });
 }); // Correctness
 
 // Performance tests

@@ -201,7 +201,7 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         solve1d2d(W, bBuf, k2);
 
       for (let i = 0; i < dim; ++i)
-        k2[i] = k2[i] - kBuf[i];
+        k2[i] -= kBuf[i];
 
       // 9) F3 = F(t + alpha3 * h, y + h * (alpha31 * k1 + alpha32 * k2))  <-- Fbuf
       for (let i = 0; i < dim; ++i)
@@ -224,7 +224,9 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
         solve1d2d(W, bBuf, k3);
 
       for (let i = 0; i < dim; ++i)
-        k3[i] = k3[i] - kBuf[i];
+        k3[i] -= kBuf[i];
+
+      console.log(k1, k2, k3);
 
       // 12) yNext = y + h * (b1 * k1 + b2 * k2 + b3 * k3)   <-- yTemp
       for (let i = 0; i < dim; ++i)
