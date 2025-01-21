@@ -174,7 +174,6 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         bBuf[i] = fBuf[i] + GAMMA * HT[i];
 
-      //luSolve(L, U, bBuf, luBuf, k1, dim);
       if (toUseLU)
         luSolve(L, U, bBuf, luBuf, k1, dim);
       else
@@ -194,7 +193,6 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         bBuf[i] = fBuf[i] + kBuf[i] + GAMMA_2 * HT[i];
 
-      //luSolve(L, U, bBuf, luBuf, k2, dim);
       if (toUseLU)
         luSolve(L, U, bBuf, luBuf, k2, dim);
       else
@@ -217,7 +215,6 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
       for (let i = 0; i < dim; ++i)
         bBuf[i] = fBuf[i] + kBuf[i] + GAMMA_3 * HT[i];
 
-      //luSolve(L, U, bBuf, luBuf, k3, dim);
       if (toUseLU)
         luSolve(L, U, bBuf, luBuf, k3, dim);
       else
@@ -225,8 +222,6 @@ export function ros3prw(odes: ODEs, callback?: Callback): DG.DataFrame {
 
       for (let i = 0; i < dim; ++i)
         k3[i] -= kBuf[i];
-
-      console.log(k1, k2, k3);
 
       // 12) yNext = y + h * (b1 * k1 + b2 * k2 + b3 * k3)   <-- yTemp
       for (let i = 0; i < dim; ++i)

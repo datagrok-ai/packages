@@ -1,6 +1,7 @@
 /** Utils for testing correctness of solvers.
 
    References
+
    [1] Steven Chapra, Raymond Canale - Numerical Methods for Engineers-McGraw Hill (2020)
 */
 
@@ -50,7 +51,7 @@ const nonStiff2D = {
     output[0] = y[0] + y[1];
     output[1] = y[1] - y[0];
   },
-  tolerance: 0.0000001,
+  tolerance: 0.000000001,
   solutionColNames: [NAMES.X, NAMES.Y],
 };
 
@@ -59,6 +60,35 @@ const exactNonStiff2D = (t: number) => {
   return new Float64Array([
     Math.exp(t) * (Math.cos(t) + Math.sin(t)),
     Math.exp(t) * (Math.cos(t) - Math.sin(t)),
+  ]);
+};
+
+/** Non-stiff 3D test problem: equations */
+const nonStiff3D = {
+  name: 'non-stiff 3D',
+  arg: {name: NAMES.T, start: 0, finish: 2, step: 0.001},
+  initial: [0.3, -0.8, 0],
+  func: (t: number, y: Float64Array, output: Float64Array) => {
+    output[0] = 5 * y[0] + 2 * y[1] + Math.sin(t);
+    output[1] = -4 * y[0] - y[1] + Math.exp(2 * t);
+    output[2] = 5 * t**4 - 3 * t**2 + 2 * t;
+  },
+  tolerance: 0.00000001,
+  solutionColNames: [NAMES.X, NAMES.Y, NAMES.Z],
+};
+
+/** Non-stiff 3D test problem: exact solution */
+const exactNonStiff3D = (t: number) => {
+  const e1 = Math.exp(t);
+  const e2 = Math.exp(2 * t);
+  const e3 = Math.exp(3 * t);
+  const c = Math.cos(t);
+  const s = Math.sin(t);
+
+  return new Float64Array([
+    e1 + e3 + 0.1 * (3 * c - s) - 2 * e2,
+    -2 * e1 - e3 - 0.2 * (2 * s + 4 * c) + 3 * e2,
+    t**5 - t**3 + t**2,
   ]);
 };
 
@@ -129,6 +159,7 @@ const exactStiff3D = (t: number) => {
 export const correctnessProblems = [
   {odes: nonStiff1D, exact: exactNonStiff1D},
   {odes: nonStiff2D, exact: exactNonStiff2D},
+  {odes: nonStiff3D, exact: exactNonStiff3D},
   {odes: stiff1D, exact: exactStiff1D},
   {odes: stiff2D, exact: exactStiff2D},
   {odes: stiff3D, exact: exactStiff3D},
@@ -154,14 +185,8 @@ export function getError(method: (odes: ODEs) => DG.DataFrame, corProb: Correctn
   for (let i = 0; i < rows; ++i) {
     const exactSolution = exact(arg[i]);
 
-    for (let j = 0; j < funcColsCount; ++j) {
+    for (let j = 0; j < funcColsCount; ++j)
       error = Math.max(error, Math.abs(exactSolution[j] - funcsRaw[j][i]));
-      if (Math.abs(exactSolution[j] - funcsRaw[j][i]) > 0.1) {
-        console.log(arg[i]);
-        console.log(exactSolution);
-        console.log(funcsRaw[0][i], funcsRaw[0][i]);
-      }
-    }
   }
 
   return error;
