@@ -1,1 +1,0 @@
-export {invMatrix} from './wasm/get-inv-matr';

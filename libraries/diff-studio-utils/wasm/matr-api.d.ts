@@ -1,1 +1,0 @@
-export declare async function invMatr(matr: Float64Array): void;
