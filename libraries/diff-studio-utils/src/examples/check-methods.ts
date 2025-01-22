@@ -1,4 +1,4 @@
-//
+// A script for checking performance
 
 import {ODEs, corrProbs, CorrProblem, mrt, ros3prw, ros34prw, perfProbs} from '../../index';
 

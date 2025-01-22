@@ -8,8 +8,8 @@ A lightweight TypeScript library for solving initial value problem ([IVP](https:
   * The modified Rosenbrock triple ([MRT](https://doi.org/10.1137/S1064827594276424))
   * The [ROS3PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
   * The [ROS34PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
-* Zero dependencies
 * Scripting !! TODO: add description
+* Zero dependencies
 
 ## Installation
 
@@ -17,9 +17,7 @@ A lightweight TypeScript library for solving initial value problem ([IVP](https:
 npm install diff-studio-utils !!!TODO: modify
 ```
 
-## Usage
-
-### Solving IVP
+## Solving IVP
 
 To find numerical solution of a problem:
 
@@ -82,10 +80,6 @@ Currently, `solution` contains:
 
 Find this example in [basic-use.ts](./src/examples/basic-use.ts).
 
-### Scripting
-
-TO ADD
-
 ## Performance
 
 The following [classic problems](https://archimede.uniba.it/~testset/testsetivpsolvers/?page_id=26#ODE) are used to evaluate efficiency of Diff Studio methods:
@@ -125,3 +119,9 @@ The MRT, ROS3PRw and ROS34PRw methods demonstrate the following time performance
 |[OREGO](https://archimede.uniba.it/~testset/report/orego.pdf)|[0, 360]|36K|1E-8|381|483|199|
 |[E5](https://archimede.uniba.it/~testset/report/e5.pdf)|[0, 10E+13]|40K|1E-6|14|17|8|
 |[Pollution](https://archimede.uniba.it/~testset/report/pollu.pdf)|[0, 60]|30K|1E-6|36|50|23|
+
+Run [check-methods.ts](./src/examples/check-methods.ts) to check results.
+
+## Scripting
+
+TO ADD
