@@ -14,7 +14,11 @@ import {luDecomp, luSolve, solve1d2d} from './lin-alg-tools';
 const D = 1.0 - Math.sqrt(2.0) / 2.0;
 const E32 = 6.0 + Math.sqrt(2.0);
 
-/** Solve initial value problem the modified Rosenbrock triple (MRT) method [1, 2] */
+/** Solve initial value problem the modified Rosenbrock triple (MRT) method [1, 2]
+ * @param odes initial value problem for ordinary differential equations
+ * @param callback computations control callback
+ * @returns solution of the problem
+*/
 export function mrt(odes: ODEs, callback?: Callback): Float64Array[] {
   /** right-hand side of the IVP solved */
   const f = odes.func;

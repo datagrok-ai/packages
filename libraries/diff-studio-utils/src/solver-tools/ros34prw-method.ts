@@ -32,15 +32,6 @@ const GAMMA_4 = GAMMA_41 + GAMMA_42 + GAMMA_43 + GAMMA;
 const ALPHA_21 = 1.3075995645253771;
 const ALPHA_2 = ALPHA_21;
 
-/* REMARK. Expressions with ALPHAs are simplified */
-/*const ALPHA_31 = 0.5;
-const ALPHA_32 = 0.5;
-const ALPHA_3 = ALPHA_31 + ALPHA_32;
-const ALPHA_41 = 0.5;
-const ALPHA_42 = 0.5;
-const ALPHA_43 = 0;
-const ALPHA_4 = ALPHA_41 + ALPHA_42;*/
-
 const B_1 = 0.34449143192447917;
 const B_2 = -0.45388516575112231;
 const B_3 = 0.67352721231818413;
@@ -57,7 +48,11 @@ const R_3 = B_3 - B_HAT_3;
 const R_4 = B_4 - B_HAT_4;
 
 
-/** Solve initial value problem using the ROS34PRw method [5]. */
+/** Solve initial value problem using the ROS34PRw method [1]
+ * @param odes initial value problem for ordinary differential equations
+ * @param callback computations control callback
+ * @returns solution of the problem
+*/
 export function ros34prw(odes: ODEs, callback?: Callback): Float64Array[] {
   /** right-hand side of the IVP solved */
   const f = odes.func;

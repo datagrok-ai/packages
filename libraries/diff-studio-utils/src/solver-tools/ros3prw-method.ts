@@ -40,7 +40,11 @@ const R_2 = B_2 - B_HAT_2;
 const R_3 = B_3 - B_HAT_3;
 
 
-/** Solve initial value problem using the ROS3Pw method [5]. */
+/** Solve initial value problem using the ROS3Pw method [1]
+ * @param odes initial value problem for ordinary differential equations
+ * @param callback computations control callback
+ * @returns solution of the problem
+*/
 export function ros3prw(odes: ODEs, callback?: Callback): Float64Array[] {
   /** right-hand side of the IVP solved */
   const f = odes.func;
@@ -286,4 +290,4 @@ export function ros3prw(odes: ODEs, callback?: Callback): Float64Array[] {
     yArrs[i][rowCount - 1] = y[i];
 
   return [tArr].concat(yArrs);
-} // ros3pw
+} // ros3prw
