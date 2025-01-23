@@ -1,7 +1,7 @@
 /** Example. Solve the following initial value problem
      
-      dx / dt = y + y - t
-      dy / dt = x y + t
+      dx / dt = x + y - t
+      dy / dt = x * y + t
       x(0) = 1
       y(0) = -1
 

@@ -3,7 +3,7 @@
      - parser of formulas defining IVP;
      - JS-script generator.
 
-   The parser processes IVP formulas given in the special form (see "Project structure" in README.md).
+   The parser processes IVP formulas given in the declarative form (see README.md).
 
    JS-script generator creates DATAGROK JavaScript script: annotation & code.
 */
@@ -1308,3 +1308,72 @@ function checkCorrectness(ivp: IVP): void {
   // 5. Check solver settings
   checkSolverSettings(ivp.solverSettings);
 } // checkCorrectness
+
+/** */
+export function getJScode(ivp: IVP): string[] {
+  const res = [] as string[];
+
+  // 1. Math functions
+  if (ivp.usedMathFuncs.length > 0) {
+    res.push(SCRIPT.MATH_FUNC_COM);
+    ivp.usedMathFuncs.forEach((i) =>
+      res.push(`const ${MATH_FUNCS[i]} = ${getMathArg(i)} => Math.${MATH_FUNCS[i]}${getMathArg(i)};`,
+      ));
+  }
+
+  // 2. Math constants
+  if (ivp.usedMathConsts.length > 0) {
+    res.push('');
+    res.push(SCRIPT.MATH_CONST_COM);
+    ivp.usedMathConsts.forEach((i) => res.push(`const ${MATH_CONSTS[i]} = Math.${MATH_CONSTS[i]};`));
+  }
+
+  // 1. Constants lines
+  if (ivp.consts !== null) {
+    res.push('');
+    res.push(SCRIPT.CONSTS);
+    ivp.consts.forEach((val, key) => res.push(`const ${key} = ${val.value};`));
+  }
+
+  // 2. The problem definition lines
+  res.push('');
+  res.push(SCRIPT.ODE_COM);
+  res.push(`const odes = {`);
+  res.push(`${SCRIPT.SPACE4}name: '${ivp.name}',`);
+
+  // 2.1) argument
+  const t = ivp.arg.name;
+  const t0 = `${SERVICE}${t}0`;
+  const t1 = `${SERVICE}${t}1`;
+  const h = `${SERVICE}h`;
+  res.push(`${SCRIPT.SPACE4}arg: {name: '${t}', start: ${t0}, finish: ${t1}, step: ${h}},`);
+
+  const names = ivp.deqs.solutionNames;
+
+  // 2.2) initial values
+  res.push(`${SCRIPT.SPACE4}initial: [${names.join(', ')}],`);
+
+  // 2.3) the right-hand side of the problem
+  res.push(`${SCRIPT.SPACE4}func: (${t}, ${SERVICE}y, ${SERVICE}output) => {`);
+
+  res.push(`${SCRIPT.SPACE6}${SCRIPT.FUNC_VALS}`);
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}const ${name} = ${SERVICE}y[${idx}];`));
+
+  if (ivp.exprs !== null) {
+    res.push(`\n${SCRIPT.SPACE6}${SCRIPT.EVAL_EXPR}`);
+    ivp.exprs.forEach((val, key) => res.push(`${SCRIPT.SPACE6}const ${key} = ${val};`));
+  }
+
+  res.push(`\n${SCRIPT.SPACE6}${SCRIPT.COMP_OUT}`);
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}${SERVICE}output[${idx}] = ${ivp.deqs.equations.get(name)};`));
+
+  res.push(`${SCRIPT.SPACE4}},`);
+
+  // 2.4) final lines of the problem specification
+  res.push(`${SCRIPT.SPACE4}tolerance: ${ivp.tolerance},`);
+  //res.push(`${SCRIPT.SPACE6}solverOptions: ${ivp.solverSettings.replaceAll(ANNOT_SEPAR, COMMA)},`);
+  res.push(`${SCRIPT.SPACE4}solutionColNames: [${names.map((key) => `'${key}'`).join(', ')}]`);
+  res.push('};');
+
+  return res;
+} // getJScode

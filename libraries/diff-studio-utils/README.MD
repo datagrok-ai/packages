@@ -10,7 +10,10 @@ A lightweight TypeScript library for solving initial value problem ([IVP](https:
   * The modified Rosenbrock triple ([MRT](https://doi.org/10.1137/S1064827594276424))
   * The [ROS3PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
   * The [ROS34PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
-* Scripting !! TODO: add description
+* Scripting:
+  * declarative specification of models
+  * auto-generated JavaScript code
+* Integration with the [Datagrok](https://datagrok.ai) platform
 * Zero dependencies
 
 ## Installation
@@ -153,4 +156,163 @@ Run [check-methods.ts](./src/examples/check-methods.ts) to check results.
 
 ## Scripting
 
-TO ADD
+The library provides tools for declarative specifying models defined by IVPs. This feature enables a development of "no-code" modeling tools seamlessly integrated with the [Datagrok](https://datagrok.ai) platform.
+
+### Model components and syntax
+
+Diff Studio **model** has a simple declarative syntax.
+
+#### Core blocks
+
+These blocks define the basic mathematical model and are required for any model:
+
+1. `#name`: Add a model identifier
+
+   ```python
+   #name: Problem
+   ```
+
+1. `#equations`: Define the system of ODEs to solve. Diff Studio supports any number of equations with single or multi-letter variable names
+  
+   ```python
+   #equations:
+     dx/dt = x + y + exp(t)
+     dy/dt = x - y - cos(t)
+   ```
+
+1. `#argument`: Defines
+   * independent variable
+   * its initial value (`initial`)
+   * final value (`final`), and
+   * grid step (`step`)
+
+   The solver calculates values at each step interval across the specified [_initial,final_] range.
+
+   ```python
+   #argument: t
+     initial = 0
+     final = 1
+     step = 0.01
+   ```
+
+1. `#inits`: Defines initial values for functions being solved
+
+   ```python
+   #inits:
+     x = 2
+     y = 5
+   ```
+
+#### Comments
+
+* `#comment`: Write a comment in any place of your model
+
+   ```python
+   #comment:
+     You can provide any text here. Diff Studio ignores it.
+   ```
+
+* Place comments right in formulas using `//`
+
+   ```python
+   #equations:
+     dx/dt = x + y + exp(t) // 1-st equation
+     dy/dt = x - y - cos(t) // 2-nd equation
+   ```
+
+#### Model parameters
+
+These blocks define values used in equations. Choose type based on intended use:
+
+* `#parameters`: Generate UI controls for model exploration
+
+   ```python
+   #parameters:
+     P1 = 1
+     P2 = -1
+
+   ```
+
+* `#constants`: Use for fixed values in equations that don't require UI controls
+
+   ```python
+   #constants:
+     C1 = 1
+     C2 = 3
+   ```
+
+#### Auxiliary calculations
+
+This block defines mathematical functions using `#parameters`, `#constants`,
+`#argument`, and other functions. These are direct calculations (no ODEs involved). Use them to break
+down complex calculations and simplify your equations.
+
+* `#expressions`
+
+   ```python
+   #expressions:
+     E1 = C1 * t + P1
+     E2 = C2 * cos(2 * t) + P2
+   ```
+### JS-code generation
+
+To transform Diff Studio model to JavaScript code with an appropriate specification of `ODEs` object, follow the steps:
+
+1. Import the parsing and code generating tools:
+
+```typescript
+import {getIVP, getJScode} from '@datagrok-ai/diff-studio-tools';
+```
+
+2. Define a string with a model specification, use Diff Studio [model syntax](#model-components-and-syntax):
+
+```typescript
+const model = `
+#name: Example
+#equations:
+  dx/dt = x + y - cos(t)
+  dy/dt = x - y + sin(t)
+...
+`;
+```
+
+3. Parse formulas:
+
+```typescript
+const ivp = getIVP(model);
+```
+
+The method `getIVP` parses formulas and returns `IVP` object specifying a model.
+
+4. Generate JS-code:
+
+```typescript
+const lines = getJScode(ivp);
+```
+
+The method `getJScode` transforms `IVP` object to JavaScript code. It returns an array of strings with this code.
+
+Find this example in [scripting.ts](./src/examples/scripting.ts).
+
+## Integration with Datagrok
+
+[Datagrok](https://datagrok.ai) is a platform enabling powerful scientific computing capabilities. It provides next-generation environment for leveraging interactive visualizations, data access, machine learning, and enterprise features to enable developing, publishing, discovering, and using scientific applications.
+
+The library is seamlessly integrated to Datagrok via the [Diff Studio](https://github.com/datagrok-ai/public/tree/master/packages/DiffStudio) package. It provides
+
+* Numerical solving IVPs directly in the browser
+* "No-code" models development
+* Solving both stiff and non-stiff systems of ODEs
+* Automatic generation of user interfaces
+* Interactive visualization and model exploration
+* Sensitivity analysis and parameters optimization
+* Sharing models and computational results
+
+Run the Diff Studio [app](https://public.datagrok.ai/apps/DiffStudio) and check interactive modeling.
+
+Learn more
+
+ * Diff Studio application [docs](https://datagrok.ai/help/compute/diff-studio)
+ * Example [models](https://datagrok.ai/help/compute/models)
+ * [Parameters optimization](https://datagrok.ai/help/compute/function-analysis#parameter-optimization)
+ * [Sensitivity analysis](https://datagrok.ai/help/compute/function-analysis#sensitivity-analysis)
