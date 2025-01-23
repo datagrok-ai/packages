@@ -1,9 +1,11 @@
-# Diff Studio Utils
+# Diff Studio Tools
 
 A lightweight TypeScript library for solving initial value problem ([IVP](https://en.wikipedia.org/wiki/Initial_value_problem)) for ordinary differential equations ([ODEs](https://en.wikipedia.org/wiki/Ordinary_differential_equation)) using numerical methods. This library focuses on solving [stiff equations](https://en.wikipedia.org/wiki/Stiff_equation).
 
 ## Features
 
+* Solving both [stiff](https://en.wikipedia.org/wiki/Stiff_equation) and non-stiff equations
+* Fast computations
 * A set of Rosenbrock–Wanner-type methods:
   * The modified Rosenbrock triple ([MRT](https://doi.org/10.1137/S1064827594276424))
   * The [ROS3PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
@@ -17,24 +19,47 @@ A lightweight TypeScript library for solving initial value problem ([IVP](https:
 npm install diff-studio-utils !!!TODO: modify
 ```
 
-## Solving IVP
+## Solving
+
+### General
 
 To find numerical solution of a problem:
 
 $$\frac{dy}{dt} = f(t, y)$$
 $$y(t_{0}) = y_0$$
 
-on the segment $[t_0, t_1]$ with the step $h$, start with imports:
+on the segment $[t_0, t_1]$ with the step $h$:
 
-```typescript
-import {ODEs, mrt} from '@datagrok-ai/diff-studio-tools';
-```
+1. Import `ODEs` and a desired numerical method:
 
-Here, we import `mrt` to apply the MRT method. Import `ros3prw` or `ros34prw` to use the ROS3PRw or ROS34PRw methods, respectively.
+   * `mrt` - the [MRT](https://doi.org/10.1137/S1064827594276424) method
+   * `ros3prw`- the [ROS3PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
+   * `ros34prw` - the [ROS34PRw](https://doi.org/10.1016/j.cam.2015.03.010) method
 
-Set `ODEs` object that specifies a given problem.
+2. Specify `ODEs` object that defines a problem:
 
-For example, to solve
+   * `name` - name of a model
+   * `arg` - independent variable specification. This is in object with fields:
+     * `name` - name of the argument, $t$
+     * `start` - initial value of the argument, $t_0$
+     * `finish` - final value of the argument, $t_1$
+     * `step` - solution grid step, $h$
+   * `initial` - initial values, $y_0$
+   * `func` - right-hand side of the system, $f(t, y)$. This is a function `(t: number, y: Float64Array, output: Float64Array) => void`:
+     * `t` - value of independent variable $t$
+     * `y` - values of $y$
+     * `output` - output values of $f(t, y)$
+
+   * `tolerance` - numerical tolerance
+   * `solutionColNames` - names of solutions, i.e. names of the vector $y$ elements
+
+3. Call numerical method. It returns `Float64Array`-arrays with values of an argument and approximate solutions.
+
+Diff Studio Tools are designed to provide fast computations. Check [performance](#performance) for the details.
+
+### Example
+
+Consider the following problem:
 
 $$\begin{cases}
 \frac{dx}{dt} = x + y - t \\
@@ -43,7 +68,13 @@ x(0) = 1 \\
 y(0) = -1
 \end{cases}$$
 
-on $[0, 2]$ with the step $0.01$ and the tolerance $10^{-7}$, use the following declaration:
+To solve it on the segment $[0, 2]$ with the step $0.01$ using the [MRT](https://doi.org/10.1137/S1064827594276424) method with the tolerance $10^{-7}$, we start with imports:
+
+```typescript
+import {ODEs, mrt} from '@datagrok-ai/diff-studio-tools';
+```
+
+Next, we create
 
 ```typescript
 const task: ODEs = {
@@ -64,13 +95,11 @@ const task: ODEs = {
 };
 ```
 
-Call the specified numerical method to solve `task`:
+Finally, we call the specified numerical method to solve `task`:
 
 ```typescript
 const solution = mrt(task);
 ```
-
-It returns `Float64Array`-arrays with values of an argument and approximate solutions.
 
 Currently, `solution` contains:
 
