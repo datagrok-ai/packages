@@ -1,18 +1,32 @@
 // Tests of numerical methods
-
-import * as grok from 'datagrok-api/grok';
-import * as ui from 'datagrok-api/ui';
-import * as DG from 'datagrok-api/dg';
 import {_package} from '../package-test';
-
 import {category, expect, test} from '@datagrok-libraries/utils/src/test';
+import {mrt, ros3prw, ros34prw, CorrProblem, ODEs, corrProbs, perfProbs} from '@datagrok-libraries/diff-studio-tools';
 
-import {mrt} from '../solver-tools/mrt-method';
-import {ros3prw} from '../solver-tools/ros3prw-method';
-import {ros34prw} from '../solver-tools/ros34prw-method';
+/** Return numerical solution error: maximum absolute deviation between approximate & exact solutions */
+function getError(method: (odes: ODEs) => Float64Array[], corProb: CorrProblem): number {
+  let error = 0;
 
-import {correctnessProblems, getError} from './correctness-utils';
-import {problems} from './performance-problems';
+  // Get numerical solution
+  const approxSolution = method(corProb.odes);
+
+  const exact = corProb.exact;
+
+  const arg = approxSolution[0];
+
+  const pointsCount = arg.length;
+  const funcsCount = approxSolution.length - 1;
+
+  // Compute error
+  for (let i = 0; i < pointsCount; ++i) {
+    const exactSolution = exact(arg[i]);
+
+    for (let j = 0; j < funcsCount; ++j)
+      error = Math.max(error, Math.abs(exactSolution[j] - approxSolution[j + 1][i]));
+  }
+
+  return error;
+}
 
 const TIMEOUT = 4000;
 const TINY = 0.1;
@@ -27,7 +41,7 @@ const methods = new Map([
 // Correctness tests
 category('Correctness', () => {
   methods.forEach((method, name) => {
-    correctnessProblems.forEach((problem) => test(`Method: ${name}, problem: ${problem.odes.name}`, async () => {
+    corrProbs.forEach((problem) => test(`Method: ${name}, problem: ${problem.odes.name}`, async () => {
       const error = getError(method, problem);
       console.log(`Method: ${name}, problem: ${problem.odes.name}, ERROR: ${error}`);
       expect(
@@ -42,9 +56,9 @@ category('Correctness', () => {
 // Performance tests
 category('Performance', () => {
   methods.forEach((method, methodName) => {
-    problems.forEach((odes, odesName) => {
-      test(`Method: ${methodName}, problem: ${odesName}`, async () => {
-        const rows = method(odes).rowCount;
+    perfProbs.forEach((odes) => {
+      test(`Method: ${methodName}, problem: ${odes.name}`, async () => {
+        const rows = method(odes)[0].length;
         expect(
           rows > MIN_ROWS,
           true,

@@ -13,6 +13,8 @@ import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
 
+import {mrt, ros3prw, ros34prw, perfProbs} from '@datagrok-libraries/diff-studio-tools';
+
 export const _package = new DG.Package();
 
 //name: info
@@ -266,4 +268,29 @@ export async function solveODE(problem: string): Promise<DG.DataFrame> {
   await call.call();
 
   return call.outputs[DF_NAME];
+}
+
+//top-menu: ML | Try DST...
+//name: tryDST
+export function tryDST() {
+  const methods = new Map([
+    ['MRT', mrt],
+    ['ROS3PRw', ros3prw],
+    ['ROS34PRw', ros34prw],
+  ]);
+
+  console.log('Performance:\n');
+
+  methods.forEach((method, name) => {
+    console.log('  ', name);
+
+    perfProbs.forEach((odes) => {
+      const start = Date.now();
+      method(odes);
+      const finish = Date.now();
+      console.log(`     ${odes.name}: ${finish - start} ms.`);
+    });
+
+    console.log();
+  });
 }

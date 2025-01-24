@@ -1,8 +1,3 @@
-data-samples/
-
-src/**/*.ts
-!src/**/*.d.ts
-
 # Developer keys
 upload.keys.json
 
@@ -29,21 +24,6 @@ node_modules/
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/codeStyles/
-
-# vim
-# Swap
-[._]*.s[a-v][a-z]
-!*.svg
-[._]*.sw[a-p]
-[._]s[a-rt-v][a-z]
-[._]ss[a-gi-z]
-[._]sw[a-p]
-Session.vim
-Sessionx.vim
-.netrwhist
-*~
-tags
-[._]*.un~
 test-record.mp4
 test-report.csv
 test-console-output.log

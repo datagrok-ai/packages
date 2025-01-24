@@ -1,4 +1,4 @@
-export {ODEs, mrt,ros3prw, ros34prw, CallbackAction, DEFAULT_OPTIONS} from './src/solver-tools';
+export {ODEs, mrt,ros3prw, ros34prw, CallbackAction, DEFAULT_OPTIONS, SolverOptions} from './src/solver-tools';
 
 export {perfProbs, corrProbs, CorrProblem} from './src/examples';
 

@@ -1,5 +1,9 @@
 # Diff Studio changelog
 
+## 1.2.1 (2025-02-01)
+
+TODO
+
 ## 1.2.0 (2024-12-01)
 
 UI/UX updates:
