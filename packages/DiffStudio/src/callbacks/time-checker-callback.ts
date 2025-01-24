@@ -1,5 +1,5 @@
 import {Callback} from './callback-base';
-import {CallbackAction} from '../solver-defs';
+import {CallbackAction} from '../solver-tools';
 
 /** This callback terminates computations if the maximum calculation time is exceeded */
 export class TimeCheckerCallback extends Callback {

@@ -1,5 +1,5 @@
 import {Callback} from './callback-base';
-import {CallbackAction} from '../solver-defs';
+import {CallbackAction} from '../solver-tools';
 
 /** This callback terminates computations if the maximum iterations is exceeded */
 export class IterCheckerCallback extends Callback {

@@ -1,1 +1,0 @@
-em++ -O3 matr-oper.cpp -o matrix-operations.js -s TOTAL_MEMORY=2147483648 -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 -s MODULARIZE=1 -s EXPORT_NAME="exportMatrOper" -s EXPORTED_FUNCTIONS=["_invMatrixD","_invMatrixD","_malloc","_free"] -s EXPORTED_RUNTIME_METHODS=["cwrap","ccall"] -sENVIRONMENT=web,worker

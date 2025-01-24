@@ -5,8 +5,30 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
 import {ODEs, SolverOptions, mrt, ros3prw, ros34prw} from '@datagrok-libraries/diff-studio-tools';
-import {getCallback} from './solver-tools/callbacks/callback-tools';
+import {getCallback} from './callbacks/callback-tools';
 import {METHOD} from './ui-constants';
+
+// Solver definitions
+
+/** Error messages */
+export enum ERROR_MSG {
+  MRT_FAILS = 'The modified Rosenbrock triple method fails',
+  ROS3PRW_FAILS = 'The ROS3PRw method fails',
+  ROS34PRW_FAILS = 'The ROS34PRw method fails',
+};
+
+/** Callback action */
+export class CallbackAction extends Error {
+  constructor(msg: string) {
+    super(msg);
+  }
+}
+
+/** Default options of the solver */
+export enum DEFAULT_OPTIONS {
+  SCRIPTING = '{maxIterations: 1}',
+  NO_CHECKS = '{ }',
+}
 
 /** Return solution as a dataframe */
 function getSolutionDF(odes: ODEs, solutionArrs: Float64Array[]): DG.DataFrame {
