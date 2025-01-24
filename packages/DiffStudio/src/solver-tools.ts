@@ -33,8 +33,10 @@ export enum DEFAULT_OPTIONS {
 /** Return solution as a dataframe */
 function getSolutionDF(odes: ODEs, solutionArrs: Float64Array[]): DG.DataFrame {
   const names = [odes.arg.name].concat(odes.solutionColNames);
+  const df = DG.DataFrame.fromColumns(names.map((name, idx) => DG.Column.fromFloat64Array(name, solutionArrs[idx])));
+  df.name = odes.name;
 
-  return DG.DataFrame.fromColumns(names.map((name, idx) => DG.Column.fromFloat64Array(name, solutionArrs[idx])));
+  return df;
 }
 
 /** Default solver of initial value problem. */
