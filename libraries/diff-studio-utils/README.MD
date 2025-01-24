@@ -313,6 +313,6 @@ Run the Diff Studio [app](https://public.datagrok.ai/apps/DiffStudio) and check 
 Learn more
 
  * Diff Studio application [docs](https://datagrok.ai/help/compute/diff-studio)
- * Example [models](https://datagrok.ai/help/compute/models)
+ * Diff Studio example [models](https://datagrok.ai/help/compute/models)
  * [Parameters optimization](https://datagrok.ai/help/compute/function-analysis#parameter-optimization)
  * [Sensitivity analysis](https://datagrok.ai/help/compute/function-analysis#sensitivity-analysis)

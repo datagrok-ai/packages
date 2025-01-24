@@ -8,7 +8,7 @@
    JS-script generator creates DATAGROK JavaScript script: annotation & code.
 */
 
-import {CONTROL_TAG, CONTROL_TAG_LEN, DF_NAME, CONTROL_EXPR, LOOP, UPDATE, MAX_LINE_CHART,
+import {CONTROL_TAG, CONTROL_TAG_LEN, CONTROL_EXPR, LOOP, UPDATE, MAX_LINE_CHART,
   SOLVER_OPTIONS_RANGES, TINY, STEP_RATIO} from './constants';
 
 import {ModelError} from './model-error';
@@ -26,16 +26,9 @@ export const BRACKET_CLOSE = ']';
 export const ANNOT_SEPAR = ';';
 const DEFAULT_TOL = '0.00005';
 export const DEFAULT_SOLVER_SETTINGS: string = '{}';
-const COLUMNS = `${SERVICE}columns`;
 const COMMENT_SEQ = '//';
-export const STAGE_COL_NAME = `${SERVICE}Stage`;
+export const STAGE_COL_NAME = `_Stage`;
 const INCEPTION = 'Inception';
-
-/** Solver package name */
-const PACKAGE_NAME = 'DiffStudio';
-
-/** Numerical solver function */
-const SOLVER_FUNC = 'solveEquations';
 
 /** Elementary math tools */
 const MATH_FUNCS = ['pow', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan', 'sqrt', 'exp', 'log', 'sinh', 'cosh', 'tanh'];
@@ -122,42 +115,42 @@ export type IVP = {
 /** Help links for model errors */
 enum ERROR_LINK {
   MAIN_DOCS = '/help/compute/diff-studio',
-  CORE_BLOCKS = `${MAIN_DOCS}#core-blocks`,
-  COMPS_SYNTAX = `${MAIN_DOCS}#model-components-and-syntax`,
-  LOOP = `${MAIN_DOCS}#cyclic-processes`,
-  UPDATE = `${MAIN_DOCS}#multistage-processes`,
-  UI_OPTS = `${MAIN_DOCS}#user-interface-options`,
-  LOOP_VS_UPDATE = `${MAIN_DOCS}#advanced-features`,
-  SOLVER_CONFIG = `${MAIN_DOCS}#solver-configuration`,
-  MODEL_PARAMS = `${MAIN_DOCS}#model-parameters`,
+  CORE_BLOCKS = `/help/compute/diff-studio#core-blocks`,
+  COMPS_SYNTAX = `/help/compute/diff-studio#model-components-and-syntax`,
+  LOOP = `/help/compute/diff-studio#cyclic-processes`,
+  UPDATE = `/help/compute/diff-studio#multistage-processes`,
+  UI_OPTS = `/help/compute/diff-studio#user-interface-options`,
+  LOOP_VS_UPDATE = `/help/compute/diff-studio#advanced-features`,
+  SOLVER_CONFIG = `/help/compute/diff-studio#solver-configuration`,
+  MODEL_PARAMS = `/help/compute/diff-studio#model-parameters`,
 };
 
 /** Specific error messages */
 enum ERROR_MSG {
-  CTRL_EXPR = `Unsupported control expression with the tag **"${CONTROL_TAG}"**`,
-  ARG = `'The **${CONTROL_EXPR.ARG}** block must consist of 3 lines specifying initial and final time, and solution grid step.`,
-  LOOP = `The **${CONTROL_EXPR.LOOP}** block must contain at least one line.`,
+  CTRL_EXPR = `Unsupported control expression with the tag **"#"**`,
+  ARG = `'The **#argument** block must consist of 3 lines specifying initial and final time, and solution grid step.`,
+  LOOP = `The **#loop** block must contain at least one line.`,
   COUNT = 'Incorrect loop count',
-  LOOP_VS_UPDATE = `The **${CONTROL_EXPR.LOOP}** and **${CONTROL_EXPR.UPDATE}** blocks cannot be used simultaneously.`,
-  UPDATE_LINES_COUNT = `The **${CONTROL_EXPR.UPDATE}** block must contain at least one line.`,
+  LOOP_VS_UPDATE = `The **#loop** and **'#update'** blocks cannot be used simultaneously.`,
+  UPDATE_LINES_COUNT = `The **'#update'** block must contain at least one line.`,
   DURATION = 'Incorrect update duration',
   BRACES = ' Missing one of the braces (**{**, **}**).',
-  COLON = `Incorrect position of **"${CONTROL_SEP}"**.`,
+  COLON = `Incorrect position of **":"**.`,
   CASE_INSENS = 'Non-unique name (case-insensitive): use different caption for ',
-  MISSING_INIT = `Correct the **${CONTROL_EXPR.INITS}** block.`,
-  UNDEF_NAME = `Model name missing. Specify the model name in the **${CONTROL_EXPR.NAME}** block.`,
-  UNDEF_DEQS = `Differential equation(s) are required for this model. Add equation(s) under the **${CONTROL_EXPR.DIF_EQ}** block.`,
-  UNDEF_INITS = `Initial conditions are required for this model. Add initial conditions under the **${CONTROL_EXPR.INITS}** block.`,
-  UNDEF_ARG = `Argument specification is required for this model. Specify an argument, its range, and a grid step in the **${CONTROL_EXPR.ARG}** block.`,
-  CORRECT_ARG_LIM = `Correct limits in the **${CONTROL_EXPR.ARG}** block.`,
+  MISSING_INIT = `Correct the **#inits** block.`,
+  UNDEF_NAME = `Model name missing. Specify the model name in the **#name** block.`,
+  UNDEF_DEQS = `Differential equation(s) are required for this model. Add equation(s) under the **#equations** block.`,
+  UNDEF_INITS = `Initial conditions are required for this model. Add initial conditions under the **#inits** block.`,
+  UNDEF_ARG = `Argument specification is required for this model. Specify an argument, its range, and a grid step in the **#argument** block.`,
+  CORRECT_ARG_LIM = `Correct limits in the **#argument** block.`,
   INTERVAL = `Incorrect range for`,
-  NEGATIVE_STEP = `Solution grid step must be positive. Correct the **${CONTROL_EXPR.ARG}** block.`,
-  INCOR_STEP = `Grid step must less than the length of solution interval. Correct the **${CONTROL_EXPR.ARG}** block.`,
-  MISS_COLON = `Missing **"${CONTROL_SEP}"**`,
+  NEGATIVE_STEP = `Solution grid step must be positive. Correct the **#argument** block.`,
+  INCOR_STEP = `Grid step must less than the length of solution interval. Correct the **#argument** block.`,
+  MISS_COLON = `Missing **":"**`,
   NAN = `is not a valid number. Correct the line`,
-  SERVICE_START = `Variable names must not begin with **"${SERVICE}"**.`,
+  SERVICE_START = `Variable names must not begin with **"_"**.`,
   REUSE_NAME = 'Variable reuse (case-insensitive): rename ',
-  SOLVER = `Incorrect solver options. Correct the **${CONTROL_EXPR.SOLVER}** line.`,
+  SOLVER = `Incorrect solver options. Correct the **#meta.solver** line.`,
 } // ERROR_MSG
 
 /** Datagrok annotations */
@@ -168,7 +161,7 @@ enum ANNOT {
   LANG = '//language: javascript',
   DOUBLE_INPUT = '//input: double',
   INT_INPUT = '//input: int',
-  OUTPUT = `//output: dataframe ${DF_NAME}`,
+  OUTPUT = `//output: dataframe df`,
   EDITOR = '//editor: Compute:RichFunctionViewEditor',
   SIDEBAR = '//sidebar: @compute',
   CAPTION = 'caption:',
@@ -185,10 +178,10 @@ enum SCRIPT {
   ODE_COM = '// the problem definition',
   ODE = 'let odes = {',
   SOLVER_COM = '// solve the problem',
-  SOLVER = `const solver = await grok.functions.eval('${PACKAGE_NAME}:${SOLVER_FUNC}');`,
+  SOLVER = `const solver = await grok.functions.eval('DiffStudio:solveEquations');`,
   PREPARE = 'let call = solver.prepare({problem: odes, options: opts});',
   CALL = 'await call.call();',
-  OUTPUT = `let ${DF_NAME} = call.getParamValue('${DF_NAME}');`,
+  OUTPUT = `let df = call.getParamValue('df');`,
   SPACE2 = '  ',
   SPACE4 = '    ',
   SPACE6 = '      ',
@@ -201,17 +194,17 @@ enum SCRIPT {
   ONE_STAGE_COM = '\n// one stage solution',
   ONE_STAGE_BEGIN = 'let _oneStage = async (',
   ONE_STAGE_END = ') => {',
-  ASYNC_OUTPUT = `let ${DF_NAME} = await _oneStage(`,
-  RETURN_OUTPUT = `return call.getParamValue('${DF_NAME}');`,
-  EMPTY_OUTPUT = `let ${DF_NAME} = DG.DataFrame.create();`,
-  APPEND = `${DF_NAME}.append(`,
+  ASYNC_OUTPUT = `let df = await _oneStage(`,
+  RETURN_OUTPUT = `return call.getParamValue('df');`,
+  EMPTY_OUTPUT = `let df = DG.DataFrame.create();`,
+  APPEND = `df.append(`,
   SOLUTION_DF_COM = '// solution dataframe',
   LOOP_INTERVAL_COM = '// loop interval',
-  LOOP_INTERVAL = `${SERVICE}interval`,
-  LAST_IDX = `${SERVICE}lastIdx`,
+  LOOP_INTERVAL = `_interval`,
+  LAST_IDX = `_lastIdx`,
   UPDATE_COM = '// update ',
   CUSTOM_OUTPUT_COM = '// create custom output',
-  CUSTOM_COLUMNS = `let ${COLUMNS} = [`,
+  CUSTOM_COLUMNS = `let _columns = [`,
   ONE_STAGE = 'await _oneStage(',
   SEGMENT_COM = '// add segment category',
 }
@@ -684,9 +677,9 @@ function getAnnot(ivp: IVP, toAddViewers = true, toAddEditor = false): string[] 
 
   // argument lines
   const arg = ivp.arg;
-  const t0 = `${SERVICE}${arg.name}0`;
-  const t1 = `${SERVICE}${arg.name}1`;
-  const h = `${SERVICE}h`;
+  const t0 = `_${arg.name}0`;
+  const t1 = `_${arg.name}1`;
+  const h = `_h`;
   res.push(`${ANNOT.DOUBLE_INPUT} ${t0} = ${getInputSpec(arg.initial)}`);
   res.push(`${ANNOT.DOUBLE_INPUT} ${t1} = ${getInputSpec(arg.final)}`);
   res.push(`${ANNOT.DOUBLE_INPUT} ${h} = ${getInputSpec(arg.step)}`);
@@ -733,21 +726,21 @@ function getCustomOutputLinesNoExpressions(name: string,
 
   outputs.forEach((val, key) => {
     if (!val.formula)
-      res.push(`${SCRIPT.SPACE2}${DF_NAME}.col('${key}'),`);
+      res.push(`${SCRIPT.SPACE2}df.col('${key}'),`);
   });
 
   if (toAddUpdateCol)
-    res.push(`${SCRIPT.SPACE2}${DF_NAME}.col('${STAGE_COL_NAME}'),`);
+    res.push(`${SCRIPT.SPACE2}df.col('${STAGE_COL_NAME}'),`);
 
   res.push('];');
 
   outputs.forEach((val, key) => {
     if (!val.formula)
-      res.push(`${DF_NAME}.col('${key}').name = '${val.caption}';`);
+      res.push(`df.col('${key}').name = '${val.caption}';`);
   });
 
-  res.push(`${DF_NAME} = DG.DataFrame.fromColumns(${COLUMNS});`);
-  res.push(`${DF_NAME}.name = '${name}';`);
+  res.push(`df = DG.DataFrame.fromColumns(_columns);`);
+  res.push(`df.name = '${name}';`);
   return res;
 } // getCustomOutputLinesNoExpressions
 
@@ -758,12 +751,12 @@ function getCustomOutputLinesWithExpressions(ivp: IVP): string[] {
   res.push(SCRIPT.CUSTOM_OUTPUT_COM);
 
   // 1. Solution raw data
-  res.push(`const ${ivp.arg.name}RawData = ${DF_NAME}.col('${ivp.arg.name}').getRawData();`);
+  res.push(`const ${ivp.arg.name}RawData = df.col('${ivp.arg.name}').getRawData();`);
   res.push(`let ${ivp.arg.name};`);
-  res.push(`const len = ${DF_NAME}.rowCount;\n`);
+  res.push(`const len = df.rowCount;\n`);
 
   ivp.inits.forEach((val, key) => {
-    res.push(`const ${key}RawData = ${DF_NAME}.col('${key}').getRawData();`);
+    res.push(`const ${key}RawData = df.col('${key}').getRawData();`);
   });
 
   res.push('');
@@ -796,17 +789,17 @@ function getCustomOutputLinesWithExpressions(ivp: IVP): string[] {
   res.push('}\n');
 
   // 4. Form output
-  res.push(`${DF_NAME} = DG.DataFrame.fromColumns([`);
+  res.push(`df = DG.DataFrame.fromColumns([`);
   ivp.outputs!.forEach((val, key) => {
     if (!val.formula)
       res.push(`${SCRIPT.SPACE2}DG.Column.fromFloat64Array('${val.caption}', ${key}RawData.slice(0, len)),`);
   });
 
   if (ivp.updates !== null)
-    res.push(`${SCRIPT.SPACE2}${DF_NAME}.col('${STAGE_COL_NAME}'),`);
+    res.push(`${SCRIPT.SPACE2}df.col('${STAGE_COL_NAME}'),`);
 
   res.push(']);');
-  res.push(`${DF_NAME}.name = '${ivp.name}';`);
+  res.push(`df.name = '${ivp.name}';`);
 
   return res;
 } // getCustomOutputLinesWithExpressions
@@ -842,9 +835,9 @@ function getScriptMainBodyBasic(ivp: IVP): string[] {
 
   // 2.1) argument
   const t = ivp.arg.name;
-  const t0 = `${SERVICE}${t}0`;
-  const t1 = `${SERVICE}${t}1`;
-  const h = `${SERVICE}h`;
+  const t0 = `_${t}0`;
+  const t1 = `_${t}1`;
+  const h = `_h`;
   res.push(`${SCRIPT.SPACE4}arg: {name: '${t}', start: ${t0}, finish: ${t1}, step: ${h}},`);
 
   const names = ivp.deqs.solutionNames;
@@ -853,10 +846,10 @@ function getScriptMainBodyBasic(ivp: IVP): string[] {
   res.push(`${SCRIPT.SPACE4}initial: [${names.join(', ')}],`);
 
   // 2.3) the right-hand side of the problem
-  res.push(`${SCRIPT.SPACE4}func: (${t}, ${SERVICE}y, ${SERVICE}output) => {`);
+  res.push(`${SCRIPT.SPACE4}func: (${t}, _y, _output) => {`);
 
   res.push(`${SCRIPT.SPACE6}${SCRIPT.FUNC_VALS}`);
-  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}const ${name} = ${SERVICE}y[${idx}];`));
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}const ${name} = _y[${idx}];`));
 
   if (ivp.exprs !== null) {
     res.push(`\n${SCRIPT.SPACE6}${SCRIPT.EVAL_EXPR}`);
@@ -864,7 +857,7 @@ function getScriptMainBodyBasic(ivp: IVP): string[] {
   }
 
   res.push(`\n${SCRIPT.SPACE6}${SCRIPT.COMP_OUT}`);
-  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}${SERVICE}output[${idx}] = ${ivp.deqs.equations.get(name)};`));
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}_output[${idx}] = ${ivp.deqs.equations.get(name)};`));
 
   res.push(`${SCRIPT.SPACE4}},`);
 
@@ -927,9 +920,9 @@ function getScriptFunc(ivp: IVP, funcParamsNames: string): string[] {
 
   // 2.1) argument
   const t = ivp.arg.name;
-  const t0 = `${SERVICE}${t}0`;
-  const t1 = `${SERVICE}${t}1`;
-  const h = `${SERVICE}h`;
+  const t0 = `_${t}0`;
+  const t1 = `_${t}1`;
+  const h = `_h`;
   res.push(`${SCRIPT.SPACE6}arg: {name: '${t}', start: ${t0}, finish: ${t1}, step: ${h}},`);
 
   const names = ivp.deqs.solutionNames;
@@ -938,10 +931,10 @@ function getScriptFunc(ivp: IVP, funcParamsNames: string): string[] {
   res.push(`${SCRIPT.SPACE6}initial: [${names.join(', ')}],`);
 
   // 2.3) the right-hand side of the problem
-  res.push(`${SCRIPT.SPACE6}func: (${t}, ${SERVICE}y, ${SERVICE}output) => {`);
+  res.push(`${SCRIPT.SPACE6}func: (${t}, _y, _output) => {`);
 
   res.push(`${SCRIPT.SPACE8}${SCRIPT.FUNC_VALS}`);
-  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE8}const ${name} = ${SERVICE}y[${idx}];`));
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE8}const ${name} = _y[${idx}];`));
 
   if (ivp.exprs !== null) {
     res.push(`\n${SCRIPT.SPACE8}${SCRIPT.EVAL_EXPR}`);
@@ -949,7 +942,7 @@ function getScriptFunc(ivp: IVP, funcParamsNames: string): string[] {
   }
 
   res.push(`\n${SCRIPT.SPACE8}${SCRIPT.COMP_OUT}`);
-  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE8}${SERVICE}output[${idx}] = ${ivp.deqs.equations.get(name)};`));
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE8}_output[${idx}] = ${ivp.deqs.equations.get(name)};`));
 
   res.push(`${SCRIPT.SPACE6}},`);
 
@@ -1002,32 +995,32 @@ function getScriptMainBodyLoopCase(ivp: IVP): string[] {
   res.push(SCRIPT.SOLUTION_DF_COM);
   const dfNames = getSolutionDfColsNames(ivp);
 
-  res.push(`let ${DF_NAME} = DG.DataFrame.fromColumns([`);
+  res.push(`let df = DG.DataFrame.fromColumns([`);
   dfNames.forEach((name) => res.push(`${SCRIPT.SPACE2}DG.Column.fromFloat64Array('${name}', []),`));
   res.push(`]);`);
-  res.push(`${DF_NAME}.name = '${ivp.name}';`);
+  res.push(`df.name = '${ivp.name}';`);
   res.push('');
 
   res.push(SCRIPT.LOOP_INTERVAL_COM);
-  res.push(`const ${SCRIPT.LOOP_INTERVAL} = ${SERVICE}${ivp.arg.name}1 - ${SERVICE}${ivp.arg.name}0;`);
+  res.push(`const ${SCRIPT.LOOP_INTERVAL} = _${ivp.arg.name}1 - _${ivp.arg.name}0;`);
   res.push('');
   res.push(`let ${SCRIPT.LAST_IDX} = 0;\n`);
 
   res.push(SCRIPT.SOLVER_COM);
-  res.push(`for (let ${SERVICE}idx = 0; ${SERVICE}idx < ${LOOP.COUNT_NAME}; ++${SERVICE}idx) {`);
+  res.push(`for (let _idx = 0; _idx < ${LOOP.COUNT_NAME}; ++_idx) {`);
   ivp.loop!.updates.forEach((upd) => res.push(`${SCRIPT.SPACE2}${upd};`));
   res.push(`${SCRIPT.SPACE2}${SCRIPT.APPEND}${SCRIPT.ONE_STAGE}${funcParamsNames}), true);`);
-  res.push(`${SCRIPT.SPACE2}${SERVICE}${ivp.arg.name}0 = ${SERVICE}${ivp.arg.name}1;`);
-  res.push(`${SCRIPT.SPACE2}${SERVICE}${ivp.arg.name}1 += ${SCRIPT.LOOP_INTERVAL};`);
-  res.push(`${SCRIPT.SPACE2}${SCRIPT.LAST_IDX} = ${DF_NAME}.rowCount - 1;`);
+  res.push(`${SCRIPT.SPACE2}_${ivp.arg.name}0 = _${ivp.arg.name}1;`);
+  res.push(`${SCRIPT.SPACE2}_${ivp.arg.name}1 += ${SCRIPT.LOOP_INTERVAL};`);
+  res.push(`${SCRIPT.SPACE2}${SCRIPT.LAST_IDX} = df.rowCount - 1;`);
 
   dfNames.forEach((name, idx) => {
     if (idx !== 0)
-      res.push(`${SCRIPT.SPACE2}${name} = ${DF_NAME}.get('${name}', ${SCRIPT.LAST_IDX});`);
+      res.push(`${SCRIPT.SPACE2}${name} = df.get('${name}', ${SCRIPT.LAST_IDX});`);
   });
 
   // eslint-disable-next-line max-len
-  res.push(`${SCRIPT.SPACE2}${DF_NAME}.set('${ivp.arg.name}', ${SCRIPT.LAST_IDX}, ${SERVICE}${ivp.arg.name}0 - Math.min(${SERVICE}h * ${STEP_RATIO}, ${TINY}));`);
+  res.push(`${SCRIPT.SPACE2}df.set('${ivp.arg.name}', ${SCRIPT.LAST_IDX}, _${ivp.arg.name}0 - Math.min(_h * ${STEP_RATIO}, ${TINY}));`);
 
   res.push('};');
 
@@ -1050,7 +1043,7 @@ function getScriptMainBodyUpdateCase(ivp: IVP): string[] {
 
   res.push(SCRIPT.SEGMENT_COM);
   // eslint-disable-next-line max-len
-  res.push(`${DF_NAME}.columns.add(DG.Column.fromList('string', '${STAGE_COL_NAME}', new Array(${DF_NAME}.rowCount).fill('${ivp.arg.updateName ?? INCEPTION}')));`);
+  res.push(`df.columns.add(DG.Column.fromList('string', '${STAGE_COL_NAME}', new Array(df.rowCount).fill('${ivp.arg.updateName ?? INCEPTION}')));`);
 
   res.push('');
   res.push(`let ${SCRIPT.LAST_IDX} = 0;`);
@@ -1059,25 +1052,25 @@ function getScriptMainBodyUpdateCase(ivp: IVP): string[] {
     res.push('');
     res.push(`${SCRIPT.UPDATE_COM} ${idx + 1}`);
     res.push(`const ${UPDATE.DURATION}${idx + 1} = ${upd.durationFormula};`);
-    res.push(`${SCRIPT.LAST_IDX} = ${DF_NAME}.rowCount - 1;`);
+    res.push(`${SCRIPT.LAST_IDX} = df.rowCount - 1;`);
 
     // eslint-disable-next-line max-len
-    res.push(`${DF_NAME}.set('${ivp.arg.name}', ${SCRIPT.LAST_IDX}, ${SERVICE}${ivp.arg.name}1 - Math.min(${SERVICE}h * ${STEP_RATIO}, ${TINY}));`);
+    res.push(`df.set('${ivp.arg.name}', ${SCRIPT.LAST_IDX}, _${ivp.arg.name}1 - Math.min(_h * ${STEP_RATIO}, ${TINY}));`);
 
     dfNames.forEach((name, idx) => {
       if (idx !== 0)
-        res.push(`${name} = ${DF_NAME}.get('${name}', ${SCRIPT.LAST_IDX});`);
+        res.push(`${name} = df.get('${name}', ${SCRIPT.LAST_IDX});`);
     });
 
     upd.updates.forEach((upd) => res.push(`${upd};`));
 
-    res.push(`${SERVICE}${ivp.arg.name}0 = ${SERVICE}${ivp.arg.name}1;`);
-    res.push(`${SERVICE}${ivp.arg.name}1 += ${UPDATE.DURATION}${idx + 1};`);
+    res.push(`_${ivp.arg.name}0 = _${ivp.arg.name}1;`);
+    res.push(`_${ivp.arg.name}1 += ${UPDATE.DURATION}${idx + 1};`);
 
-    res.push(`const ${SERVICE}DF${idx + 1} = ${SCRIPT.ONE_STAGE}${funcParamsNames});`);
+    res.push(`const _DF${idx + 1} = ${SCRIPT.ONE_STAGE}${funcParamsNames});`);
     // eslint-disable-next-line max-len
-    res.push(`${SERVICE}DF${idx + 1}.columns.add(DG.Column.fromList('string', '${STAGE_COL_NAME}', new Array(${SERVICE}DF${idx + 1}.rowCount).fill('${upd.name}')));`);
-    res.push(`${SCRIPT.APPEND}${SERVICE}DF${idx + 1}, true);`);
+    res.push(`_DF${idx + 1}.columns.add(DG.Column.fromList('string', '${STAGE_COL_NAME}', new Array(_DF${idx + 1}.rowCount).fill('${upd.name}')));`);
+    res.push(`${SCRIPT.APPEND}_DF${idx + 1}, true);`);
   });
 
   return res;
@@ -1113,9 +1106,9 @@ export function getScriptParams(ivp: IVP): Record<string, number> {
 
   const arg = ivp.arg;
 
-  res[`${SERVICE}${arg.name}0`] = arg.initial.value;
-  res[`${SERVICE}${arg.name}1`] = arg.final.value;
-  res[`${SERVICE}h`] = arg.step.value;
+  res[`_${arg.name}0`] = arg.initial.value;
+  res[`_${arg.name}1`] = arg.final.value;
+  res[`_h`] = arg.step.value;
 
   ivp.inits.forEach((val, key) => res[key] = val.value);
 
@@ -1131,9 +1124,9 @@ function getFuncParamsNames(ivp: IVP): string {
 
   const arg = ivp.arg.name;
 
-  names.push(`${SERVICE}${arg}0`);
-  names.push(`${SERVICE}${arg}1`);
-  names.push(`${SERVICE}h`);
+  names.push(`_${arg}0`);
+  names.push(`_${arg}1`);
+  names.push(`_h`);
 
   ivp.inits.forEach((val, key) => names.push(key));
 
@@ -1265,7 +1258,7 @@ function checkCorrectness(ivp: IVP): void {
   ivp.inits.forEach((_, key) => {
     if (key[0] === SERVICE) {
       throw new ModelError(
-        `${ERROR_MSG.SERVICE_START} Correct **"${key}"** in the **${CONTROL_EXPR.INITS}** block.`,
+        `${ERROR_MSG.SERVICE_START} Correct **"${key}"** in the **#inits** block.`,
         ERROR_LINK.CORE_BLOCKS,
       );
     }
@@ -1274,7 +1267,7 @@ function checkCorrectness(ivp: IVP): void {
 
     if (scriptInputs.includes(current)) {
       throw new ModelError(
-        `${ERROR_MSG.REUSE_NAME} **"${key}"** in the **${CONTROL_EXPR.INITS}** block.`,
+        `${ERROR_MSG.REUSE_NAME} **"${key}"** in the **#inits** block.`,
         ERROR_LINK.CORE_BLOCKS,
       );
     }
@@ -1343,9 +1336,9 @@ export function getJScode(ivp: IVP): string[] {
 
   // 2.1) argument
   const t = ivp.arg.name;
-  const t0 = `${SERVICE}${t}0`;
-  const t1 = `${SERVICE}${t}1`;
-  const h = `${SERVICE}h`;
+  const t0 = `_${t}0`;
+  const t1 = `_${t}1`;
+  const h = `_h`;
   res.push(`${SCRIPT.SPACE4}arg: {name: '${t}', start: ${t0}, finish: ${t1}, step: ${h}},`);
 
   const names = ivp.deqs.solutionNames;
@@ -1354,10 +1347,10 @@ export function getJScode(ivp: IVP): string[] {
   res.push(`${SCRIPT.SPACE4}initial: [${names.join(', ')}],`);
 
   // 2.3) the right-hand side of the problem
-  res.push(`${SCRIPT.SPACE4}func: (${t}, ${SERVICE}y, ${SERVICE}output) => {`);
+  res.push(`${SCRIPT.SPACE4}func: (${t}, _y, _output) => {`);
 
   res.push(`${SCRIPT.SPACE6}${SCRIPT.FUNC_VALS}`);
-  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}const ${name} = ${SERVICE}y[${idx}];`));
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}const ${name} = _y[${idx}];`));
 
   if (ivp.exprs !== null) {
     res.push(`\n${SCRIPT.SPACE6}${SCRIPT.EVAL_EXPR}`);
@@ -1365,7 +1358,7 @@ export function getJScode(ivp: IVP): string[] {
   }
 
   res.push(`\n${SCRIPT.SPACE6}${SCRIPT.COMP_OUT}`);
-  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}${SERVICE}output[${idx}] = ${ivp.deqs.equations.get(name)};`));
+  names.forEach((name, idx) => res.push(`${SCRIPT.SPACE6}_output[${idx}] = ${ivp.deqs.equations.get(name)};`));
 
   res.push(`${SCRIPT.SPACE4}},`);
 

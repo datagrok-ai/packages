@@ -2,29 +2,28 @@
 export const CONTROL_TAG = '#';
 export const CONTROL_TAG_LEN = CONTROL_TAG.length;
 export const DF_NAME = 'df';
-const META = `${CONTROL_TAG}meta`;
 export const MAX_LINE_CHART = 4;
 
 /** Control expressions for the problem specifying */
 export enum CONTROL_EXPR {
-    NAME = `${CONTROL_TAG}name`,
-    TAGS = `${CONTROL_TAG}tags`,
-    DESCR = `${CONTROL_TAG}description`,
-    DIF_EQ = `${CONTROL_TAG}equations`,
-    EXPR = `${CONTROL_TAG}expressions`,
-    ARG = `${CONTROL_TAG}argument`,
-    INITS = `${CONTROL_TAG}inits`,
-    CONSTS = `${CONTROL_TAG}constants`,
-    PARAMS = `${CONTROL_TAG}parameters`,
-    TOL = `${CONTROL_TAG}tolerance`,
-    LOOP = `${CONTROL_TAG}loop`,
-    UPDATE = `${CONTROL_TAG}update`,
-    RUN_ON_OPEN = `${META}.runOnOpen`,
-    RUN_ON_INPUT = `${META}.runOnInput`,
-    OUTPUT = `${CONTROL_TAG}output`,
-    COMMENT = `${CONTROL_TAG}comment`,
-    SOLVER = `${META}.solver`,
-    INPUTS = `${META}.inputs`,
+    NAME = '#name',
+    TAGS = '#tags',
+    DESCR = '#description',
+    DIF_EQ = '#equations',
+    EXPR = '#expressions',
+    ARG = '#argument',
+    INITS = '#inits',
+    CONSTS = '#constants',
+    PARAMS = '#parameters',
+    TOL = '#tolerance',
+    LOOP = '#loop',
+    UPDATE = '#update',
+    RUN_ON_OPEN = '#meta.runOnOpen',
+    RUN_ON_INPUT = '#meta.runOnInput',
+    OUTPUT = '#output',
+    COMMENT = '#comment',
+    SOLVER = '#meta.solver',
+    INPUTS = '#meta.inputs',
 };
 
 /** Loop consts */
