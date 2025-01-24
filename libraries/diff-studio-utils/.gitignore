@@ -1,0 +1,17 @@
+upload.keys.json
+node_modules/
+dist/
+.idea
+
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts
+src/**/*.d.ts.map
+src/*.js
+*.js.map
+*.d.ts
+*.d.ts.map
+/index.d.ts
+/index.d.ts.map
+/index.js
+test-console-output.log

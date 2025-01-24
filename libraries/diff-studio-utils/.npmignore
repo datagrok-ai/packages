@@ -1,0 +1,49 @@
+data-samples/
+
+src/**/*.ts
+!src/**/*.d.ts
+
+# Developer keys
+upload.keys.json
+
+# Dependency directories
+node_modules/
+
+# IDEs
+# VS Code (https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+# Intellij IDEA/WebStorm (https://github.com/github/gitignore/blob/master/Global/JetBrains.gitignore)
+.idea/inspectionProfiles/
+.idea/**/compiler.xml
+.idea/**/encodings.xml
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+.idea/codeStyles/
+
+# vim
+# Swap
+[._]*.s[a-v][a-z]
+!*.svg
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+Session.vim
+Sessionx.vim
+.netrwhist
+*~
+tags
+[._]*.un~
+test-record.mp4
+test-report.csv
+test-console-output.log
