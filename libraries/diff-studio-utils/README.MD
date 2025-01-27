@@ -19,7 +19,7 @@ A lightweight TypeScript library for solving initial value problem ([IVP](https:
 ## Installation
 
 ```bash
-npm install diff-studio-utils !!!TODO: modify
+npm i @datagrok/diff-studio-tools
 ```
 
 ## Solving
