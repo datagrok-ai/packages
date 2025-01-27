@@ -34,5 +34,10 @@
     "build": "tsc",
     "lint": "eslint \"./src/**/*.ts\"",
     "lint-fix": "eslint \"./src/**/*.ts\" --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:datagrok-ai/ds-tools.git",
+    "directory": ""
   }
 }
