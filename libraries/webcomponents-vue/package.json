@@ -8,7 +8,7 @@
   },
   "description": "Datagrok web components vue wrappers",
   "dependencies": {
-    "@datagrok-libraries/compute-utils": "^1.40.0",
+    "@datagrok-libraries/compute-utils": "../compute-utils",
     "@datagrok-libraries/dock-spawn-dg": "^0.0.1",
     "@datagrok-libraries/webcomponents": "^0.0.6",
     "@vueuse/core": "^10.11.1",

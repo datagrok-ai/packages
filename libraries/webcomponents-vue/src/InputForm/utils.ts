@@ -2,9 +2,8 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import type {ConsistencyInfo} from '@datagrok-libraries/compute-utils/reactive-tree-driver/src/runtime/StateTreeNodes';
-import type {ValidationResultBase} from '@datagrok-libraries/compute-utils/shared-utils/validation';
+import type {ValidationResult} from '@datagrok-libraries/compute-utils/reactive-tree-driver/src/data/common-types';
 import $ from 'cash-dom';
-import type {FuncCallInput} from '@datagrok-libraries/compute-utils/shared-utils/input-wrappers';
 
 function addPopover(icon: HTMLElement) {
   const popover = ui.div([], 'd4-tooltip');
@@ -18,7 +17,7 @@ function displayValidation(
   ioName: string,
   input: DG.InputBase,
   status: {
-    validation?: ValidationResultBase,
+    validation?: ValidationResult,
     consistency?: ConsistencyInfo,
   }, icon: HTMLElement, popover: HTMLElement) {
   alignPopover(icon, popover);
@@ -50,7 +49,7 @@ function renderValidationResults(
   ioName: string,
   input: DG.InputBase,
   status: {
-    validation?: ValidationResultBase,
+    validation?: ValidationResult,
     consistency?: ConsistencyInfo,
   }) {
   const root = ui.divV([], {style: {gap: '10px'}});
@@ -118,13 +117,12 @@ export function getValidationIcon(
   ioName: string,
   input: DG.InputBase,
   status: {
-  validation?: ValidationResultBase,
+  validation?: ValidationResult,
   consistency?: ConsistencyInfo,
 }) {
   const {validation, consistency} = status;
 
   const iconOptions = (() => {
-    if (validation?.pending) return {name: 'spinner', class: 'fa-spin'};
     if (validation?.errors && validation.errors.length) return {name: 'exclamation-circle', color: 'var(--red-3)'};
     if (validation?.warnings && validation.warnings.length)
       return {name: 'exclamation-circle', color: 'var(--orange-2)'};
@@ -141,7 +139,6 @@ export function getValidationIcon(
   const icon = ui.iconFA(iconOptions.name, () => {displayValidation(emit, ioName, input, status, icon, popover);});
   $(icon).css({'pointer-events': 'all'});
   if (iconOptions.color) $(icon).css('color', `${iconOptions.color}!important`);
-  if (iconOptions.class) $(icon).addClass(iconOptions.class);
 
   $(icon).toggleClass('fal far');
   const popover = addPopover(icon);
@@ -155,7 +152,7 @@ export const injectInputBaseStatus = (emit: Function, ioName: string, t: DG.Inpu
   t.addOptions(validationIndicator);
 
   function setStatus(status: {
-    validation?: ValidationResultBase,
+    validation?: ValidationResult,
     consistency?: ConsistencyInfo,
   }) {
     const {validation, consistency} = status;
@@ -173,7 +170,6 @@ export const injectInputBaseStatus = (emit: Function, ioName: string, t: DG.Inpu
       (validation?.errors && validation.errors.length) ||
       (validation?.warnings && validation.warnings.length) ||
       (validation?.notifications && validation.notifications.length) ||
-      validation?.pending ||
       consistency?.inconsistent;
 
     $(validationIndicator).css('display', isAnythingToShow ? 'flex': 'none');
@@ -187,17 +183,10 @@ export const injectInputBaseStatus = (emit: Function, ioName: string, t: DG.Inpu
   (t as any).setStatus = setStatus;
 };
 
-export interface FuncCallInputStatusable<T = any> extends FuncCallInput<T> {
-  setStatus: (status: {
-    validation?: ValidationResultBase,
-    consistency?: ConsistencyInfo,
-  }) => void;
-}
-
-export function isFuncCallInput<T = any>(arg: any): arg is FuncCallInput<T> {
+export function isFuncCallInput(arg: any): boolean {
   return arg && arg.root && arg.onInput;
 }
 
-export function isInputInjected(arg: any): arg is FuncCallInputStatusable {
+export function isInputInjected(arg: any): boolean {
   return arg?.setStatus && isFuncCallInput(arg);
 }

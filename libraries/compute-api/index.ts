@@ -8,21 +8,6 @@ type ConstructorTypeOf<T> = new (...args:any[]) => T;
 declare global {
   interface Window {
     compute: {
-      fileInput: typeof UiUtils.fileInput,
-      historyInput: typeof UiUtils.historyInput,
-      historyInputJSON: typeof UiUtils.historyInputJSON,
-      historyPanel: typeof UiUtils.historyPanel,
-      testPipeline: typeof testPipeline,
-
-      CompView: ConstructorTypeOf<ComputationView>,
-      RFV: ConstructorTypeOf<RichFunctionView>,
-      Pipeline: ConstructorTypeOf<PipelineView>,
-
-      makeValidationResult: typeof makeValidationResult,
-      makeAdvice: typeof makeAdvice,
-      makeRevalidation: typeof makeRevalidation,
-      mergeValidationResults: typeof mergeValidationResults,
-
       makeValidationResult2: typeof makeValidationResult2,
       makeAdvice2: typeof makeAdvice2,
       mergeValidationResults2: typeof mergeValidationResults2,
@@ -31,21 +16,6 @@ declare global {
     },
   }
 }
-
-import {testPipeline} from './src/utils';
-export {testPipeline};
-
-import * as UiUtils from './src/ui-utils';
-export {UiUtils};
-
-import {
-  makeValidationResult, makeAdvice, makeRevalidation, mergeValidationResults,
-  ValidationInfo,
-} from './src/validation';
-export {
-  makeValidationResult, makeAdvice, makeRevalidation, mergeValidationResults,
-  ValidationInfo,
-};
 
 import {
   makeValidationResult2, makeAdvice2, mergeValidationResults2,
@@ -65,15 +35,6 @@ export type {
   PipelineConfiguration, IRuntimeLinkController, IRuntimeMetaController,
   IRuntimeValidatorController, IRuntimePipelineMutationController,
 } from '@datagrok-libraries/compute-utils/reactive-tree-driver/index';
-
-import {
-  ComputationView, RichFunctionView, PipelineView,
-  createCompView, createRFV, createPipeline,
-} from './src/views';
-export {
-  ComputationView, RichFunctionView, PipelineView,
-  createCompView, createRFV, createPipeline,
-};
 
 export async function initComputeApi() {
   const initFunc = DG.Func.find({package: 'Compute', name: 'init'})[0];

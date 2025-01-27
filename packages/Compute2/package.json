@@ -8,9 +8,9 @@
   },
   "description": "Provides UI based on Vue/Webcomponents",
   "dependencies": {
-    "@datagrok-libraries/compute-utils": "^1.40.0",
+    "@datagrok-libraries/compute-utils": "../../libraries/compute-utils",
     "@datagrok-libraries/utils": "^4.3.12",
-    "@datagrok-libraries/webcomponents-vue": "^0.0.6",
+    "@datagrok-libraries/webcomponents-vue": "../../libraries/webcomponents-vue",
     "@he-tree/vue": "^2.8.7",
     "@types/wu": "^2.1.44",
     "@vueuse/core": "^11.1.0",

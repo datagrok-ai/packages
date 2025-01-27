@@ -3,10 +3,6 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import $ from 'cash-dom';
 import {RUN_ID_COL_LABEL, RUN_NAME_COL_LABEL, VIEWER_PATH, viewerTypesMapping} from '../../../shared-utils/consts';
-import wu from 'wu';
-import {Observable} from 'rxjs';
-import {FuncCallInput, SubscriptionLike} from '../../../shared-utils/input-wrappers';
-import {isInputBase} from '../../../shared-utils/utils';
 
 export const delay = (delayInms: number) => {
   return new Promise((resolve) => setTimeout(resolve, delayInms));
@@ -24,24 +20,6 @@ export const getDefaultValue = (prop: DG.Property) => {
     legacyDefaultValue;
 };
 
-export function properUpdateIndicator(e: HTMLElement, state: boolean) {
-  if (state) {
-    $(e).addClass('ui-box').css({'width': 'auto', 'height': 'auto'});
-    ui.setUpdateIndicator(e, true);
-  } else {
-    ui.setUpdateIndicator(e, false);
-    $(e).removeClass('ui-box');
-  }
-}
-
-export function getObservable<T>(onInput: (f: Function) => SubscriptionLike): Observable<T> {
-  return new Observable((observer: any) => {
-    const sub = onInput((val: T) => {
-      observer.next(val);
-    });
-    return () => sub.unsubscribe();
-  });
-}
 
 export const getPropViewers = (prop: DG.Property): {name: string, config: Record<string, string | boolean>[]} => {
   const viewersRawConfig = prop.options[VIEWER_PATH];
@@ -63,10 +41,6 @@ export const getPropViewers = (prop: DG.Property): {name: string, config: Record
       return v;
     })}:
     {name: prop.name, config: []};
-};
-
-export const getFuncRunLabel = (func: DG.Func) => {
-  return func.options['runLabel'];
 };
 
 export const getDfFromRuns = (
@@ -254,51 +228,4 @@ export const getStarted = (call: DG.FuncCall) => {
   } catch {
     return 'Not completed';
   }
-};
-
-export const injectLockIcons = (
-  t: FuncCallInput,
-  onUnlock: Function,
-  onUndo: Function,
-  onWarningClick: Function,
-) => {
-  t.root.addEventListener('click', () => onUnlock());
-
-  const lockIcon = ui.iconFA('lock');
-  $(lockIcon).addClass('rfv-icon-lock');
-  $(lockIcon).css({color: `var(--grey-2)`});
-
-  const unlockIcon = ui.iconFA('lock-open');
-  $(unlockIcon).addClass('rfv-icon-unlock');
-  $(unlockIcon).css({color: `var(--grey-2)`});
-
-  const resetIcon = ui.iconFA('undo', (e: MouseEvent) => onUndo(e), 'Reset value to computed value');
-  $(resetIcon).addClass('rfv-icon-undo');
-  $(resetIcon).css({color: `var(--blue-2)`});
-
-  const warningIcon = ui.iconFA('exclamation-circle', null);
-  ui.tooltip.bind(warningIcon, () => onWarningClick());
-  $(warningIcon).addClass('rfv-icon-warning');
-  $(warningIcon).css({color: `var(--orange-2)`});
-
-  function defaultPlaceLockStateIcons(
-    lockIcon: HTMLElement,
-    unlockIcon: HTMLElement,
-    resetIcon: HTMLElement,
-    warningIcon: HTMLElement,
-  ) {
-    // If custom input is not DG.InputBase instance then do nothing
-    if (!isInputBase(t)) return;
-
-    t.addOptions(lockIcon);
-    t.addOptions(unlockIcon);
-    t.addOptions(resetIcon);
-    t.addOptions(warningIcon);
-  }
-
-  const tAny = (t as any);
-  // if no custom place for lock state icons is provided then use default placing
-  if (!tAny.placeLockStateIcons)
-    tAny.placeLockStateIcons = defaultPlaceLockStateIcons;
-  tAny.placeLockStateIcons(lockIcon, unlockIcon, resetIcon, warningIcon);
 };

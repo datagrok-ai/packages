@@ -4,8 +4,9 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import wu from 'wu';
-import {deepCopy, getStartedOrNull, isIncomplete} from '../../shared-utils/utils';
+import {deepCopy, isIncomplete} from '../../shared-utils/utils';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 
 type DateOptions = 'Any time' | 'Today' | 'Yesterday' | 'This week' | 'Last week' | 'This month' | 'Last month' | 'This year' | 'Last year';
 
