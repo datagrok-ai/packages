@@ -1,6 +1,6 @@
 // Manager of callbacks
 
-import {SolverOptions} from '@datagrok-libraries/diff-studio-tools';
+import {SolverOptions} from '@datagrok/diff-studio-tools';
 import {Callback} from './callback-base';
 import {TimeCheckerCallback} from './time-checker-callback';
 import {IterCheckerCallback} from './iter-checker-callback';

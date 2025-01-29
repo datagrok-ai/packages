@@ -22,7 +22,7 @@
     "datagrok-api": "^1.23.0",
     "dayjs": "=1.11.10",
     "style-loader": "^3.3.4",
-    "@datagrok-libraries/diff-studio-tools": "../../libraries/diff-studio-utils"
+    "@datagrok/diff-studio-tools": "../../../DiffStudioLib/ds-tools"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.62.0",

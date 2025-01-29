@@ -11,7 +11,7 @@ import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
 
-import {ODEs, mrt, ros3prw, ros34prw, perfProbs, SolverOptions} from '@datagrok-libraries/diff-studio-tools';
+import {ODEs, mrt, ros3prw, ros34prw, perfProbs, SolverOptions} from '@datagrok/diff-studio-tools';
 
 export const _package = new DG.Package();
 

@@ -4,7 +4,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {ODEs, SolverOptions, mrt, ros3prw, ros34prw} from '@datagrok-libraries/diff-studio-tools';
+import {ODEs, SolverOptions, mrt, ros3prw, ros34prw} from '@datagrok/diff-studio-tools';
 import {getCallback} from './callbacks/callback-tools';
 import {METHOD} from './ui-constants';
 
