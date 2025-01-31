@@ -27,9 +27,6 @@ jobs:
       - name: Upgrade npm
         run: npm install -g npm@x
 
-      - name: install npx
-        run: npm install -g npx
-
       - name: Analysis
         working-directory: ./misc
         env:
