@@ -27,8 +27,10 @@ jobs:
       - name: Upgrade npm
         run: npm install -g npm@x
 
-      - name: Install typescript
-        run: npm install typescript --save-dev
+      - name: Configure typescript
+        run: |
+          npm install typescript --save-dev
+          npm install --save-dev @types/node
 
       - name: Analysis
         working-directory: ./misc
