@@ -173,9 +173,13 @@ category('UI top menu', () => {
     const lipinski = Array.from(dialog.querySelectorAll('.d4-tree-view-group-label'))
       .find((el) => el.textContent === 'Lipinski')!.previousSibling as HTMLElement;
     lipinski.click();
+    await awaitCheck(() => {
+      const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled');
+      return okButton && okButton.length > 0;
+    }, 'element columns haven\'t been added', 5000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
-    await awaitCheck(() => smiles.columns.length === 20, 'columns length != 20', 3000);
+    await awaitCheck(() => smiles.columns.length === 27, `expected 25 descriptors, got ${smiles.columns.length - 2}`, 3000);
     isColumnPresent(smiles.columns, 'FractionCSP3');
     isColumnPresent(smiles.columns, 'NumAromaticCarbocycles');
     isColumnPresent(smiles.columns, 'NumHAcceptors');
@@ -288,6 +292,10 @@ category('UI top menu', () => {
     grok.shell.topMenu.find('Chem').group('Analyze').find('Elemental Analysis...').click();
     await awaitCheck(() => DG.Dialog.getOpenDialogs().length > 0, 'cannot open elemental analysis dialog', 2000);
     const dialog = DG.Dialog.getOpenDialogs()[0].root;
+    await awaitCheck(() => {
+      const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled');
+      return okButton && okButton.length > 0;
+    }, 'element columns haven\'t been added', 5000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
     await awaitCheck(() => smiles.columns.length === 11, 'element columns haven\'t been added', 5000);

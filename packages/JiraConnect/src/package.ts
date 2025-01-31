@@ -1,9 +1,6 @@
 /* Do not change these import lines to match external modules in webpack configuration */
 import * as grok from 'datagrok-api/grok';
-import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
-import * as constants from './app/constants';
-import { _package } from './package-test';
 import { loadProjectsList, loadIssues, loadIssueData, loadProjectData } from './api/data';
 import { JiraIssue, Project } from './api/objects';
 import { AuthCreds } from './api/objects';
@@ -13,7 +10,7 @@ import { JiraGridCellHandler } from './jira-grid-cell-handler';
 import '../css/jira_connect.css';
 import { LruCache } from "datagrok-api/dg";
 
-
+export let _package = new DG.Package();
 export const cache = new LruCache<string, JiraIssue>(100);
 export const queried = new Set<string>();
 

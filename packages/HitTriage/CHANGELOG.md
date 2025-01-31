@@ -1,5 +1,10 @@
 # HitTriage changelog
 
+## 1.4.1 (2025-01-31)
+
+* Support current molecule sending to designer functions
+* Support multiple molecule columns in joining dataframe
+
 ## 1.4.0 (2025-01-16)
 
 * Support adding tables to hit design campaigns

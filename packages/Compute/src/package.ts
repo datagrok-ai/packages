@@ -8,6 +8,7 @@ import {
   ComputationView as ComputationViewInst,
   RichFunctionView as RichFunctionViewInst,
   PipelineView as PipelineViewInst,
+  CustomFunctionView as CustomFunctionViewInst,
   UiUtils,
 } from '@datagrok-libraries/compute-utils';
 import {
@@ -421,6 +422,7 @@ export async function modelCatalogTreeBrowser(treeNode: DG.TreeViewGroup, browse
 export const testPipeline = testPipelineInst;
 export const CompView = ComputationViewInst;
 export const RFV = RichFunctionViewInst;
+export const CFV = CustomFunctionViewInst;
 export const Pipeline = PipelineViewInst;
 export const makeValidationResult = makeValidationResultInst;
 export const makeAdvice = makeAdviceInst;

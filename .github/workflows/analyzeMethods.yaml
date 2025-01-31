@@ -1,0 +1,52 @@
+name: Analyze Metrhods
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - vhlushchenko/NOSTORY/AnalyzeMethod
+
+jobs:
+  analyzeMethods:
+    name: Check changes
+    needs: common-check
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ env.FETCH_DEPTH }}
+          sparse-checkout: |
+            ./misc
+            ./js-api
+            ./packages
+            - name: Upload Artifact
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm
+        run: npm install -g npm@x
+
+      - name: install npx
+        run: npm install -g npx
+
+      - name: Analysis
+        working-directory: ./misc
+        env:
+          PATH_TO_PACKAGES: ../packages
+          PATH_TO_JS_API: ../js-api
+        run: |
+          npx tsc --init
+          echo "$PATH_TO_JS_API"
+          echo "$PATH_TO_PACKAGES"
+          npx ts-node analyzeMethods.ts $PATH_TO_PACKAGES $PATH_TO_JS_API
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Result
+          path: misc/test-covering.csv
+          retention-days: 14
+          if-no-files-found: warn

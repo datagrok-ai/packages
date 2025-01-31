@@ -8,7 +8,6 @@ import {
 } from 'rxjs/operators';
 
 export class Viewer<T = any> extends HTMLElement {
-  private viewerSetted$ = new BehaviorSubject<DG.Viewer<T> | undefined>(undefined);
   private dfSetted$ = new BehaviorSubject<DG.DataFrame | undefined>(undefined);
   private typeSetted$ = new BehaviorSubject<string | undefined>(undefined);
   private _options: Record<string, string | boolean> = {};
@@ -52,24 +51,15 @@ export class Viewer<T = any> extends HTMLElement {
       this.dfSetted$,
     ] as const);
 
-    merge(
-      settedParams$,
-      this.viewerSetted$,
-    ).pipe(
-      switchMap((payload) => {
-        if (Array.isArray(payload)) {
-          const [type, df] = payload;
-          if (type && df) {
-            if (this.viewer?.type !== type || !this.viewer)
-              return from(this.createViewer(type, df));
-            else
-              return EMPTY;
-          } else
-            return of(undefined);
-        } else {
-          const viewer = payload;
-          return of(viewer);
-        }
+    settedParams$.pipe(
+      switchMap(([type, df]) => {
+        if (type && df) {
+          if (this.viewer?.type !== type || !this.viewer)
+            return from(this.createViewer(type, df));
+          else
+            return EMPTY;
+        } else
+          return of(undefined);
       }),
       takeUntil(this.destroyed$),
     ).subscribe((viewer) => {
@@ -100,10 +90,6 @@ export class Viewer<T = any> extends HTMLElement {
 
   get viewer() {
     return this.viewer$.value;
-  }
-
-  set viewer(viewer: DG.Viewer<T> | undefined) {
-    this.viewerSetted$.next(viewer);
   }
 
   get dataFrame() {

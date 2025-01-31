@@ -154,27 +154,12 @@ export async function TestViewerComponent() {
     viewerComponent.type = undefined;
   });
 
-  const changeViewerBtn1 = ui.button('Provide histogram', () => {
-    viewerComponent.viewer = grok.data.demo.demog().plot.histogram();
-  });
-
-  const changeViewerBtn2 = ui.button('Provide barchart', () => {
-    viewerComponent.viewer = grok.data.demo.demog().plot.bar();
-  });
-
-  const changeViewerBtn3 = ui.button('Provide empty', () => {
-    viewerComponent.viewer = undefined;
-  });
-
   view.root.insertAdjacentElement('beforeend', setSrcBtn1);
   view.root.insertAdjacentElement('beforeend', setSrcBtn2);
   view.root.insertAdjacentElement('beforeend', remSrcBtn);
   view.root.insertAdjacentElement('beforeend', setViewerTypeBtn1);
   view.root.insertAdjacentElement('beforeend', setViewerTypeBtn2);
   view.root.insertAdjacentElement('beforeend', setViewerTypeBtn3);
-  view.root.insertAdjacentElement('beforeend', changeViewerBtn1);
-  view.root.insertAdjacentElement('beforeend', changeViewerBtn2);
-  view.root.insertAdjacentElement('beforeend', changeViewerBtn3);
   view.root.insertAdjacentElement('beforeend', viewerComponent);
 
   grok.shell.addView(view);

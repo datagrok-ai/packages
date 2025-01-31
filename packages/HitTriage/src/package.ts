@@ -16,6 +16,8 @@ export class HTPackage extends DG.Package {
   molToSmilesLruCache = new DG.LruCache<string, string>(2000);
 
   convertToSmiles(mol: string): string {
+    if (!mol)
+      return '';
     return this.molToSmilesLruCache.getOrCreate(mol,
       (mol) => grok.chem.convert(mol, grok.chem.Notation.Unknown, grok.chem.Notation.Smiles),
     );

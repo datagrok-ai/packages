@@ -25,9 +25,9 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Chemistry');
+    const cp = await awaitPanel(pp, 'Chemistry');
     await delay(200);
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    (cp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Gasteiger Partial Charges');
     const gpc = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Gasteiger Partial Charges') as HTMLElement;
@@ -57,8 +57,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Structure');
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const sp = await awaitPanel(pp, 'Structure');
+    (sp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Identifiers', 2000);
     const ih = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Identifiers') as HTMLElement;
@@ -117,8 +117,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Structure', 3000);
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const sp = await awaitPanel(pp, 'Structure', 3000);
+    (sp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     const s2d = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === '2D Structure') as HTMLElement;
     if (!s2d.classList.contains('expanded')) s2d?.click();
@@ -136,8 +136,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Structure', 3000);
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const sp = await awaitPanel(pp, 'Structure', 3000);
+    (sp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, '3D Structure', 3000);
     const s3d = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === '3D Structure') as HTMLElement;
@@ -156,8 +156,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Chemistry');
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const cp = await awaitPanel(pp, 'Chemistry');
+    (cp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Properties', 10000);
     const p = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Properties') as HTMLElement;
@@ -176,8 +176,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Biology');
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const bp = await awaitPanel(pp, 'Biology');
+    (bp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Toxicity', 10000);
     const t = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Toxicity') as HTMLElement;
@@ -196,8 +196,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Biology');
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const bp = await awaitPanel(pp, 'Biology');
+    (bp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Drug Likeness', 3000);
     const dl = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Drug Likeness') as HTMLElement;
@@ -215,18 +215,19 @@ category('UI info panel', () => {
     grok.shell.o = ui.div();
     v = grok.shell.addTableView(smiles);
     await grok.data.detectSemanticTypes(smiles);
+    smiles.currentCell = smiles.cell(2, 'smiles');
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Biology');
-    (document.querySelector('.fa-chevron-square-up') as HTMLElement)?.click();
+    const bp = await awaitPanel(pp, 'Biology');
+    (bp.querySelector('.fa-chevron-square-up') as HTMLElement)?.click();
     await delay(1000);
-    smiles.currentCell = smiles.cell(2, 'smiles');
-    await delay(1000);
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    (bp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Structural Alerts', 3000);
     const sa = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Structural Alerts') as HTMLElement;
     if (!sa?.classList.contains('expanded')) sa?.click();
+    await delay(100);
+    await delay(1000);
     await awaitCheck(() => {
       return (sa?.nextSibling as HTMLElement).querySelectorAll('.chem-canvas').length === 10;
     },
@@ -243,8 +244,8 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-    await awaitPanel(pp, 'Chemistry');
-    (document.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
+    const cp = await awaitPanel(pp, 'Chemistry');
+    (cp.querySelector('.fa-chevron-square-down') as HTMLElement)?.click();
     await awaitPanel(pp, 'Descriptors', 3000);
     const desc = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Descriptors') as HTMLElement;
@@ -259,9 +260,10 @@ category('UI info panel', () => {
   });
 });
 
-async function awaitPanel(pp: HTMLElement, name: string, ms: number = 5000): Promise<void> {
+async function awaitPanel(pp: HTMLElement, name: string, ms: number = 5000): Promise<Element> {
   await awaitCheck(() => {
     return Array.from(pp?.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === name) !== undefined;
   }, `cannot find ${name} property`, ms);
+  return Array.from(pp!.querySelectorAll('div.d4-accordion-pane-header')).find((el: any) => el.textContent === name)!;
 }

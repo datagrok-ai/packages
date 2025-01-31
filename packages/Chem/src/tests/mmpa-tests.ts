@@ -301,9 +301,9 @@ category('mmpa', () => {
     const isExpected = () => {
       const predicted = genDf.col('Prediction')!.toList().filter((it) => it).length;
       // we get different results on cpu and gpu for predictions
-      return predicted === 91 || (mmp.calculatedOnGPU && length === 92);
+      return predicted === 91 || (mmp.calculatedOnGPU && predicted === 92);
     };
-    expect(isExpected, true, 'Incorrect data in \'Prediction\' column');
+    expect(isExpected(), true, 'Incorrect data in \'Prediction\' column');
   });
 });
 
