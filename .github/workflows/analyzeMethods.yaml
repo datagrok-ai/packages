@@ -7,7 +7,6 @@ on:
 
 jobs:
   analyzeMethods:
-    name: Analysis of available methods
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -18,7 +17,6 @@ jobs:
             ./misc
             ./js-api
             ./packages
-            - name: Upload Artifact
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -42,6 +40,7 @@ jobs:
           echo "$PATH_TO_JS_API"
           echo "$PATH_TO_PACKAGES"
           npx ts-node analyzeMethods.ts $PATH_TO_PACKAGES $PATH_TO_JS_API
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
