@@ -20,6 +20,9 @@ test-record.mp4
 test-report.csv
 test-console-output.log
 
+#AnalyzeMethods
+**/test-covering.csv
+/misc/tsconfig.json
 # Build results
 dist/
 zip
