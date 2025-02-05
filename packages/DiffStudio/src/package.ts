@@ -11,7 +11,7 @@ import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
 
-import {ODEs, mrt, ros3prw, ros34prw, perfProbs, SolverOptions} from '@datagrok/diff-studio-tools';
+import {ODEs, SolverOptions, getIvp2WebWorker} from '@datagrok/diff-studio-tools';
 
 export const _package = new DG.Package();
 
@@ -266,27 +266,206 @@ export async function solveODE(problem: string): Promise<DG.DataFrame> {
   return call.outputs[DF_NAME];
 }
 
-//top-menu: ML | Try DST...
-//name: tryDST
-export function tryDST() {
-  const methods = new Map([
-    ['MRT', mrt],
-    ['ROS3PRw', ros3prw],
-    ['ROS34PRw', ros34prw],
-  ]);
+//name: trySolveAnInWorker
+//description: Run the Bioreactor simulation
+//input: int n = 200 {caption: runs} [Model runs count]
+export async function trySolveInWorker(n: number) {
+  const model = `#name: Bioreactor
+#tags: model
+#description: Bioreactor simulation
+#comment: 
+  Source: https://doi.org/10.1074/jbc.RA117.000303.
+#equations:
 
-  console.log('Performance:\n');
+  d(FFox)/dt = -E11 + E12
 
-  methods.forEach((method, name) => {
-    console.log('  ', name);
+  d(KKox)/dt = -E21 + E22
 
-    perfProbs.forEach((odes) => {
-      const start = Date.now();
-      method(odes);
-      const finish = Date.now();
-      console.log(`     ${odes.name}: ${finish - start} ms.`);
+  d(FFred)/dt = E11 - E12 - E31 + E32
+
+  d(KKred)/dt = E21 - E22 - E41 + E42
+
+  d(Ffree)/dt = 2 * (E31 - E32) - E51 + E52
+
+  d(Kfree)/dt = 2 * (E41 - E42) - E51 + E52
+
+  d(FKred)/dt = E51 - E52 - E61 + E62
+
+  d(FKox)/dt = E61 - E62
+
+  d(MEAthiol)/dt = 2 * (-E11 + E12 - E21 + E22 + E31 + E41 - E32 - E42 - E62 - ktox * E71 * E72)
+                   - (MEAthiol + MA) * (Fin + Fper) / VL
+
+  d(CO2)/dt = (Fin * pO2sat * 0.0022 - 2 * Fper * CO2) / VL + OTR - 0.5 * ktox * E71 * E72
+
+  d(yO2P)/dt = -OTR * (VL / (VTV - VL)) * R * T * P + yO2in * qin - yO2P * qout
+
+  d(CYST)/dt = ktox * E71 * E72 - krcyst * CYST * E0 - (Fin + Fper) * CYST / VL
+
+  d(VL)/dt = Fin - Fper
+
+#expressions:
+
+  KF = pow(VL, -0.65) * 0.065 * pow(speed**3 * diam**5 * power / 2.16e12, 0.361)
+
+  MA = MEAthiol * pow(10, pH - pKa2MEA)
+
+  qout = qin - KF * (yO2P * H - CO2) * VL * R * T / (P * 1000)
+  
+  OTR = KF * (yO2P * H - CO2)
+
+  Fin = t < switchTime ? 0 : 0.025
+
+  Fper = t < switchTime ? 0.025 : Fin
+
+  E0 = VLinit / VL
+
+  E1 = (MA * E0)**2
+  
+  E11 = k1red * FFox * E0 * E1
+
+  E12 = k1ox * FFred * E0
+
+  E31 = k2Fd * FFred * E0
+
+  E32 = k2Fa * (Ffree * E0)**2 * E1
+
+  E21 = k1red * KKox * E0 * E1
+
+  E22 = k1ox * KKred * E0
+
+  E41 = k2Kd * KKred * E0
+
+  E42 = k2Ka * (Kfree * E0)**2 * E1
+
+  E51 = k3FKa * Ffree * E0 * Kfree * E0
+
+  E52 = k3FKd * FKred * E0
+
+  E61 = k4ox * FKred * E0 * (CYST * E0)**2
+
+  E62 = k4red * FKox * E0 * E1
+
+  E70 = E0 * CO2
+
+  E71 = (MEAthiol * E0)**2
+
+  E72 = (E70 >= 0) ? sqrt(E70) : 0  
+
+#argument: t
+  t0 = 0.0   {units: min; caption: Initial; category: Time}                       [Initial time of simulation]
+  t1 = 1000  {units: min; caption: Final;   category: Time; min: 500; max: 1000}  [Final time of simulation]
+   h = 1     {units: min; caption: Step;    category: Time; min: 0.1; max: 2}     [Time step of simulation]
+
+#inits:  
+  FFox     = 0.2   {units: mmol/L; category: Initial values; min: 0.15; max: 0.25; step: 0.01}  [FF oxidized]
+  KKox     = 0.2   {units: mmol/L; category: Initial values; min: 0.15; max: 0.25; step: 0.01}  [KK oxidized]
+  FFred    = 0.1   {units: mmol/L; category: Initial values; min: 0.08; max: 0.12; step: 0.01}  [FF reduced]
+  KKred    = 0.1   {units: mmol/L; category: Initial values; min: 0.08; max: 0.12; step: 0.01}  [KK reduced]
+  Ffree    = 0     {units: mmol/L; category: Initial values}                                    [F free]
+  Kfree    = 0     {units: mmol/L; category: Initial values}                                    [K free]
+  FKred    = 0     {units: mmol/L; category: Initial values}                                    [FK reduced]
+  FKox     = 0     {units: mmol/L; category: Initial values}                                    [FK oxidized]
+  MEAthiol = 15    {units: mmol/L; category: Initial values; min: 10;   max: 16}                [MEAthiol]
+  CO2      = 0.12  {units: mmol/L; category: Initial values; min: 0.09; max: 0.15}              [Dissolved oxygen]
+  yO2P     = 0.209 {units: atm;    category: Initial values}                                    [Atm headspace]
+  CYST     = 0     {units: mmol/L; category: Initial values}                                    [Cystamine]
+  VL       = 7.2   {units: L;      category: Initial values}                                    [Liquid volume]
+
+#output:
+  t  
+  FFox     {caption: FFox(t)} 
+  KKox     {caption: KKox(t)}
+  FFred    {caption: FFred(t)}
+  KKred    {caption: KKred(t)}
+  Ffree    {caption: Ffree(t)}
+  Kfree    {caption: Kfree(t)}
+  FKred    {caption: FKred(t)}
+  FKox     {caption: FKox(t)}
+  MEAthiol {caption: MEAthiol(t)}
+  CO2      {caption: CO2(t)}
+  yO2P     {caption: yO2P(t)}
+  CYST     {caption: CYST(t)}
+  VL       {caption: VL(t)}
+
+#constants:
+   VLinit = 7.2
+      VTV = 10
+    speed = 400
+     diam = 6
+    power = 2.1
+       pH = 7.4
+    k1red = 5.604e-2
+     k1ox = 1.08e-2
+     k2Fd = 1.35
+     k2Fa = 1.104e8
+     k2Kd = 4.038e-2
+     k2Ka = 1.2e8
+    k3FKa = 1.812e8
+    k3FKd = 1.188e-2
+     k4ox = 1.08e-2
+    k4red = 5.604e-2
+     ktox = 5e-3
+   krcyst = 0
+   pO2sat = 100
+  pKa2MEA = 8.18
+        H = 1.072069378
+        R = 8.2e-2
+
+#parameters:
+         qin =    1  {units: L/min; caption: Gas;         category: Parameters;  min: 0.5; max: 1.5}            [Gas to headspace]
+       yO2in = 0.21  {              caption: O2 fraction; category: Parameters;  min: 0.1; max: 0.9}            [Oxygen mole fraction]
+           T =  300  {units: K;     caption: temperature; category: Parameters;  min: 250; max: 350}            [System temperature]
+           P =    1  {units: atm;   caption: pressure;    category: Parameters;  min: 1;   max: 2}              [Headspace pressure]
+  switchTime =  135  {units: min;   caption: switch at;   category: Time;        min: 70;  max: 180; step: 10}  [Switch mode time]
+`;
+  const ivp = getIVP(model);
+
+  const mins = new Float64Array([0, 1000, 1, 0.15, 0.15, 0.08, 0.08, 0, 0, 0, 0, 15, 0.12, 0.209, 0, 7.2, 1, 0.21, 300, 1, 70]);
+
+  const maxs = new Float64Array([0, 1000, 1, 0.25, 0.25, 0.12, 0.12, 0, 0, 0, 0, 15, 0.12, 0.209, 0, 7.2, 1, 0.21, 300, 1, 180]);
+
+  const ivpWW = getIvp2WebWorker(ivp);
+
+  let workerOutput: any;
+
+  const start = Date.now();
+
+  const promise = new Promise((resolve, _reject) => {
+    const worker = new Worker(new URL('workers/test-sa.ts', import.meta.url));
+
+    worker.postMessage({
+      ivp: ivpWW,
+      runs: n,
+      mins: mins,
+      maxs: maxs,
     });
 
-    console.log();
+    worker.onmessage = function(e) {
+      worker.terminate();
+      resolve(e.data);
+    };
   });
+
+  await promise.then(
+    (result) => {workerOutput = result as Float64Array[];},
+    (_error) => {throw new Error('Solving failed');},
+  );
+
+  const finish = Date.now();
+
+  grok.shell.info(`Time: ${finish - start} ms.`);
+
+  if (workerOutput.callResult !== 0)
+    throw new Error('Failed to solve in worker');
+
+  const res = workerOutput.res as Float64Array[];
+
+  const cols: DG.Column[] = [DG.Column.fromFloat64Array(ivp.arg.name, res[0])];
+
+  res.slice(1).forEach((arr, idx) => cols.push(DG.Column.fromFloat64Array(ivp.deqs.solutionNames[idx], arr)));
+
+  const df = DG.DataFrame.fromColumns(cols);
+  df.name = `${ivp.name}(last point)`;
+  grok.shell.addTableView(df);
 }
