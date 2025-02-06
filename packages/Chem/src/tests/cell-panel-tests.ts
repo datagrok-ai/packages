@@ -40,6 +40,8 @@ category('cell panel', async () => {
       chemCommonRdKit.setRdKitWebRoot(_package.webRoot);
       await chemCommonRdKit.initRdKitModuleLocal();
     }
+    //to make sure jupyter is running
+    await grok.functions.call('Chem:JupyterHealthCheck');
   });
 
   test('drug-likeness', async () => {

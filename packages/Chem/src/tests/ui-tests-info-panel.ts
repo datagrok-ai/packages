@@ -16,6 +16,8 @@ category('UI info panel', () => {
   before(async () => {
     grok.shell.closeAll();
     grok.shell.windows.showProperties = true;
+    //to make sure jupyter is running
+    await grok.functions.call('Chem:JupyterHealthCheck');
   });
 
 
