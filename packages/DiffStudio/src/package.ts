@@ -11,7 +11,7 @@ import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
 
-import {ODEs, SolverOptions, getIvp2WebWorker} from '@datagrok/diff-studio-tools';
+import {IVP2WebWorker, ODEs, SolverOptions, getIvp2WebWorker} from '@datagrok/diff-studio-tools';
 
 export const _package = new DG.Package();
 
@@ -431,35 +431,37 @@ export async function trySolveInWorker(n: number) {
 
   const start = Date.now();
 
-  const promise = new Promise((resolve, _reject) => {
-    const worker = new Worker(new URL('workers/test-sa.ts', import.meta.url));
+  // const promise = new Promise((resolve, _reject) => {
+  //   const worker = new Worker(new URL('workers/test-sa.ts', import.meta.url));
 
-    worker.postMessage({
-      ivp: ivpWW,
-      runs: n,
-      mins: mins,
-      maxs: maxs,
-    });
+  //   worker.postMessage({
+  //     ivp: ivpWW,
+  //     runs: n,
+  //     mins: mins,
+  //     maxs: maxs,
+  //   });
 
-    worker.onmessage = function(e) {
-      worker.terminate();
-      resolve(e.data);
-    };
-  });
+  //   worker.onmessage = function(e) {
+  //     worker.terminate();
+  //     resolve(e.data);
+  //   };
+  // });
 
-  await promise.then(
-    (result) => {workerOutput = result as Float64Array[];},
-    (_error) => {throw new Error('Solving failed');},
-  );
+  // await promise.then(
+  //   (result) => {workerOutput = result as Float64Array[];},
+  //   (_error) => {throw new Error('Solving failed');},
+  // );
+
+  const res = await runInParallel(ivpWW, n, mins, maxs);
 
   const finish = Date.now();
 
   grok.shell.info(`Time: ${finish - start} ms.`);
 
-  if (workerOutput.callResult !== 0)
-    throw new Error('Failed to solve in worker');
+  // if (workerOutput.callResult !== 0)
+  //   throw new Error('Failed to solve in worker');
 
-  const res = workerOutput.res as Float64Array[];
+  // const res = workerOutput.res as Float64Array[];
 
   const cols: DG.Column[] = [DG.Column.fromFloat64Array(ivp.arg.name, res[0])];
 
@@ -469,3 +471,57 @@ export async function trySolveInWorker(n: number) {
   df.name = `${ivp.name}(last point)`;
   grok.shell.addTableView(df);
 }
+
+async function runInParallel(ivp: IVP2WebWorker,
+  runs: number,
+  mins: Float64Array,
+  maxs: Float64Array) {
+  const nThreads = Math.max(1, navigator.hardwareConcurrency - 2);
+
+  const workers = new Array(nThreads).fill(null).map((_) => new Worker(new URL('workers/test-sa.ts', import.meta.url)));
+
+  const runsPerThread = Math.ceil(runs / nThreads);
+
+  const resultsArray: Float64Array[][] = [];
+
+  const promises = workers.map((w) => {
+    return new Promise<void>((resolve, reject) => {
+      w.postMessage({
+        ivp: ivp,
+        runs: runsPerThread,
+        mins: mins,
+        maxs: maxs,
+      });
+
+      w.onmessage = (e: any) => {
+        w.terminate();
+        if (e.data.callResult === 0)
+          resultsArray.push(e.data.res);
+        else {
+          reject(e.data.msg ?? 'error in calculation');
+          return;
+        }
+        resolve();
+      };
+      w.onerror = (e) => {
+        w.terminate();
+        console.error(e);
+        reject(e);
+      };
+    });
+  });
+
+  await Promise.all(promises);
+
+  const res: Float64Array[] = new Array(resultsArray[0].length).fill(null).map(() => new Float64Array(runsPerThread * nThreads));
+
+  let offset = 0;
+
+  for (let i = 0; i < nThreads; i++) {
+    for (let j = 0; j < res.length; j++)
+      res[j].set(resultsArray[i][j], offset);
+    offset += runsPerThread;
+  }
+
+  return res;
+};

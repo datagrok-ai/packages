@@ -2,6 +2,8 @@ import {solveIvp, IVP2WebWorker} from '@datagrok/diff-studio-tools';
 
 onmessage = async function(evt) {
   try {
+    const someNum = Math.random();
+    console.time(`worker-${someNum}`);
     const ivp = evt.data.ivp as IVP2WebWorker;
     const runsCount = evt.data.runs as number;
     const mins = evt.data.mins as Float64Array;
@@ -31,6 +33,7 @@ onmessage = async function(evt) {
         res[j][i] = solution[j][size];
     }
 
+    console.timeEnd(`worker-${someNum}`);
     postMessage({'callResult': 0, 'res': res});
   } catch (e) {
     postMessage({'callResult': -1, 'msg': e instanceof Error ? e.message : ':((('});
