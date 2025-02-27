@@ -18,7 +18,7 @@ This not only gives us the ability to execute C++ code at the native speed, but 
 modern multicore CPUs by running computations in multiple threads.
 
 Here are some of the features:
- 
+
 * Molecule sketching
   * OpenChemLib
 * SAR analysis
