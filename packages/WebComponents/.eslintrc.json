@@ -1,0 +1,47 @@
+{
+	"env": {
+		"browser": true,
+		"es2022": true
+	},
+	"extends": [
+		"google"
+	],
+	"parserOptions": {
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"ignorePatterns": ["*.d.ts", "*.js"],
+	"rules": {
+		"indent": [
+			"error",
+			2
+		],
+		"max-len": [
+			"error",
+			120
+		],
+		"require-jsdoc": "off",
+		"spaced-comment": "off",
+		"linebreak-style": "off",
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": "warn",
+		"curly": [
+			"error",
+			"multi-or-nest"
+		],
+		"brace-style": [
+			"error",
+			"1tbs",
+			{
+				"allowSingleLine": true
+			}
+		],
+		"block-spacing": 2,
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": "warn"
+	},
+	"parser": "@typescript-eslint/parser",
+	"plugins": [
+		"@typescript-eslint"
+	]
+}

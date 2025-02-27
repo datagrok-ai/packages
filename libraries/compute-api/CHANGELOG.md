@@ -1,4 +1,8 @@
-# compute-utils changelog
+# compute-api changelog
+
+## 0.4.0 (2025-02-19)
+
+- Release for 1.24.0
 
 ## 0.3.2 (2025-01-27)
 

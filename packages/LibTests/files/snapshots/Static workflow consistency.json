@@ -13,6 +13,11 @@
         "frame": 10,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -20,6 +25,11 @@
         "frame": 10,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -27,6 +37,11 @@
         "frame": 20,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -53,6 +68,11 @@
         "frame": 10,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -60,6 +80,11 @@
         "frame": 20,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -167,6 +192,11 @@
         "frame": 30,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 1
+          },
           "hasValue": true
         }
       },
@@ -174,6 +204,11 @@
         "frame": 40,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 1
+          },
           "hasValue": true
         }
       }
@@ -226,6 +261,11 @@
         "frame": 50,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -233,6 +273,11 @@
         "frame": 50,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -240,6 +285,11 @@
         "frame": 60,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -266,6 +316,11 @@
         "frame": 50,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -273,6 +328,11 @@
         "frame": 60,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -380,6 +440,11 @@
         "frame": 70,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 1
+          },
           "hasValue": true
         }
       },
@@ -387,6 +452,11 @@
         "frame": 80,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 1
+          },
           "hasValue": true
         }
       }
@@ -451,6 +521,11 @@
         "frame": 90,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -458,6 +533,11 @@
         "frame": 90,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -465,6 +545,11 @@
         "frame": 100,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -498,6 +583,11 @@
         "frame": 90,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 3
+          },
           "hasValue": true
         }
       },
@@ -505,6 +595,11 @@
         "frame": 100,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 3
+          },
           "hasValue": true
         }
       }
@@ -619,6 +714,11 @@
         "frame": 110,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 6
+          },
           "hasValue": true
         }
       },
@@ -626,6 +726,11 @@
         "frame": 120,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 6
+          },
           "hasValue": true
         }
       }
@@ -733,6 +838,11 @@
         "frame": 130,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 10
+          },
           "hasValue": true
         }
       },
@@ -740,6 +850,11 @@
         "frame": 140,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 10
+          },
           "hasValue": true
         }
       }
@@ -847,6 +962,11 @@
         "frame": 150,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -854,6 +974,11 @@
         "frame": 160,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -961,6 +1086,11 @@
         "frame": 170,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 1
+          },
           "hasValue": true
         }
       },
@@ -968,6 +1098,11 @@
         "frame": 180,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 1
+          },
           "hasValue": true
         }
       }
@@ -1075,6 +1210,11 @@
         "frame": 190,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -1082,6 +1222,11 @@
         "frame": 200,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }
@@ -1189,6 +1334,11 @@
         "frame": 210,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       },
@@ -1196,6 +1346,11 @@
         "frame": 220,
         "notification": {
           "kind": "N",
+          "value": {
+            "restriction": "restricted",
+            "inconsistent": false,
+            "assignedValue": 2
+          },
           "hasValue": true
         }
       }

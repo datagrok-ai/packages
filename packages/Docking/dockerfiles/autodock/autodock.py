@@ -148,10 +148,6 @@ def extract_json_values(json_data):
     debug_mode = request.args.get('debug', False)
     return receptor_value, receptor_format, ligand_value, ligand_format, autodock_gpf, pose_count, debug_mode
 
-@app.route('/health_check', methods=['GET'])
-def health_check():
-    return jsonify({"success": True}), 200
-
 @app.route('/check_opencl', methods=['GET'])
 def check_opencl():
     try:

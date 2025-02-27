@@ -135,7 +135,7 @@ const HELP_TEST = `
 Usage: grok test
 
 Options:
-[--package] [--category] [--test] [--host] [--csv] [--gui] [--skip-build] [--skip-publish] [--link] [--catchUnhandled] [--report] [--record] [--verbose] [--platform] [--benchmark] [--stress-test]
+[--package] [--category] [--test] [--host] [--csv] [--gui] [--skip-build] [--skip-publish] [--link] [--catchUnhandled] [--report] [--record] [--verbose] [--platform] [--benchmark] [--stress-test] --[debug]
 
 --package           Specify a package name to run tests for
 --category          Specify a category name to run tests for
@@ -143,6 +143,7 @@ Options:
 --host              Host alias as in the config file
 --csv               Save the test report in a CSV file
 --gui               Launch graphical interface (non-headless mode)
+--debug             Enables debug point on tests run (useless without gui mode(you also have to open Inspector)) 
 --catchUnhandled    Catch unhandled exceptions during test execution (default=true)
 --report            Report failed tests to audit, notifies package author (default=false)
 --skip-build        Skip the package build step
@@ -165,12 +166,13 @@ const HELP_TESTALL = `
 Usage: grok testall
 
 Options:
-[--packages] [--host] [--csv] [--gui] [--skip-build] [--skip-publish] [--link-package] [--catchUnhandled] [--report] [--record] [--verbose] [--benchmark] [--stress-test] [--order] [--tags] [--testRepeat] [--browsers-count]
+[--packages] [--host] [--csv] [--gui] [--skip-build] [--skip-publish] [--link-package] [--catchUnhandled] [--report] [--record] [--verbose] [--benchmark] [--stress-test] [--order] [--tags] [--testRepeat] [--browsers-count] [--debug]
 
 --packages          Specify a packages names to run tests for
 --host              Host alias as in the config file
 --csv               Save the test report in a CSV file
 --gui               Launch graphical interface (non-headless mode)
+--debug             Enables debug point on tests run (useless without gui mode(you also have to open Inspector)) 
 --catchUnhandled    Catch unhandled exceptions during test execution (default=true)
 --report            Report failed tests to audit, notifies packages author (default=false)
 --skip-build        Skip the packages build step

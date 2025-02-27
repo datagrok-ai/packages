@@ -1,5 +1,17 @@
 # Helm changelog
 
+## 2.8.0 (2025-02-20)
+
+Supporting all notations for hovering, conversion and context actions
+
+## 2.7.4 (2025-02-17)
+
+Fix Helm Splitter for marginal cases and tests
+
+## 2.7.3 (2025-02-17)
+
+Support for DNA/RNA for hover and other effects
+
 ## 2.7.2 (2025-01-21)
 
 Support for async rendering in non-grid views

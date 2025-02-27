@@ -27,7 +27,7 @@ const UNSUPPORTED_COLUMN_TYPE_MES = 'unsupported column type: ';
 const INCORRECT_MIN_DIST_MES = 'min distance must be positive.';
 const INCORRECT_SPREAD_MES = 'spread must be positive.';
 const INCORRECT_EPOCH_MES = 'number of epoch must be at least 1.';
-const INCORRECT_NEIBORS_MES = 'number of neibors must be at least 2 and not greater than samples count.';
+const INCORRECT_NEIBORS_MES = 'number of neighbors must be at least 2 and not greater than samples count.';
 const INCORRECT_ITERATIONS_MES = 'number of iterations must be at least 1.';
 const INCORRECT_LEARNING_RATE_MES = 'learning rate must be positive.';
 const INCORRECT_PERPLEXITY_MES = 'perplexity must be at least 2 and not greater than samples count.';
@@ -244,7 +244,7 @@ function scaleDf(df: DG.DataFrame): DG.DataFrame {
   return df;
 }
 
-/** Return standartized dataframe */
+/** Return standardized dataframe */
 export function centerScaleDataFrame(df: DG.DataFrame, toCenter: boolean, toScale: boolean): DG.DataFrame {
   if (toCenter) {
     if (toScale)
@@ -269,4 +269,50 @@ export function extractNonConstantColsDf(features: DG.ColumnList): DG.DataFrame 
   }
 
   return DG.DataFrame.fromColumns(cols);
+}
+
+/** Describe viewers and return the Done button */
+export function describeElements(roots: HTMLElement[], description: string[], position: string[]): HTMLButtonElement {
+  if (roots.length !== description.length)
+    throw new Error('Non-equal size of viewer roots and descriptions');
+
+  let idx = 0;
+  let closeIcn: HTMLElement;
+  let msg: HTMLDivElement;
+  let popup: HTMLDivElement;
+
+  const nextBtn = ui.button('next', () => {
+    popup.remove();
+    ++idx;
+    step();
+  }, 'Go to the next viewer');
+
+  const prevBtn = ui.button('prev', () => {
+    idx -= 1;    
+    popup.remove();
+    step();
+  }, 'Go to the previous viewer');
+
+  const doneBtn = ui.button('done', () => popup.remove(), 'Go to the next step');
+
+  const btnsDiv = ui.divH([prevBtn, nextBtn, doneBtn]);
+ btnsDiv.style.marginLeft = 'auto';
+ btnsDiv.style.marginRight = '0px';
+
+  const step = () => {
+    if (idx < roots.length) {
+      msg = ui.divV([ui.markdown(description[idx]), btnsDiv]);
+      popup = ui.hints.addHint(roots[idx], msg, position[idx] as ui.hints.POSITION);
+      doneBtn.hidden = (idx < roots.length - 1);
+      nextBtn.hidden = (idx === roots.length - 1);
+      prevBtn.hidden = (idx < 1);
+      
+      closeIcn = popup.querySelector('i') as HTMLElement;
+      closeIcn.onclick = () => doneBtn.click();
+    }
+  };
+
+  step();
+
+  return doneBtn;
 }

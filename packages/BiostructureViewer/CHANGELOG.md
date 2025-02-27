@@ -1,5 +1,9 @@
 # BiostructureViewer changelog
 
+## 1.3.3 (2025-02-06)
+
+* * [#3244](https://github.com/datagrok-ai/public/issues/3244): BsV: Does not maintain opened structure file
+
 ## 1.3.2 (2025-01-21)
 
 Fix for renderers in non-grid views

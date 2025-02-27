@@ -1124,6 +1124,14 @@ export class FileSource {
     return api.grok_Dapi_UserFiles_WriteBinaryDataFrames(file, dataFrames.map((df) => df.dart));
   }
 
+  /** Creates directory
+   * Sample: {@link https://public.datagrok.ai/js/samples/dapi/files}
+   * @param {FileInfo | string} file*/
+  async createDirectory(file: FileInfo | string): Promise<void> {
+    file = this.setRoot(file);
+    return api.grok_Dapi_UserFiles_CreateDirectory(file);
+  }
+
   /** Writes a file.
    * Sample: {@link https://public.datagrok.ai/js/samples/dapi/files}
    * @param {FileInfo | string} file

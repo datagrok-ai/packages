@@ -7,14 +7,14 @@ import {
   DGButton, DGIconFA,
   DGToggleInput, DGComboPopup, DGMarkdown,
 } from '@datagrok-libraries/webcomponents';
-import {DockSpawnTsWebcomponent} from '@datagrok-libraries/dock-spawn-dg/lib'
+import {DockSpawnTsWebcomponent} from '@datagrok-libraries/dock-spawn-dg/lib';
 
 export const _package = new DG.Package();
 
 let inited = false;
 
 //tags: init
-export function init() {
+export async function init() {
   if (inited) return;
 
   customElements.define('dg-viewer', Viewer);
@@ -27,5 +27,18 @@ export function init() {
   customElements.define('dock-spawn-ts', DockSpawnTsWebcomponent);
   customElements.define('dg-markdown', DGMarkdown);
   inited = true;
+
+  await Promise.all([
+    customElements.whenDefined('dg-viewer'),
+    customElements.whenDefined('dg-input-form'),
+    customElements.whenDefined('dg-button'),
+    customElements.whenDefined('dg-big-button'),
+    customElements.whenDefined('dg-icon-fa'),
+    customElements.whenDefined('dg-toggle-input'),
+    customElements.whenDefined('dg-combo-popup'),
+    customElements.whenDefined('dock-spawn-ts'),
+    customElements.whenDefined('dg-markdown'),
+  ]);
+
   console.log('webcomponents registered');
 }

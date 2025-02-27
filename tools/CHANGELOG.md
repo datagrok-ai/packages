@@ -1,5 +1,18 @@
 # Datagrok-tools changelog
 
+## 4.13.63 (2025-02-27)
+
+### Features
+
+* Grok Link minor fixes
+
+## 4.13.62 (2025-02-27)
+
+### Features
+
+* No Sandbox mode for puppeteer removed
+* Added debug mode for test and testAll
+
 ## 4.13.61 (2025-01-27)
 
 ### Features

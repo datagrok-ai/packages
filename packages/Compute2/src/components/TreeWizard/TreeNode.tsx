@@ -240,7 +240,8 @@ export const TreeNode = Vue.defineComponent({
               }}
             /> }
             {
-              isRunnable.value && !props.isReadonly && hasInconsistencies(props.consistencyStates) &&
+              isRunnable.value && !props.isReadonly &&
+                hasInconsistencies(props.consistencyStates) && !(props.callState?.pendingDependencies?.length) &&
                 <IconFA
                   name='sync'
                   tooltip={'Rerun this step with consistent inputs'}

@@ -5,12 +5,13 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.core.AppenderBase;
 import com.google.gson.Gson;
-import org.eclipse.jetty.websocket.api.Session;
+import grok_connect.handlers.QueryHandler;
+import grok_connect.handlers.SessionHandler;
+import org.slf4j.MDC;
 import org.slf4j.Marker;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -21,20 +22,13 @@ public class QueryStreamAppender extends AppenderBase<ILoggingEvent> {
     private static final String EVENT_STAGE_KEY = "EVENT_STAGE_KEY";
     private static final String EVENT_DF_NUMBER_KEY = "EVENT_DF_NUMBER_KEY";
     private static final String EVENT_DEST_GC_SERVER = "GrokConnect -> Server";
-    private static final String ORDER = "ORDER";
     private static final Gson GSON = new Gson();
-    private final Session session;
-    private final List<String> allowedLevels;
-    private int currentOrder = 1;
-
-    public QueryStreamAppender(Session session, List<String> allowedLevels) {
-        this.session = session;
-        this.allowedLevels = allowedLevels;
-    }
 
     @Override
     protected void append(ILoggingEvent iLoggingEvent) {
-        if (allowedLevels.size() != 0 && !allowedLevels.contains(iLoggingEvent.getLevel().levelStr.toLowerCase()))
+        String id = MDC.get(QueryHandler.CALL_ID_HEADER);
+        SessionHandler handler = QueryHandler.getSessionHandler(id);
+        if (handler == null || handler.skipLog(iLoggingEvent.getLevel().levelStr.toLowerCase()))
             return;
         Marker marker = iLoggingEvent.getMarker() == null ? EventType.MISC.getMarker()
                 : iLoggingEvent.getMarker();
@@ -44,7 +38,6 @@ public class QueryStreamAppender extends AppenderBase<ILoggingEvent> {
         String stage = split[2];
         Map<String, Object> params = new HashMap<>();
         params.put(COMPONENT, COMPONENT_NAME);
-        params.put(ORDER, currentOrder++);
         if (!dfNumber.equals(" "))
             params.put(EVENT_DF_NUMBER_KEY, Integer.parseInt(dfNumber));
         if (!stage.equals(" "))
@@ -62,6 +55,6 @@ public class QueryStreamAppender extends AppenderBase<ILoggingEvent> {
                 iLoggingEvent.getTimeStamp(),
                 iLoggingEvent.getFormattedMessage(),
                 flag, params, stackTrace);
-        session.getRemote().sendStringByFuture(String.format("LOG %s", GSON.toJson(message)));
+        handler.getSession().getRemote().sendStringByFuture(String.format("LOG %s", GSON.toJson(message)));
     }
 }

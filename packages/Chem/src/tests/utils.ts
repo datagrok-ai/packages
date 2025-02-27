@@ -67,6 +67,26 @@ export async function _testSearchSubstructureAllParameters(foo: any): Promise<vo
   await foo();
 }
 
+export async function ensureContainersRunning() {
+  const [chempropContainer, chemContainer] = await Promise.all([
+    grok.dapi.docker.dockerContainers.filter('chemprop').first(),
+    grok.dapi.docker.dockerContainers.filter('name = "chem-chem"').first()
+  ]);
+
+  _package.logger.debug(`*************** chempropContainer ${chempropContainer.status}`);
+  _package.logger.debug(`*************** chemContainer ${chemContainer.status}`);
+
+  await Promise.all([
+    !(chemContainer.status.startsWith('started') || chemContainer.status.startsWith('checking')) 
+      ? grok.dapi.docker.dockerContainers.run(chemContainer.id, true) 
+      : Promise.resolve(),
+
+    !(chempropContainer.status.startsWith('started') || chempropContainer.status.startsWith('checking'))
+      ? grok.dapi.docker.dockerContainers.run(chempropContainer.id, true) 
+      : Promise.resolve()
+  ]);
+}
+
 export const malformedMolblock = `
 Accelrys05311914342D 1   1.00000     0.00000     0
 

@@ -103,11 +103,11 @@ export function editMoleculeCell(cell: DG.GridCell): void {
   checkMonomersAndOpenWebEditor(cell, undefined, undefined);
 }
 
-//name: Open Helm Web Editor
+//name: Edit Helm...
 //description: Adds editor
-//meta.action: Open Helm Web Editor
-//input: string mol { semType: Macromolecule }
-export function openEditor(mol: string): void {
+//meta.action: Edit Helm...
+//input: semantic_value mol { semType: Macromolecule }
+export function openEditor(mol: DG.SemanticValue): void {
   const df = grok.shell.tv.grid.dataFrame;
   const col = df.columns.bySemType('Macromolecule')! as DG.Column<string>;
   const colSh = _package.seqHelper.getSeqHandler(col);
@@ -117,9 +117,11 @@ export function openEditor(mol: string): void {
   const gCell = DG.GridCell.fromColumnRow(grok.shell.tv.grid, col.name, df.currentRowIdx);
   if (colUnits === NOTATION.HELM)
     checkMonomersAndOpenWebEditor(gCell, undefined, undefined);
-  const convert = colSh.getConverter(NOTATION.HELM);
-  const helmMol = convert(mol);
-  checkMonomersAndOpenWebEditor(gCell, helmMol, col.meta.units!);
+  else {
+    const convert = colSh.getConverter(NOTATION.HELM);
+    const helmMol = convert(mol.value);
+    checkMonomersAndOpenWebEditor(gCell, helmMol, col.meta.units!);
+  }
 }
 
 //name: Properties

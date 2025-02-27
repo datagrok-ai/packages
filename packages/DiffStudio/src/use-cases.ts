@@ -1,13 +1,14 @@
 /* eslint-disable max-len */
-import {CONTROL_EXPR} from './constants';
+
+// Models library
 
 /** Chemical reactions, mass-action kinetics */
-const CHEM_REACT_MODEL = `${CONTROL_EXPR.NAME}: Chem react
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Mass-action kinetics illustration
-${CONTROL_EXPR.COMMENT}: 
+const CHEM_REACT_MODEL = `#name: Chem react
+#tags: model
+#description: Mass-action kinetics illustration
+#comment: 
   Source: https://doi.org/10.1002/ijch.201800003.
-${CONTROL_EXPR.DIF_EQ}:
+#equations:
   dx1/dt = -k1 * x1 + k2 * (x2)**2 + k3 * x1 * x3 
            - k4 * (x1)**2 - 2 * k5 * (x1)**2 + k6 * x2 * x4
 
@@ -18,7 +19,7 @@ ${CONTROL_EXPR.DIF_EQ}:
 
   dx4/dt = k5 * (x1)**2 - k6 * x2 * x4
 
-${CONTROL_EXPR.PARAMS}:
+#parameters:
   k1 = 0.7 {category: Reaction parameters; min: 0.1; max: 5}
   k2 = 0.9 {category: Reaction parameters; min: 0.1; max: 5}
   k3 = 1.2 {category: Reaction parameters; min: 0.1; max: 5}
@@ -26,134 +27,134 @@ ${CONTROL_EXPR.PARAMS}:
   k5 = 2.3 {category: Reaction parameters; min: 0.1; max: 5}
   k6 = 4.5 {category: Reaction parameters; min: 0.1; max: 5}
 
-${CONTROL_EXPR.INITS}:
+#inits:
   x1 = 1 {units: mol/L; category: Initial concentrations; min: 0; max: 2}
   x2 = 0 {units: mol/L; category: Initial concentrations; min: 0; max: 2}
   x3 = 0 {units: mol/L; category: Initial concentrations; min: 0; max: 2}
   x4 = 0 {units: mol/L; category: Initial concentrations; min: 0; max: 2}
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   initial = 0 {units: min; caption: Initial; category: Time; min: 0; max: 5} [Initial time of simulation]
   final = 6 {units: min; caption: Final; category: Time; min: 6; max: 10} [Final time of simulation]
-  step = 0.01 {units: min; caption: Step; category: Time; min: 0.01; max: 0.1; step: 0.001} [Time step of simlulation]
+  step = 0.01 {units: min; caption: Step; category: Time; min: 0.01; max: 0.1; step: 0.001} [Time step of simulation]
 
-${CONTROL_EXPR.TOL}: 5e-5`;
+#tolerance: 5e-5`;
 
 /** Robertson's chemical reaction model - stiff ODEs */
-const ROBERTSON_MODEL = `${CONTROL_EXPR.NAME}: Robertson
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Robertson chemical reaction model
-${CONTROL_EXPR.COMMENT}: This is classic example of stiff ODEs.
-${CONTROL_EXPR.DIF_EQ}:
+const ROBERTSON_MODEL = `#name: Robertson
+#tags: model
+#description: Robertson chemical reaction model
+#comment: This is classic example of stiff ODEs.
+#equations:
   dA/dt = -0.04 * A + 1e4 * B * C
   dB/dt = 0.04 * A - 1e4 * B * C - 3e7 * B**2
   dC/dt = 3e7 * B**2
 
-${CONTROL_EXPR.INITS}:
+#inits:
   A = 1 {units: mol/L; category: Initial concentrations; min: 0; max: 5}
   B = 0 {units: mol/L; category: Initial concentrations; min: 0; max: 5}
   C = 0 {units: mol/L; category: Initial concentrations; min: 0; max: 5}
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   start = 0 {units: sec; caption: Initial; category: Time; min: 0; max: 1} [Initial time of simulation]
   finish = 40 {units: sec; caption: Final; category: Time; min: 2; max: 50} [Final time of simulation]
-  step = 0.01 {units: sec; caption: Step; category: Time; min: 0.01; max: 0.1} [Time step of simlulation]
+  step = 0.01 {units: sec; caption: Step; category: Time; min: 0.01; max: 0.1} [Time step of simulation]
 
-${CONTROL_EXPR.TOL}: 1e-7`;
+#tolerance: 1e-7`;
 
 /** Fermentation process simulation */
-const FERMENTATION_MODEL = `${CONTROL_EXPR.NAME}: Fermentation
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Simulation of fermentation process in the ethanol production
-${CONTROL_EXPR.COMMENT}: 
+const FERMENTATION_MODEL = `#name: Fermentation
+#tags: model
+#description: Simulation of fermentation process in the ethanol production
+#comment: 
   Source: https://core.ac.uk/download/pdf/11737483.pdf.
-${CONTROL_EXPR.DIF_EQ}:
+#equations:
   dP/dt = r * X
   dS/dt = -q * X
   dX/dt = V * S / (K + S) * X
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   initial = 0 {units: d; caption: Initial; category: Time; min: 0; max: 10} [Initial time of simulation]
   final = 70 {units: d; caption: Final; category: Time; min: 15; max: 100} [Final time of simulation]
-  step = 0.01 {units: d; caption: Step; category: Time; min: 0.01; max: 1} [Time step of simlulation]
+  step = 0.01 {units: d; caption: Step; category: Time; min: 0.01; max: 1} [Time step of simulation]
 
-${CONTROL_EXPR.INITS}:  
+#inits:  
   P = 4.276 {units: ml/ml; caption: ethanol, P; category: Initials; min: 3; max: 6} [Concentration of ethanol]
   S = 0.3185 {units: mg/ml; caption: glucose, S; category: Initials; min: 0.1; max: 0.5} [Concentration of glucose]
   X = 9.2e-2 {units: mg/ml; caption: saccharomyces, X; category: Initials; min: 0.01; max: 0.2} [Saccharomyces wet weight]
 
-${CONTROL_EXPR.PARAMS}:
+#parameters:
   r = 1.3455 {units: mg/ml; category: Parameters; min: 1; max: 2} [The growth rate of ethanol]
   q = 1.1129e-2 {units: mg/ml; category: Parameters; min: 0.01; max: 0.2} [The rate of glucose consumption]
   V = 8.7e-2 {units: mg/ml; category: Parameters; min: 0.01; max: 0.2} [The maximal growth rate of Saccharomyces]
   K = 6.28e-2 {category: Parameters} [Michaelis-Menten constant]
   
-${CONTROL_EXPR.TOL}: 1e-7`;
+#tolerance: 1e-7`;
 
 /** PK simulation */
-const PK_MODEL = `${CONTROL_EXPR.NAME}: PK
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Pharmacokinetic (PK) simulation: one-compartment model
-${CONTROL_EXPR.DIF_EQ}:
+const PK_MODEL = `#name: PK
+#tags: model
+#description: Pharmacokinetic (PK) simulation: one-compartment model
+#equations:
   d(depot)/dt = -KA * depot
   d(centr)/dt = KA * depot - CL * C2
 
-${CONTROL_EXPR.EXPR}:
+#expressions:
   C2 = centr / V2
 
-${CONTROL_EXPR.LOOP}:
+#loop:
   count = 1 {category: Dosing; min: 1; max: 10} [Number of doses]
   depot += dose
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   start = 0 {units: h; caption: begin; category: Dosing; min: 0; max: 1} [Begin of dosing interval]
   final = 12 {units: h; caption: end; category: Dosing; min: 5; max: 15} [End of dosing interval]
-  step = 0.01 {units: h; caption: step; category: Dosing; min: 0.01; max: 0.1} [Time step of simlulation]  
+  step = 0.01 {units: h; caption: step; category: Dosing; min: 0.01; max: 0.1} [Time step of simulation]  
 
-${CONTROL_EXPR.INITS}:  
+#inits:  
   depot = 0 {category: Initial values}
   centr = 0 {category: Initial values} [Central]
 
-${CONTROL_EXPR.PARAMS}:  
+#parameters:  
   dose = 1e4 {category: Dosing; min: 1e3; max: 2e4; step: 1e3} [Dosage]
   KA = 0.3 {caption: rate constant; category: Parameters; min: 0.1; max: 1}
   CL = 2 {caption: clearance; category: Parameters; min: 1; max: 5}
   V2 = 4 {caption: central volume; category: Parameters; min: 1; max: 10} [Central compartment volume]
 
-${CONTROL_EXPR.SOLVER}: {method: 'mrt'; maxTimeMs: 50}
+#meta.solver: {method: 'mrt'; maxTimeMs: 50}
   
-${CONTROL_EXPR.TOL}: 1e-9`;
+#tolerance: 1e-9`;
 
 /** PK-PD simulation */
-const PK_PD_MODEL = `${CONTROL_EXPR.NAME}: PK-PD
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Pharmacokinetic-pharmacodynamic (PK-PD) simulation: two-compartment model
-${CONTROL_EXPR.DIF_EQ}:
+const PK_PD_MODEL = `#name: PK-PD
+#tags: model
+#description: Pharmacokinetic-pharmacodynamic (PK-PD) simulation: two-compartment model
+#equations:
   d(depot)/dt = -KA * depot
   d(centr)/dt = KA * depot - CL * C2 - Q * C2 + Q * C3
   d(peri)/dt  = Q * C2 - Q * C3
   d(eff)/dt  = Kin - Kout * (1 - C2/(EC50 + C2)) * eff
 
-${CONTROL_EXPR.EXPR}:
+#expressions:
   C2 = centr / V2
   C3 = peri / V3
 
-${CONTROL_EXPR.LOOP}:
+#loop:
   count = 10 {caption: count; category: Dosing; min: 1; max: 20} [Number of doses]
   depot += dose
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   start = 0 {units: h; caption: begin; category: Dosing; min: 0; max: 1} [Begin of dosing interval]
   final = 12 {units: h; caption: end; category: Dosing; min: 5; max: 15} [End of dosing interval]
-  step = 0.1 {units: h; caption: step; category: Dosing; min: 0.01; max: 0.1} [Time step of simlulation]  
+  step = 0.1 {units: h; caption: step; category: Dosing; min: 0.01; max: 0.1} [Time step of simulation]  
 
-${CONTROL_EXPR.INITS}:  
+#inits:  
   depot = 0 {category: Initial values}
   centr = 0 {category: Initial values} [Central]
   peri = 0 {category: Initial values} [Peripheral]
   eff = 0.2 {category: Initial values} [Effective compartment rate]
 
-${CONTROL_EXPR.PARAMS}:  
+#parameters:  
   dose = 1e4 {category: Dosing; min: 1e3; max: 2e4; step: 1e3} [Dosage]
   KA = 0.3 {caption: rate constant; category: Parameters; min: 0.1; max: 1}
   CL = 2 {caption: clearance; category: Parameters; min: 1; max: 5}
@@ -164,45 +165,45 @@ ${CONTROL_EXPR.PARAMS}:
   Kin = 0.2 {caption: Kin; category: Parameters; min: 0.1; max: 0.5} [The first-order production constant]
   Kout = 0.2 {caption: Kout; category: Parameters; min: 0.1; max: 0.5} [The first-order dissipation rate constant]
   
-${CONTROL_EXPR.TOL}: 1e-9`;
+#tolerance: 1e-9`;
 
 /** Gluconic acid production */
-const ACID_PROD_MODEL = `${CONTROL_EXPR.NAME}: GA-production
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Gluconic acid (GA) production by Aspergillus niger modeling
-${CONTROL_EXPR.DIF_EQ}:
+const ACID_PROD_MODEL = `#name: GA-production
+#tags: model
+#description: Gluconic acid (GA) production by Aspergillus niger modeling
+#equations:
   dX/dt = rX
   dS/dt = -gamma * rX - lambda * X
   dO/dt = Kla * (Cod - O) - delta * rX - phi * X
   dP/dt = alpha * rX + beta * X
 
-${CONTROL_EXPR.EXPR}:
+#expressions:
   mu = muM * S / (Ks + S) * O / (Ko + O)
   rX = mu * X
 
-${CONTROL_EXPR.ARG}: t, 1-st stage
+#argument: t, 1-st stage
   _t0 = 0 {units: h; caption: initial; category: Misc} [Start of the process]
   _t1 = 60 {units: h; caption: 1-st stage; category: Durations; min: 20; max: 80} [Duration of the 1-st stage]
-  step = 0.1 {units: h; caption: step; category: Misc; min: 0.01; max: 1} [Time step of simlulation]
+  step = 0.1 {units: h; caption: step; category: Misc; min: 0.01; max: 1} [Time step of simulation]
 
-${CONTROL_EXPR.UPDATE}: 2-nd stage
+#update: 2-nd stage
   duration = overall - _t1
   S += 70
 
-${CONTROL_EXPR.INITS}:  
+#inits:  
   X = 5 {units: kg/m³; caption: biomass; category: Initial concentrations; min: 1; max: 10} [Aspergillus niger biomass]
   S = 150 {units: kg/m³; caption: glucose; category: Initial concentrations; min: 50; max: 200} [Glucose]
   O = 7 {units: kg/m³; caption: oxygen; category: Initial concentrations; min: 1; max: 10} [Dissolved oxygen]
   P = 0 {units: kg/m³; caption: acid; category: Initial concentrations; min: 0; max: 0.1} [Gluconic acid]
 
-${CONTROL_EXPR.OUTPUT}:
+#output:
   t {caption: time}
   X {caption: biomass}
   S {caption: glucose}
   O {caption: oxygen}
   P {caption: acid}
 
-${CONTROL_EXPR.PARAMS}:
+#parameters:
   overall = 100 {units: h; category: Durations; min: 100; max: 140} [Overall duration]
   muM = 0.668 {units: 1/h; category: Parameters} [Monod type model parameter]
   alpha = 2.92 {category: Parameters} [Monod type model parameter]
@@ -216,15 +217,15 @@ ${CONTROL_EXPR.PARAMS}:
   Kla = 1.7e-2 {units: 1/s; category: Parameters} [Volumetric mass transfer coefficient]
   Cod = 15 {units: kg/m³; category: Parameters} [Liquid phase dissolved oxygen saturation concentration]
   
-${CONTROL_EXPR.TOL}: 1e-9`;
+#tolerance: 1e-9`;
 
 /** Nimotuzumab disposition model */
-const NIMOTUZUMAB_MODEL = `${CONTROL_EXPR.NAME}: Nimotuzumab
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Nimotuzumab disposition model
-${CONTROL_EXPR.COMMENT}:
+const NIMOTUZUMAB_MODEL = `#name: Nimotuzumab
+#tags: model
+#description: Nimotuzumab disposition model
+#comment:
   Source: https://www.mdpi.com/1999-4923/12/12/1147
-${CONTROL_EXPR.DIF_EQ}:
+#equations:
   dA1/dt = (-(CL * A3 / V1 + Q / V1) * A1 + Q / V2 * A2 - kint * Rtot * A1 / (Kss + A1 / V1)) 
            / (1 + Rtot * Kss / (Kss + A1 / V1)**2)
 
@@ -232,22 +233,22 @@ ${CONTROL_EXPR.DIF_EQ}:
 
   dA3/dt = Kin * (1 + Smax * A1**gamma / (S50**gamma + A1**gamma)) - Kout * A3
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   start = 0 {caption: Initial; category: Time; min: 0; max: 10} [Initial time of simulation]
   finish = 70 {caption: Final; category: Time; min: 50; max: 100} [Final time of simulation]
-  step = 0.01 {caption: Step; category: Time; min: 0.01; max: 1} [Time step of simlulation]
+  step = 0.01 {caption: Step; category: Time; min: 0.01; max: 1} [Time step of simulation]
 
-${CONTROL_EXPR.INITS}:
+#inits:
   A1 = 0.43 {category: Initials; min: 0.2; max: 0.6} [Central]
   A2 = 0.55 {category: Initials; min: 0.3; max: 0.8} [Periferal]
   A3 = 10.32 {category: Initials; min: 5; max: 15} [Mediator]
 
-${CONTROL_EXPR.OUTPUT}:
+#output:
   t {caption: Time, h}
   A1 {caption: Central}
   A2 {caption: Periferal}
 
-${CONTROL_EXPR.PARAMS}:
+#parameters:
   CL = 9.64e-3 {category: Parameters; min: 0.005; max: 0.015} [Non-specific clearance]
   V1 = 2.63 {category: Parameters; min: 0.7; max: 3} [Apparent volume of distribution of the central compartment]
   Q = 2.88e-2 {category: Parameters; min: 0.015; max: 0.035} [Distribution clearance of free nimotuzumab between the central and peripheral compartment]
@@ -262,15 +263,15 @@ ${CONTROL_EXPR.PARAMS}:
   Smax = 3.18 {category: Parameters; min: 1; max: 5} [Maximal effect of the stimulation]
   gamma = 0.5 {category: Parameters; min: 0.1; max: 1} [Hill coefficient of the sigmoid function]  
 
-${CONTROL_EXPR.TOL}: 1e-7`;
+#tolerance: 1e-7`;
 
 /** Bioreactor simulation */
-const BIOREACTOR_MODEL = `${CONTROL_EXPR.NAME}: Bioreactor
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: Bioreactor simulation
-${CONTROL_EXPR.COMMENT}: 
+const BIOREACTOR_MODEL = `#name: Bioreactor
+#tags: model
+#description: Bioreactor simulation
+#comment: 
   Source: https://doi.org/10.1074/jbc.RA117.000303.
-${CONTROL_EXPR.DIF_EQ}:
+#equations:
 
   d(FFox)/dt = -E11 + E12
 
@@ -289,17 +290,17 @@ ${CONTROL_EXPR.DIF_EQ}:
   d(FKox)/dt = E61 - E62
 
   d(MEAthiol)/dt = 2 * (-E11 + E12 - E21 + E22 + E31 + E41 - E32 - E42 - E62 - ktox * E71 * E72)
-			            - (MEAthiol + MA) * (Fin + Fper) / VL
+                   - (MEAthiol + MA) * (Fin + Fper) / VL
 
-  d(CO2)/dt = (Fin * pO2sat * 0.0022 - 2 * Fper * CO2) / VL + OTR	- 0.5 * ktox * E71 * E72
-			
+  d(CO2)/dt = (Fin * pO2sat * 0.0022 - 2 * Fper * CO2) / VL + OTR - 0.5 * ktox * E71 * E72
+
   d(yO2P)/dt = -OTR * (VL / (VTV - VL)) * R * T * P + yO2in * qin - yO2P * qout
 
-  d(CYST)/dt = ktox * E71 * E72	- krcyst * CYST * E0 - (Fin + Fper) * CYST / VL
+  d(CYST)/dt = ktox * E71 * E72 - krcyst * CYST * E0 - (Fin + Fper) * CYST / VL
 
   d(VL)/dt = Fin - Fper
 
-${CONTROL_EXPR.EXPR}:
+#expressions:
 
   KF = pow(VL, -0.65) * 0.065 * pow(speed**3 * diam**5 * power / 2.16e12, 0.361)
 
@@ -347,12 +348,12 @@ ${CONTROL_EXPR.EXPR}:
 
   E72 = (E70 >= 0) ? sqrt(E70) : 0  
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   t0 = 0.0   {units: min; caption: Initial; category: Time}                       [Initial time of simulation]
   t1 = 1000  {units: min; caption: Final;   category: Time; min: 500; max: 1000}  [Final time of simulation]
-   h = 1     {units: min; caption: Step;    category: Time; min: 0.1; max: 2}     [Time step of simlulation]
+   h = 1     {units: min; caption: Step;    category: Time; min: 0.1; max: 2}     [Time step of simulation]
 
-${CONTROL_EXPR.INITS}:  
+#inits:  
   FFox     = 0.2   {units: mmol/L; category: Initial values; min: 0.15; max: 0.25; step: 0.01}  [FF oxidized]
   KKox     = 0.2   {units: mmol/L; category: Initial values; min: 0.15; max: 0.25; step: 0.01}  [KK oxidized]
   FFred    = 0.1   {units: mmol/L; category: Initial values; min: 0.08; max: 0.12; step: 0.01}  [FF reduced]
@@ -367,23 +368,7 @@ ${CONTROL_EXPR.INITS}:
   CYST     = 0     {units: mmol/L; category: Initial values}                                    [Cystamine]
   VL       = 7.2   {units: L;      category: Initial values}                                    [Liquid volume]
 
-${CONTROL_EXPR.OUTPUT}:
-  t  
-  FFox     {caption: FFox(t)} 
-  KKox     {caption: KKox(t)}
-  FFred    {caption: FFred(t)}
-  KKred    {caption: KKred(t)}
-  Ffree    {caption: Ffree(t)}
-  Kfree    {caption: Kfree(t)}
-  FKred    {caption: FKred(t)}
-  FKox     {caption: FKox(t)}
-  MEAthiol {caption: MEAthiol(t)}
-  CO2      {caption: CO2(t)}
-  yO2P     {caption: yO2P(t)}
-  CYST     {caption: CYST(t)}
-  VL       {caption: VL(t)}
-
-${CONTROL_EXPR.CONSTS}:
+#constants:
    VLinit = 7.2
       VTV = 10
     speed = 400
@@ -407,22 +392,22 @@ ${CONTROL_EXPR.CONSTS}:
         H = 1.072069378
         R = 8.2e-2
 
-${CONTROL_EXPR.PARAMS}:
+#parameters:
          qin =    1  {units: L/min; caption: Gas;         category: Parameters;  min: 0.5; max: 1.5}            [Gas to headspace]
        yO2in = 0.21  {              caption: O2 fraction; category: Parameters;  min: 0.1; max: 0.9}            [Oxygen mole fraction]
            T =  300  {units: K;     caption: temperature; category: Parameters;  min: 250; max: 350}            [System temperature]
            P =    1  {units: atm;   caption: pressure;    category: Parameters;  min: 1;   max: 2}              [Headspace pressure]
   switchTime =  135  {units: min;   caption: switch at;   category: Time;        min: 70;  max: 180; step: 10}  [Switch mode time]
   
-${CONTROL_EXPR.INPUTS}: mode {caption: Process mode; category: Process parameters; choices: OpenFile("System:AppData/DiffStudio/library/bioreactor-inputs.csv")} [Reactions flow mode]`;
+#meta.inputs: mode {caption: Process mode; category: Process parameters; choices: OpenFile("System:AppData/DiffStudio/library/bioreactor-inputs.csv")} [Reactions flow mode]`;
 
 /** Pollution model */
-const POLLUTION_MODEL = `${CONTROL_EXPR.NAME}: Pollution
-${CONTROL_EXPR.TAGS}: model
-${CONTROL_EXPR.DESCR}: The chemical reaction part of the air pollution model developed at The Dutch National Institute of Public Health and Environmental Protection
-${CONTROL_EXPR.COMMENT}: 
+const POLLUTION_MODEL = `#name: Pollution
+#tags: model
+#description: The chemical reaction part of the air pollution model developed at The Dutch National Institute of Public Health and Environmental Protection
+#comment: 
   Source: https://archimede.uniba.it/~testset/report/pollu.pdf
-${CONTROL_EXPR.DIF_EQ}:
+#equations:
   dy1/dt = -(r1 + r10 + r14 + r23 + r24) + (r2 + r3 + r9 + r11 + r12 + r22 + r25)
 
   dy2/dt = -r2 - r3 - r9 - r12 + r1 + r21
@@ -463,7 +448,7 @@ ${CONTROL_EXPR.DIF_EQ}:
 
   dy20/dt = -r25 + r24
 
-${CONTROL_EXPR.EXPR}:
+#expressions:
   r1 = k1 * y1
 
   r2 = k2 * y2 * y4
@@ -514,13 +499,13 @@ ${CONTROL_EXPR.EXPR}:
 
   r25 = k25 * y20
 
-${CONTROL_EXPR.ARG}: t
+#argument: t
   t0 = 0   {units: min; caption: Initial; category: Time; min: 0; max: 0.9} [Initial time of simulation]
   t1 = 60  {units: min; caption: Final; category: Time; min: 1; max: 100; step: 1} [Final time of simulation]
-  h = 0.01 {units: min; caption: Step; category: Time; min: 0.001; max: 0.1; step: 0.001} [Time step of simlulation]
+  h = 0.1  {units: min; caption: Step; category: Time; min: 0.001; max: 0.1; step: 0.001} [Time step of simulation]
 
 
-${CONTROL_EXPR.INITS}:
+#inits:
   y1 = 0    {caption: NO2; category: Initial concentrations; min: 0; max: 0.1} [Initial concentration of NO2]
   y2 = 0.2  {caption: NO; category: Initial concentrations; min: 0; max: 0.4} [Initial concentration of NO]
   y3 = 0    {caption: O3P; category: Initial concentrations; min: 0; max: 0.1} [Initial concentration of O3P]
@@ -542,7 +527,7 @@ ${CONTROL_EXPR.INITS}:
   y19 = 0   {caption: NO3; category: Initial concentrations} [Initial concentration of NO3]
   y20 = 0   {caption: N2O5; category: Initial concentrations} [Initial concentration of N2O5]
 
-${CONTROL_EXPR.OUTPUT}:
+#output:
    t  {caption: t, min}
   y1  {caption: NO2}
   y2  {caption: NO}
@@ -565,7 +550,7 @@ ${CONTROL_EXPR.OUTPUT}:
   y19 {caption: NO3}
   y20 {caption: N2O5}
 
-${CONTROL_EXPR.PARAMS}:
+#parameters:
   k1 = 0.35    {category: Reaction constants} [NO2 -> NO + O3P]
   k2 = 26.6    {category: Reaction constants} [NO + O3 -> NO2]
   k3 = 1.23e4  {category: Reaction constants} [HO2 + NO -> NO2 + OH]
@@ -592,7 +577,7 @@ ${CONTROL_EXPR.PARAMS}:
   k24 = 1780   {category: Reaction constants} [NO3 + NO2 -> N2O5]
   k25 = 3.12   {category: Reaction constants} [N2O5 -> NO3 + NO2]
 
-${CONTROL_EXPR.TOL}: 1e-6`;
+#tolerance: 1e-6`;
 
 /** Initial value problem use cases */
 export enum USE_CASES {

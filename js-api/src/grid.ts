@@ -4,7 +4,7 @@ import {toDart, toJs} from './wrappers';
 import {__obs, _sub, EventData, GridCellArgs, StreamSubscription} from './events';
 import {_identityInt32, _isDartium, _toIterable, MapProxy} from './utils';
 import {Observable} from 'rxjs';
-import {Color, RangeSlider} from './widgets';
+import {Color, RangeSlider, Widget} from './widgets';
 import {SemType} from './const';
 import {Property} from './entities';
 import {IFormSettings, IGridSettings} from "./interfaces/d4";
@@ -1346,4 +1346,136 @@ export class SemanticValue<T = any> {
 
   get viewer(): Viewer { return api.grok_SemanticValue_Get_Viewer(this.dart); }
   set viewer(x: Viewer) { api.grok_SemanticValue_Set_Viewer(this.dart, toDart(x)); }
+}
+
+
+/** Proxy class for the Dart-based column grid. */
+export class ColumnGrid extends Widget {
+  constructor(public readonly dart: any) {
+    super(api.grok_Widget_Get_Root(dart));
+  }
+
+  /** Creates a new grid. */
+  static create(options?: {
+    filter: (c: Column) => boolean;
+    isColGrayedOut: (input: any) => any;
+    gridOptions: { [key: string]: any };
+    showMenuIcon: boolean;
+  }): ColumnGrid {
+    return new ColumnGrid(api.grok_ColumnGrid_Create(options?.filter, options?.isColGrayedOut, options?.gridOptions, options?.showMenuIcon));
+  }
+
+  /** Creates a new column manager grid. */
+  static columnManager(dfSource?: DataFrame, filter?: (c: Column) => boolean, gridOptions?: { [key: string]: any }): ColumnGrid {
+    return new ColumnGrid(api.grok_ColumnGrid_Create_ColumnManager(dfSource?.dart, filter, gridOptions));
+  }
+
+  /** Creates a new column reorder manager grid. */
+  static columnReorderManagerDialog(df: DataFrame, title: string, options?: {
+    dfSource?: Grid;
+    filter?: (c: Column) => boolean;
+    order?: Column[];
+    checks?: (colName: string) => boolean;
+    addAdditionalChecks?: (colName: string) => boolean;
+    additionalChecksName?: string;
+    applyOrder?: (cg: ColumnGrid) => void;
+    applyVisibility?: (cg: ColumnGrid) => void;
+    gridOptions?: { [key: string]: any };
+    addServiceColumns: boolean;
+  }) : ColumnGrid {
+    return new ColumnGrid(api.grok_ColumnGrid_Create_ColumnReorderManagerDialog(df.dart, title,
+      toJs(options?.dfSource), options?.filter, options?.order?.map(c => c.dart), options?.checks, options?.addAdditionalChecks,
+      options?.additionalChecksName ?? null, options?.applyOrder ? (cg: any) => options?.applyOrder?.(toJs(cg)) : null,
+      options?.applyVisibility ? (cg: any) => options?.applyVisibility?.(toJs(cg)) : null,
+      options?.gridOptions, options?.addServiceColumns));
+  }
+  
+  /** Creates a new popup grid. */
+  static popup(dfSource: DataFrame, options?: {
+    filter?: (c: Column) => boolean;
+    addEmpty?: boolean;
+    widgetMode?: boolean;
+    grayedOutColsMode?: boolean;
+    serviceColsTagName?: string;
+  }): ColumnGrid {
+    return new ColumnGrid(api.grok_ColumnGrid_Create_Popup(dfSource.dart, options?.filter, options?.addEmpty ?? false,
+      options?.widgetMode ?? false, options?.grayedOutColsMode ?? false, options?.serviceColsTagName ?? null));
+    }
+
+  /** Creates a new column selector grid. */
+  static columnSelector(dfSource: DataFrame, options?: {
+    checkAll?: boolean;
+    filter?: (c: Column) => boolean;
+    isChecked?: (c: Column) => boolean;
+  }): ColumnGrid {
+    return new ColumnGrid(api.grok_ColumnGrid_Create_ColumnSelector(dfSource.dart, options?.checkAll ?? false, options?.filter, options?.isChecked));  
+  }
+  
+  get dfColumns(): DataFrame { return toJs(api.grok_ColumnGrid_Get_DfColumns(this.dart)); }
+  get dfSource(): DataFrame { return toJs(api.grok_ColumnGrid_Get_DfSource(this.dart)); }
+  get gridSource(): Grid { return toJs(api.grok_ColumnGrid_Get_GridSource(this.dart)); }
+  get grid(): Grid { return toJs(api.grok_ColumnGrid_Get_Grid(this.dart)); }
+  get nameCol(): Column { return toJs(api.grok_ColumnGrid_Get_NameCol(this.dart)); }
+  get typeNameCol(): Column { return toJs(api.grok_ColumnGrid_Get_TypeNameCol(this.dart)); }
+
+  get filter(): (c: Column) => boolean { return api.grok_ColumnGrid_Get_Filter(this.dart); }
+  set filter(f: (c: Column) => boolean) { api.grok_ColumnGrid_Set_Filter(this.dart, f); }
+  
+  addCheckedSelect(): void { api.grok_ColumnGrid_AddCheckedSelect(this.dart); }
+  filterColumns(): void { api.grok_ColumnGrid_FilterColumns(this.dart); }
+  shouldShowColumnTooltip(col: Column): boolean { return api.grok_ColumnGrid_ShouldShowColumnTooltip(this.dart, col.dart); }
+  passesFilter(col: Column, columnName?: string): boolean { return api.grok_ColumnGrid_PassesFilter(this.dart, col.dart, columnName ?? null); }
+  refreshStats(): void { api.grok_ColumnGrid_RefreshStats(this.dart); }
+
+  get showSearch(): boolean { return api.grok_ColumnGrid_Get_ShowSearch(this.dart); }
+  set showSearch(x: boolean) { api.grok_ColumnGrid_Set_ShowSearch(this.dart, x); }
+
+  close(): void { api.grok_ColumnGrid_Close(this.dart); }
+  detach(): void { api.grok_ColumnGrid_Detach(this.dart); }
+  addColumnSelectionControls(): void { api.grok_ColumnGrid_AddColumnSelectionControls(this.dart); }
+
+  initGrayedOutColumnStyle(): void { api.grok_ColumnGrid_InitGrayedOutColumnStyle(this.dart); }
+  initTypeColoring(): void { api.grok_ColumnGrid_InitTypeColoring(this.dart); }
+  initColumnTooltips(): void { api.grok_ColumnGrid_InitColumnTooltips(this.dart); }
+  initColumnDragDrop(): void { api.grok_ColumnGrid_InitColumnDragDrop(this.dart); }
+  init(dfSource: DataFrame, gridSource?: Grid, filter?: (c: Column) => boolean,
+  syncSelections?: boolean, order?: Column[], addServiceColumns?: boolean): void {
+    api.grok_ColumnGrid_Init(this.dart, dfSource.dart, gridSource?.dart, filter,
+      syncSelections ?? true, order?.map((c) => c.dart), addServiceColumns ?? false);
+  }
+  initColumnSelector(dfSource: DataFrame, checkAll?: boolean, filter?: (c: Column) => boolean): void {
+    api.grok_ColumnGrid_InitColumnSelector(this.dart, dfSource.dart ?? false, checkAll, filter);
+  }
+  initContextMenu(): void { api.grok_ColumnGrid_InitContextMenu(this.dart); }
+  initColumnManager(dfSource: DataFrame, filter?: (c: Column) => boolean) : void {
+    api.grok_ColumnGrid_InitColumnManager(this.dart, dfSource.dart, filter);
+  }
+
+  getRow(col: Column): number { return api.grok_ColumnGrid_GetRow(this.dart, col.dart); }
+  getCol(row: number): Column { return toJs(api.grok_ColumnGrid_GetCol(this.dart, row)); }
+  get currentColumn(): Column { return toJs(api.grok_ColumnGrid_Get_CurrentColumn(this.dart)); }
+  get mouseOverColumn(): Column { return toJs(api.grok_ColumnGrid_Get_MouseOverColumn(this.dart)); }
+
+  addChecks(isChecked: (colName: string) => boolean, addAdditionalChecks: (colName: string) => boolean, additionalChecksName: string): void {
+    api.grok_ColumnGrid_AddChecks(this.dart, isChecked, addAdditionalChecks, additionalChecksName);
+  }
+  checkAll(isChecked?: boolean): void { api.grok_ColumnGrid_CheckAll(this.dart, isChecked ?? false); }
+
+  getCheckedIndexes(): number[] { return api.grok_ColumnGrid_GetCheckedIndexes(this.dart); }
+  getCheckedColumns(): Column[] { return api.grok_ColumnGrid_GetCheckedColumns(this.dart).map(toJs); }
+  getCheckedColumnNames(): string[] { return api.grok_ColumnGrid_GetCheckedColumnNames(this.dart); }
+
+  getAdditionalCheckedIndexes(): number[] { return api.grok_ColumnGrid_GetAdditionalCheckedIndexes(this.dart); }
+  getAdditionalCheckedColumns(): Column[] { return api.grok_ColumnGrid_GetAdditionalCheckedColumns(this.dart).map(toJs); }
+  getAdditionalCheckedColumnNames(): string[] { return api.grok_ColumnGrid_GetAdditionalCheckedColumnNames(this.dart); }
+
+  getSelectedColumns(): Column[] { return api.grok_ColumnGrid_GetSelectedColumns(this.dart).map(toJs); }
+  setSelectedColumns(columnIds: any[]): void { api.grok_ColumnGrid_SetSelectedColumns(this.dart, columnIds); }
+
+  indexes(rows: string): number[] { return api.grok_ColumnGrid_Indexes(this.dart, rows); }
+  addColumnStats(aggType: string): Column { return toJs(api.grok_ColumnGrid_AddColumnStats(this.dart, aggType)); }
+  addColumnProperty(p: Property): Column { return toJs(api.grok_ColumnGrid_AddColumnProperty(this.dart, p.dart)); }
+  columnsToDataFrame(columnsOrder?: Column[], addServiceColumns?: boolean, serviceColsTagName?: string): void {
+    api.grok_ColumnGrid_ColumnsToDataFrame(this.dart, columnsOrder?.map(c => c.dart), addServiceColumns ?? false, serviceColsTagName ?? null);
+  }
 }

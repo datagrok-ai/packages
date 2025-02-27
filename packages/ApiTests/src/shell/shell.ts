@@ -26,7 +26,7 @@ category('Shell', () => {
     expect(grok.shell.v?.id, v.id);
     v.close();
     //@ts-ignore
-    expect(grok.shell.v.id != view.id, true);
+    expect(grok.shell.v?.id != view.id, true);
   });
 
   test('tables', async () => {

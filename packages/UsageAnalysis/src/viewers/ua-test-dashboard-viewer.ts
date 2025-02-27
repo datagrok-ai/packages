@@ -69,7 +69,7 @@ export class TestDashboardWidget extends DG.JsViewer {
   onFrameAttached(dataFrame: DG.DataFrame): void {
     this.root.childNodes.forEach((node, _idx, _parent) => node.remove());
     this.root.appendChild(ui.wait(async () => {
-      let tableNames: RegExp[] = [/Benchmark.*Dashboard/, /Test.*Track.*Dashboard/];
+      let tableNames: RegExp[] = [/Benchmark/, /Test.*Track/];
       let promises: Promise<void>[] = tableNames.map((name) => new Promise((resolve, reject) => {
         const checkCondition = () => {
           try {
@@ -92,6 +92,7 @@ export class TestDashboardWidget extends DG.JsViewer {
       verdicts.push(...this.verdictsOnTestTrack());
       verdicts.push(...(await this.unaddressedTests(dataFrame)));
       verdicts.push(...(await this.verdictsForTickets()));
+      verdicts.push(...this.getBuildInfos(dataFrame));
       let status = Priority.getMaxPriority(verdicts.map((v) => v.priority));
       if (status == Priority.BLOCKER)
         d.append(ui.h1('Platform is not release-ready ❌❌❌', { style: { color: DG.Color.toRgb(DG.Color.red) } }));
@@ -125,7 +126,7 @@ export class TestDashboardWidget extends DG.JsViewer {
   }
   verdictsOnPerformance(): Verdict[] {
     let verdicts: Verdict[] = [];
-    let df = grok.shell.tables.find((df) => df.name.match(/Benchmark.*Dashboard/));
+    let df = grok.shell.tables.find((df) => df.name.match(/Benchmark/));
     if (df == null)
       return verdicts;
     verdicts.push(...this.performanceDowngrades(df));
@@ -133,11 +134,13 @@ export class TestDashboardWidget extends DG.JsViewer {
   }
   verdictsOnTestTrack(): Verdict[] {
     let verdicts: Verdict[] = [];
-    let df = grok.shell.tables.find((df) => df.name.match(/Test.*Track.*Dashboard/));
+    let df = grok.shell.tables.find((df) => df.name.match(/Test.*Track/));
     if (df == null)
       return verdicts;
-    if (df.col('jira') != null)
-      this.jiraTickets(df.col('jira')!);
+    for (let col of df.columns) {
+      if (col.name.startsWith('ticket'))
+        this.jiraTickets(col);
+    }
     verdicts.push(...this.testTrackDowngrades(df));
     return verdicts;
   }
@@ -160,7 +163,7 @@ export class TestDashboardWidget extends DG.JsViewer {
   }
   majorPackages(df: DG.DataFrame): Verdict[] {
     try {
-      let packageList = ['datlas', 'ddt', 'ddtx', 'dinq', 'ApiTests', 'ApiSamples', 'Bio', 'Chem']
+      let packageList = ['datlas', 'ddt', 'ddtx', 'dinq', 'ApiTests', 'ApiSamples', 'Bio', 'Chem', 'DevTools'];
       let testColumn: DG.Column = df.col('test')!;
       let failingColumn: DG.Column<boolean> = df.col('needs_attention')!;
       let brokenPackages: Map<string, string[]> = new Map();
@@ -179,6 +182,7 @@ export class TestDashboardWidget extends DG.JsViewer {
         widget.root.onclick = (ev: MouseEvent) => {
           df.filter.init((row) => testColumn.getString(row)?.startsWith(packageName));
           df.selection.init((row) => testColumn.getString(row)?.startsWith(packageName) && (failingColumn.get(row) ?? false));
+          grok.shell.tv.grid.sort(['needs_attention'], [false]);
         };
         ui.tooltip.bind(widget.root, 'Click to filter');
         verdicts.push(new Verdict(Priority.BLOCKER, 'Critical package failure', widget.root));
@@ -187,6 +191,37 @@ export class TestDashboardWidget extends DG.JsViewer {
     } catch (x) {
       return [new Verdict(Priority.BLOCKER, 'Unhandled exception', ui.div([
         ui.span(['Failed to verify major packages']),
+        ui.span([x])
+      ]))];
+    }
+  }
+  getBuildInfos(df: DG.DataFrame): Verdict[] {
+    try {
+      let builds = Array.from(df.columns.toList().filter((col) => col.name.endsWith('date')).map((col) => col.name.split(' ')[0]));
+      builds.sort((a, b) => parseInt(a) - parseInt(b));
+      let res = ui.table(builds, (build, idx) => {
+          console.log(build);
+          console.log(df.col(build + ' instance')?.categories[0] ?? 'unknown');
+          console.log(df.col(build + ' commit')?.categories[0] ?? 'unknown');
+          let date = null;
+          for (var i = 0; i < df.rowCount; i++) {
+            let curDate = df.get(build + ' build_date', i);
+            if (curDate != undefined) {
+              date = curDate;
+              break;
+            }
+          }
+          return [ui.span([build]),
+            ui.tableFromMap({'Instance': df.col(build + ' instance')?.categories[0] ?? 'unknown',
+                             'Commit': df.col(build + ' commit')?.categories[0] ?? 'unknown',
+                             'Build date': date ?? 'unknown'})
+          ];
+        }
+      );
+      return [new Verdict(Priority.INFO, 'Builds info', res)];
+    } catch (x) {
+      return [new Verdict(Priority.ERROR, 'Unhandled exception', ui.div([
+        ui.span(['Failed to get build infos']),
         ui.span([x])
       ]))];
     }
@@ -237,17 +272,17 @@ export class TestDashboardWidget extends DG.JsViewer {
         }
         verdicts.push(new Verdict(Priority.INFO, 'Responsible for tests', ui.div([
           ui.span([summary]),
-          ui.button('Copy to Clipboard', () => {
-            let slackMessage = '';
-            for (const [owner, tests] of Object.entries(unaddressedTests)) {
-              const slackOwner = owner.match(/\w+@datagrok.ai/) ? '@' + owner.match(/\w+@datagrok.ai/)?.[0].split('@')[0] : owner;
-              slackMessage += `${slackOwner}: ` + tests.length + '\n\n';
-            }
+          // ui.button('Copy to Clipboard', () => {
+          //   let slackMessage = '';
+          //   for (const [owner, tests] of Object.entries(unaddressedTests)) {
+          //     const slackOwner = owner.match(/\w+@datagrok.ai/) ? '@' + owner.match(/\w+@datagrok.ai/)?.[0].split('@')[0] : owner;
+          //     slackMessage += `${slackOwner}: ` + tests.length + '\n\n';
+          //   }
       
-            navigator.clipboard.writeText(slackMessage).then(() => {
-              grok.shell.info('Summary copied to clipboard');
-            });
-          })
+          //   navigator.clipboard.writeText(slackMessage).then(() => {
+          //     grok.shell.info('Summary copied to clipboard');
+          //   });
+          // })
         ])));
       }
       return verdicts;
@@ -263,6 +298,7 @@ export class TestDashboardWidget extends DG.JsViewer {
     let testColumn: DG.Column = df.col('test')!;
     let ignoreColumn: DG.Column = df.col('ignore?')!;
     let ignoreReasonColumn: DG.Column = df.col('ignoreReason')!;
+    let ignoreVersionColumn: DG.Column = df.col('ignoreReason')!;
     let widgets: DG.Widget[] = [];
     for (var i = 0; i < df.rowCount; i++) {
       if (ignoreColumn.get(i)) {
@@ -314,8 +350,20 @@ export class TestDashboardWidget extends DG.JsViewer {
       ]))];
     }
   }
+
+  async loadManualTickets(): Promise<void> {
+    let tickets: DG.DataFrame = await grok.functions.call('ManualTicketFetch');
+    for (var i = 0; i < tickets.rowCount; i++) {
+      const ticket = tickets.col('name')?.getString(i);
+      if (ticket != null)
+        this.tickets.add(ticket);
+    }
+  }
+
   async verdictsForTickets(): Promise<Verdict[]> {
     try {
+      await this.loadManualTickets();
+
       let verdicts: Verdict[] = [];
       const priorityRows: Map<string, number[]> = new Map([
         [Priority.BLOCKER, []],
@@ -323,8 +371,15 @@ export class TestDashboardWidget extends DG.JsViewer {
         [Priority.INFO, []],
         [Priority.RESOLVED, []]
       ]);
+
+      let tickets: string[] = [];
+      this.tickets.forEach((ticket, _v, _t) => {
+        let match = ticket.match(/GROK\-\d+/);
+        if (match != null && match[0] != undefined)
+          tickets.push(match[0]);
+      });
     
-      let jiraCol: DG.Column<string> = DG.Column.fromStrings('jira', [...this.tickets]);
+      let jiraCol: DG.Column<string> = DG.Column.fromStrings('jira', [...tickets]);
       let severityCol: DG.Column<string> = await grok.functions.call('JiraConnect:getJiraField', {
         ticketColumn: jiraCol,
         field: 'priority:name'
@@ -351,12 +406,12 @@ export class TestDashboardWidget extends DG.JsViewer {
       });
       for (var i = 0; i < jiraCol.length; i++) {
         let priority: string = Priority.INFO;
-        if (statusCol.getString(i) == 'Done')
+        if (statusCol.getString(i) == 'Done' || statusCol.getString(i) == 'Won\'t fix')
           priority = Priority.RESOLVED;
-        else if (severityCol.getString(i).startsWith('High') || fixVersionsCol.getString(i).startsWith(_properties['Platform version']))
+        else if (severityCol.getString(i).startsWith('Blocker'))
           priority = Priority.BLOCKER;
         else if (issueTypeCol.getString(i) == 'Bug') {
-          if (severityCol.getString(i).startsWith('Low'))
+          if (severityCol.getString(i).startsWith('Low') || !(fixVersionsCol.getString(i).startsWith(_properties['Platform version'])))
             priority = Priority.INFO;
           else
             priority = Priority.ERROR;
@@ -367,17 +422,18 @@ export class TestDashboardWidget extends DG.JsViewer {
       for (const [priority, rowIndices] of priorityRows) {
         if (rowIndices.length > 0) {
             const filteredColumns = [
+                jiraCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
                 summaryCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
                 fixVersionsCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
                 statusCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
                 severityCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
                 issueTypeCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
-                jiraCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx))),
                 assigneeCol.clone(DG.BitSet.create(jiraCol.length, (idx) => rowIndices.includes(idx)))
             ];
     
             const grid = DG.Grid.create(DG.DataFrame.fromColumns(filteredColumns));
-            
+            grid.sort(['jira'], [true]);
+            await grok.data.detectSemanticTypes(grid.dataFrame);
             verdicts.push(new Verdict(
                 priority,
                 `JIRA tickets [${priority}] - ${rowIndices.length} items`,
@@ -408,6 +464,19 @@ export class TestDashboardWidget extends DG.JsViewer {
       }
       lastAccordion!.appendChild(ui.div([verdicts[i].widget]));
     }
+    res.addPane('Actions', () => ui.actionLink('Watch a jira ticket', () => {
+      let dialog = ui.dialog('Watch ticket');
+      let ticketInput = ui.input.textArea('name');
+      dialog.add(ticketInput.root);
+      dialog.onOK(async () => {
+        let match = ticketInput.value.match(/GROK\-\d+/);
+        if (match != null && match[0] != undefined)
+          await grok.functions.call('ManualTicketCreation', {'name': match[0]});
+        else
+          (new DG.Balloon()).warning('Cpuldn\'t recognize a ticket name in ' + ticketInput.value);
+      });
+      dialog.show();
+    }));
     return res.root;
   }
 

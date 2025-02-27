@@ -4,13 +4,10 @@ import * as DG from 'datagrok-api/dg';
 
 import '../../css/choice_input.css';
 import Choices from 'choices.js';
+import {ChoiceInputBase} from "./choice-input-base";
 
 
-export class ChoiceInputGroups {
-  choices: Choices;
-  field: DG.InputBase;
-  allUsers: string[];
-
+export class ChoiceInputGroups extends ChoiceInputBase {
   static async construct() {
     const field = ui.input.choice('Groups');
     field.input.setAttribute('multiple', '');
@@ -41,20 +38,6 @@ export class ChoiceInputGroups {
   }
 
   private constructor(choices: Choices, field: DG.InputBase, allUsers: string) {
-    this.choices = choices;
-    this.field = field;
-    this.allUsers = [allUsers];
-  }
-
-  getSelectedGroups(): string[] {
-    const users = this.choices?.getValue(true) as string[];
-    if (users && users.length > 0 && users[0] !== '[]')
-      return users;
-    else
-      return this.allUsers;
-  }
-
-  addItems(items: string[]) {
-    items.forEach((i) => this.choices?._addItem({value: i}));
+    super(choices, field, allUsers);
   }
 }

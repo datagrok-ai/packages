@@ -14,7 +14,7 @@ import { setAlphabeticalOrder } from '../utils/order-functions';
 const testInvocationTimeout = 3600000;
 
 const availableCommandOptions = ['host', 'package', 'csv', 'gui', 'catchUnhandled', 'platform', 'core',
-  'report', 'skip-build', 'skip-publish', 'path', 'record', 'verbose', 'benchmark', 'category', 'test', 'stress-test', 'link', 'tag', 'ci-cd'];
+  'report', 'skip-build', 'skip-publish', 'path', 'record', 'verbose', 'benchmark', 'category', 'test', 'stress-test', 'link', 'tag', 'ci-cd', 'debug'];
 
 const curDir = process.cwd();
 const grokDir = path.join(os.homedir(), '.grok');
@@ -122,8 +122,8 @@ async function runTesting(args: TestArgs): Promise<ResultObject> {
     organized = filtered;
   }
   if (args.verbose) {
-    console.log(filtered);
-    console.log(`Tests total: ${filtered.length}`);
+    console.log(organized);
+    console.log(`Tests total: ${organized.length}`);
   }
   color.info('Starting tests...');
   let testsResults: ResultObject[] = [];
@@ -140,7 +140,8 @@ async function runTesting(args: TestArgs): Promise<ResultObject> {
         report: args.report ?? false,
         verbose: args.verbose ?? false,
         ciCd: args['ci-cd'] ?? false,
-        stopOnTimeout: true
+        stopOnTimeout: true,
+        debug: args['debug'] ?? false
       }, browserId, testInvocationTimeout);
       let testsLeft: OrganizedTest[] = [];
       let testsToReproduce: OrganizedTest[] = [];
@@ -236,6 +237,7 @@ interface TestArgs {
   package?: string,
   csv?: boolean,
   gui?: boolean,
+  'debug'?: boolean,
   catchUnhandled?: boolean,
   report?: boolean,
   record?: boolean,

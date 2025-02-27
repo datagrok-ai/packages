@@ -82,13 +82,12 @@ async function _testActivityCliffsOpen(df: DG.DataFrame, molCol: string, activit
   }
   expect(scatterPlot != null, true);
   const checkScatterPlotInitialized = () => {
-    const cliffsLink = Array.from(scatterPlot!.root.children)
-    .filter((it) => it.className === 'ui-btn ui-btn-ok scatter_plot_link cliffs_grid');
-    return !!cliffsLink.length && ((cliffsLink[0] as HTMLElement).innerText.toLowerCase() === `${numberCliffs} cliffs`)
+    const cliffsLink = scatterPlot!.root.getElementsByClassName('scatter_plot_link');
+    return cliffsLink.length > 0 && ((cliffsLink[0] as HTMLElement).innerText.toLowerCase() === `${numberCliffs} cliffs`)
   }
   await awaitCheck(() => {
     return checkScatterPlotInitialized();
-  }, 'activity cliffs failed', layout ? 1000 : 60000);
+  }, 'activity cliffs failed', layout ? 2000 : 60000);
   if (layout) {
     const layout = actCliffsTableView.saveLayout();
     scatterPlot?.close();

@@ -205,9 +205,10 @@ export class SubstructureFilter extends DG.Filter {
     };
     //this fix is required for Marvin JS sync between filter panel and hamburger menu
     ui.tools.waitForElementInDom(this.sketcher.root).then(async () => {
-      let inplaceSketcher = false;
+      let inplaceSketcher = !this.root.closest('.d4-filter');
       try {
-        await awaitCheck(() => this.sketcher._mode === DG.chem.SKETCHER_MODE.EXTERNAL);
+        if (!inplaceSketcher)
+          await awaitCheck(() => this.sketcher._mode === DG.chem.SKETCHER_MODE.EXTERNAL, '', 1500);
       } catch (e) {
         inplaceSketcher = true;
       }
@@ -242,10 +243,8 @@ export class SubstructureFilter extends DG.Filter {
       }));
 
     this.subs.push(grok.events.onResetFilterRequest.subscribe((_) => {
-      {
-        this.searchTypeInput.value = SubstructureSearchType.CONTAINS;
-        this.sketcher.setMolFile(DG.WHITE_MOLBLOCK);
-      }
+      this.sketcher.setMolFile(DG.WHITE_MOLBLOCK);
+      this.searchTypeInput.value = SubstructureSearchType.CONTAINS;
     }));
     this.subs.push(grok.events.onCustomEvent(FILTER_SYNC_EVENT).subscribe((state: ISubstructureFilterState) => {
       if (state.colName === this.columnName && this.tableName == state.tableName && this.filterId !== state.filterId) {
@@ -310,7 +309,7 @@ export class SubstructureFilter extends DG.Filter {
       }
     }));
 
-    if (!this.column!.temp[PRE_CALCULATED_FP]) {
+    if (this.column !== null && !this.column.temp[PRE_CALCULATED_FP]) {
       _package.logger.debug(`********pre-calculating fp, filter: ${this.filterId}`);
       this.column!.temp[PRE_CALCULATED_FP] = this.filterId;
       this.currentSearches.add('');

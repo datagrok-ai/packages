@@ -12,7 +12,7 @@ module.exports = {
     package: './src/package.ts',
   },
   resolve: {
-    extensions: ['.wasm', '.mjs', '.ts', '.tsx', '.js', '.json'],
+    extensions: ['.wasm', '.ts', '.tsx', '.mjs', '.js', '.jsx',  '.json'],
     // Needed for rxjs test scheduler to work properly
     alias: {
       'rxjs': path.resolve('node_modules/rxjs'),
@@ -27,7 +27,7 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.(ts|tsx|mjs|js|jsx)$/,
         enforce: 'pre',
         use: ['source-map-loader'],
       },

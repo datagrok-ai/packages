@@ -1028,6 +1028,7 @@ function getCorrectedMolBlock(molBlock: string) {
   // 2. RGP field is present in the correct format
   // 3. R group labels are written as R# and not just R
   // 4. there is no ISO field in the molblock. if there is, it needs to be substituted with RGP field and thats it.
+  // 5. make sure that R groups have no metadata in the atomblocks
 
   const lines = molBlock.split('\n');
 
@@ -1055,7 +1056,7 @@ function getCorrectedMolBlock(molBlock: string) {
       rgroupLineNumbers[atomI - molStartIdx] = rgroupNum;
   }
 
-  const rgroupLineNums = Object.values(rgroupLineNumbers);
+  const rgroupLineNums = Object.keys(rgroupLineNumbers);
   // find and possibly add rgp field
 
   const rgpLineIdx = lines.findIndex((line) => line.startsWith('M') && line.includes('RGP'));
@@ -1066,6 +1067,23 @@ function getCorrectedMolBlock(molBlock: string) {
     const mEndIdx = lines.findIndex((line) => line.startsWith('M') && line.includes('END'));
     lines.splice(mEndIdx, 0, rgpLine);
   }
+
+  //make sure that R# lines do not have any metadata that can be interpreted as isotopes or anything else
+  //for example, following line could be interpreted as isotope with mass 2 in some cases
+  //"    3.9970    0.3462    0.0000 R#  0  0  0  0  0  1  0  0  0  0  2  0"
+  const rGroupActualLines = rgroupLineNums.filter((rLine) => !!Number.parseInt(rLine)).map((atomLine) => Number.parseInt(atomLine) + molStartIdx);
+  rGroupActualLines.forEach((lineIdx) => {
+    const splitLine = lines[lineIdx].split(' ');
+    const rIdx = splitLine.findIndex((s) => s === 'R#');
+    if (rIdx === -1)
+      return;
+    for (let i = rIdx + 1; i < splitLine.length; i++) {
+      if (!!splitLine[i] && splitLine[i].length == 1 && (Number.parseInt(splitLine[i]) ?? 0) > 0)
+        splitLine[i] = '0';
+    }
+    lines[lineIdx] = splitLine.join(' ');
+  });
+
   return lines.join('\n');
 }
 
@@ -1087,12 +1105,24 @@ function monomerFromDfRow(dfRow: DG.Row): Monomer {
     if (typeof metaJSON[key] === 'object')
       metaJSON[key] = JSON.stringify(metaJSON[key]);
   }
+  const smiles = dfRow.get(MONOMER_DF_COLUMN_NAMES.MONOMER);
+  if (!smiles)
+    throw new Error('Monomer SMILES is empty');
+  let molfile = '';
+
+  try {
+    molfile = grok.chem.convert(smiles, DG.chem.Notation.Smiles, DG.chem.Notation.MolBlock);
+    molfile = getCorrectedMolBlock(molfile);
+  } catch (e) {
+    grok.shell.error(`Error converting SMILES to molfile, \n ${smiles}`);
+    console.error(e);
+  }
 
   return {
     symbol: dfRow.get(MONOMER_DF_COLUMN_NAMES.SYMBOL),
     name: dfRow.get(MONOMER_DF_COLUMN_NAMES.NAME),
-    molfile: '',
-    smiles: dfRow.get(MONOMER_DF_COLUMN_NAMES.MONOMER),
+    molfile: molfile,
+    smiles: smiles,
     polymerType: dfRow.get(MONOMER_DF_COLUMN_NAMES.POLYMER_TYPE),
     monomerType: dfRow.get(MONOMER_DF_COLUMN_NAMES.MONOMER_TYPE),
     naturalAnalog: dfRow.get(MONOMER_DF_COLUMN_NAMES.NATURAL_ANALOG),

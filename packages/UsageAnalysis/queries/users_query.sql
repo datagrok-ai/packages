@@ -8,7 +8,7 @@ select t.date::date, count(t.id) as user_count from (
 	inner join users_sessions s on e.session_id = s.id
 	inner join users u on u.id = s.user_id
 	where @date(e.event_time)
-	and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+	and (u.login = any(@users) or @users = ARRAY['all'])
 ) t
 group by t.date::date
 order by t.date::date;
@@ -24,7 +24,7 @@ select t.date::date, count(t.id) as user_count from (
 	join users_sessions s on e.session_id = s.id
 	left join users u on u.id = s.user_id
 	where @date(e.event_time)
-	and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+	and (u.login = any(@users) or @users = ARRAY['all'])
 ) t
 group by t.date::date;
 --end
@@ -38,7 +38,7 @@ inner join event_types t on e.event_type_id = t.id
 inner join users_sessions s on e.session_id = s.id
 inner join users u on u.id = s.user_id
 where @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 order by e.event_time desc
 --end
 
@@ -61,7 +61,7 @@ select t.name, count(t.id) from (
 		and t.tag = 'autostart'
 	)
 	and @date(e.event_time)
-    and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+    and (u.login = any(@users) or @users = ARRAY['all'])
 	group by pp.name, u.id
 ) t
 group by t.name
@@ -79,6 +79,6 @@ inner join users_sessions s on e.session_id = s.id
 inner join users u on u.id = s.user_id
 where
 @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by u.login
 --end

@@ -10,6 +10,7 @@ import { chemSimilaritySearch } from '../analysis/chem-similarity-viewer';
 import { BitArrayMetrics } from '@datagrok-libraries/ml/src/typed-metrics';
 import { Fingerprint } from '../utils/chem-common';
 import { SubstructureSearchType } from '../constants';
+import { sketchersWarmUp } from './sketcher-tests';
 
 const expectedResults: {[key: string]: any} = {
   'oneColumn': [737141248, 593097, 3256025153, 4],
@@ -137,6 +138,8 @@ category('substructure filters', async () => {
       chemCommonRdKit.setRdKitWebRoot(_package.webRoot);
       await chemCommonRdKit.initRdKitModuleLocal();
     }
+    const funcs = DG.Func.find({tags: ['moleculeSketcher']});
+    await sketchersWarmUp(funcs);
   });
 
   test('filterBy2Columns', async () => {
@@ -224,6 +227,7 @@ M  END
     await delay(500); //for closing the progress bar
     sketcherDialogs.forEach((it) => it.close());
     filter.detach();
+    await delay(500); //for progressBar to be closed and finish detach
   }, {timeout: 60000});
 
   test('filteringMultipleDfs', async () => {
@@ -251,6 +255,7 @@ M  END
     sketcherDialogs.forEach((it) => it.close());
     filter1.detach();
     filter2.detach();
+    await delay(500); //for progressBar to be closed and finish detach
   }, {timeout: 60000});
 
   test('multipleDfsWithTerminatedSearch', async () => {
@@ -282,6 +287,7 @@ M  END
     sketcherDialogs.forEach((it) => it.close());
     filter1.detach();
     filter2.detach();
+    await delay(500); //for progressBar to be closed and finish detach
   }, {timeout: 60000});
 
   test('similaritySearchAfterTerminatedSearch', async () => { //#2533 (https://github.com/datagrok-ai/public/issues/2533)
@@ -308,6 +314,7 @@ M  END
     expect(simResults?.get('indexes', 11), 731);
     sketcherDialogs.forEach((it) => it.close());
     filter.detach();
+    await delay(500); //for progressBar to be closed and finish detach
   });
 
   test('filterOptionsSynchronization', async () => { //#2512 (https://github.com/datagrok-ai/public/issues/2512)
@@ -337,6 +344,7 @@ M  END
     sketcherDialogs.forEach((it) => it.close());
     filter1.detach();
     filter2.detach();
+    await delay(500); //for progressBar to be closed and finish detach
   });
 
   test('properSearchFinish', async () => { //#2400 (https://github.com/datagrok-ai/public/issues/2400)
@@ -355,6 +363,7 @@ M  END
     expect(filter1.calculating, false, 'search hasn\'t been finished properly, loader is active');
     sketcherDialogs.forEach((it) => it.close());
     filter1.detach();
+    await delay(500); //for progressBar to be closed and finish detach
     DG.chem.currentSketcherType = 'OpenChemLib';
   });
 
@@ -454,9 +463,9 @@ async function testOneColumn(dfName: string, colName: string, substructure: stri
 
   filter.sketcher.setSmiles(substructure);
   await awaitCheck(() => df.filter.trueCount === expectedTrueCount, 'df hasn\'t been filtered', 10000);
-  await delay(1000); //for progressBar to be closed
   expectArray(df.filter.getBuffer(), expectedResults[expectedKey]);
   sketcherDialogs.forEach((it) => it.close());
   filter.detach();
+  await delay(1000); //for progressBar to be closed and finish detach
 }
 

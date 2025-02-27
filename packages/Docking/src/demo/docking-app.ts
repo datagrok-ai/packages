@@ -15,6 +15,7 @@ export class DockingViewApp extends BaseViewApp {
     this.abort = this.terminateProcess;
     this.sketcherValue = {'(5~{S})-5-(1~{H}-indol-2-yl)pyrrolidin-2-one': 'c1ccc2c(c1)cc([nH]2)[C@@H]3CCC(=O)N3'};
     this.addTabControl = false;
+    this.tableName = 'Docking';
   }
 
   private async generateCustomForm(): Promise<HTMLElement | null> {

@@ -57,8 +57,8 @@ export async function seqToMolFileWorker(seqCol: DG.Column<string>, monomersDict
     worker.postMessage({seqList, monomersDict, alphabet, polymerType, start, end} as SeqToMolfileWorkerData);
   }
 
-  let molList: MolfileWithMap[] = [];
-  let warnings: string[] = [];
+  const molList: MolfileWithMap[] = [];
+  const warnings: string[] = [];
   await Promise.all(promises).then((resArray: SeqToMolfileWorkerRes[]) => {
     for (const resItem of resArray) {
       molList.push(...resItem.molfiles);
@@ -66,7 +66,7 @@ export async function seqToMolFileWorker(seqCol: DG.Column<string>, monomersDict
     }
   });
 
-  const molHlList = molList.map((item: MolfileWithMap) => getMolHighlight(item.monomers.values(), monomerLib));
+  //const molHlList = molList.map((item: MolfileWithMap) => getMolHighlight(item.monomers.values(), monomerLib));
 
   setTimeout(() => {
     workers.forEach((worker) => {
@@ -75,7 +75,7 @@ export async function seqToMolFileWorker(seqCol: DG.Column<string>, monomersDict
   }, 0);
   const molColName = getMolColName(df, seqCol.name);
   const molCol = DG.Column.fromType(DG.COLUMN_TYPE.STRING, molColName, seqCol.length)
-    .init((rowIdx) => molList[rowIdx].molfile);
+    .init((rowIdx) => molList[rowIdx]?.molfile);
   molCol.semType = DG.SEMTYPE.MOLECULE;
   molCol.meta.units = DG.UNITS.Molecule.MOLBLOCK;
   molCol.setTag(ChemTags.SEQUENCE_SRC_COL, seqCol.name);

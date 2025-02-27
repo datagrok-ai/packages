@@ -26,9 +26,10 @@ export function performNelderMeadOptimization(
   for (i = 0; i < samplesCount; ++i) {
     try {
       if (i === 0 && infiniteFirst) {
+        const infCasePrms = initialValues === null ? params[i] : initialValues;
         const paramsB = new Float32Array(initialValues!.length).map((_) => -Infinity);
         const paramsT = new Float32Array(initialValues!.length).map((_) => +Infinity);
-        extremums.push(optimizeNM(objectiveFunc, params[i], settings, paramsB, paramsT));
+        extremums.push(optimizeNM(objectiveFunc, infCasePrms, settings, paramsB, paramsT));
       } else
         extremums.push(optimizeNM(objectiveFunc, params[i], settings, paramsBottom, paramsTop));
     } catch (e) {

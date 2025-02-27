@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/Hit Design",
+    "invalidateOn": "0 * * * *",
+    "preflight": true
+  },
+  {
+    "path": "/Hit Triage",
+    "invalidateOn": "0 * * * *",
+    "preflight": true
+  },
+  {
+    "path": "/Hit Design/campaigns",
+    "invalidateOn": "0 * * * *",
+    "preflight": true
+  },
+  {
+    "path": "/Hit Triage/campaigns",
+    "invalidateOn": "0 * * * *",
+    "preflight": true
+  },
+  {
+    "path": "/",
+    "invalidateOn": "0 * * * *",
+    "preflight": true
+  }
+]

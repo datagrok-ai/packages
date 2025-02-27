@@ -66,12 +66,14 @@ category('UI: Tables', () => {
       const normalize = Array.from(pp.querySelectorAll('.d4-link-action'))
         .find((el) => el.textContent === 'Normalize...') as HTMLElement;
       normalize.click();
+      await delay(100);
       await awaitCheck(() => DG.Dialog.getOpenDialogs().length > 0);
       const dialog = DG.Dialog.getOpenDialogs()[0];
       if (changeMethod) {
         const method = dialog.inputs[2];
         method.value = method.property.choices[1];
       }
+      await delay(100);
       (dialog.root.querySelector('.ui-btn.ui-btn-ok.enabled') as HTMLElement).click();
       await awaitCheck(() => ageDF.getCol('age').get(3) === (changeMethod ? 0.6055613160133362 : 0.7254902124404907),
         'normalize does not work properly', 1000);

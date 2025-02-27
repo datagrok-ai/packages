@@ -5,6 +5,7 @@ import {MultiColumnDimReductionEditor}
   from '../multi-column-dimensionality-reduction/multi-column-dim-reduction-editor';
 import {getGPUAdapterDescription} from '@datagrok-libraries/math/src/webGPU/getGPUDevice';
 import {defaultMCLOptions} from './markov-cluster';
+import {Options} from '@datagrok-libraries/utils/src/type-declarations';
 
 
 export class MCLEditor extends MultiColumnDimReductionEditor {
@@ -45,6 +46,25 @@ export class MCLEditor extends MultiColumnDimReductionEditor {
         this.useWebGPUInput.root,
       ], {style: {minWidth: '420px'}, classes: 'ui-form'});
       return div;
+    }
+
+    override getInput(): any {
+      const input = super.getInput() as Options;
+      input.similarityThreshold = this.similarityThresholdInput.value;
+      input.maxIterations = this.maxIterationsInput.value;
+      input.useWebGPU = this.useWebGPUInput.value ?? false;
+      input.inflateFactor = this.inflateInput.value ?? defaultMCLOptions.inflateFactor;
+      input.minClusterSize = this.minClusterSizeInput.value ?? 5;
+      return input;
+    }
+
+    override async applyInput(input: any): Promise<void> {
+      await super.applyInput(input);
+      this.similarityThresholdInput.value = input.similarityThreshold;
+      this.maxIterationsInput.value = input.maxIterations;
+      this.useWebGPUInput.value = input.useWebGPU;
+      this.inflateInput.value = input.inflateFactor;
+      this.minClusterSizeInput.value = input.minClusterSize;
     }
 
     public get params() {

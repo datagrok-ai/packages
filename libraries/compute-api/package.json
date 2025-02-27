@@ -1,15 +1,15 @@
 {
   "name": "@datagrok-libraries/compute-api",
   "friendlyName": "ComputeApi",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "author": {
-    "name": "Aufar Zakiev",
-    "email": "aufar.zakiev@softwarecountry.com"
+    "name": "Andrey Sharapov",
+    "email": "andrey.sharapov@softwarecountry.com"
   },
   "description": "Datagrok compute global API",
   "dependencies": {
-    "@datagrok-libraries/compute-utils": "^1.40.2",
-    "datagrok-api": "^1.23.0",
+    "@datagrok-libraries/compute-utils": "^1.41.0",
+    "datagrok-api": "^1.24.0",
     "dayjs": "=1.11.10"
   },
   "devDependencies": {

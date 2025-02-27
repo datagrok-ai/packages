@@ -8,6 +8,8 @@ Metadata:
         Parameters:
           - DatagrokVersion
           - GrokConnectVersion
+          - GrokPipeVersion
+          - RabbitmqVersion
           - GrokSpawnerVersion
           - JKGVersion
           - JNVersion
@@ -16,6 +18,10 @@ Metadata:
         default: 'Datagrok Version'
       GrokConnectVersion:
         default: 'Grok Connect Version'
+      GrokPipeVersion:
+        default: 'Grok Pipe Version'
+      RabbitmqVersion:
+        default: 'RabbitMQ Version'
       GrokSpawnerVersion:
         default: 'Grok Spawner Version'
       JKGVersion:
@@ -25,14 +31,23 @@ Metadata:
 Parameters:
   DatagrokVersion:
     Type: String
-    Default: 1.23.0
+    Default: 1.24.0
     AllowedPattern: "([0-9]+\\.[0-9]+\\.[0-9]+)|latest|stable|bleeding-edge"
     Description: Enter Datagrok docker image version.
   GrokConnectVersion:
     Type: String
-    Default: 2.1.23
+    Default: 2.3.29
     AllowedPattern: "([0-9]+\\.[0-9]+\\.[0-9]+)|latest|bleeding-edge"
     Description: Enter Grok Connect docker image version.
+  GrokPipeVersion:
+    Type: String
+    Default: bleeding-edge
+    AllowedPattern: "([0-9]+\\.[0-9]+\\.[0-9]+)|latest|bleeding-edge"
+    Description: Enter Grok Pipe docker image version.
+  RabbitmqVersion:
+    Type: String
+    Default: 4.0.5-management
+    Description: Enter rabbitmq docker image version.
   GrokSpawnerVersion:
     Type: String
     Default: 1.9.0
@@ -40,7 +55,7 @@ Parameters:
     Description: Enter Grok Spawner docker image version.
   JKGVersion:
     Type: String
-    Default: 1.12.0
+    Default: bleeding-edge
     AllowedPattern: "([0-9]+\\.[0-9]+\\.[0-9]+)|latest|bleeding-edge"
     Description: Enter Datagrok Jupyter Kernel Gateway docker image version.
   JNVersion:

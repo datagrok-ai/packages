@@ -1,0 +1,157 @@
+run_type = "staged_learning"
+tb_logdir = "tb_stage1"
+json_out_config = "_stage1.json"
+device = "cpu"
+
+[parameters]
+prior_file = "mol2mol_similarity.prior"
+agent_file = "mol2mol_similarity.prior"
+summary_csv_prefix = "stage1"
+sample_strategy = "multinomial"
+smiles_file = ""
+
+batch_size = 1
+
+use_checkpoint = false
+use_cuda = false
+unique_sequences = true
+randomize_smiles = true
+
+[learning_strategy]
+type = "dap"
+sigma = 128
+rate = 0.0001
+
+[[stage]]
+
+max_score = 1.0
+max_steps = 5
+chkpt_file = 'stage1.chkpt'
+
+[stage.scoring]
+type = "arithmetic_mean"
+
+[[stage.scoring.component]]
+[stage.scoring.component.DockStream]
+[[stage.scoring.component.DockStream.endpoint]]
+name = "Docking with Dockstream"
+weight = 1
+params.configuration_path = "kras_docking.json"
+params.docker_script_path = ""
+params.docker_python_path =   ""
+transform.type = "reverse_sigmoid"
+transform.high = 0
+transform.low = -10
+transform.k = 0.5
+
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "hERG"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Class"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5
+    
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "BBB"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Class"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5
+    
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "CYP1A2-Inhibitor"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Activity"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5
+    
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "CYP2C19-Inhibitor"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Activity"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5
+    
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "CYP2C9-Inhibitor"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Activity"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5
+    
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "CYP2D6-Inhibitor"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Activity"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5
+    
+[[stage.scoring.component]]
+[stage.scoring.component.ChemProp]
+    
+[[stage.scoring.component.ChemProp.endpoint]]
+name = "CYP3A4-Inhibitor"
+weight = 0.5
+    
+params.checkpoint_dir = ""
+params.rdkit_2d_normalized = true
+params.target_column = "Activity"
+    
+transform.type = "reverse_sigmoid"
+transform.high = 1.0
+transform.low = 0.0
+transform.k = 0.5

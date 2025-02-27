@@ -7,7 +7,7 @@ join event_types et on e.event_type_id = et.id
 join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.source = 'function'
 group by et.name
 --end
@@ -28,7 +28,7 @@ and NOT EXISTS (
     and t.tag = 'autostart'
 )
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by et.name
 --end
 
@@ -40,7 +40,7 @@ select e.event_time::date, count(1) from events e
 join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by e.event_time::date
 order by e.event_time::date;
 --end
@@ -63,7 +63,7 @@ and NOT EXISTS (
     and t.tag = 'autostart'
 )
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by pp.name
 limit 50
 --end
@@ -77,7 +77,7 @@ join events e on e.event_type_id = et.id
 join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by et.source
 limit 50;
 --end

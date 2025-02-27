@@ -10,7 +10,7 @@ import {CampaignIdKey, CampaignJsonName, CampaignTableName,
 import {calculateColumns, calculateCellValues, getNewVid} from './utils/calculate-single-cell';
 import '../../css/hit-triage.css';
 import {_package} from '../package';
-import {addBreadCrumbsToRibbons, checkRibbonsHaveSubmit, editableTableField, modifyUrl, toFormatedDateString} from './utils';
+import {addBreadCrumbsToRibbons, checkFileExists, checkRibbonsHaveSubmit, editableTableField, modifyUrl, toFormatedDateString} from './utils';
 import {HitDesignSubmitView} from './hit-design-views/submit-view';
 import {getTilesViewDialog} from './hit-design-views/tiles-view';
 import {HitAppBase} from './hit-app-base';
@@ -19,7 +19,7 @@ import {chemFunctionsDialog} from './dialogs/functions-dialog';
 import {Observable, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {defaultPermissions, PermissionsDialog} from './dialogs/permissions-dialog';
-import {getDefaultSharingSettings} from '../packageSettingsEditor';
+import {getDefaultCampaignStorageSettings, getDefaultSharingSettings} from '../packageSettingsEditor';
 
 export class HitDesignApp<T extends HitDesignTemplate = HitDesignTemplate> extends HitAppBase<T> {
   multiView: DG.MultiView;
@@ -54,7 +54,12 @@ export class HitDesignApp<T extends HitDesignTemplate = HitDesignTemplate> exten
   }
 
   async handleJoiningDataframe(df: DG.DataFrame) {
-    const molCol = df.columns.bySemType(DG.SEMTYPE.MOLECULE);
+    const molCols = df.columns.bySemTypeAll(DG.SEMTYPE.MOLECULE);
+    if (!molCols || molCols.length === 0) {
+      grok.shell.error('No molecule column found');
+      return;
+    }
+    const molCol = molCols.find((c) => c?.name?.toLowerCase() === 'smiles' || c?.name?.toLowerCase() === 'molecule') ?? molCols[0];
     if (!molCol) {
       grok.shell.error('No molecule column found');
       return;
@@ -262,7 +267,10 @@ export class HitDesignApp<T extends HitDesignTemplate = HitDesignTemplate> exten
       this._designView = undefined;
       campaignId = await this.getNewCampaignName(`${this.appName}/campaigns`, template.key);
       modifyUrl(HitDesignCampaignIdKey, campaignId);
-      this._filePath = `System.AppData/HitTriage/${this.appName}/campaigns/${campaignId}/${CampaignTableName}`;
+      let defaultFolderPath = await getDefaultCampaignStorageSettings();
+      if (!defaultFolderPath.endsWith('/'))
+        defaultFolderPath += '/';
+      this._filePath = `${defaultFolderPath}${this.appName}/campaigns/${campaignId}/${CampaignTableName}`;
     } else {
       const fileLoc = `System.AppData/HitTriage/${this.appName}/campaigns`;
       this._filePath = this.campaign?.savePath ?? `${fileLoc}/${campaignId}/${CampaignTableName}`;
@@ -517,21 +525,36 @@ export class HitDesignApp<T extends HitDesignTemplate = HitDesignTemplate> exten
           // TODO: Support multiple functions
           const designerFunc = designerFuncs[0];
           const designerButton = ui.iconFA('pen-nib', async () => {
-            const fc = designerFunc.prepare();
+            const prepareObj: any = {};
+            if (designerFunc.inputs.length > 0 && this.dataFrame && this.dataFrame.currentRowIdx >=0 && designerFunc.inputs[0].semType === DG.SEMTYPE.MOLECULE) {
+              const mol = _package.convertToSmiles(this.dataFrame.col(this.molColName)?.get(this.dataFrame.currentRowIdx));
+              if (mol)
+                prepareObj[designerFunc.inputs[0].name] = mol;
+            }
+            const fc = designerFunc.prepare(prepareObj);
             // the editor we get here will be editing the funccall, so then we can just call it.
             const dialogContent = await fc.getEditor();
             ui.dialog(designerFunc.friendlyName)
               .add(dialogContent)
               .onOK(async () => {
-                await fc.call();
-                const res: DG.DataFrame = fc.getOutputParamValue();
-                if (!res || !res.rowCount) {
-                  grok.shell.warning(`${designerFunc.friendlyName} returned an empty result`);
-                  return;
+                const pg = DG.TaskBarProgressIndicator.create(`Running ${designerFunc.friendlyName}`);
+                try {
+                  await fc.call();
+                  const res: DG.DataFrame = fc.getOutputParamValue();
+                  if (!res || !res.rowCount) {
+                    grok.shell.warning(`${designerFunc.friendlyName} returned an empty result`);
+                    pg.close();
+                    return;
+                  }
+                  await res.meta.detectSemanticTypes();
+                  await grok.data.detectSemanticTypes(res);
+                  await this.handleJoiningDataframe(res);
+                } catch (e) {
+                  grok.shell.error(`Failed to run ${designerFunc.friendlyName}`);
+                  _package.logger.error(e);
+                } finally {
+                  pg.close();
                 }
-                await res.meta.detectSemanticTypes();
-                await grok.data.detectSemanticTypes(res);
-                await this.handleJoiningDataframe(res);
               })
               .show();
           }, designerFunc.description ? designerFunc.description : designerFunc.friendlyName);
@@ -822,22 +845,8 @@ export class HitDesignApp<T extends HitDesignTemplate = HitDesignTemplate> exten
           labelElement.remove();
         newPathInput.root.style.width = '100%';
 
-        async function checkFolder() {
-          const newPath = newPathInput.value;
-          if (!newPath || newPath.trim() === '') {
-            grok.shell.error('Path can not be empty');
-            return false;
-          }
-          const exists = await grok.dapi.files.exists(newPath);
-          if (!exists) {
-            grok.shell.error('Given folder does not exist');
-            return false;
-          }
-          return true;
-        }
-
         const saveButton = ui.button('Save', async () => {
-          const exists = await checkFolder();
+          const exists = await checkFileExists(newPathInput.value);
           if (!exists)
             return;
           const newPath = newPathInput.value;

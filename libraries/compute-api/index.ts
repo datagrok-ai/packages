@@ -17,6 +17,7 @@ declare global {
       CompView: ConstructorTypeOf<ComputationView>,
       RFV: ConstructorTypeOf<RichFunctionView>,
       Pipeline: ConstructorTypeOf<PipelineView>,
+      CFV: ConstructorTypeOf<CustomFunctionView>,
 
       makeValidationResult: typeof makeValidationResult,
       makeAdvice: typeof makeAdvice,
@@ -26,8 +27,6 @@ declare global {
       makeValidationResult2: typeof makeValidationResult2,
       makeAdvice2: typeof makeAdvice2,
       mergeValidationResults2: typeof mergeValidationResults2,
-
-      makeModel: typeof makeModel,
     },
   }
 }
@@ -54,25 +53,18 @@ export {
   makeValidationResult2, makeAdvice2, mergeValidationResults2,
 };
 
-import {
-  makeModel,
-} from '@datagrok-libraries/compute-utils/reactive-tree-driver';
-export {
-  makeModel,
-};
-
 export type {
   PipelineConfiguration, IRuntimeLinkController, IRuntimeMetaController,
   IRuntimeValidatorController, IRuntimePipelineMutationController,
 } from '@datagrok-libraries/compute-utils/reactive-tree-driver/index';
 
 import {
-  ComputationView, RichFunctionView, PipelineView,
-  createCompView, createRFV, createPipeline,
+  ComputationView, RichFunctionView, PipelineView, CustomFunctionView,
+  createCompView, createRFV, createPipeline, createCFV
 } from './src/views';
 export {
-  ComputationView, RichFunctionView, PipelineView,
-  createCompView, createRFV, createPipeline,
+  ComputationView, RichFunctionView, PipelineView, CustomFunctionView,
+  createCompView, createRFV, createPipeline, createCFV
 };
 
 export async function initComputeApi() {

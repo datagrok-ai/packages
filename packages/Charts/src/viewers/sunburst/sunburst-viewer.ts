@@ -85,7 +85,7 @@ export class SunburstViewer extends EChartViewer {
 
       return path.every((segment, j) => {
         const columnValue = this.dataFrame.getCol(this.eligibleHierarchyNames[j]).get(index);
-        return (columnValue && columnValue.toString() === segment) || (!columnValue && segment === '');
+        return columnValue == null ? segment === ' ' : columnValue.toString() === segment;
       });
     }, event);
   }
@@ -100,7 +100,7 @@ export class SunburstViewer extends EChartViewer {
       return path.every((expectedValue, i) => {
         const column = this.dataFrame.getCol(this.eligibleHierarchyNames[i]);
         const columnValue = row.get(this.eligibleHierarchyNames[i]);
-        const formattedValue = columnValue ?
+        const formattedValue = columnValue !== null ?
           (column.type !== DG.TYPE.STRING ? columnValue.toString() : columnValue) : '';
         return formattedValue === expectedValue;
       });

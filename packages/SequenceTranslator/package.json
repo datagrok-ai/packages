@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/sequence-translator",
   "friendlyName": "Sequence Translator",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "author": {
     "name": "Leonid Stolbov",
     "email": "lstolbov@datagrok.ai"
@@ -22,13 +22,13 @@
     }
   ],
   "dependencies": {
-    "@datagrok-libraries/bio": "^5.46.0",
+    "@datagrok-libraries/bio": "^5.50.0",
     "@datagrok-libraries/chem-meta": "^1.2.8",
     "@datagrok-libraries/tutorials": "^1.4.3",
     "@datagrok-libraries/utils": "^4.3.7",
     "@types/react": "^18.0.15",
     "cash-dom": "^8.1.0",
-    "datagrok-api": "^1.21.1",
+    "datagrok-api": "^1.24.0",
     "lodash": "^4.17.21",
     "object-hash": "^3.0.0",
     "openchemlib": "6.0.1",
@@ -42,9 +42,9 @@
     "@datagrok-libraries/helm-web-editor": "^1.1.13",
     "@datagrok-libraries/js-draw-lite": "^0.0.10",
     "@datagrok/bio": "^2.18.0",
-    "@datagrok/helm": "^2.7.0",
     "@datagrok/chem": "^1.13.0",
-    "@types/jquery": "^3.5.14",
+    "@datagrok/helm": "^2.7.0",
+    "@types/jquery": "^3.5.32",
     "@types/js-yaml": "^4.0.5",
     "@types/lodash": "^4.14.202",
     "@types/node-fetch": "^2.6.2",

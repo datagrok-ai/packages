@@ -11,7 +11,7 @@ import {PipelineInstanceConfig} from '../config/PipelineInstance';
 export class ControllerCancelled extends Error { };
 
 export class ControllerBase<T> {
-  private isClosed = true;
+  private isActive = true;
 
   public outputs: Record<string, T> = {};
 
@@ -26,6 +26,7 @@ export class ControllerBase<T> {
   protected checkInput(name: string) {
     if (!this.inputsSet.has(name)) {
       const e = new Error(`Handler for Link ${this.id} is trying to set an unknown input ${name}`);
+      console.error(e);
       grok.shell.error(e.message);
       throw e;
     }
@@ -34,13 +35,14 @@ export class ControllerBase<T> {
   protected checkOutput(name: string) {
     if (!this.outputsSet.has(name)) {
       const e = new Error(`Handler for Link ${this.id} is trying to set an unknown output ${name}`);
+      console.error(e);
       grok.shell.error(e.message);
       throw e;
     }
   }
 
   protected checkIsClosed() {
-    if (!this.isClosed)
+    if (!this.isActive)
       throw new ControllerCancelled();
   }
 
@@ -49,7 +51,7 @@ export class ControllerBase<T> {
   }
 
   close() {
-    this.isClosed = false;
+    this.isActive = false;
   }
 }
 
@@ -74,7 +76,7 @@ export class LinkController extends ControllerBase<[any, RestrictionType]> imple
     return this.getAll<T>(name)?.[0];
   }
 
-  setAll<T = any>(name: string, state: T, restriction: RestrictionType = 'none') {
+  setAll<T = any>(name: string, state: T, restriction: RestrictionType = 'restricted') {
     this.checkIsClosed();
     this.checkOutput(name);
     this.outputs[name] = [state, restriction] as const;

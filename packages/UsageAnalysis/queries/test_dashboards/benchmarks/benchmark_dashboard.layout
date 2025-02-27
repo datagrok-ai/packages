@@ -941,8 +941,8 @@
     ],
     "floating": [],
     "tableId": "94e609e4-b5b7-437e-b91f-01da1ff73b17",
-    "tableName": "1. Benchmark. Dashboard"
+    "tableName": "Benchmarks"
   },
-  "name": "BenchmarkDashboard",
-  "friendlyName": "1. Benchmark Dashboard"
+  "name": "Benchmarks",
+  "friendlyName": "Benchmarks"
 }

@@ -16,7 +16,7 @@ import * as chemCommonRdKit from '../utils/chem-common-rdkit';
 import * as CONST from './const';
 import {structure2dWidget} from '../widgets/structure2d';
 import {structure3dWidget} from '../widgets/structure3d';
-import {molV2000, molV3000} from './utils';
+import {ensureContainersRunning, molV2000, molV3000} from './utils';
 import {EMPTY_MOLECULE_MESSAGE} from '../constants';
 import {checkPackage} from '../utils/elemental-analysis-utils';
 
@@ -40,6 +40,7 @@ category('cell panel', async () => {
       chemCommonRdKit.setRdKitWebRoot(_package.webRoot);
       await chemCommonRdKit.initRdKitModuleLocal();
     }
+    await ensureContainersRunning();
   });
 
   test('drug-likeness', async () => {

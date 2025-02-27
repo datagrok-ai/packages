@@ -21,9 +21,6 @@ The script browser allows you to view previously created scripts, view their pro
   * Display inputs and outputs values
 * Open the "Script" tab in [Context Panel](/help/datagrok/navigation/panels/panels.md#context-panel):
   * "Script" tab is open. The text of the script is shown here.
-* Open the "History" tab in [Context Panel](/help/datagrok/navigation/panels/panels.md#context-panel):
-  * "History" tab is open
-  * Display actually information about running of script
 * Open the "Activity" tab in [Context Panel](/help/datagrok/navigation/panels/panels.md#context-panel):
   * "Activity" tab is open
   * Display information about actual actions with script

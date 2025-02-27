@@ -188,12 +188,12 @@ export function createSearchPanel(searchMode: SEARCH_MODE, smiles: string, categ
       const idx = searchMode === SEARCH_MODE.SIMILAR ? similarityResult!.get('index', i) : i;
       const smiles = smilesCol.get(idx);
       const molHost = ui.div();
-      grok.functions.call('Chem:drawMolecule', {'molStr': smiles, 'w': WIDTH, 'h': HEIGHT, 'popupMenu': true})
-        .then((res: HTMLElement) => {
-          molHost.append(res);
-          if (searchMode === SEARCH_MODE.SIMILAR)
-            molHost.appendChild(ui.divText(`Score: ${similarityResult?.get('score', i).toFixed(2)}`));
-        });
+      if (smiles) {
+        const res = grok.chem.drawMolecule(smiles, WIDTH, HEIGHT, true);
+        molHost.append(res);
+        if (searchMode === SEARCH_MODE.SIMILAR)
+          molHost.appendChild(ui.divText(`Score: ${similarityResult?.get('score', i).toFixed(2)}`));
+      }
       ui.tooltip.bind(molHost, () => getTooltip(idx));
       molHost.addEventListener('click', () => window.open(res[idx].link, '_blank'));
       compsHost.appendChild(molHost);

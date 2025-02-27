@@ -12,7 +12,8 @@ import {FunctionView, RichFunctionView} from '../function-views';
 import dayjs from 'dayjs';
 import {ID_COLUMN_NAME} from '../shared-components/src/history-input';
 import {delay, getStarted} from '../function-views/src/shared/utils';
-import cloneDeepWith from 'lodash.clonedeepwith';
+import {deserialize} from '@datagrok-libraries/utils/src/json-serialization';
+import {OUTPUT_OUTDATED_PATH} from '../reactive-tree-driver/src/runtime/funccall-utils';
 
 export const replaceForWindowsPath = (rawName: string, stringToInsert?: string) => {
   const regExpForWindowsPath = /(\/|\\|\:|\*|\?|\"|\<|\>|\|)/g;
@@ -416,16 +417,26 @@ export const setGridColumnsRendering = (grid: DG.Grid) => {
     favCol.cellType = 'html';
     favCol.width = 30;
   }
-  const expCol = grid.columns.byName(EXP_COLUMN_NAME)!;
-  expCol.cellType = 'html';
-  expCol.width = 30;
 
-  const tagsColumn = grid.columns.byName(TAGS_COLUMN_NAME)!;
-  tagsColumn.cellType = 'html';
-  tagsColumn.width = 90;
+  const expCol = grid.columns.byName(EXP_COLUMN_NAME);
+  if (expCol) {
+    expCol.cellType = 'html';
+    expCol.width = 30;
+  }
 
-  grid.columns.byName(STARTED_COLUMN_NAME)!.width = 110;
-  grid.columns.byName(ID_COLUMN_NAME)!.cellType = 'html';
+  const tagsColumn = grid.columns.byName(TAGS_COLUMN_NAME);
+  if (tagsColumn) {
+    tagsColumn.cellType = 'html';
+    tagsColumn.width = 90;
+  }
+
+  const startedCol = grid.columns.byName(STARTED_COLUMN_NAME);
+  if (startedCol)
+    startedCol.width = 110;
+
+  const idCol = grid.columns.byName(ID_COLUMN_NAME);
+  if (idCol)
+    idCol.cellType = 'html';
 };
 
 export const styleHistoryGrid = (
@@ -586,7 +597,7 @@ export const getRunsDfFromList = async (
     if (key === COMPLETE_COLUMN_NAME) {
       return DG.Column.bool(getColumnName(key), newRuns.length)
         // Workaround for https://reddata.atlassian.net/browse/GROK-15286
-        .init((idx) =>getStartedOrNull(newRuns[idx]));
+        .init((idx) => !isIncomplete(newRuns[idx]));
     }
 
     return DG.Column.fromStrings(
@@ -755,12 +766,13 @@ export const getFeature = (features: Record<string, boolean> | string[], feature
 };
 
 export const isIncomplete = (run: DG.FuncCall) => {
-  return !getStartedOrNull(run) || !run.id;
+  const isOutputOutdated = deserialize(run.options[OUTPUT_OUTDATED_PATH] ?? 'false');
+  return isOutputOutdated || !getStartedOrNull(run) || !run.id;
 };
 
 export const getStartedOrNull = (run: DG.FuncCall) => {
   try {
-    return run.started;
+    return run.started as any;
   } catch {
     return null;
   }

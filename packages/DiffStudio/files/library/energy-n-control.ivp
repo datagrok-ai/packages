@@ -20,7 +20,7 @@
   // simple if-then-else custom function
   func1 = (p, t) => (p < 8) ? ceil(t) : ceil(t**2 / 20)
 
-  // another custom function using the previouse one  
+  // another custom function using the previous one  
   func2 = (p, t) => (p < 5) ? ceil(exp(-t) * 10) : func1(p, t);
 
   // usage of custom function
@@ -44,6 +44,6 @@
 #argument: t
   start = 0 {caption: Initial; category: Time; min: 0; max: 10} [Initial time of simulation]
   finish = 10 {caption: Final; category: Time; min: 10; max: 20} [Final time of simulation]
-  step = 0.01 {caption: Step; category: Time; min: 0.01; max: 0.1; step: 0.001} [Time step of simlulation]
+  step = 0.01 {caption: Step; category: Time; min: 0.01; max: 0.1; step: 0.001} [Time step of simulation]
 
 #tolerance: 5e-5

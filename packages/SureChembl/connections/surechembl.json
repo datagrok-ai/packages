@@ -1,0 +1,21 @@
+{
+  "#type": "DataConnection",
+  "name": "SureChembl",
+  "friendlyName": "SureCHEMBLDocker",
+  "parameters": {
+    "server": "${Surechembl<DockerContainer>}",
+    "db": "surechembl",
+    "cacheResults": true
+  },
+  "credentials": {
+    "parameters": {
+      "login": "datagrok",
+      "password": "datagrok"
+    }
+  },
+  "dataSource": "Postgres",
+  "description": "SureCHEMBL DB",
+  "tags": [
+    "chem"
+  ]
+}

@@ -16,7 +16,8 @@
   ],
   "rules": {
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^(_|ui$|grok$|DG$)", "argsIgnorePattern": "^_"}],
+        "@typescript-eslint/no-unused-vars": ["warn", { "varsIgnorePattern": "^(_|ui$|grok$|DG$)", "argsIgnorePattern": "^_"}],
+    "@typescript-eslint/require-array-sort-compare": "error",
     "indent": [
       "error",
       2

@@ -13,6 +13,13 @@ import {RFVApp} from './apps/RFVApp';
 import {PipelineConfiguration} from '@datagrok-libraries/compute-utils';
 import './tailwind.css';
 import {makeAdvice, makeValidationResult} from '@datagrok-libraries/compute-utils/reactive-tree-driver/src/utils';
+import {CustomFunctionView} from '@datagrok-libraries/compute-utils/function-views/src/custom-function-view';
+import {HistoryApp} from './apps/HistoryApp';
+import {Subject} from 'rxjs';
+
+declare global {
+  var initialURLHandled: boolean;
+}
 
 export const _package = new DG.Package();
 
@@ -21,15 +28,59 @@ export async function init() {
   await DG.Func.byName('WebComponents:init').prepare().call();
 }
 
+function setViewHierarchyData(call: DG.FuncCall, view: DG.ViewBase) {
+  view.parentCall = call.parentCall;
+
+  if (view.parentCall?.aux?.view)
+    view.parentView = view.parentCall.aux.view;
+
+  if (call?.func?.name)
+    view.basePath = `/${call.func.name}`;
+}
+
+//name: CustomFunctionViewEditor
+//tags: editor, vue
+//input: funccall call
+//output: view result
+export async function CustomFunctionViewEditor(call: DG.FuncCall) {
+  const view = (await call.call()).getOutputParamValue() as CustomFunctionView;
+  setViewHierarchyData(call, view);
+
+  await view.isReady.pipe(filter((x) => x), take(1)).toPromise();
+  const updateFCBus = new Subject<DG.FuncCall>();
+
+  const app = Vue.createApp(HistoryApp, {name: view.funcNqName, showHistory: view.showHistory, updateFCBus});
+
+  const sub = updateFCBus.subscribe((fc) => {
+    view.linkFunccall(fc);
+    view.onAfterLoadRun(fc);
+  });
+
+  app.mount(view.historyRoot);
+
+  grok.events.onViewRemoved.pipe(
+    filter((closedView) => {
+      return closedView === (view as any);
+    }),
+    take(1),
+  ).subscribe(() => {
+    sub.unsubscribe();
+    app.unmount();
+  });
+
+  return view;
+}
+
+
 //name: RichFunctionViewEditor
 //tags: editor, vue
 //input: funccall call
 //output: view result
 export async function RichFunctionViewEditor(call: DG.FuncCall) {
-  await customElements.whenDefined('dg-markdown');
-
   const view = new DG.ViewBase();
-  const app = Vue.createApp(RFVApp, {funcCall: call});
+  setViewHierarchyData(call, view);
+
+  const app = Vue.createApp(RFVApp, {funcCall: call, view});
   view.root.classList.remove('ui-panel');
   // view.root.classList.add('ui-box');
   view.root.style.overflow = 'hidden';
@@ -62,13 +113,16 @@ export async function TreeWizardTestApp() {}
 //input: funccall call
 //output: view result
 export async function TreeWizardEditor(call: DG.FuncCall) {
-  await customElements.whenDefined('dg-markdown');
-
-  if (!call.func.options.provider)
-    throw new Error(`Model ${call.name} has no provider`);
+  const providerFunc = call?.func?.options?.provider;
+  if (!providerFunc)
+    throw new Error(`Model ${call?.func?.name} has no provider`);
 
   const view = new DG.ViewBase();
-  const app = Vue.createApp(TreeWizardAppInstance, {providerFunc: call.func.options.provider});
+  setViewHierarchyData(call, view);
+
+  const modelName = call.options?.['title'] ?? call.func?.friendlyName ?? call.func?.name;
+
+  const app = Vue.createApp(TreeWizardAppInstance, {providerFunc, modelName, view});
   view.root.classList.remove('ui-panel');
   view.root.classList.add('ui-box');
 
@@ -132,10 +186,10 @@ export async function MockProvider1(params: any) {
         id: 'step1',
         nqName: 'Compute2:LongScript',
       },
-      {
-        id: 'step2',
-        nqName: 'Compute2:LongFailingScript',
-      },
+      // {
+      //   id: 'step2',
+      //   nqName: 'Compute2:LongFailingScript',
+      // },
     ],
     links: [{
       id: 'link1',
@@ -297,7 +351,6 @@ export async function TestAdd2(a: number, b: number) {
   return a + b;
 }
 
-
 //name: TestMul2
 //input: double a
 //input: double b
@@ -324,4 +377,48 @@ export async function TestDiv2(a: number, b: number) {
 //output: dataframe res
 export async function TestDF1(df: DG.DataFrame) {
   return df;
+}
+
+class MyView extends CustomFunctionView {
+  private aIn?: DG.InputBase;
+  private bIn?: DG.InputBase;
+  private res?: DG.InputBase;
+
+  constructor() {
+    super('Compute2:TestAdd2');
+    this.box = true;
+  }
+
+  override buildIO() {
+    this.aIn = ui.input.float('a', {onValueChanged: (val) => this.funcCall!.inputs.a = val});
+    this.bIn = ui.input.float('b', {onValueChanged: (val) => this.funcCall!.inputs.b = val});
+    this.res = ui.input.float('res');
+    this.res.enabled = false;
+    return ui.div([
+      this.aIn,
+      this.bIn,
+      ui.div([ui.bigButton('Run', async () => {
+        await this.funcCall!.call();
+        await this.saveRun(this.funcCall!);
+        this.res!.value = this.funcCall?.outputs.res;
+      })]),
+      this.res,
+    ]);
+  }
+
+  override async onAfterLoadRun(loadedRun: DG.FuncCall) {
+    console.log(`Loaded run ${loadedRun.id}`);
+    this.aIn!.value = this.funcCall!.inputs.a;
+    this.bIn!.value = this.funcCall!.inputs.b;
+    this.res!.value = this.funcCall?.outputs.res;
+  }
+}
+
+//name: Custom View (Compute 2 Test)
+//tags: demo, test
+//editor: Compute2:CustomFunctionViewEditor
+//output: view result
+export async function TestCustomView() {
+  const view = new MyView();
+  return view;
 }

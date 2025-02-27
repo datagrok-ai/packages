@@ -8,6 +8,7 @@ import {
   ComputationView as ComputationViewInst,
   RichFunctionView as RichFunctionViewInst,
   PipelineView as PipelineViewInst,
+  CustomFunctionView as CustomFunctionViewInst,
   UiUtils,
 } from '@datagrok-libraries/compute-utils';
 import {
@@ -22,7 +23,7 @@ export {
   makeAdvice as makeAdvice2,
   mergeValidationResults as mergeValidationResults2,
 } from '@datagrok-libraries/compute-utils/reactive-tree-driver/src/utils';
-import {ModelCatalogView, ModelHandler} from '@datagrok-libraries/compute-utils/model-catalog';
+import {ModelCatalogView, ModelHandler, makeModelCatalog, makeModelTreeBrowser} from '@datagrok-libraries/compute-utils/model-catalog';
 import {
   testPipeline as testPipelineInst,
 } from '@datagrok-libraries/compute-utils/shared-utils/function-views-testing';
@@ -190,58 +191,15 @@ let startUriLoaded = false;
 //output: view v
 //meta.browsePath: Compute
 export function modelCatalog() {
-  // Separately process direct link access
-  const startOptionalPart = grok.shell.startUri.indexOf('?');
-  const startPathSegments = grok.shell.startUri
-    .substring('https://'.length, startOptionalPart > 0 ? startOptionalPart: undefined)
-    .split('/');
-
-  if (!startUriLoaded && startPathSegments.includes('Compute')) {
-    const view = ModelCatalogView.findOrCreateCatalogView('Model Catalog', 'modelCatalog', _package);
-
-    grok.shell.addView(view);
-    startUriLoaded = true;
-
-    if (startPathSegments.length > 3) {
-      grok.dapi.functions.filter(`shortName = "${startPathSegments[3]}" and #model`).list().then((lst) => {
-        if (lst.length == 1)
-          ModelHandler.openModel(lst[0]);
-      });
-    }
-
-    return;
-  }
-
-  const optionalPart = window.location.href.indexOf('?');
-  const pathSegments = window.location.href
-    .substring('https://'.length, optionalPart > 0 ? optionalPart: undefined)
-    .split('/');
-
-  if (pathSegments.includes('browse')) {
-    const view = ModelCatalogView.findModelCatalogView('modelCatalog');
-
-    // If there is existing view, then switch on it
-    if (view)
-      grok.shell.v = view;
-
-
-    // Always return new with no subscribtions to show in Browse tree
-    const newView = ModelCatalogView.createModelCatalogView('Model Catalog', 'modelCatalog', _package);
-    return newView;
-  }
-
-  // Separately process double-clicking on Model Catalog card
-  if (pathSegments.includes('apps')) {
-    const view = ModelCatalogView.findModelCatalogView('modelCatalog');
-
-    // If there is existing view, then switch on it
-    if (view)
-      grok.shell.v = view;
-    else {
-      const newView = ModelCatalogView.createModelCatalogView('Model Catalog', 'modelCatalog', _package);
-      grok.shell.addView(newView);
-    }
-  }
+  return makeModelCatalog({
+    _package,
+    ViewClass: ModelCatalogView,
+    HandlerCass: ModelHandler,
+    segment: 'Compute',
+    viewName: 'Model Catalog',
+    funcName: 'modelCatalog',
+    startUriLoaded,
+  }, () => startUriLoaded = true);
 }
 
 
@@ -345,75 +303,7 @@ export function ObjectCoolingSelector(params: any) {
 //input: dynamic treeNode
 //input: view browseView
 export async function modelCatalogTreeBrowser(treeNode: DG.TreeViewGroup, browseView: DG.BrowseView) {
-  const NO_CATEGORY = 'Uncategorized' as const;
-
-  const modelSource = grok.dapi.functions.filter('(#model)');
-  const modelList = await modelSource.list();
-  const departments = modelList.reduce((acc, model) => {
-    if (model.options.department)
-      acc.add(model.options.department);
-    else
-      acc.add(NO_CATEGORY);
-    return acc;
-  }, new Set([] as string[]));
-
-  const hlProcesses = modelList.reduce((acc, model) => {
-    if (model.options.HL_process)
-      acc.add(model.options.HL_process);
-    else
-      acc.add(NO_CATEGORY);
-    return acc;
-  }, new Set([] as string[]));
-
-  const processes = modelList.reduce((acc, model) => {
-    if (model.options.process)
-      acc.add(model.options.process);
-    else
-      acc.add(NO_CATEGORY);
-    return acc;
-  }, new Set([] as string[]));
-
-  for (const department of departments) {
-    const serverDep = (department !== NO_CATEGORY ? department: undefined);
-    const hasModelsDep = modelList.find((model) =>
-      model.options.department === serverDep,
-    );
-
-    if (!hasModelsDep) continue;
-
-    const depNode = treeNode.getOrCreateGroup(department, null, false);
-    for (const hlProcess of hlProcesses) {
-      const serverHlProcess = (hlProcess !== NO_CATEGORY ? hlProcess: undefined);
-      const hasModelsHl = modelList.find((model) =>
-        model.options.department === serverDep &&
-        model.options.HL_process === serverHlProcess,
-      );
-
-      if (!hasModelsHl) continue;
-
-      const hlNode = hlProcess !== NO_CATEGORY ? depNode.getOrCreateGroup(hlProcess, null, false): depNode;
-      for (const process of processes) {
-        const serverProcess = (process !== NO_CATEGORY ? process: undefined);
-        const hasModels = modelList.find((model) =>
-          model.options.department === serverDep &&
-          model.options.HL_process === serverHlProcess &&
-          model.options.process === serverProcess,
-        );
-
-        if (!hasModels) continue;
-
-        const processNode = process !== NO_CATEGORY ? hlNode.getOrCreateGroup(process, null, false): hlNode;
-        processNode.onNodeExpanding.pipe(take(1)).subscribe(() => {
-          const modelRule = `(#model)`;
-          const depRules = department === NO_CATEGORY ? `(options.department = null)`: `(options.department in ("${department}"))`;
-          const hlProcessRules = hlProcess === NO_CATEGORY ? `(options.HL_process = null)`: `(options.HL_process in ("${hlProcess}"))`;
-          const processRules = process === NO_CATEGORY ? `(options.process = null)`: `(options.process in ("${process}"))`;
-          const filteringRules = `(${[modelRule, depRules, hlProcessRules, processRules].join(' and ')})`;
-          processNode.loadSources(grok.dapi.functions.filter(filteringRules));
-        });
-      }
-    }
-  }
+  await makeModelTreeBrowser(treeNode, browseView);
 }
 
 //// Compute-utils API section
@@ -421,6 +311,7 @@ export async function modelCatalogTreeBrowser(treeNode: DG.TreeViewGroup, browse
 export const testPipeline = testPipelineInst;
 export const CompView = ComputationViewInst;
 export const RFV = RichFunctionViewInst;
+export const CFV = CustomFunctionViewInst;
 export const Pipeline = PipelineViewInst;
 export const makeValidationResult = makeValidationResultInst;
 export const makeAdvice = makeAdviceInst;

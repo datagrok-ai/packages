@@ -87,11 +87,7 @@ export class PdbGridCellRendererBack extends CellRendererBackAsyncBase<NglGlProp
     let viewer: (DG.Viewer & IBiostructureViewer) | undefined;
 
     switch (dockingRole) {
-    case DockingRole.ligand: {
-      // Biostructure, NGL viewers track current, selected rows to display ligands
-      break;
-    }
-
+    case DockingRole.ligand:
     case DockingRole.target:
     default: {
       viewer = await df.plot.fromType('Biostructure', {pdb: value}) as DG.Viewer & IBiostructureViewer;
@@ -169,6 +165,7 @@ export class PdbGridCellRenderer extends DG.GridCellRenderer {
 /// Shows PDB id when the cell is small, and renders protein if the cell is higher than 40 pixels
 export class PdbIdGridCellRenderer extends DG.GridCellRenderer {
   imageCache: LruCache<string, HTMLImageElement> = new LruCache<string, HTMLImageElement>();
+  pdbIdHeight: number = 25;
 
   get defaultWidth() { return 100; }
   get defaultHeight() { return 100; }
@@ -192,12 +189,12 @@ export class PdbIdGridCellRenderer extends DG.GridCellRenderer {
       if (this.imageCache.has(url)) {
         const img = this.imageCache.get(url);
         if (img) {
-          const fit = new DG.Rect(x, y, w, h).fit(img.width, img.height);
+          const fit = new DG.Rect(x, y + this.pdbIdHeight, w, h - this.pdbIdHeight).fit(img.width, img.height);
           g.drawImage(img, fit.x, fit.y, fit.width, fit.height);
-          DG.GridCellRenderer.byName('string')?.render(g, x, y, w, 25, gridCell, cellStyle);
+          DG.GridCellRenderer.byName('string')?.render(g, x, y, w, this.pdbIdHeight, gridCell, cellStyle);
         }
       } else {
-        DG.GridCellRenderer.byName('string')?.render(g, x, y, w, 25, gridCell, cellStyle);
+        DG.GridCellRenderer.byName('string')?.render(g, x, y, w, this.pdbIdHeight, gridCell, cellStyle);
 
         fetch(url).then(async (response) => {
           if (!response.ok) {
@@ -214,7 +211,7 @@ export class PdbIdGridCellRenderer extends DG.GridCellRenderer {
             if (renderedOnGrid)
               gridCell.render();
             else
-              this.render(g, x, y, w, h, gridCell, cellStyle);
+              this.render(g, x, y + this.pdbIdHeight, w, h - this.pdbIdHeight, gridCell, cellStyle);
             URL.revokeObjectURL(img.src);
           };
         }).catch((_) => { });

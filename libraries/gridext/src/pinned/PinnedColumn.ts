@@ -955,7 +955,8 @@ export class PinnedColumn {
         input.style.top = (nHColHead + (nPinnedRow - nRowMin) * nHRows) + 'px';
         input.style.width = this.m_root.offsetWidth + 'px';
         input.style.height = nHRows + 'px';
-        input.style.textAlign = 'right';
+        input.style.textAlign = 'left';
+        input.style.zIndex = '2';
         input.addEventListener('focusout', () => {
           input.parentElement!.removeChild(input);
         });

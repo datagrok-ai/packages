@@ -1,0 +1,296 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4.0.5-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      datagrok:
+        aliases:
+          - rabbitmq
+    restart: unless-stopped
+    profiles: [ "all", "rabbitmq", "scripting", "jupyter_kernel_gateway", "jkg" ]
+
+  grok_pipe:
+    image: datagrok/grok_pipe:${DATAGROK_VERSION:-bleeding-edge}
+    container_name: grok_pipe
+    ports:
+      - "3000:3000"
+    environment:
+      API_KEY: test-key
+    networks:
+      datagrok:
+        aliases:
+          - grok_pipe
+    restart: unless-stopped
+    profiles: [ "all", "scripting", "jupyter_kernel_gateway", "jkg" ]
+
+  datagrok:
+    privileged: true
+    image: datagrok/datagrok:${DATAGROK_VERSION:-bleeding-edge}
+    environment:
+      GROK_PARAMETERS: |
+        {
+          "deployDemo": false,
+          "dbServer": "database",
+          "db": "datagrok",
+          "dbAdminLogin": "postgres",
+          "dbAdminPassword": "postgres",
+          "dbLogin": "dg",
+          "dbPassword": "dg",
+          "adminPassword": "admin",
+          "adminDevKey": "admin",
+          "isolatesCount": 2,
+          "queuePluginSettings": {"amqpHost": "rabbitmq", "pipeHost": "grok_pipe", "pipeKey": "test-key"}
+        }
+    ports:
+      - "${DATAGROK_PORT:-8080}:8080/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - datagrok
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: false
+      rabbitmq:
+        condition: service_started
+    volumes:
+      - datagrok_data:/home/grok/data
+      - datagrok_cfg:/home/grok/cfg
+    restart: unless-stopped
+    profiles: [ "all", "datagrok" ]
+
+  grok_spawner:
+    image: datagrok/grok_spawner:${GROK_SPAWNER_VERSION:-bleeding-edge}
+    user: root
+    environment:
+      X_API_KEY: test-x-api-key
+      GROK_SPAWNER_ENVIRONMENT: ${COMPOSE_PROJECT_NAME:-localhost}
+      GROK_SPAWNER_CORE_MODE: ${GROK_SPAWNER_CORE_MODE:-true}
+    ports:
+      - "${GROK_SPAWNER_PORT:-8000}:8000/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - grok_spawner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    profiles: [ "all", "grok_spawner" ]
+
+  grok_connect:
+    image: datagrok/grok_connect:${GROK_CONNECT_VERSION:-bleeding-edge}
+    networks:
+      datagrok:
+        aliases:
+          - grok_connect
+    ports:
+      - "${GROK_CONNECT_PORT:-1234}:1234/tcp"
+    restart: unless-stopped
+    profiles: [ "all", "grok_connect" ]
+
+  cvm_nginx:
+    image: datagrok/cvm_nginx:bleeding-edge
+    ports:
+      - "${DATAGROK_CVM_PORT:-8090}:8090/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - cvm
+          - nginx_cvm
+    restart: unless-stopped
+    profiles: [ "all", "nginx", "cvm", "jupyter_notebook", "notebook" ]
+
+  jupyter_notebook:
+    image: datagrok/jupyter_notebook:${GROK_JUPYTER_NOTEBOOK_VERSION:-bleeding-edge}
+    networks:
+      datagrok:
+        aliases:
+          - jupyter_notebook
+    restart: unless-stopped
+    profiles: [ "all", "cvm", "jupyter_notebook", "notebook" ]
+
+  jupyter_kernel_gateway:
+    image: datagrok/jupyter_kernel_gateway:${GROK_JUPYTER_KERNEL_GATEWAY_VERSION:-bleeding-edge}
+    networks:
+      datagrok:
+        aliases:
+          - jupyter_kernel_gateway
+    environment:
+      GROK_PARAMETERS: |
+        {
+          "isolatesCount": 1,
+          "jupyterToken": "4b8ed936cf61a1c5e37a8b3a845599941c272de6e29330a0",
+          "capabilities": ["jupyter"],
+          "queuePluginSettings": {"amqpHost": "rabbitmq", "pipeHost": "grok_pipe", "pipeKey": "test-key", "maxConcurrentCalls": 6}
+        }
+    restart: unless-stopped
+    depends_on:
+      rabbitmq:
+        condition: service_started
+    profiles: [ "all", "cvm", "scripting", "jupyter_kernel_gateway", "jkg" ]
+
+  db:
+    image: postgres:12.20
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "${DATAGROK_DB_PORT:-5432}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - database
+    volumes:
+      - datagrok_db:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=1000'
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    profiles: [ "all", "db" ]
+
+  pg_rdkit:
+    image: mcs07/postgres-rdkit
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "${DATAGROK_DB_RDKIT_PORT:-54329}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - pgsql_rdkit
+    volumes:
+      - datagrok_postgres_rdkit:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=1000'
+    restart: on-failure
+    profiles: [ "postgres_rdkit" ]
+
+  northwind:
+    image: datagrok/demo_db_postgres:12-1.1.0
+    environment:
+      POSTGRES_DB: northwind
+    ports:
+      - "${DATAGROK_DEMO_POSTGRES_NORTHWIND_PORT:-5433}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - northwind
+    volumes:
+      - datagrok_demo_postgres_northwind:/var/lib/postgresql/data
+    restart: on-failure
+    profiles: [ "demo", "postgres_northwind", "northwind" ]
+
+  chembl:
+    image: datagrok/demo_db_chembl:12.9-rdkit2022032-32
+    environment:
+      POSTGRES_DB: chembl
+    ports:
+      - "${DATAGROK_DEMO_POSTGRES_CHEMBL_PORT:-5434}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - chembl
+    volumes:
+      - datagrok_demo_postgres_chembl:/var/lib/postgresql/data
+    restart: on-failure
+    profiles: [ "demo", "postgres_chembl", "chembl" ]
+
+  unichem:
+    image: datagrok/demo_db_postgres:12-1.1.0
+    environment:
+      POSTGRES_DB: unichem
+    ports:
+      - "${DATAGROK_DEMO_POSTGRES_UNICHEM_PORT:-5435}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - unichem
+    volumes:
+      - datagrok_demo_postgres_unichem:/var/lib/postgresql/data
+    restart: on-failure
+    profiles: [ "demo", "postgres_unichem", "unichem" ]
+
+  starbucks:
+    image: datagrok/demo_db_postgres:bleeding-edge-1.1.0
+    environment:
+      POSTGRES_DB: starbucks
+    ports:
+      - "${DATAGROK_DEMO_POSTGRES_STARBUCKS_PORT:-5436}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - starbucks
+    volumes:
+      - datagrok_demo_postgres_starbucks:/var/lib/postgresql/data
+    restart: on-failure
+    profiles: [ "demo", "postgres_starbucks", "starbucks" ]
+
+  world:
+    image: datagrok/demo_db_postgres:12-1.1.0
+    environment:
+      POSTGRES_DB: world
+    ports:
+      - "${DATAGROK_DEMO_POSTGRES_WORLD_PORT:-5437}:5432/tcp"
+    networks:
+      datagrok:
+        aliases:
+          - world
+    volumes:
+      - datagrok_demo_postgres_world:/var/lib/postgresql/data
+    restart: on-failure
+    profiles: [ "demo", "postgres_world", "world" ]
+
+  mlflow:
+    image: datagrok/mlflow:2.9.2
+    command: >-
+      mlflow server
+        --backend-store-uri file:/data/mlruns
+        --default-artifact-root mlflow-artifacts:/
+        --artifacts-destination /data/mlartifacts
+        --host 0.0.0.0 --port 5000
+        --expose-prometheus /data/mlflow_metrics
+        --serve-artifacts
+    volumes:
+      - datagrok_mlflow_artifact:/data/mlartifacts
+      - datagrok_mlflow_backend:/data/mlruns
+      - datagrok_mlflow_prom:/data/mlflow_metrics
+    ports:
+      - "${DATAGROK_MLFLOW_PORT:-5555}:5000/tcp"
+    #    --backend-store-uri postgresql://postgres:postgres@database:5432/mlflow
+    #    depends_on:
+    #      db:
+    #        condition: service_healthy
+    #        restart: false
+    networks:
+      datagrok:
+        aliases:
+          - mlflow
+    restart: on-failure
+    platform: linux/amd64
+    profiles: [ "ml", "mlflow" ]
+
+volumes:
+  datagrok_db:
+  datagrok_data:
+  datagrok_cfg:
+  datagrok_demo_postgres_northwind:
+  datagrok_demo_postgres_chembl:
+  datagrok_demo_postgres_starbucks:
+  datagrok_demo_postgres_world:
+  datagrok_demo_postgres_unichem:
+  datagrok_postgres_rdkit:
+  datagrok_mlflow_artifact:
+  datagrok_mlflow_backend:
+  datagrok_mlflow_prom:
+
+networks:
+  datagrok:

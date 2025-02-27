@@ -7,6 +7,8 @@ shopping for the chemical building blocks.
 There are two ways to use it: as an [application](https://datagrok.ai/help/develop/how-to/build-an-app),
 or as an [info panel](https://datagrok.ai/help/explore/data-augmentation/info-panels) for chemical structures.
 
+Note that package queries external source, the structure you are searching with is sent to Chemspace as a query parameter.
+
 ## Application
 
 The application allows to search the Chemspace, and show results in the table view. Sketch the

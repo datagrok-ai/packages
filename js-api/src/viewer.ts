@@ -676,6 +676,16 @@ export class ViewerMetaHelper {
   }
 }
 
+export class TrellisPlotViewer extends Viewer<interfaces.ITrellisPlotSettings> {
+  constructor(dart: any) {
+    super(dart);
+  }
+
+  get onInnerViewerClicked(): rxjs.Observable<number[]> { return this.onEvent('d4-trellis-plot-inner-viewer-clicked'); }
+  get onTrellisCurrentCellChanged(): rxjs.Observable<CategoryDataArgs> { return this.onEvent('d4-trellis-plot-current-cell-changed'); }
+  get onViewerTypeChanged(): rxjs.Observable<string> { return this.onEvent('d4-trellis-plot-viewer-type-changed'); }
+}
+
 export class ViewerFormulaLinesHelper extends FormulaLinesHelper {
   readonly viewer: Viewer;
 

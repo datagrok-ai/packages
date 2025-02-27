@@ -96,7 +96,7 @@ export async function initTests() {
 
         const annotation = `//name: ${script.friendlyName} 
 //language: javascript`;
-        debugger
+        // debugger
         if (scriptViewer.includes(script.friendlyName))
           await runScriptViewer(script);
         else

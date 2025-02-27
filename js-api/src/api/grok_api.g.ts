@@ -304,7 +304,13 @@ export interface IDartApi {
   grok_Menu_Clear(m: any): any;
   grok_Menu_Remove(m: any, id: String): any;
   grok_MenuItem_ToString(mi: any): any;
+  grok_Menu_Get_CloseOnClick(m: any): any;
+  grok_Menu_Set_CloseOnClick(m: any, closeOnClick: Bool): any;
   grok_Menu_Items(m: any, items: any, onClick: any, isValid: any, isChecked: any, toString: any, describe: any, onMouseEnter: any, radioGroup: String): any;
+  grok_Menu_ColorPalette(m: any, colors: any, getInitial: any, onSelect: any, onPreview: any, asGroup: String, visible: Bool, categorical: Bool, resetColorMs: Num): any;
+  grok_Menu_SingleColumSelector(m: any, dataFrame: any, initialValue: String, onChange: any, asGroup: String, nullable: Bool, visible: Bool, editable: Bool, closeOnClick: Bool, changeOnHover: Bool, columnFilter: any): any;
+  grok_Menu_MultiColumSelector(m: any, dataFrame: any, initialValue: any, onChange: any, asGroup: String, visible: Bool, editable: Bool, columnFilter: any): any;
+  grok_Menu_Header(m: any, text: String, onClick: any, hasHoverEffect: Bool, getDescription: any): any;
   grok_Dialog(title: String, helpUrl: String, showHeader: Bool, showFooter: Bool): any;
   grok_Dialog_Get_Root(d: any): any;
   grok_Dialog_Get_Title(d: any): any;
@@ -1071,24 +1077,7 @@ export interface IDartApi {
   grok_ScriptEnvironment_Create(name: String): any;
   grok_ScriptEnvironment_Environment(e: any): any;
   grok_ScriptEnvironment_Setup(p0: any): Promise<any>;
-  grok_IntInput(name: any, value: any): any;
-  grok_SliderInput(name: any, value: any, min: any, max: any, step: any): any;
-  grok_StringInput(name: any, value: any, options: any): any;
-  grok_SearchInput(name: any, value: any): any;
-  grok_TextInput(name: any, value: any): any;
-  grok_FloatInput(name: any, value: any): any;
-  grok_DateInput(name: any, value: any): any;
-  grok_ChoiceInput(name: any, value: any, items: any, options: any): any;
-  grok_MultiChoiceInput(name: any, selected: any, items: any): any;
-  grok_BoolInput(name: any, value: any): any;
-  grok_SwitchInput(name: any, value: any): any;
-  grok_MoleculeInput(name: any, value: any): any;
-  grok_ColumnInput(name: any, table: any, predicate: any, value: any): any;
-  grok_ColumnsInput(name: any, table: any, availableColumns: any, checkedColumns: any): any;
-  grok_TableInput(name: String, t: any, items: any): any;
-  grok_ColorInput(name: any, value: any): any;
   grok_ColorPicker(color: any, onChanged: any, colorDiv: any, onOk: any, onCancel: any): any;
-  grok_RadioInput(name: any, value: any, items: any): any;
   grok_CodeEditor(script: String, mode: String, placeholder: String, root: any): any;
   grok_ProgressIndicator_Get_Canceled(pi: any): any;
   grok_ProgressIndicator_Get_Percent(pi: any): any;
@@ -1353,6 +1342,8 @@ export interface IDartApi {
   grok_RegisterParamFunc(name: any, type: any, run: any, check: any, desc: any): any;
   grok_RegisterViewer(name: String, description: String, createViewer: any): any;
   grok_Color_CategoricalPalette(): any;
+  grok_Color_CategoricalSchemes(): any;
+  grok_Color_ContinuousSchemes(): any;
   grok_Color_GetCategoricalPalettes(): any;
   grok_Color_GetContrastColor(color: Num): any;
   grok_Color_ToHtml(color: Num): any;
@@ -1443,6 +1434,7 @@ export interface IDartApi {
   grok_Dapi_UserFiles_Rename(fi: any, newName: String): Promise<any>;
   grok_Dapi_UserFiles_ReadBinaryDataFrames(fi: any): Promise<any>;
   grok_Dapi_UserFiles_WriteBinaryDataFrames(fi: any, dfList: any): Promise<any>;
+  grok_Dapi_UserFiles_CreateDirectory(fi: any): Promise<any>;
   grok_RangeSlider(style: String, vertical: Bool): any;
   grok_RangeSlider_Get_MinRange(rangeSelector: any): any;
   grok_RangeSlider_Get_MaxRange(rangeSelector: any): any;
@@ -1556,6 +1548,55 @@ export interface IDartApi {
   grok_Parse_Command(command: String, safe: Bool): any;
   grok_ColumnName_HandleOuterBrackets(name: String, escape: Bool): any;
   grok_Set_AutoReport_Options(options: any): any;
+  grok_ColumnGrid_Create(filter: any, isColGrayedOut: any, gridOptions: any, showMenuIcon: Bool): any;
+  grok_ColumnGrid_Create_ColumnManager(dfSource: any, filter: any, gridOptions: any): any;
+  grok_ColumnGrid_Create_ColumnReorderManagerDialog(df: any, title: String, dfSource: any, filter: any, order: any, checks: any, addAdditionalChecks: any, additionalChecksName: String, applyOrder: any, applyVisibility: any, gridOptions: any, addServiceColumns: Bool): any;
+  grok_ColumnGrid_Create_Popup(dfSource: any, filter: any, addEmpty: Bool, widgetMode: Bool, grayedOutColsMode: Bool, serviceColsTagName: String): any;
+  grok_ColumnGrid_Create_ColumnSelector(dfSource: any, checkAll: Bool, filter: any, isChecked: any): any;
+  grok_ColumnGrid_Get_DfColumns(cg: any): any;
+  grok_ColumnGrid_Get_DfSource(cg: any): any;
+  grok_ColumnGrid_Get_GridSource(cg: any): any;
+  grok_ColumnGrid_Get_Grid(cg: any): any;
+  grok_ColumnGrid_Get_NameCol(cg: any): any;
+  grok_ColumnGrid_Get_TypeNameCol(cg: any): any;
+  grok_ColumnGrid_Get_Filter(cg: any): any;
+  grok_ColumnGrid_Set_Filter(cg: any, filter: any): any;
+  grok_ColumnGrid_AddCheckedSelect(cg: any): any;
+  grok_ColumnGrid_FilterColumns(cg: any): any;
+  grok_ColumnGrid_ShouldShowColumnTooltip(cg: any, column: any): any;
+  grok_ColumnGrid_PassesFilter(cg: any, column: any, columnName: String): any;
+  grok_ColumnGrid_RefreshStats(cg: any): any;
+  grok_ColumnGrid_Get_ShowSearch(cg: any): any;
+  grok_ColumnGrid_Set_ShowSearch(cg: any, x: Bool): any;
+  grok_ColumnGrid_Close(cg: any): any;
+  grok_ColumnGrid_Detach(cg: any): any;
+  grok_ColumnGrid_AddColumnSelectionControls(cg: any): any;
+  grok_ColumnGrid_InitGrayedOutColumnStyle(cg: any): any;
+  grok_ColumnGrid_InitTypeColoring(cg: any): any;
+  grok_ColumnGrid_InitColumnTooltips(cg: any): any;
+  grok_ColumnGrid_InitColumnDragDrop(cg: any): any;
+  grok_ColumnGrid_Init(cg: any, dfSource: any, gridSource: any, filter: any, syncSelections: Bool, order: any, addServiceColumns: Bool): any;
+  grok_ColumnGrid_InitColumnSelector(cg: any, dfSource: any, checkAll: Bool, filter: any): any;
+  grok_ColumnGrid_InitContextMenu(cg: any): any;
+  grok_ColumnGrid_InitColumnManager(cg: any, dfSource: any, filter: any): any;
+  grok_ColumnGrid_GetRow(cg: any, col: any): any;
+  grok_ColumnGrid_GetCol(cg: any, row: Num): any;
+  grok_ColumnGrid_Get_CurrentColumn(cg: any): any;
+  grok_ColumnGrid_Get_MouseOverColumn(cg: any): any;
+  grok_ColumnGrid_AddChecks(cg: any, isChecked: any, addAdditionalChecks: any, additionalChecksName: String): any;
+  grok_ColumnGrid_CheckAll(cg: any, flag: Bool): any;
+  grok_ColumnGrid_GetCheckedIndexes(cg: any): any;
+  grok_ColumnGrid_GetCheckedColumns(cg: any): any;
+  grok_ColumnGrid_GetCheckedColumnNames(cg: any): any;
+  grok_ColumnGrid_GetAdditionalCheckedIndexes(cg: any): any;
+  grok_ColumnGrid_GetAdditionalCheckedColumns(cg: any): any;
+  grok_ColumnGrid_GetAdditionalCheckedColumnNames(cg: any): any;
+  grok_ColumnGrid_GetSelectedColumns(cg: any): any;
+  grok_ColumnGrid_SetSelectedColumns(cg: any, columnIds: any): any;
+  grok_ColumnGrid_Indexes(cg: any, rows: String): any;
+  grok_ColumnGrid_AddColumnStats(cg: any, aggType: String): any;
+  grok_ColumnGrid_ColumnsToDataFrame(cg: any, columnsOrder: any, addServiceColumns: Bool, serviceColsTagName: String): any;
+  grok_ColumnGrid_AddColumnProperty(cg: any, p: any): any;
 
   // Generated from ../grok_shared/lib/grok_shared.api.g.dart
   grok_DataSourceType_Create(): any;
@@ -1602,13 +1643,10 @@ export interface IDartApi {
   grok_FuncOptions_Create(): any;
   grok_FuncParamOptions_Create(): any;
 
-  // Generated from ../d4/lib/src/common/common.api.g.dart
+  // Generated from ../d4\lib\src\common\common.api.g.dart
   grok_UsageType_Create(): any;
 
-  // Generated from ../d4/lib/src/widgets/widgets.api.g.dart
-  grok_InputType_Create(): any;
-
-  // Generated from ../d4/lib/src/grid/grid.api.g.dart
+  // Generated from ../d4\lib\src\grid\grid.api.g.dart
   grok_GridCellStyle_Create(): any;
   grok_GridCellStyle_Get_defaultStyle(): any;
   grok_GridCellStyle_Set_defaultStyle(v: any): any;
@@ -1658,7 +1696,7 @@ export interface IDartApi {
   grok_GridCellStyle_Set_choices(x: any, v: any): any;
   grok_renderMultipleHistograms(g: any, bounds: any, histograms: any, categoryColumn: any, colors: any, tension: Num, normalize: Bool, markerSize: Num, fill: Bool, minBin: Num, maxBin: Num, localMaximum: Bool, highlightedHistogram: Num): any;
 
-  // Generated from ../d4/lib/src/viewer_base/viewer_base.api.g.dart
+  // Generated from ../d4\lib\src\viewer_base\viewer_base.api.g.dart
   grok_ViewerEvent_Create(): any;
   grok_ViewerEvent_Get_viewer(x: any): any;
   grok_ViewerEvent_Set_viewer(x: any, v: any): any;
@@ -1673,4 +1711,7 @@ export interface IDartApi {
   grok_ViewerEvent_Get_mouseEvent(x: any): any;
   grok_ViewerEvent_Set_mouseEvent(x: any, v: any): any;
   grok_ViewerEvent_Get_bitset(x: any): any;
+
+  // Generated from ../d4\lib\src\widgets\widgets.api.g.dart
+  grok_InputType_Create(): any;
 }

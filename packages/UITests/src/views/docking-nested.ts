@@ -255,8 +255,8 @@ category('View: DockingNested', () => {
         isRightOf(resLeftOfRightDiv, tv.grid.root) &&
         //isLeftOf(resLeftOfRightDiv, resRightDiv) &&
         isLeftOf(resLeftOfRightDiv, resFillOfRightDiv)&&
-        isLeftOf(resDownOfRightDiv, resLeftOfRightDiv) &&
-        isLeftOf(resFillOfDownOfRightDiv, resLeftOfRightDiv)
+        !isLeftOf(resDownOfRightDiv, resLeftOfRightDiv) &&
+        !isLeftOf(resFillOfDownOfRightDiv, resLeftOfRightDiv)
       ) && (
         //isDownOf(resDownOfRightDiv, resRightDiv) &&
         //isDownOf(resFillOfDownOfRightDiv, resRightDiv) &&

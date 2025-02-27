@@ -14,7 +14,7 @@
 #argument: t
   start = 0 {caption: Initial; category: Time; min: 0; max: 10} [Initial time of simulation]
   finish = 70 {caption: Final; category: Time; min: 50; max: 100} [Final time of simulation]
-  step = 0.01 {caption: Step; category: Time; min: 0.01; max: 1} [Time step of simlulation]
+  step = 0.01 {caption: Step; category: Time; min: 0.01; max: 1} [Time step of simulation]
 
 #inits:
   A1 = 0.43 {category: Initials; min: 0.2; max: 0.6} [Central]

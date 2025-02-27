@@ -2,7 +2,7 @@ const path = require('path');
 const packageName = path.parse(require('./package.json').name).name.toLowerCase().replace(/-/g, '');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
     test: {
       filename: 'package-test.js',
@@ -12,7 +12,7 @@ module.exports = {
     package: './src/package.ts',
   },
   resolve: {
-    extensions: ['.wasm', '.mjs', '.ts', '.js', '.json', '.tsx'],
+    extensions: ['.wasm', '.ts', '.tsx', '.mjs', '.js', '.jsx',  '.json'],
   },
   module: {
     rules: [
@@ -22,10 +22,9 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.js$/,
+        test: /\.(ts|tsx|mjs|js|jsx)$/,
         enforce: 'pre',
         use: ['source-map-loader'],
-        exclude: /node_modules/
       },
     ],
   },
@@ -48,4 +47,8 @@ module.exports = {
     libraryTarget: 'var',
     path: path.resolve(__dirname, 'dist'),
   },
+  optimization: {
+    usedExports: true,
+    concatenateModules: false,
+  }
 };

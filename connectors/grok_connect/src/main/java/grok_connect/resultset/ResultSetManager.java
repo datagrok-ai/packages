@@ -24,7 +24,7 @@ public interface ResultSetManager {
      * @param index Column index
      * @param queryLogger Logger
      */
-    void processValue(Object o, int index, Logger queryLogger);
+    void processValue(Object o, int index);
 
     /**
      * Return filled Columns

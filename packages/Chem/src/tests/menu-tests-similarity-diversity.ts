@@ -132,16 +132,19 @@ category('top menu similarity/diversity', () => {
 
   test('testDiversitySearch.smiles', async () => {
     const df = DG.Test.isInBenchmark ? await readDataframe('tests/smi10K.csv') : molecules;
+    //@ts-ignore
     await chemDiversitySearch(df.getCol('smiles'), tanimotoSimilarity, 10, 'Morgan' as Fingerprint,
       DG.BitSet.create(df.rowCount).setAll(true));
   }, {benchmark: true});
 
   test('testDiversitySearch.molV2000', async () => {
+    //@ts-ignore
     await chemDiversitySearch(spgi100.getCol('Structure'), tanimotoSimilarity, 10, Fingerprint.Morgan as Fingerprint,
       DG.BitSet.create(spgi100.rowCount).setAll(true));
   });
 
   test('testDiversitySearch.molV3000', async () => {
+    //@ts-ignore
     await chemDiversitySearch(approvedDrugs100.getCol('molecule'), tanimotoSimilarity, 10,
       Fingerprint.Morgan as Fingerprint, DG.BitSet.create(approvedDrugs100.rowCount).setAll(true));
   });

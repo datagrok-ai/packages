@@ -2,5 +2,5 @@
   "cpu": 1,
   "memory": 1024,
   "on_demand": true, 
-  "timeout_minutes": 30
+  "shutdown_timeout": 30
 }

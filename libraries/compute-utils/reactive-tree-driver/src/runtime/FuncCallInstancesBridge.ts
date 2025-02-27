@@ -116,7 +116,7 @@ export class FuncCallInstancesBridge implements IStateStore, IRestrictionStore, 
     );
   }
 
-  setState<T = any>(id: string, val: T | undefined, restrictionType: RestrictionType = 'none') {
+  setState<T = any>(id: string, val: T | undefined, restrictionType: RestrictionType = 'restricted') {
     const currentInstance = this.instance$.value?.adapter;
     if (currentInstance == null)
       throw new Error(`Attempting to set an empty FuncCallInstancesBridge`);
@@ -213,6 +213,7 @@ export class FuncCallInstancesBridge implements IStateStore, IRestrictionStore, 
         catchError((e) => {
           this.runError$.next(String(e));
           this.outdatedChanged$.next(true);
+          console.error(e);
           grok.shell.error(e);
           return EMPTY;
         }),

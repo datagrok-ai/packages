@@ -6,6 +6,7 @@ import './tests/detector-tests';
 import './tests/curves-cell-renderer-tests';
 import './tests/transform-tests';
 import './tests/fit-tests';
+import './tests/plate-tests';
 
 export const _package = new DG.Package();
 export {tests};

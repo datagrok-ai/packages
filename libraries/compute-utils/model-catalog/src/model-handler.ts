@@ -38,6 +38,13 @@ function stylePopover(popover: HTMLElement): void {
   popover.style.color = 'var(--gray-6)';
 }
 
+function getBulletIcon() {
+  const bulletIcon = ui.iconFA('times');
+  bulletIcon.style.marginRight = '6px';
+  bulletIcon.classList.remove('grok-icon');
+  return bulletIcon;
+}
+
 async function requestMembership(groupName: string) {
   try {
     const groups = await grok.dapi.groups.filter(`friendlyName="${groupName}"`).list();
@@ -129,31 +136,12 @@ export class ModelHandler extends DG.ObjectHandler {
     const markup = ui.divH([], {style: {justifyContent: 'space-between', width: '100%'}});
 
     setTimeout(async () => {
-      const userGroups = await this.awaitUserGroups();
-      const mandatoryUserGroups = JSON.parse(x.options['mandatoryUserGroups'] ? `${x.options['mandatoryUserGroups']}` : '[]') as {name: string, help?: string}[];
-      const missingMandatoryGroups = mandatoryUserGroups.filter((group) => !userGroups.map((userGroup) => userGroup.friendlyName).includes(group.name));
+      const missingMandatoryGroups = await this.getMissingGroups(x);
       const hasMissingMandatoryGroups = missingMandatoryGroups.length > 0;
       const mandatoryGroupsIcon = ui.iconFA('exclamation-triangle', null);
       mandatoryGroupsIcon.classList.remove('grok-icon');
 
-      const getBulletIcon = () => {
-        const bulletIcon = ui.iconFA('times');
-        bulletIcon.style.marginRight = '6px';
-        bulletIcon.classList.remove('grok-icon');
-        return bulletIcon;
-      };
-
-      const mandatoryGroupsInfo = ui.div(ui.divV([
-        ui.label('You should be a member of the following group(s):', {style: {marginLeft: '0px'}}),
-        ...missingMandatoryGroups.map((group) => ui.divV([
-          ui.span([getBulletIcon(), group.name], {style: {fontWeight: '600'}}),
-          ...group.help ? [ui.span([group.help], {style: {marginLeft: '16px'}})]: [],
-          ui.link(`Request group membership`, async () => {
-            await requestMembership(group.name);
-            hidePopover(mandatoryGroupsInfo);
-          }, undefined, {style: {marginLeft: '16px'}}),
-        ])),
-      ], {style: {gap: '10px'}})) as HTMLElement;
+      const mandatoryGroupsInfo = this.makeMandatoryGroupsInfo(missingMandatoryGroups);
 
       const label = ui.span([
         this.renderIcon(x),
@@ -180,7 +168,7 @@ export class ModelHandler extends DG.ObjectHandler {
 
       markup.append(label);
       if (hasMissingMandatoryGroups)
-        markup.append(ui.span([mandatoryGroupsIcon]));
+        markup.append(ui.span([mandatoryGroupsIcon], {style: {paddingLeft: '10px'}}));
     });
 
 
@@ -214,13 +202,17 @@ export class ModelHandler extends DG.ObjectHandler {
     //@ts-ignore
     return DG.View.fromViewAsync(async () => {
       const help = await ModelHandler.getHelp(x);
+      const missingMandatoryGroups = await this.getMissingGroups(x);
+      const startBtnDiv = missingMandatoryGroups.length ?
+        ui.div([this.makeMandatoryGroupsInfo(missingMandatoryGroups)]) :
+        ui.div([ui.bigButton('Launch', () => x.prepare().edit())]);
       v.append(
         ui.div(
           [
             ui.h1(x.friendlyName ?? x.name),
-            ui.divText(x.description ?? x.name, { style: { marginBottom: '10px' }}),
-            ui.div([ui.bigButton('Launch', () => x.prepare().edit())]),
-            ui.div([], { style: { padding: '20px '}}),
+            ui.divText(x.description ?? x.name, {style: {marginBottom: '10px'}}),
+            startBtnDiv,
+            ui.div([], {style: {padding: '20px '}}),
             ui.markdown(help ?? ''),
           ],
           {
@@ -228,10 +220,9 @@ export class ModelHandler extends DG.ObjectHandler {
               display: 'flex',
               flexDirection: 'column',
               height: '100%',
-              padding: '20px',
               overflow: 'auto',
-            }
-          })
+            },
+          }),
       );
       return v;
     });
@@ -281,6 +272,28 @@ export class ModelHandler extends DG.ObjectHandler {
       const userGroups = (await(await fetch(`${window.location.origin}/api/groups/all_parents`)).json() as DG.Group[]);
       this.userGroups.next(userGroups);
     });
+  }
+
+  private makeMandatoryGroupsInfo(missingMandatoryGroups: {name: string, help?: string}[]) {
+    const mandatoryGroupsInfo = ui.div(ui.divV([
+      ui.label('You should be a member of the following group(s):', {style: {marginLeft: '0px'}}),
+      ...missingMandatoryGroups.map((group) => ui.divV([
+        ui.span([getBulletIcon(), group.name], {style: {fontWeight: '600'}}),
+        ...group.help ? [ui.span([group.help], {style: {marginLeft: '16px'}})]: [],
+        ui.link(`Request group membership`, async () => {
+          await requestMembership(group.name);
+          hidePopover(mandatoryGroupsInfo);
+        }, undefined, {style: {marginLeft: '16px'}}),
+      ])),
+    ], {style: {gap: '10px'}})) as HTMLElement;
+    return mandatoryGroupsInfo;
+  }
+
+  private async getMissingGroups(x: DG.Func) {
+    const userGroups = await this.awaitUserGroups();
+    const mandatoryUserGroups = JSON.parse(x.options['mandatoryUserGroups'] ? `${x.options['mandatoryUserGroups']}` : '[]') as {name: string, help?: string}[];
+    const missingMandatoryGroups = mandatoryUserGroups.filter((group) => !userGroups.map((userGroup) => userGroup.friendlyName).includes(group.name));
+    return missingMandatoryGroups;
   }
 
   private async awaitUserGroups() {

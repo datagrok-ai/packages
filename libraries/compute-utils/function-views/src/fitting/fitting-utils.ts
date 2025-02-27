@@ -1,9 +1,12 @@
 /* eslint-disable valid-jsdoc */
 // Fitting utilities
 
+import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
 import {InconsistentTables} from './optimizer-misc';
+
+import '../../css/fitting-view.css';
 
 /** Returns indeces corresponding to the closest items */
 export function getIndeces(expArg: DG.Column, simArg: DG.Column): Uint32Array {
@@ -87,3 +90,25 @@ export function getErrors(arg: string, expDf: DG.DataFrame, simDf: DG.DataFrame,
 
   return errors;
 } // getErrors
+
+/** Return widget for show/hide group of inputs */
+export function getCategoryWidget(category: string, roots: HTMLElement[]) {
+  const updateWgts = (isExpanded: boolean) => {
+    chevronToOpen.hidden = isExpanded;
+    chevronToClose.hidden = !isExpanded;
+
+    roots.forEach((r) => r.hidden = !isExpanded);
+  };
+
+  const chevronToOpen = ui.iconFA('chevron-right', () => updateWgts(true), 'Open category');
+  chevronToOpen.classList.add('fit-view-chevron-right');
+  chevronToOpen.hidden = true;
+
+  const chevronToClose = ui.iconFA('chevron-down', () => updateWgts(false), 'Close category');
+  chevronToClose.classList.add('fit-view-chevron-down');
+
+  return ui.divH(
+    [chevronToOpen, chevronToClose, ui.label(category)],
+    'fit-view-inputs-category',
+  );
+}

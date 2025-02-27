@@ -12,6 +12,7 @@ import {LogOptions} from '@datagrok-libraries/statistics/src/fit/fit-data';
 import {FitStatistics} from '@datagrok-libraries/statistics/src/fit/fit-curve';
 import {FitConstants} from './fit/const';
 import {PlateCellHandler} from "./plate/plate-cell-renderer";
+import {FitSeries} from '@datagrok-libraries/statistics/src/fit/new-fit-API';
 
 
 export const _package = new DG.Package();
@@ -99,6 +100,19 @@ export function addAggrStatisticsColumn(df: DG.DataFrame, colName: string, propN
       return fitResult[propName as keyof FitStatistics];
     });
   df.columns.insert(column, chartColumn.idx);
+}
+
+//name: testPlatesCurvesNewAPI
+export function testPlatesCurvesNewAPI(): void {
+  const series = new FitSeries([
+    {'x': 0, 'y': 0},
+    {'x': 1, 'y': 0.5},
+    {'x': 2, 'y': 1},
+    {'x': 3, 'y': 10, 'outlier': true},
+    {'x': 4, 'y': 0},
+  ]);
+  const params = series.fit.sigmoid();
+  console.log(params);
 }
 
 export {_FitChartCellRenderer};

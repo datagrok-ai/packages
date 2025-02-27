@@ -1,619 +1,377 @@
 {
   "#type": "ViewLayout",
   "viewStateMap": {
-    "containerType": "fill",
+    "containerType": "horizontal",
     "state": {
-      "width": 1068,
-      "height": 927,
-      "documentManager": true
+      "width": 2032,
+      "height": 1009
     },
     "children": [
       {
-        "containerType": "panel",
+        "containerType": "vertical",
         "state": {
-          "width": 1068,
-          "height": 927,
-          "element": {
-            "id": "788fce70-c210-11ef-8d1a-838cceae178a",
-            "type": "Grid",
-            "look": {
-              "#type": "GridLook",
-              "showAddNewRowIcon": true,
-              "addNewRowOnLastRowEdit": true,
-              "colHeaderHeight": 21,
-              "rowHeight": 80,
-              "topLevelDefaultMenu": true,
-              "allowColumnMenu": true,
-              "colLabelsOrientation": "Horz",
-              "columns": [
-                {
-                  "width": 36,
-                  "backgroundColor": 4294440951,
-                  "customName": "",
-                  "cellType": "row header",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 309,
-                  "columnName": "owner",
-                  "cellType": "User",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 400,
-                  "columnName": "test",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 80,
-                  "customName": "piechart",
-                  "cellType": "piechart",
-                  "tooltipColumns": [
-                    "1: date"
-                  ],
-                  "tooltipType": "Columns",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  },
-                  "settings": {
-                    "piechart": {
-                      "columnNames": [
-                        "1: failed",
-                        "1: success"
-                      ],
-                      "style": "Angle",
-                      "colorCode": "Bins"
-                    }
-                  }
-                },
-                {
-                  "width": 80,
-                  "customName": "piechart",
-                  "cellType": "piechart",
-                  "tooltipColumns": [
-                    "2: date"
-                  ],
-                  "tooltipType": "Columns",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  },
-                  "settings": {
-                    "piechart": {
-                      "columnNames": [
-                        "2: failed",
-                        "2: success"
-                      ],
-                      "style": "Angle",
-                      "colorCode": "Bins"
-                    }
-                  }
-                },
-                {
-                  "width": 80,
-                  "customName": "piechart",
-                  "cellType": "piechart",
-                  "tooltipColumns": [
-                    "3: date"
-                  ],
-                  "tooltipType": "Columns",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  },
-                  "settings": {
-                    "piechart": {
-                      "columnNames": [
-                        "3: failed",
-                        "3: success"
-                      ],
-                      "style": "Angle",
-                      "colorCode": "Bins"
-                    }
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 87,
-                  "columnName": "1: success",
-                  "cellType": "number",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 72,
-                  "columnName": "1: failed",
-                  "cellType": "number",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 72,
-                  "columnName": "2: failed",
-                  "cellType": "number",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 87,
-                  "columnName": "2: success",
-                  "cellType": "number",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 72,
-                  "columnName": "3: failed",
-                  "cellType": "number",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 87,
-                  "columnName": "3: success",
-                  "cellType": "number",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 178,
-                  "columnName": "4 0  concat unique(status)",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 178,
-                  "columnName": "4 1  concat unique(status)",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 178,
-                  "columnName": "4 2  concat unique(status)",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 178,
-                  "columnName": "5 0  concat unique(status)",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 178,
-                  "columnName": "5 1  concat unique(status)",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 178,
-                  "columnName": "5 2  concat unique(status)",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 0 0 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 0 1 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 0 2 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 1 0 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 1 1 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 1 2 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 2 0 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 2 1 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{1 2 2 concat unique(status)",
-                  "group": "2025-01-13-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 0 0 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 0 1 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 0 2 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 1 0 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 1 1 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 1 2 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 2 0 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 2 1 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{2 2 2 concat unique(status)",
-                  "group": "2025-01-10-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 0 0 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 0 1 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 0 2 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 1 0 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 1 1 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 1 2 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 2 0 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 2 1 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "visible": false,
-                  "width": 180,
-                  "columnName": "{3 2 2 concat unique(status)",
-                  "group": "2025-01-09-1.24.0.BE-1",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 202,
-                  "columnName": "1: date",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 202,
-                  "columnName": "2: date",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 202,
-                  "columnName": "3: date",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 171,
-                  "columnName": "4 0  avg(build_date)",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 171,
-                  "columnName": "4 1  avg(build_date)",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 171,
-                  "columnName": "4 2  avg(build_date)",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 171,
-                  "columnName": "5 0  avg(build_date)",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 171,
-                  "columnName": "5 1  avg(build_date)",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "width": 171,
-                  "columnName": "5 2  avg(build_date)",
-                  "cellType": "number",
-                  "format": "M/d/yyyy HH:mm:ss.fff",
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                }
-              ],
-              "rowSource": "All",
-              "table": "Table (2)"
-            },
-            "title": "Table (2)",
-            "default": true
-          }
+          "width": 819,
+          "height": 1009
         },
-        "children": []
+        "children": [
+          {
+            "containerType": "fill",
+            "state": {
+              "width": 819,
+              "height": 645,
+              "documentManager": true
+            },
+            "children": [
+              {
+                "containerType": "panel",
+                "state": {
+                  "width": 819,
+                  "height": 645,
+                  "element": {
+                    "id": "fe71ff60-e920-11ef-a2ba-058bae87577d",
+                    "type": "Grid",
+                    "look": {
+                      "#type": "GridLook",
+                      "showAddNewRowIcon": true,
+                      "addNewRowOnLastRowEdit": true,
+                      "sortByColumnNames": [
+                        "test"
+                      ],
+                      "sortTypes": [
+                        false
+                      ],
+                      "topLevelDefaultMenu": true,
+                      "allowColumnMenu": true,
+                      "columns": [
+                        {
+                          "width": 48,
+                          "backgroundColor": 4294440951,
+                          "customName": "",
+                          "cellType": "row header",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 58,
+                          "columnName": "backup",
+                          "colorCodingType": "Categorical",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 58,
+                          "columnName": "worker",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 57,
+                          "columnName": "browser",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 143,
+                          "columnName": "test",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 67,
+                          "columnName": "passed",
+                          "cellType": "bool",
+                          "colorCodingCategorical": {
+                            "false": 4292224808,
+                            "true": 4281114668
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 82,
+                          "columnName": "duration",
+                          "cellType": "number",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 105,
+                          "columnName": "started",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 37,
+                          "columnName": "batch",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 80,
+                          "columnName": "category",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 68,
+                          "columnName": "package",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        }
+                      ]
+                    },
+                    "title": "result",
+                    "default": true
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 819,
+              "height": 363,
+              "element": {
+                "id": "fe722670-e920-11ef-c819-4fd038cae6a5",
+                "type": "Trellis plot",
+                "look": {
+                  "#type": "TrellisPlotLook",
+                  "xColumnNames": [
+                    "batch"
+                  ],
+                  "yColumnNames": [
+                    "backup"
+                  ],
+                  "allowViewerFullScreen": false,
+                  "innerViewerLook": {
+                    "#type": "PieChartLook",
+                    "categoryColumnName": "passed",
+                    "includeNulls": false,
+                    "segmentAngleColumnName": "started",
+                    "showInnerPercent": true,
+                    "showInnerLabel": false,
+                    "showColumnSelector": false,
+                    "showMouseOverRowGroup": false,
+                    "marginLeft": 5,
+                    "marginTop": 5,
+                    "marginRight": 5,
+                    "marginBottom": 5,
+                    "legendVisibility": "Never",
+                    "table": "result",
+                    "legendPosition": "Auto",
+                    "autoLayout": false
+                  },
+                  "globalScale": true,
+                  "title": "Pass rate by backup size",
+                  "legendPosition": "Auto"
+                },
+                "title": "Pass rate by backup size"
+              }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "containerType": "vertical",
+        "state": {
+          "width": 1212,
+          "height": 1009
+        },
+        "children": [
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 1212,
+              "height": 512,
+              "element": {
+                "id": "fe722670-e920-11ef-8257-9326fdd42245",
+                "type": "Box plot",
+                "look": {
+                  "#type": "BoxPlotLook",
+                  "categoryColumnNames": [
+                    "batch",
+                    "backup"
+                  ],
+                  "valueColumnName": "duration",
+                  "markerColorColumnName": "backup",
+                  "markerSizeColumnName": "",
+                  "title": "Boxplot of duration grouped by backup size",
+                  "legendPosition": "Auto"
+                },
+                "title": "Boxplot of duration grouped by backup size"
+              }
+            },
+            "children": []
+          },
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 1212,
+              "height": 496,
+              "element": {
+                "id": "fe722670-e920-11ef-a48e-a12672f98db2",
+                "type": "Trellis plot",
+                "look": {
+                  "#type": "TrellisPlotLook",
+                  "xColumnNames": [
+                    "category"
+                  ],
+                  "yColumnNames": [
+                    "batch",
+                    "backup"
+                  ],
+                  "innerViewerLook": {
+                    "#type": "PieChartLook",
+                    "categoryColumnName": "passed",
+                    "segmentAngleColumnName": "started",
+                    "showInnerPercent": true,
+                    "autoLayout": false,
+                    "showInnerLabel": false,
+                    "showColumnSelector": false,
+                    "showMouseOverRowGroup": false,
+                    "marginLeft": 5,
+                    "marginTop": 5,
+                    "marginRight": 5,
+                    "marginBottom": 5,
+                    "legendVisibility": "Never",
+                    "table": "result",
+                    "legendPosition": "Auto"
+                  },
+                  "title": "Pass rate by test category",
+                  "legendPosition": "Auto"
+                },
+                "title": "Pass rate by test category"
+              }
+            },
+            "children": []
+          }
+        ]
       }
     ],
     "floating": [],
-     "tableId": "48498f80-c210-11ef-9cb9-7bfcfe94b295",
-    "tableName": "2_ Stress_ Tests"
+    "tableId": "2f545610-e920-11ef-8945-ebc9c2d382d6",
+    "tableName": "Stress tests"
   },
-  "userData": {
-    "TABLE_ROW_HEIGHT_KEY": null
-  },
+  "columns": [
+    {
+      "name": "duration",
+      "type": "int",
+      "id": "2fe4fd50-e920-11ef-8bcc-1f3094fee427",
+      "friendlyName": "Duration",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-b736-27a8e59a4578"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-e5f6-9f6d22a9de67"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "4",
+        ".id": "2fe4fd50-e920-11ef-8bcc-1f3094fee427"
+      }
+    },
+    {
+      "name": "backup",
+      "type": "string",
+      "id": "2fe4d640-e920-11ef-c979-0538253f314c",
+      "friendlyName": "Backup",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-d5bb-a9e65aac4199"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-a7fb-837d80afac38"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "fe724d80-e920-11ef-c699-b7dc05b8d73e"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "3",
+        ".id": "2fe4d640-e920-11ef-c979-0538253f314c",
+        ".color-coding-type": "Categorical"
+      }
+    },
+    {
+      "name": "batch",
+      "type": "string",
+      "id": "2fe4d640-e920-11ef-d453-2950a77f5683",
+      "friendlyName": "Batch",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-d76d-8f4245287935"
+        },
+        {
+          "tag": "friendlyName",
+          "id": "fe724d80-e920-11ef-c229-05dc896e229d"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-f179-bfc11e9a495a"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "2",
+        "friendlyName": "#",
+        ".id": "2fe4d640-e920-11ef-d453-2950a77f5683"
+      }
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "id": "2fe4fd50-e920-11ef-9260-b5c25ff46d2f",
+      "friendlyName": "Category",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-e592-cbe3cd313e3c"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-dbf0-89e956f64c50"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "4",
+        ".id": "2fe4fd50-e920-11ef-9260-b5c25ff46d2f"
+      }
+    }
+  ],
   "name": "StressTests",
-  "friendlyName": "2. Stress Tests"
+  "friendlyName": "Stress tests"
 }

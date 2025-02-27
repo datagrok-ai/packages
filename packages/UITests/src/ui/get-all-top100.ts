@@ -1,4 +1,4 @@
-import {after, before, category, test, awaitCheck} from '@datagrok-libraries/utils/src/test';
+import {after, before, category, test, awaitCheck, delay} from '@datagrok-libraries/utils/src/test';
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 
@@ -9,6 +9,9 @@ category('Connections', () => {
   let northwind: DG.TreeViewGroup;
 
   before(async () => {
+    const browseButton = document.querySelector('.d4-tab-header[name="Browse"]') as HTMLElement;
+    browseButton.click();
+    await delay(100);
     const browseView = grok.shell.view(DG.View.BROWSE) as DG.BrowseView;
     browseView.mainTree.expanded = true;
     const databases: DG.TreeViewGroup | undefined = browseView.mainTree.children.find((c) => c.text === 'Databases') as DG.TreeViewGroup;
@@ -19,9 +22,11 @@ category('Connections', () => {
     if (!postgres)
       throw new Error('Postgres data source was not found');
     postgres.expanded = true;
-    northwind = postgres.children.find((c) => c.text === 'Northwind') as DG.TreeViewGroup;
+    debugger
+    await delay(5000);
+    northwind = postgres.children.find((c) => c.text === 'Datagrok') as DG.TreeViewGroup;
     if (!northwind)
-      throw new Error('Northwind was not found');
+      throw new Error('Datagrok was not found');
   });
 
   test('getAll', async () => {

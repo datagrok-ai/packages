@@ -7,7 +7,7 @@
 * Execute the JavaScript script.
 * Move the slider for the *Final at* input. 
 
-REMARK. This UI does NOT contain the Process mode input (unlike Diff Studio)
+REMARK. This UI does NOT contain the Process mode input (unlike Diff Studio). Also, just the Multiaxis plot is shown.
 
 * Observe Changes: Verify that the table and line chart are modified in real-time as you move the slider.
 3. Save the Script:

@@ -65,7 +65,8 @@ category('MolstarViewer', () => {
     expect(viewer.ligands.current != null, true, 'The current ligand expected.');
     expect(viewer.ligands.current!.rowIdx, 3, 'The current ligand of rowIdx = 3.');
     expect(viewer.ligands.selected.length, 2);
-  }, {timeout: 30000,});
+    await delay(DebounceIntervals.ligands * 2.5); // await for debounce onRebuildViewLigands
+  }, {timeout: 45000,});
 
   test('ligands-Molecule3D', async () => {
     const [pdbqtCnt, targetData]: [string, BiostructureData] = await Promise.all([
@@ -109,7 +110,8 @@ category('MolstarViewer', () => {
     expect(viewer.ligands.current != null, true, 'The current ligand expected');
     expect(viewer.ligands.current!.rowIdx, 1, 'The current ligand of rowIdx = 1.');
     expect(viewer.ligands.selected.length, 2);
-  }, {timeout: 30000});
+    await delay(50);
+  }, {timeout: 45000});
 
   const pdbIdCsv: string = `pdb_id
 1QBS
@@ -154,7 +156,8 @@ category('MolstarViewer', () => {
     expect(aViewer.dataEff != null, true, 'dataEff is null');
     expect(aViewer.dataEff.options.name, '2BDJ');
     expect((aViewer.dataEffStructureRefs?.length ?? 0) >= 2, true, 'Structure in the viewer not found');
-  }, {timeout: 40000});
+    await delay(DebounceIntervals.currentRow * 2.5);
+  }, {timeout: 50000});
 
   test('bcif_id_binary', async () => {
     const logPrefix: string = `Tests: MolstarViewer.bcif_id_binary`;
@@ -189,7 +192,8 @@ category('MolstarViewer', () => {
     expect(aViewer.dataEff != null, true, 'dataEff is null');
     expect(aViewer.dataEff.options.name, '2BDJ');
     expect((aViewer.dataEffStructureRefs?.length ?? 0) >= 2, true, 'Structure in the viewer not found');
-  }, {timeout: 40000});
+    await delay(DebounceIntervals.currentRow * 2.5);
+  }, {timeout: 50000});
 
   test('pdb_data', async () => {
     const logPrefix = `BsV tests: MolstarViewer.pdb_data()`;
@@ -215,7 +219,8 @@ category('MolstarViewer', () => {
     expect(!!aViewer.dataEff, true, 'Viewer dataEff is empty.');
     expect(aViewer.dataEff.data.includes(pdbName), true, `Viewer dataEff must be '${pdbName}' for row ${df.currentRowIdx}.`);
     expect((aViewer.dataEffStructureRefs?.length ?? 0) >= 2, true, 'Structure in the viewer not found');
-  }, {timeout: 60000});
+    await delay(DebounceIntervals.currentRow * 2.5);
+  }, {timeout: 70000});
 
   test('open_file_shares', async () => {
     const waitForElement = async (selector: string, errorMsg: string, timeout = 2000) => {

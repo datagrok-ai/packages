@@ -15,6 +15,6 @@ join events e on e.event_type_id = et.id
 join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.error_source = @name
 --end

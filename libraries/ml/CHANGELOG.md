@@ -1,5 +1,9 @@
 # ml changelog
 
+## 6.8.1 (2025-02-03)
+
+MCL: Add History support
+
 ## 6.8.0 (2025-01-06)
 
 Refork MCL Viewer

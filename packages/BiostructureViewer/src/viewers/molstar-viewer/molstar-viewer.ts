@@ -220,9 +220,6 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
     // this.emdbProvider = this.string(PROPS.emdbProvider, defaults.emdbProvider,
     //   {category: PROPS_CATS.DATA});
     this.ligandValue = this.string(PROPS.ligandValue, null, {category: PROPS_CATS.DATA, userEditable: false});
-    // -- Style --
-    this.representation = this.string(PROPS.representation, defaults.representation,
-      {category: PROPS_CATS.STYLE, choices: Object.keys(StructureRepresentationRegistry.BuiltIn)});
 
     // -- Layout --
     this.layoutIsExpanded = this.bool(PROPS.layoutIsExpanded, defaults.layoutIsExpanded,
@@ -273,6 +270,10 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
       {category: PROPS_CATS.BEHAVIOUR});
     this.showMouseOverRowLigand = this.bool(PROPS.showMouseOverRowLigand, true,
       {category: PROPS_CATS.BEHAVIOUR});
+
+    // -- Style --
+    this.representation = this.string(PROPS.representation, defaults.representation,
+      {category: PROPS_CATS.STYLE, choices: Object.keys(StructureRepresentationRegistry.BuiltIn)});
 
     // --
     this.zoom = this.bool(PROPS.zoom, false, {userEditable: false});
@@ -417,9 +418,17 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
         break;
       }
 
-      case PROPS.representation:
-        this.updateView(this.representation);
+      case PROPS.representation: {
+        const checkAndUpdate = () => {
+          if (!this.setDataInProgress && this.viewer)
+            this.updateView(this.representation);
+          else
+            requestAnimationFrame(checkAndUpdate);
+        };
+        checkAndUpdate();
         break;
+      }
+      
       case PROPS.showImportControls:
         break;
       case PROPS.layoutIsExpanded:
@@ -668,7 +677,6 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
           this.dataEff = {binary: false, ext: 'pdb', data: pdb!};
         if (this.dataJson && this.dataJson !== BiostructureDataJson.empty) {
           this.dataEff = BiostructureDataJson.toData(this.dataJson);
-          this.dataJson = '';
         }
         if (this.biostructureDataProvider) {
           if (!this.biostructureDataProviderFunc) {
@@ -884,7 +892,7 @@ export class MolstarViewer extends DG.JsViewer implements IBiostructureViewer, I
 
   private async updateView(type: any) {
     const entries = this.viewer!.plugin.managers.structure.selection.entries;
-    const state = this.viewer?.plugin.state;
+    const state = this.viewer!.plugin.state;
     entries.forEach(async ({ selection }, ref) => {
       const cell = StateObjectRef.resolveAndCheck(state!.data, ref);
       if (cell) {

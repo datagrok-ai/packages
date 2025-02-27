@@ -176,7 +176,7 @@ export class FormCellRenderer extends DG.GridCellRenderer {
       gc.settings[SparklineType.Form] ??= getSettings(gc);
 
     return ui.inputs([
-      ...createBaseInputs(gc, settings),
+      ...createBaseInputs(gc, settings, true),
       ui.input.choice('Show column names', {value: settings.showColumnNames ?? 'Auto', items: ['Auto', 'Always', 'Never'],
         onValueChanged: (value) => {
           settings.showColumnNames = value as ColumnNamesVisibility;

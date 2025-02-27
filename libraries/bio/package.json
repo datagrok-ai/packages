@@ -8,7 +8,7 @@
     "access": "public"
   },
   "friendlyName": "Datagrok bio library",
-  "version": "5.48.2",
+  "version": "5.50.1",
   "description": "Bio utilities, types supporting Macromolecule, Molecule3D data",
   "dependencies": {
     "@datagrok-libraries/chem-meta": "^1.2.7",

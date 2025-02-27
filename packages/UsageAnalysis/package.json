@@ -5,7 +5,7 @@
     "email": "ppolovyi@datagrok.ai"
   },
   "friendlyName": "Usage Analysis",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "Platform usage analysis system",
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
     "cash-dom": "^8.1.0",
     "choices.js": "^10.1.0",
     "color-hash": "^2.0.2",
-    "datagrok-api": "../../js-api",
+    "datagrok-api": "^1.24.0",
     "moment": "^2.29.1",
     "rxjs": "^6.5.5",
     "dayjs": "^1.11.13"

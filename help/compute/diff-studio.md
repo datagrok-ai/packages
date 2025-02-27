@@ -367,6 +367,7 @@ To improve UI, annotate model inputs using:
 * [Function analysis](function-analysis.md)
 * [Compute](compute.md)
 * [Function annotations](../datagrok/concepts/functions/func-params-annotation.md)
+* [Tutorial](https://public.datagrok.ai/apps/tutorials/Tutorials/Scientificcomputing/Differentialequations)
 * Videos:
   
   [![UGM](pics/diff-studio-ugm.png "Open on Youtube")](https://www.youtube.com/watch?v=RS163zKe7s8&t=160s)

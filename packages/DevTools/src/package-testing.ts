@@ -78,7 +78,6 @@ export class TestManager extends DG.ViewBase {
   testManagerView: DG.View;
   selectedNode: DG.TreeViewGroup | DG.TreeViewNode;
   nodeDict: { [id: string]: any } = {};
-  debugMode = false;
   runSkippedMode = false;
   tree: DG.TreeViewGroup;
   ribbonPanelDiv = undefined;
@@ -348,7 +347,7 @@ export class TestManager extends DG.ViewBase {
     });
     runTestsButton.classList.add('ui-btn-outline');
 
-    const debugButton = ui.input.bool('Debug', { value: this.debugMode, onValueChanged: () => { this.debugMode = !this.debugMode; } });
+    const debugButton = ui.input.bool('Debug', { value: DG.Test.isInDebug, onValueChanged: () => { DG.Test.isInDebug = debugButton.value; } });
     debugButton.classList.add('tm-button');
 
     const benchmarkButton = ui.input.bool('Benchmark', {
@@ -474,8 +473,6 @@ export class TestManager extends DG.ViewBase {
       t.test.options.skipReason = undefined;
       runSkipped = true;
     }
-    if (this.debugMode)
-      debugger;
     this.testInProgress(t.resultDiv, true);
     const res: DG.DataFrame = await grok.functions.call(
       `${t.packageName}:test`, {

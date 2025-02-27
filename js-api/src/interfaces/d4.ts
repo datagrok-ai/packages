@@ -77,7 +77,6 @@ export enum FlexPosition {
   Right = 'Right',
   Top = 'Top',
   Bottom = 'Bottom',
-  Center = 'Center',
 }
 
 export enum VisibilityMode {
@@ -158,10 +157,6 @@ export interface IPieChartSettings {
 
   autoLayout: boolean;
 
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   segmentAngle: string;
   segmentAngleColumnName: string;
 
@@ -176,6 +171,8 @@ export interface IPieChartSettings {
   onClick: keyof typeof RowGroupAction;
 
   startAngle: number;
+
+  maxRadius: number;
 
   shift: number;
 
@@ -212,6 +209,10 @@ export interface IPieChartSettings {
   marginBottom: number;
 
   aggTooltipColumns: string;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;
@@ -252,6 +253,11 @@ export interface IPieChartSettings {
 
 }
 
+export enum RowGroupAction {
+  Select = 'Select',
+  Filter = 'Filter',
+}
+
 export enum FlexAutoPosition {
   Auto = 'Auto',
   Left = 'Left',
@@ -262,11 +268,6 @@ export enum FlexAutoPosition {
   RightBottom = 'RightBottom',
   LeftTop = 'LeftTop',
   LeftBottom = 'LeftBottom',
-}
-
-export enum RowGroupAction {
-  Select = 'Select',
-  Filter = 'Filter',
 }
 
 export interface IStatsViewerSettings {
@@ -432,7 +433,11 @@ export interface IScatterPlotSettings {
 
   /// Randomly shift (x, y) marker position up to the *Jitter Size* pixels.
   /// Useful when multiple points fall on the same exact position.
+  /// If *Jitter Size Y* is defined, then *Jitter Size* shifts x only.
   jitterSize: number;
+
+  /// Randomly shift y marker position up to the *Jitter Size Y* pixels.
+  jitterSizeY: number;
 
   markerDrawBorder: boolean;
 
@@ -579,15 +584,15 @@ export interface IScatterPlotSettings {
   /// Requires *Auto Axis Size* to be turned off.
   yAxisWidth: number;
 
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   axisFont: string;
 
   labelFont: string;
 
   defaultRenderer: boolean;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;
@@ -673,7 +678,7 @@ export interface IBoxPlotSettings {
   /// Include plots, which are empty or have null values.
   showEmptyCategories: boolean;
 
-  /// Column to color-code boxes (Q2-Q3 region).
+  /// Column to color-code boxes (Q2-Q3 region) or inner violin shapes.
   /// See also *Bin Color Aggr Type*.
   binColor: string;
   binColorColumnName: string;
@@ -687,6 +692,8 @@ export interface IBoxPlotSettings {
   /// Column to color-code markers.
   markerColor: string;
   markerColorColumnName: string;
+
+  invertColorScheme: boolean;
 
   markers: string;
   markersColumnName: string;
@@ -705,11 +712,6 @@ export interface IBoxPlotSettings {
 
   markerOpacity: number;
 
-  /// Points are not shown if the number of rows is greater than *Show Values Limit*.
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   showMeanCross: boolean;
 
   showLowerDash: boolean;
@@ -718,6 +720,7 @@ export interface IBoxPlotSettings {
 
   showMedianDash: boolean;
 
+  /// Points are not shown if the number of rows is greater than *Show Values Limit*.
   showValuesLimit: number;
 
   /// Show points inside the Q2-Q3 bar
@@ -786,6 +789,10 @@ export interface IBoxPlotSettings {
   /// Newline-separated list of column names to be used in a tooltip.
   /// Requires *showTooltip* to be enabled.
   rowTooltip: string;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;
@@ -1158,10 +1165,6 @@ export interface ITrellisPlotSettings {
 
   showGridlines: string;
 
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   showXSelectors: boolean;
 
   showYSelectors: boolean;
@@ -1187,6 +1190,10 @@ export interface ITrellisPlotSettings {
   autoLayout: boolean;
 
   backColor: number;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;
@@ -1406,10 +1413,6 @@ export interface IHistogramSettings {
 
   showCharts: boolean;
 
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   marginLeft: number;
 
   marginTop: number;
@@ -1423,6 +1426,10 @@ export interface IHistogramSettings {
   filterMarginBottom: number;
 
   aggTooltipColumns: string;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;
@@ -2330,6 +2337,8 @@ export interface IBarChartSettings {
 
   invertColorScheme: boolean;
 
+  linearColorScheme: Array<number>;
+
   /// Whether the selected rows are indicated.
   /// Only works for cumulative aggregations such as count.
   showSelectedRows: boolean;
@@ -2382,10 +2391,6 @@ export interface IBarChartSettings {
 
   barBorderLineColor: number;
 
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   outerMarginLeft: number;
 
   outerMarginRight: number;
@@ -2401,6 +2406,10 @@ export interface IBarChartSettings {
   showEmptyBars: boolean;
 
   showLabels: string;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   allowDynamicMenus: boolean;
 
@@ -2684,10 +2693,6 @@ export interface ILineChartSettings {
 
   rowGroupTooltip: string;
 
-  legendVisibility: keyof typeof VisibilityMode;
-
-  legendPosition: keyof typeof FlexAutoPosition;
-
   /// When true, lines are added to the legend
   /// Requires *Multi Axis* to be enabled
   addLinesToLegend: boolean;
@@ -2725,6 +2730,10 @@ export interface ILineChartSettings {
   showViewerFormulaLines: boolean;
 
   aggTooltipColumns: string;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;
@@ -3056,6 +3065,10 @@ export interface IPcPlotSettings {
   color: string;
   colorColumnName: string;
 
+  showColorSelector: boolean;
+
+  invertColorScheme: boolean;
+
   /// Determines the way a value is mapped to the vertical scale.
   /// TRUE: bottom is column minimum, top is column maximum. Use when columns contain values in different units
   /// FALSE: uses the same scale. This lets you compare values across columns
@@ -3089,6 +3102,10 @@ export interface IPcPlotSettings {
 
   labelsOrientation: keyof typeof TextOrientation;
 
+  linearColorScheme: Array<number>;
+
+  categoricalColorScheme: Array<number>;
+
   backColor: number;
 
   selectedRowsColor: number;
@@ -3112,6 +3129,10 @@ export interface IPcPlotSettings {
   maxCategories: number;
 
   horzMargin: number;
+
+  legendVisibility: keyof typeof VisibilityMode;
+
+  legendPosition: keyof typeof FlexAutoPosition;
 
   /// Determines the rows shown on the plot.
   rowSource: keyof typeof RowSet;

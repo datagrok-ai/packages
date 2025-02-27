@@ -24,8 +24,9 @@ category('Widgets', () => {
 
     if (testConnection) {
       const testFW = ui.fileBrowser({path: testConnection.nqName});
-      grok.shell.newView('' ,[testFW.root]);
-      await awaitCheck(() => !testFW.root.querySelector('.grok-loader'), 'Home timeout', 30000);
+      grok.shell.newView('', [testFW.root]);
+      await awaitCheck(()=> !testFW.root.querySelector('.grok-loader') &&
+        testFW.root.querySelector('div.d4-tree-view-tri-expanded[name="tree-expander-My-files"]') !== null, 'Home timeout', 30000);
     
       const label = $(testFW.root).find(labelSelector)[0];
       expect(label != null, true, 'label');
@@ -36,8 +37,9 @@ category('Widgets', () => {
       const packageName = 'ApiTests';
       const packageDir = 'datasets';
       const testFW = ui.fileBrowser({path: `${packageDataConnection.nqName}/${packageName}/${packageDir}`});
-      grok.shell.newView('' ,[testFW.root]);
-      await awaitCheck(()=> !testFW.root.querySelector('.grok-loader'), 'AppData timeout', 30000);
+      grok.shell.newView('', [testFW.root]);
+      await awaitCheck(()=> !testFW.root.querySelector('.grok-loader') &&
+        testFW.root.querySelector(`div[name="tree-App-Data---${packageName}---${packageDir}"]`) !== null, 'AppData timeout', 30000);
       
       const labels = $(testFW.root).find(labelSelector);
       expect(labels[0] != null, true, 'labels[0]');

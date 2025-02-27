@@ -14,7 +14,9 @@
     "cash-dom": "^8.0.0",
     "datagrok-api": "../../js-api",
     "dayjs": "^1.11.7",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.5.5",
+    "jstat": "^1.9.6",
+    "exceljs": "^4.3.0"
   },
   "devDependencies": {
     "datagrok-tools": "latest",

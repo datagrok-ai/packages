@@ -1,0 +1,230 @@
+{
+  "#type": "ViewInfo",
+  "table": {
+    "id": "32a0d3c9-7b4b-420e-b06d-b05d021b8247"
+  },
+  "type": "TableView",
+  "viewStateMap": {
+    "containerType": "fill",
+    "state": {
+      "width": 1292,
+      "height": 927,
+      "documentManager": true
+    },
+    "children": [
+      {
+        "containerType": "panel",
+        "state": {
+          "width": 1292,
+          "height": 927,
+          "element": {
+            "id": "65a61730-c210-11ef-8a17-17e38806e7ec",
+            "type": "Grid",
+            "look": {
+              "#type": "GridLook",
+              "showAddNewRowIcon": true,
+              "addNewRowOnLastRowEdit": true,
+              "colHeaderHeight": 51,
+              "topLevelDefaultMenu": true,
+              "allowColumnMenu": true,
+              "columns": [
+                {
+                  "width": 28,
+                  "backgroundColor": 4294440951,
+                  "customName": "",
+                  "cellType": "row header",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 344,
+                  "columnName": "test",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "isColorCoded": true,
+                  "width": 62,
+                  "columnName": "1 concat unique(status)",
+                  "colorCodingType": "Categorical",
+                  "colorCodingCategorical": {
+                    "failed": 4292224808,
+                    "passed": 4288208778
+                  },
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "isColorCoded": true,
+                  "width": 65,
+                  "columnName": "2 concat unique(status)",
+                  "colorCodingType": "Categorical",
+                  "colorCodingCategorical": {
+                    "failed": 4292224808,
+                    "passed": 4288208778
+                  },
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "isColorCoded": true,
+                  "width": 76,
+                  "columnName": "3 concat unique(status)",
+                  "colorCodingType": "Categorical",
+                  "colorCodingCategorical": {
+                    "failed": 4292224808,
+                    "passed": 4288208778
+                  },
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "1 concat unique(result)",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "2 concat unique(result)",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 119,
+                  "columnName": "3 concat unique(result)",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 0",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 1",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 2",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 3",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 4",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 318,
+                  "columnName": "ticket 5",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 6",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 7",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 8",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 9",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 310,
+                  "columnName": "ticket 10",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 71,
+                  "columnName": "severity",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                }
+              ]
+            },
+            "title": "Grid",
+            "default": true
+          }
+        },
+        "children": []
+      }
+    ],
+    "floating": [],
+    "tableId": "32a0d3c9-7b4b-420e-b06d-b05d021b8247",
+    "tableName": "Test_ Track"
+  },
+  "userData": {
+    "TABLE_ROW_HEIGHT_KEY": null
+  },
+  "id": "d2f28bd6-03dc-4e3b-9a93-ad40f8e16a64",
+  "name": "Test_Track",
+  "friendlyName": "Test Track"
+}

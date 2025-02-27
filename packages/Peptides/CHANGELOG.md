@@ -1,5 +1,9 @@
 # Peptides changelog
 
+## 1.21.2 (2025-02-03)
+
+Correct Sizing of mutation cliff grids
+
 ## 1.21.1 (2025-01-10)
 
 LST: Fix flickering and incorrect rendering in some cases

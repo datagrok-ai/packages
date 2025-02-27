@@ -4,16 +4,16 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
 import '@datagrok-libraries/bio/src/types/ngl'; // To enable import from the NGL module declared in bio lib
-import {GridSize, IAutoDockService} from '@datagrok-libraries/bio/src/pdb/auto-dock-service';
+import {IAutoDockService} from '@datagrok-libraries/bio/src/pdb/auto-dock-service';
 import {BiostructureData, BiostructureDataJson} from '@datagrok-libraries/bio/src/pdb/types';
-import {DockingRole, DockingTags} from '@datagrok-libraries/bio/src/viewers/molecule3d';
 
 import {AutoDockApp, AutoDockDataType} from './apps/auto-dock-app';
 import {_runAutodock, AutoDockService, _runAutodock2} from './utils/auto-dock-service';
-import {_package, TARGET_PATH, BINDING_ENERGY_COL, POSE_COL, BINDING_ENERGY_COL_UNUSED, POSE_COL_UNUSED, ERROR_COL_NAME, ERROR_MESSAGE} from './utils/constants';
-import { _demoDocking } from './demo/demo-docking';
+import {_package, TARGET_PATH, BINDING_ENERGY_COL, POSE_COL, BINDING_ENERGY_COL_UNUSED, POSE_COL_UNUSED, ERROR_COL_NAME, ERROR_MESSAGE, AUTODOCK_PROPERTY_DESCRIPTIONS} from './utils/constants';
+import { _demoFolding, _demoDocking } from './demo/demo';
 import { DockingViewApp } from './demo/docking-app';
 import { addColorCoding, formatColumns, getFromPdbs, getReceptorData, processAutodockResults, prop } from './utils/utils';
+import { BoltzService } from './utils/boltz-service';
 
 //name: info
 export function info() {
@@ -90,7 +90,7 @@ export async function prepareAutoDockData(
   };
 }
 
-function getTableView(tableName?: string): DG.TableView {
+export function getTableView(tableName?: string): DG.TableView {
   const inBrowseView = grok.shell.v.type === DG.VIEW_TYPE.BROWSE;
   const tableView = inBrowseView
     ? ((grok.shell.view('Browse') as DG.BrowseView)?.preview as DG.TableView)
@@ -99,7 +99,7 @@ function getTableView(tableName?: string): DG.TableView {
 }
 
 
-//top-menu: Chem | AutoDock...
+//top-menu: Chem | Docking | AutoDock...
 //name: Autodock
 //tags: HitTriageFunction
 //description: Autodock plugin UI
@@ -154,17 +154,18 @@ export async function runAutodock5(table: DG.DataFrame, ligands: DG.Column, targ
   }
 }
 
-//name: isApplicable
-//input: semantic_value molecule
+//name: isApplicableAutodock
+//input: string molecule
 //output: bool result
-export function isApplicable(molecule: DG.SemanticValue): boolean {
-  return molecule.cell.column.getTag(DockingTags.dockingRole) === DockingRole.ligand;
+export function isApplicableAutodock(molecule: string): boolean {
+  return molecule.includes('binding energy');
 }
 
 
 //name: AutoDock
 //tags: panel, chem, widgets
 //input: semantic_value molecule { semType: Molecule3D }
+//condition: Docking:isApplicableAutodock(molecule)
 //output: widget result
 export async function autodockWidget(molecule: DG.SemanticValue): Promise<DG.Widget<any> | null> {
   return await getAutodockSingle(molecule);
@@ -206,7 +207,7 @@ export async function getAutodockSingle(
   for (let i = 3; i < autodockResults!.columns.length; ++i) {
     const columnName = autodockResults!.columns.names()[i];
     const propertyCol = autodockResults!.col(columnName);
-    map[columnName] = prop(molecule, propertyCol!, result);
+    map[columnName] = prop(molecule, propertyCol!, result, AUTODOCK_PROPERTY_DESCRIPTIONS);
   }
   result.appendChild(ui.tableFromMap(map));
   widget.root.append(result);
@@ -219,6 +220,13 @@ export async function getAutodockSingle(
 //meta.demoPath: Bioinformatics | Docking
 export async function demoDocking(): Promise<void> {
   await _demoDocking();
+}
+
+//name: Demo Folding
+//description: Demonstrates ESMFold and Boltz-1 for biomolecular folding predictions
+//meta.demoPath: Bioinformatics | Folding
+export async function demoFolding(): Promise<void> {
+  await _demoFolding();
 }
 
 //name: Biology | AutoDock
@@ -286,4 +294,55 @@ export async function dockingApp(path?: string): Promise<DG.ViewBase | null> {
   const app = new DockingViewApp(parent);
   await app.init();
   return app.tableView!;
+}
+
+//name: getBoltzConfigFolders
+//output: list<string> configFiles
+export async function getBoltzConfigFolders(): Promise<string[]> {
+  return await BoltzService.getBoltzConfigFolders();
+}
+
+//name: runBoltz
+//meta.cache: all
+//meta.cache.invalidateOn: 0 0 1 * *
+//input: string config
+//input: string msa
+//output: string s
+export async function runBoltz(config: string, msa: string): Promise<string> {
+  return await BoltzService.runBoltz(config, msa);
+}
+
+//top-menu: Bio | Folding | Boltz-1...
+//name: Folding
+//input: dataframe table
+//input: column sequences {semType: Macromolecule}
+//output: dataframe result
+export async function folding(table: DG.DataFrame, sequences: DG.Column): Promise<DG.DataFrame> {
+  return await BoltzService.folding(table, sequences);
+}
+
+//top-menu: Chem | Docking | Boltz-1...
+//name: Docking
+//input: dataframe table
+//input: column ligands {semType: Molecule}
+//input: string configuration {choices: Docking: getBoltzConfigFolders} [Folder with config files for docking]
+//output: dataframe result
+export async function docking(df: DG.DataFrame, molecules: DG.Column, config: string): Promise<DG.DataFrame> {
+  return await BoltzService.docking(df, molecules, config);
+}
+
+//name: Boltz-1
+//tags: panel, chem, widgets
+//input: semantic_value molecule { semType: Molecule3D }
+//condition: Docking:isApplicableBoltz(molecule)
+//output: widget result
+export async function boltzWidget(molecule: DG.SemanticValue): Promise<DG.Widget<any> | null> {
+  return await BoltzService.boltzWidget(molecule);
+}
+
+//name: isApplicableBoltz
+//input: string molecule
+//output: bool result
+export function isApplicableBoltz(molecule: string): boolean {
+  return molecule.includes('confidence_score');
 }

@@ -1,22 +1,22 @@
 {
   "name": "@datagrok/compute2",
   "friendlyName": "Compute2",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Andrey Sharapov",
     "email": "andrey.sharapov@softwarecountry.com"
   },
   "description": "Provides UI based on Vue/Webcomponents",
   "dependencies": {
-    "@datagrok-libraries/compute-utils": "^1.40.0",
-    "@datagrok-libraries/utils": "^4.3.12",
-    "@datagrok-libraries/webcomponents-vue": "^0.0.6",
+    "@datagrok-libraries/compute-utils": "^1.41.0",
+    "@datagrok-libraries/utils": "^4.4.1",
+    "@datagrok-libraries/webcomponents-vue": "^0.0.7",
     "@he-tree/vue": "^2.8.7",
     "@types/wu": "^2.1.44",
     "@vueuse/core": "^11.1.0",
     "@vueuse/rxjs": "^11.1.0",
     "cash-dom": "^8.1.4",
-    "datagrok-api": "^1.21.1",
+    "datagrok-api": "^1.24.0",
     "dayjs": "=1.11.10",
     "fflate": "^0.8.2",
     "idb": "^8.0.1",
@@ -75,5 +75,9 @@
     "type": "git",
     "url": "git@github.com:datagrok-ai/public.git",
     "directory": "packages/Compute2"
+  },
+  "category": "Compute",
+  "meta": {
+    "dartium": false
   }
 }

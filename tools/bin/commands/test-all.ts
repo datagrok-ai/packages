@@ -75,7 +75,8 @@ export async function testAll(args: TestArgs): Promise<boolean> {
     gui: args.gui ?? false,
     record: args.record ?? false,
     report: args.report ?? false,
-    verbose: args.verbose ?? false
+    verbose: args.verbose ?? false,
+    debug: args['debug'] ?? false
   });
 
   let i = 0;
@@ -166,6 +167,7 @@ interface TestArgs {
   core?: boolean,
   csv?: boolean;
   gui?: boolean;
+  'debug'?: boolean,
   record?: boolean;
   report?: boolean;
   verbose?: boolean;

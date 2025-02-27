@@ -148,7 +148,7 @@ export class DGComboPopup extends HTMLElement {
         'selected', {detail: {item, itemIdx: this._items.findIndex((i) => i === item)}}),
       ),
     );
-    ui.tooltip.bind(newPopup, this._tooltip)
+    ui.tooltip.bind(newPopup, this._tooltip);
     newPopup.style.height = '24px';
     newPopup.style.minWidth = '0px';
     newPopup.onclick = (ev) => {

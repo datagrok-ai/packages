@@ -20,10 +20,10 @@ category('AutoDock', () => {
       // Initialize the service if not already initialized
       if (!adSvc)
         adSvc = await getAutoDockService();
-      
-      // Perform a health check to start the container (starts on request) if not ready
-      if (!adSvc.ready)
-        await fetchWrapper(() => adSvc!.healthCheck());
+   
+      const dockingContainer = await grok.dapi.docker.dockerContainers.filter('docking').first();
+      if (!dockingContainer.status.startsWith('started'))
+        await grok.dapi.docker.dockerContainers.run(dockingContainer.id, true); 
     } catch (err: unknown) {
       // Log any errors during initialization
       const [errMsg, errStack] = errInfo(err);
@@ -71,5 +71,5 @@ category('AutoDock', () => {
     const autodockGpf = buildDefaultAutodockGpf('1bdq', npts);
     const posesDf = await adSvc.dockLigandColumn(receptorData, ligandCol, autodockGpf, 10);
     expect(posesDf.rowCount, 30);
-  }, {timeout: 90000, stressTest: true});
+  }, {timeout: 90000});
 }, {owner: 'oserhiienko@datagrok.ai'});

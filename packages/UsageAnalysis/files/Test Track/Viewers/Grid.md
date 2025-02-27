@@ -36,8 +36,12 @@
 * Open two demog.csv datasets
 * In the first dataset set Color Coding properties for **Age** coumn as: **Linear** with modifyed **color scheme**. Verify that the color-coding is applied correctly.
 * After applying the color-coding, navigate to the Color Coding menu. Select **Pick Up Coloring** to capture the color-coding settings applied to the Age column.
-* Go to second dataset. Navigate to the Color Coding menu. Select **Apply Coloring** to apply the picked-up color-coding settings from the first dataset to the **Age** column in the second dataset. 
-* Expected Result: The color-coding applied to the Age column in the second dataset should be identical to the color-coding in the first dataset. Ensure that the color gradient and color scheme match exactly between the two datasets.
+* Go to the WEIGHT column. Navigate to the Color Coding menu. Select **Apply Coloring** to apply the picked-up color-coding settings from the **Age**. 
+* Expected Result: The color-coding applied to the WEIGHT column should be identical to the color-coding in the AGE column. Ensure that the color gradient match.
+* Go to the first dataset
+* Right-click the grid and select Grid Color Coding > All and then Pick Up/Apply > Pick UP
+* Go to the second dataset
+* Right-click the grid and select Pick Up/Apply > Apply - the coloring on grids should match
 ---
 {
   "order": 26,

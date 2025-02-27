@@ -508,11 +508,12 @@ jobs:
       - name: Test Package
         if: ${{ matrix.test == 'test' }}
         continue-on-error: ${{ contains(matrix.package, 'Tests') || matrix.package == 'Chemspace' }}
-        timeout-minutes: 30
+        timeout-minutes: 60
         id: test-package
         env:
           CHROME_DEVEL_SANDBOX: /usr/local/sbin/chrome-devel-sandbox
         run: |
+          npm list -g --depth=0 --json
           if [ "${{ matrix.package }}" == "Charts" ]; then
             npm run test -- --skip-build --skip-publish --record --csv --host ${{ steps.datagrok-image.outputs.alias }} --verbose
           else

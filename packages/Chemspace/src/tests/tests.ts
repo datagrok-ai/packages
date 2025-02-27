@@ -6,7 +6,7 @@ category('Chemspace', () => {
   const mol = 'Oc1ccccc1';
 
   test('Prices panel', async () => {
-    const widget = await grok.functions.call('Chemspace:pricesPanel', {'id': 'CSCS00102564062'});
+    const widget = await grok.functions.call('Chemspace:pricesPanel', {'id': 'CSSS00102643788'});
     await awaitCheck(() => widget.root.getElementsByClassName('chemspace-prices-grid').length > 0,
       'prices panel hasn\'t been created', 30000);
   });

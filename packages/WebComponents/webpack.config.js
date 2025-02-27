@@ -8,7 +8,7 @@ module.exports = {
     package: './src/package.ts',
   },
   resolve: {
-    extensions: ['.wasm', '.mjs', '.ts', '.tsx', '.json', '.js'],
+    extensions: ['.wasm', '.ts', '.tsx', '.mjs', '.js', '.jsx',  '.json'],
   },
   module: {
     rules: [
@@ -18,7 +18,7 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.(ts|tsx|mjs|js|jsx)$/,
         enforce: 'pre',
         use: ['source-map-loader'],
       },

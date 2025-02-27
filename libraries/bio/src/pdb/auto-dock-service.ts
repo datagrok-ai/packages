@@ -52,8 +52,6 @@ export interface IAutoDockService {
 
   awaitStatus(targetStatus: DockerContainerStatus, timeout?: number): Promise<void>;
 
-  healthCheck(): Promise<void>;
-
   checkOpenCl(): Promise<number>;
 
   /**

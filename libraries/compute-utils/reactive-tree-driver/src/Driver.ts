@@ -3,7 +3,7 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import {BehaviorSubject, Observable, Subject, EMPTY, of, from, combineLatest} from 'rxjs';
 import {isFuncCallSerializedState, PipelineState} from './config/PipelineInstance';
-import {AddDynamicItem, InitPipeline, LoadDynamicItem, LoadPipeline, MoveDynamicItem, RemoveDynamicItem, ResetToConsistent, RunAction, RunSequence, RunStep, SaveDynamicItem, SavePipeline, ViewConfigCommands} from './view/ViewCommunication';
+import {AddDynamicItem, InitPipeline, LoadDynamicItem, LoadPipeline, MoveDynamicItem, RemoveDynamicItem, ResetToConsistent, RunAction, RunSequence, RunStep, SaveDynamicItem, SavePipeline, UpdateFuncCall, ViewConfigCommands} from './view/ViewCommunication';
 import {pairwise, takeUntil, concatMap, catchError, switchMap, map, mapTo, startWith, withLatestFrom, tap, distinctUntilChanged, filter} from 'rxjs/operators';
 import {StateTree} from './runtime/StateTree';
 import {loadInstanceState} from './runtime/funccall-utils';
@@ -161,6 +161,8 @@ export class Driver {
       return this.loadPipeline(msg);
     case 'initPipeline':
       return this.initPipeline(msg);
+    case 'updateFuncCall':
+      return this.updateFuncCall(msg, state);
     }
     throw new Error(`Unknow tree driver command ${(msg as any).event}`);
   }
@@ -289,6 +291,11 @@ export class Driver {
         this.wasEdited$.next(true);
       }),
     );
+  }
+
+  private updateFuncCall(msg: UpdateFuncCall, state?: StateTree) {
+    this.checkState(msg, state);
+    return state.updateFuncCall(msg.stepUuid, msg.funcCall);
   }
 
   private checkState(msg: ViewConfigCommands, state?: StateTree): asserts state is StateTree {

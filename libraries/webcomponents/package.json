@@ -1,15 +1,15 @@
 {
   "name": "@datagrok-libraries/webcomponents",
   "sideEffects": false,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": {
-    "name": "Aufar Zakiev",
-    "email": "aufar.zakiev@softwarecountry.com"
+    "name": "Andrey Sharapov",
+    "email": "andrey.sharapov@softwarecountry.com"
   },
   "description": "Datagrok web components wrappers",
   "dependencies": {
     "cash-dom": "^8.1.4",
-    "datagrok-api": "^1.18.6",
+    "datagrok-api": "^1.24.0",
     "dayjs": "=1.11.10",
     "rxjs": "^6.6.7",
     "wu": "^2.1.0"

@@ -3,8 +3,6 @@ import * as DG from 'datagrok-api/dg';
 import {before, category, expect, test, assure, expectArray, expectTable} from '@datagrok-libraries/utils/src/test';
 import {take} from 'rxjs/operators';
 
-const andreySharapov = 'andrey.sharapov@softwarecountry.com';
-
 const createForm = async (withNullable: boolean = false) => {
   const funcCall: DG.FuncCall = (await grok.functions.eval(`ApiTests:ValueLookup${withNullable ? 'WithNullable' : ''}`))
     .prepare();
@@ -69,7 +67,7 @@ category('Widgets: InputForm fc replacement edge cases', () => {
     expect(inputs['mpg'].value, 21);
     expect(inputs['cyl'].value, 6);
     expect(inputs['disp'].value, 160);
-  }, {owner: andreySharapov});
+  });
 
   test('source replace w/o value lookup run', async () => {
     const {form} = await createForm();
@@ -90,7 +88,7 @@ category('Widgets: InputForm fc replacement edge cases', () => {
     expect(inputs['cyl'].value, null);
     expect(inputs['disp'].value, null);
     expect(inputs['with_choices'].value, '0');
-  }, {owner: andreySharapov});
+  });
 }, {owner: 'dkovalyov@datagrok.ai'});
 
 category('Widgets: InputForm API', () => {
@@ -140,7 +138,7 @@ category('Widgets: InputForm API', () => {
     expect(funcCall.inputs['boolInput'], false);
     expect(funcCall.inputs['choiceInput'], '2');
     expectTable(funcCall.inputs['tableInput'], demog);
-  }, {owner: andreySharapov});
+  });
 
   test('funcall to form bind', async () => {
     const geo = grok.data.demo.geo(10);
@@ -158,7 +156,7 @@ category('Widgets: InputForm API', () => {
     expect(inputs['boolInput'].value, false);
     expect(inputs['choiceInput'].value, '2');
     expectTable(inputs['tableInput'].value, geo);
-  }, {owner: andreySharapov});
+  });
 
   function testOnInputChangeObservable(): void {
     const changedInputPropNames = [] as string[];
@@ -179,7 +177,7 @@ category('Widgets: InputForm API', () => {
 
   test('form on input change observable', async () => {
     testOnInputChangeObservable();
-  }, {owner: andreySharapov});
+  });
 
   test('source funccall replacement', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare({'stringInput': 'test2'});
@@ -187,7 +185,7 @@ category('Widgets: InputForm API', () => {
     updateInputs();
 
     expect(inputs['stringInput'].value, 'test2');
-  }, {owner: andreySharapov});
+  });
 
   test('form to funccall bind after replace', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare();
@@ -207,7 +205,7 @@ category('Widgets: InputForm API', () => {
     expect(newFuncCall.inputs['boolInput'], false);
     expect(newFuncCall.inputs['choiceInput'], '2');
     expectTable(newFuncCall.inputs['tableInput'], demog);
-  }, {owner: andreySharapov});
+  });
 
   test('funccall to form bind after replace', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare();
@@ -229,14 +227,14 @@ category('Widgets: InputForm API', () => {
     expect(inputs['boolInput'].value, true);
     expect(inputs['choiceInput'].value, '1');
     expectTable(inputs['tableInput'].value, geo);
-  }, {owner: andreySharapov});
+  });
 
   test('form on input change observable after replace', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare();
     form.source = newFuncCall;
     updateInputs();
     testOnInputChangeObservable();
-  }, {owner: andreySharapov});
+  });
 
   test('form without default initialization', async () => {
     const newFuncCall1 = (await grok.functions.eval('ApiTests:InputFormTest')).prepare({stringInput: 'test2', intInput: 4});
@@ -276,7 +274,7 @@ category('Widgets: InputForm API', () => {
     expect(newForm2.getInput('choiceInput').value, '1');
     expect(newFuncCall2.inputs['tableInput'], null);
     expect(newForm2.getInput('tableInput').value, null);
-  }, {owner: 'dkovalyov@datagrok.ai'});
+  });
 }, {owner: 'dkovalyov@datagrok.ai'});
 
 
@@ -321,20 +319,20 @@ category('Widgets: InputForm w/ custom input', () => {
     expect(inputs['stringInput'].value, 'test');
     expect(funcCall.inputs['stringInput'], 'test');
     expect(inputs['stringInput'].root.style.backgroundColor, 'aqua');
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 
   test('form to funccall bind', async () => {
     inputs['stringInput'].value = 'test2';
 
     expect(inputs['stringInput'].value, 'test2');
     expect(funcCall.inputs['stringInput'], 'test2');
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 
   test('funcall to form bind', async () => {
     funcCall.inputs['stringInput'] = 'test2';
 
     expect(inputs['stringInput'].value, 'test2');
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 
   test('form on input change observable', async () => {
     const changedInputPropNames = [] as string[];
@@ -349,7 +347,7 @@ category('Widgets: InputForm w/ custom input', () => {
       ['stringInput'],
     );
     changeSub.unsubscribe();
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 
   test('form to funccall bind after replace', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare();
@@ -359,7 +357,7 @@ category('Widgets: InputForm w/ custom input', () => {
     inputs['stringInput'].value = 'test2';
 
     expect(newFuncCall.inputs['stringInput'], 'test2');
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 
   test('funccall to form bind after replace', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare();
@@ -369,7 +367,7 @@ category('Widgets: InputForm w/ custom input', () => {
     newFuncCall.inputs['stringInput'] = 'test';
 
     expect(inputs['stringInput'].value, 'test');
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 
   test('form on input change observable after replace', async () => {
     newFuncCall = (await grok.functions.eval('ApiTests:InputFormTest')).prepare();
@@ -387,5 +385,5 @@ category('Widgets: InputForm w/ custom input', () => {
       changedInputPropNames,
       ['stringInput'],
     );
-  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737', owner: andreySharapov});
+  }, {skipReason: 'https://reddata.atlassian.net/browse/GROK-15737'});
 }, {owner: 'dkovalyov@datagrok.ai'});

@@ -13,9 +13,11 @@ RUN apt-get install -y mecab-ipadic-utf8
 RUN python -v
 RUN curl https://pyenv.run | bash \
 	&& python -m  pip install virtualenv
+RUN python -m pip install --upgrade pip
+RUN python -m pip install boto3
 ENV PATH="/root/.pyenv/bin:${PATH}"
-RUN pyenv install 3.10.12
-RUN pyenv install 3.12.4
+RUN pyenv install 3.10.15
+RUN pyenv install 3.12.2
 RUN pyenv install 3.11.9
 
 EXPOSE 5001

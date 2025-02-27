@@ -5,9 +5,8 @@
 
 async function postprocess() {
 
-  let builds = result.col('build_index').categories;
-  let buildNames = result.col('build').categories.sort().reverse();
-
+  let builds = result.col('build_index').categories.map((x) => parseInt(x));
+  let buildNames = result.col('build').categories.sort();
   let pivot = result
     .groupBy(['test', 'owner'])
     .pivot('build_index')
@@ -15,6 +14,8 @@ async function postprocess() {
     .avg('build_date')
     .first('flaking')
     .add(DG.STR_AGG.CONCAT_UNIQUE, 'status')
+    .add(DG.STR_AGG.CONCAT_UNIQUE, 'instance')
+    .add(DG.STR_AGG.CONCAT_UNIQUE, 'build_commit')
     .add(DG.STR_AGG.CONCAT_UNIQUE, 'result')
     .aggregate();
 
@@ -38,26 +39,46 @@ async function postprocess() {
   var meta = await grok.dapi.stickyMeta.getAllValues(schema, pivot.columns.byName('test'));
   pivot.columns.add(meta.col('ignore?'));
   pivot.columns.add(meta.col('ignoreReason'));
-  await pivot.columns.addNewCalculated('needs_attention', "And(Or(${flaking},${failing}), Not(${ignore?}))", 'bool');
+  pivot.columns.add(meta.col('lastResolved'));  
+  await pivot.columns.addNewCalculated('needs_attention', "And(${failing}, Not(${ignore?}))", 'bool');
 
   function replaceColumn(prefix, type, buildName, newType) {
     var col = pivot.columns.byName(prefix + type);
+    if (col != null)
+      col.name = buildName + newType;
     col?.setTag('friendlyName', buildName + newType);
   }
 
   pivot.columns.byName('owner').semType = 'User';
   pivot.columns.byName('owner').setTag('cell.renderer', 'User');
-  pivot.columns.byName('test').semType = 'test';
+  pivot.columns.byName('test').semType = 'autotest';
 
   for (var i = 1; i <= builds.length; i++) {
-    var buildName = buildNames[i - 1];
-    replaceColumn(i, ' concat unique(status)', i, '');
-    replaceColumn(i, ' concat unique(result)', buildName, ' result');
+    var buildName = builds[i - 1];
+    replaceColumn(buildName, ' concat unique(status)', i, '');
+    replaceColumn(buildName, ' concat unique(result)', i, ' result');
+    replaceColumn(buildName, ' concat unique(instance)', i, ' instance');
+    replaceColumn(buildName, ' concat unique(build_commit)', i, ' commit');
     var colResult = pivot.columns.byName(i + ' concat unique(result)');
     if (colResult !== null)
       colResult.semType = 'stackTrace';
-    replaceColumn(i, ' avg(build_date)', buildName, ' build_date');
-    replaceColumn(i, ' avg(duration)', buildName, ' duration');
+    replaceColumn(buildName, ' avg(build_date)', i, ' build_date');
+    replaceColumn(buildName, ' avg(duration)', i, ' duration');
+  }
+
+  for (let i = 0; i < pivot.rowCount; i++) {
+    if (!pivot.col('needs_attention').get(i))
+      continue;
+    if (!meta.col('lastResolved').isNone(i)) {
+      var failed = false;
+      for (let j = 0; j < builds.length; j++) {
+        if (pivot.col(`${j + 1}`).isNone(i) || pivot.col(`${j+1}`).get(i) != 'failed')
+            continue;
+        if (pivot.col(`${j+1} build_date`).isNone(i) || pivot.col(`${j+1} build_date`).get(i) > meta.col('lastResolved').get(i))
+          failed = true;
+      }
+      pivot.col('needs_attention').set(i, failed);
+    }
   }
 
 

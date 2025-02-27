@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>grok_connect</artifactId>
-    <version>2.2.28</version>
+    <version>2.3.29</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>connectors</groupId>
         <artifactId>build</artifactId>
-        <version>2.2.28</version>
+        <version>2.3.29</version>
     </parent>
 
     <properties>

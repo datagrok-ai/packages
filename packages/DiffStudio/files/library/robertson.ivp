@@ -15,6 +15,6 @@
 #argument: t
   start = 0 {units: sec; caption: Initial; category: Time; min: 0; max: 1} [Initial time of simulation]
   finish = 40 {units: sec; caption: Final; category: Time; min: 2; max: 50} [Final time of simulation]
-  step = 0.01 {units: sec; caption: Step; category: Time; min: 0.01; max: 0.1} [Time step of simlulation]
+  step = 0.01 {units: sec; caption: Step; category: Time; min: 0.01; max: 0.1} [Time step of simulation]
 
 #tolerance: 1e-7

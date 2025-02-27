@@ -142,6 +142,10 @@ export function useReactiveTreeDriver(providerFunc: Vue.Ref<string>) {
     driver.sendCommand({event: 'moveDynamicItem', uuid, position});
   };
 
+  const changeFuncCall = (uuid: string, call: DG.FuncCall) => {
+    driver.sendCommand({event: 'updateFuncCall', stepUuid: uuid, funcCall: call});
+  }
+
   return {
     // driver,
     treeMutationsLocked,
@@ -165,5 +169,6 @@ export function useReactiveTreeDriver(providerFunc: Vue.Ref<string>) {
     addStep,
     removeStep,
     moveStep,
+    changeFuncCall,
   };
 }

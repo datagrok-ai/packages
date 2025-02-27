@@ -77,10 +77,10 @@ et.name as description from event_types et
 inner join events e on e.event_type_id = et.id
 inner join event_parameter_values v1 on v1.event_id = e.id
 inner join event_parameters p1 on v1.parameter_id = p1.id and p1.type = 'entity_id'
-inner join entities en1 on en1.id::varchar = v1.value
+inner join entities en1 on en1.id = v1.value
 inner join entities_types et1 on et1.id = en1.entity_type_id
 inner join event_parameter_values v2 on v2.event_id = e.id and v1.value < v2.value
 inner join event_parameters p2 on v2.parameter_id = p2.id and p2.type = 'entity_id'
-inner join entities en2 on en2.id::varchar = v2.value
+inner join entities en2 on en2.id = v2.value
 inner join entities_types et2 on et2.id = en2.entity_type_id
 where et.source = 'audit'

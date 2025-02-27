@@ -84,7 +84,6 @@ export namespace historyUtils {
       );
     }
 
-
     if (!skipDfLoad) {
       const dfOutputs = wu(pulledRun.outputParams.values() as DG.FuncCallParam[])
         .filter((output) =>

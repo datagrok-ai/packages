@@ -100,6 +100,7 @@ category('GUI: Dialogs', () => {
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
     grok.shell.topMenu.find('ML').find('Analyze').find('PCA...').click();
     await awaitCheck(() => checkDialog('PCA'), 'Dialog is not open 1', 1000);
+    await delay(200);
     let okButton = Array.from(document.querySelectorAll('.ui-btn.ui-btn-ok'))
       .find((el) => el.textContent === 'OK') as HTMLElement;
     okButton.click();

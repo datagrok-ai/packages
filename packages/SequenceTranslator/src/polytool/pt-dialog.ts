@@ -10,7 +10,7 @@ import {errInfo} from '@datagrok-libraries/bio/src/utils/err-info';
 import {ALPHABET, NOTATION} from '@datagrok-libraries/bio/src/utils/macromolecule';
 import {getSeqHelper, ISeqHelper, ToAtomicLevelRes} from '@datagrok-libraries/bio/src/utils/seq-helper';
 import {MmcrTemps} from '@datagrok-libraries/bio/src/utils/cell-renderer-consts';
-import {addMonomerHoverLink, buildMonomerHoverLink} from '@datagrok-libraries/bio/src/monomer-works/monomer-hover';
+import {addMonomerHoverLink} from '@datagrok-libraries/bio/src/monomer-works/monomer-hover';
 import {getRdKitModule} from '@datagrok-libraries/bio/src/chem/rdkit-module';
 import {RDModule} from '@datagrok-libraries/chem-meta/src/rdkit-api';
 
@@ -68,10 +68,10 @@ export async function polyToolEnumerateChemUI(cell?: DG.Cell): Promise<void> {
 
 export async function polyToolConvertUI(): Promise<void> {
   await _package.initPromise;
-  let dialog: DG.Dialog;
+  let dialog: DG.Dialog | null = null;
   try {
     dialog = await getPolyToolConvertDialog();
-    dialog.show();
+    dialog?.show();
   } catch (err: any) {
     const [errMsg, errStack] = errInfo(err);
     grok.shell.warning('To run PolyTool Conversion, open a dataframe with macromolecules');
@@ -79,25 +79,38 @@ export async function polyToolConvertUI(): Promise<void> {
   }
 }
 
-export async function getPolyToolConvertDialog(srcCol?: DG.Column): Promise<DG.Dialog> {
+export async function getPolyToolConvertDialog(srcCol?: DG.Column): Promise<DG.Dialog | null> {
   const subs: Unsubscribable[] = [];
   const destroy = () => {
     for (const sub of subs) sub.unsubscribe();
   };
   try {
     let srcColVal: DG.Column<string> | undefined = srcCol;
+    const srcColList = grok.shell.t.columns.bySemTypeAll(DG.SEMTYPE.MACROMOLECULE);
+    const customSrcCols = srcColList.filter((col) => {
+      const sh = _package.seqHelper.getSeqHandler(col);
+      return sh.notation === NOTATION.CUSTOM;
+    });
     if (!srcColVal) {
-      const srcColList = grok.shell.t.columns.bySemTypeAll(DG.SEMTYPE.MACROMOLECULE);
       if (srcColList.length < 1)
         throw new Error(PT_ERROR_DATAFRAME);
+      
+      if (customSrcCols.length < 1) {
+        const toAtomicLevelFunc = DG.Func.find({package: 'Bio', name: 'toAtomicLevel'})[0];
+        if (toAtomicLevelFunc) {
+          toAtomicLevelFunc.prepare().edit();
+          return null;
+        }
+        grok.shell.warning('Polytool requires a macromolecule column with custom notation. \n\nUse Top menu | Bio | Transform | To Atomic Level.');
+        return null;
+      }
+
       srcColVal = srcColList[0];
     }
     const srcColInput = ui.input.column('Column', {
       table: srcColVal.dataFrame, value: srcColVal,
       filter: (col: DG.Column) => {
-        if (col.semType !== DG.SEMTYPE.MACROMOLECULE) return false;
-        const sh = _package.seqHelper.getSeqHandler(col);
-        return sh.notation === NOTATION.CUSTOM;
+        return customSrcCols.includes(col);
       }
     });
 
@@ -353,6 +366,8 @@ function buildCyclizedMonomerHoverLink(
   const resLink: MonomerHoverLink = {
     targetCol: molCol,
     handler: (seqGridCell: DG.GridCell, cyclizedMonomer: ISeqMonomer | null, targetGridCol: DG.GridColumn): boolean => {
+      if (!seqGridCell || !targetGridCol.grid || !seqCol.dataFrame)
+        return true;
       const grid = targetGridCol.grid;
       const tableRowIdx = seqGridCell.tableRowIndex!;
       const gridRowIdx = seqGridCell.gridRow;
@@ -360,13 +375,13 @@ function buildCyclizedMonomerHoverLink(
       const positionMap = positionMaps[gridRowIdx];
 
       const prev = getMonomerHover();
-      if (!prev || (prev && (prev.dataFrameId != seqCol.dataFrame.id || prev.gridRowIdx != gridRowIdx ||
+      if (!prev || (prev && (prev.dataFrameId != seqCol.dataFrame?.id || prev.gridRowIdx != gridRowIdx ||
         prev.seqColName != seqCol.name || prev.seqPosition != cyclizedMonomer?.position))
       ) {
         if (prev) {
           setMonomerHover(null);
-          prev.gridCell.grid?.invalidate();
-          // prev.gridCell.render();
+          //prev.gridCell.grid?.invalidate();
+          prev.gridCell.render();
         }
         if (!cyclizedMonomer) {
           setMonomerHover(null);
@@ -389,7 +404,6 @@ function buildCyclizedMonomerHoverLink(
 
             const resSubstructList: ISubstruct[] = [];
             const seqMonomerList: number[] = positionMap[cyclizedMonomer.position];
-            console.log(seqMonomerList);
             for (const seqMonomer of seqMonomerList) {
               const monomerMap = molMonomerMap.get(seqMonomer); // single monomer
               if (!monomerMap) return {atoms: [], bonds: [], highlightAtomColors: [], highlightBondColors: []};
@@ -402,8 +416,8 @@ function buildCyclizedMonomerHoverLink(
         });
 
         // TODO: Invalidate targetGridCell
-        grid.invalidate();
-        // targetGridCell.render();
+        //grid.invalidate();
+        targetGridCell.render();
       }
 
       return true;

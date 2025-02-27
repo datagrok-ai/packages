@@ -34,7 +34,7 @@ and NOT EXISTS (
     and t.tag = 'autostart'
 )
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and pp.name = @name
 group by u.name
 limit 50
@@ -61,7 +61,7 @@ and NOT EXISTS (
 )
 and pp.name = @name
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by et.name
 limit 50;
 --end
@@ -84,7 +84,7 @@ and et.friendly_name is not null
 and et.friendly_name != ''
 and pp.name = @name
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and e.is_error = true
 group by e.error_message, e.friendly_name
 limit 50;
@@ -102,7 +102,7 @@ join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where
 @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.name = @name
 group by u.name
 limit 50
@@ -126,7 +126,7 @@ NOT EXISTS (
     and t.tag = 'autostart'
 )
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.source = @name
 and et.friendly_name is not null
 and et.friendly_name != ''
@@ -146,7 +146,7 @@ join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where
 @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.source = @name
 group by u.name
 limit 50

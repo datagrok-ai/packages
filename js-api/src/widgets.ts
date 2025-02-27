@@ -21,6 +21,7 @@ import '../css/tags-input.css';
 import {FuncCall} from "./functions";
 import {IDartApi} from "./api/grok_api.g";
 import {HttpDataSource} from "./dapi";
+import {ColumnGrid} from "./grid";
 
 declare let grok: any;
 declare let DG: any;
@@ -874,6 +875,102 @@ export interface IMenuItemsOptions<T = any> {
   radioGroup?: string;
 }
 
+/** See {@link Menu.colorPalette} */
+export interface IMenuColorPaletteOptions {
+
+  /** Returns value put into the selector as initial or to reset. */
+  getInitialValue?: () => number[];
+
+  /** Called when color is selected by click.
+   * @param {number[]} list - A sequence of selected color palette.
+  */
+  onSelect?: (list: number[]) => void;
+
+  /** Called when color is hovered or reset.
+   * @param {number[]} list - A sequence of selected color palette.
+  */
+  onPreview?: (list: number[]) => void;
+
+  /** Either the current item is a separate subgroup by defined `string` name or inside main menu. */
+  asGroup?: string | null;
+
+  /** Whether the current item is visible. */
+  visible?: boolean | null;
+
+  /** Either the palette is displayed as a gradient (if `false`) or as a separate colors sequence (if `true`). */
+  categorical?: boolean;
+
+  /** Whether hover effect preview is allowed. */
+  allowPreview?: boolean;
+
+  /** Delay when color value reset to default after leaving hovered item. */
+  resetColorMs: number;
+}
+
+/** See {@link IMenuSingleColumnSelectorOptions} and {@link IMenuMultiColumnSelectorOptions} */
+export interface IMenuColumnSelectorOptions<T> {
+
+  /** Value put into the selector as initial or to reset. */
+  initialValue?: T;
+
+  /** Called when selector value is changed */
+  onChange?: (...args: any[]) => void;
+
+  /** Either the current item is a separate subgroup by defined `string` name or inside main menu. */
+  asGroup?: string | null,
+
+  /** Whether the current item is visible. */
+  visible?: boolean;
+
+  /** Whether the current item can be changed or its visibility can be toggled. */
+  editable?: boolean;
+
+  /** Filters set selector columns to be displayed. */
+  columnFilter?: (c: Column) => boolean;
+}
+
+/** See {@link Menu.singleColumnSelector} */
+export interface IMenuSingleColumnSelectorOptions extends IMenuColumnSelectorOptions<string> {
+
+  /** Called when selector value is changed.
+   * @param {ColumnGrid} g - selector column grid instance.
+   * @param {Column} c - A column to be selected.
+   * @param {boolean} currentRowChanged - Either the current row is changed by click or just selected on hover.
+  */
+  onChange?: (grid: ColumnGrid, column: Column, currentRowChanged: boolean) => void;
+
+  /** Whether selector contains empty value to indicate none selected. */
+  nullable?: boolean;
+
+  /** Whether the current item is closed after click. */
+  closeOnClick?: boolean;
+
+  /** Whether a hovered value is selected. */
+  changeOnHover?: boolean;
+}
+
+/** See {@link Menu.multiColumnSelector} */
+export interface IMenuMultiColumnSelectorOptions extends IMenuColumnSelectorOptions<string[]> {
+
+  /** Called when selector value is changed.
+   * @param {ColumnGrid} g - selector column grid instance.
+  */
+  onChange?: (grid: ColumnGrid) => void;
+}
+
+/** See {@link Menu.header} */
+export interface IMenuHeaderOptions {
+
+  /** Called when header is clicked. */
+  onClick?: (item: any) => void;
+
+  /** Whether hover effect is applied. */
+  hasHoverEffect?: boolean;
+
+  /** Tooltip to be shown on the menu item. */
+  getDescription?: () => string;
+}
+
 export interface IMenuItemOptions {
   /** Identifies a group of items where only one can be checked at a time. */
   radioGroup?: string;
@@ -939,6 +1036,9 @@ export class Menu {
 
   get root(): HTMLElement { return api.grok_Menu_Get_Root(this.dart); }
 
+  get closeOnClick(): boolean { return api.grok_Menu_Get_CloseOnClick(this.dart); }
+  set closeOnClick(value: boolean) { api.grok_Menu_Set_CloseOnClick(this.dart, value); }
+
   /** Finds a child menu item with the specified text. */
   find(text: string): Menu {
     return toJs(api.grok_Menu_Find(this.dart, text));
@@ -966,7 +1066,7 @@ export class Menu {
   }
 
   /** Ends a group of menu items and returns to the higher menu level.
-   * @returns {Menu} */
+   * @returns {Menu} `this` menu itself. */
   endGroup(): Menu {
     return toJs(api.grok_Menu_EndGroup(this.dart));
   }
@@ -983,6 +1083,45 @@ export class Menu {
       options?.getTooltip, options?.onMouseEnter, options?.radioGroup));
   }
 
+  /** Adds color palettes colors to menu.
+   * @param initial - Initial colors to be set first or reset.
+   * @param colors - Array of arrays of color choices.
+   * @param options - Optional params and functions, see {@link IMenuColorPaletteOptions}.
+   * @returns {Menu} `this` menu itself. */
+  colorPalette(colors: number[][], options?: IMenuColorPaletteOptions): Menu {
+    return toJs(api.grok_Menu_ColorPalette(this.dart, colors, options?.getInitialValue, options?.onSelect,
+      options?.onPreview, options?.asGroup, options?.visible, options?.categorical ?? false, options?.resetColorMs ?? 200));
+  }
+
+  /** Adds single-column selector to menu.
+   * @param dataFrame - Data frame to be used for the selector,where column choices are taken from.
+   * @param options - Optional params and functions, see {@link IMenuSingleColumnSelectorOptions}.
+   * @returns {Menu} `this` menu itself. */
+  singleColumnSelector(dataFrame: DataFrame, options?: IMenuSingleColumnSelectorOptions): Menu {
+    return toJs(api.grok_Menu_SingleColumSelector(this.dart, dataFrame.dart, options?.initialValue,
+      !options?.onChange ? null : (grid: any, c: any, currentRowChanged: boolean) => options?.onChange?.(toJs(grid), toJs(c), currentRowChanged),
+      options?.asGroup, options?.nullable ?? false, options?.visible ?? true, options?.editable ?? false, options?.closeOnClick ?? false,
+      options?.changeOnHover ?? true, (c: any) => options?.columnFilter?.(toJs(c)) ?? true));
+  }
+
+  /** Adds multi-column selector to menu.
+   * @param dataFrame - Data frame to be used for the selector,where column choices are taken from.
+   * @param options - Optional params and functions, see {@link IMenuMultiColumnSelectorOptions}.
+   * @returns {Menu} `this` menu itself. */
+  multiColumnSelector(dataFrame: DataFrame, options?: IMenuMultiColumnSelectorOptions): Menu {
+    return toJs(api.grok_Menu_MultiColumSelector(this.dart, dataFrame.dart, options?.initialValue,
+      !options?.onChange ? null : (grid: any) => options?.onChange?.(toJs(grid)),
+      options?.asGroup, options?.visible ?? true, options?.editable ?? false, (c: any) => options?.columnFilter?.(toJs(c)) ?? true));
+  }
+
+  /** Adds a header title.
+   * @param text - Header title text.
+   * @param options - Optional params and functions, see {@link IMenuHeaderOptions}.
+   * @returns {Menu} `this` menu itself. */
+  header(text: string, options?: IMenuHeaderOptions): Menu {
+    return toJs(api.grok_Menu_Header(this.dart, text, options?.onClick, options?.hasHoverEffect ?? false, options?.getDescription));
+  }
+
   /** Adds a separator line.
    *  @returns {Menu} */
   separator(): Menu {
@@ -990,7 +1129,7 @@ export class Menu {
   }
 
   /** Shows the menu.
-   * @returns {Menu} */
+   * @returns {Menu} `this` menu itself. */
   show(options?: IShowMenuOptions): Menu {
     return toJs(api.grok_Menu_Show(this.dart, options?.element, options?.causedBy, options?.x, options?.y, options?.nextToElement));
   }
@@ -1512,6 +1651,17 @@ export class Color {
   static get categoricalPalettes(): {[key: string]: any} {
     return new MapProxy(api.grok_Color_GetCategoricalPalettes());
   }
+
+  /** Returns the list of categorical color schemes used in Datagrok. */
+  static get categoricalSchemes(): number[] {
+    return api.grok_Color_CategoricalSchemes();
+  }
+
+  /** Returns the list of continuous color schemes for linear coloring used in Datagrok. */
+  static get continuousSchemes(): number[] {
+    return api.grok_Color_ContinuousSchemes();
+  }
+  
 
   static scaleColor(x: number, min: number, max: number, alpha?: number, colorScheme?: number[]): number {
     return api.grok_Color_ScaleColor(x, min, max, alpha ? alpha : null, colorScheme ? colorScheme : null);

@@ -1,7 +1,6 @@
 import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
 import * as grok from 'datagrok-api/grok';
-import {study} from '../clinical-study';
 import {updateDivInnerHTML} from '../utils/utils';
 import $ from 'cash-dom';
 import {AEBrowserHelper} from '../helpers/ae-browser-helper';
@@ -16,7 +15,7 @@ import {AE_END_DAY_FIELD, AE_START_DAY_FIELD, AE_TERM_FIELD, CON_MED_END_DAY_FIE
   VIEWS_CONFIG} from '../views-config';
 import {TIMELINES_VIEW_NAME} from '../constants/view-names-constants';
 import {TIMELINES_VIEWER} from '../constants/constants';
-import { awaitCheck } from '@datagrok-libraries/utils/src/test';
+import {studies} from '../clinical-study';
 
 const multichoiceTableDict = {'Adverse events': 'ae', 'Concomitant medication intake': 'cm', 'Drug exposure': 'ex'};
 
@@ -41,8 +40,8 @@ export class TimelinesView extends ClinicalCaseViewBase {
   filters: any;
   links: any;
 
-  constructor(name) {
-    super({});
+  constructor(name, studyId) {
+    super(name, studyId);
     this.name = name;
     this.helpUrl = `${_package.webRoot}/views_help/timelines.md`;
     //@ts-ignore
@@ -51,7 +50,7 @@ export class TimelinesView extends ClinicalCaseViewBase {
 
   createView(): void {
     this.links = this.getLinks();
-    const existingTables = study.domains.all()
+    const existingTables = studies[this.studyId].domains.all()
       .filter((it) => !this.optDomainsWithMissingCols.includes(it.name))
       .map((it) => it.name);
     this.filters = this.getFilterFields();
@@ -104,8 +103,8 @@ export class TimelinesView extends ClinicalCaseViewBase {
     this.updateTimelinesPlot();
     this.subscribeToSelection();
 
-    if (study.domains.dm) {
-      grok.data.linkTables(study.domains.dm, this.resultTables,
+    if (studies[this.studyId].domains.dm) {
+      grok.data.linkTables(studies[this.studyId].domains.dm, this.resultTables,
         [SUBJECT_ID], ['key'],
         [DG.SYNC_TYPE.FILTER_TO_FILTER]);
     }
@@ -124,7 +123,7 @@ export class TimelinesView extends ClinicalCaseViewBase {
 
   private prepare(domain: DG.DataFrame) {
     const info = this.links[domain.name];
-    const df = study.domains[domain.name];
+    const df = studies[this.studyId].domains[domain.name];
     const t = df.clone(null, Object.keys(info).map((e) => info[e]));
     const filterCols = Object.keys(this.filters[domain.name])
       .filter((it) => df.columns.names().includes(this.filters[domain.name][it]));
@@ -138,7 +137,7 @@ export class TimelinesView extends ClinicalCaseViewBase {
 
   private updateTimelinesTables() {
     this.resultTables = null;
-    for (const dt of study.domains.all().filter((t) => this.selectedDataframes.includes(t.name))) {
+    for (const dt of studies[this.studyId].domains.all().filter((t) => this.selectedDataframes.includes(t.name))) {
       const t = this.prepare(dt);
       if (this.resultTables == null)
         this.resultTables = t;
@@ -194,11 +193,11 @@ export class TimelinesView extends ClinicalCaseViewBase {
     //in case no events are selected on timelines plot and ae domain is checked - show most frequent AEs
     if (!selectedInd.length) {
       if (this.selectedDataframes.includes('ae')) {
-        const aeWithArm = addDataFromDmDomain(this.resultTables.clone(), study.domains.dm,
+        const aeWithArm = addDataFromDmDomain(this.resultTables.clone(), studies[this.studyId].domains.dm,
           this.resultTables.columns.names(), [VIEWS_CONFIG[this.name][TRT_ARM_FIELD]], 'key');
         const aeNumberByArm = aeWithArm.groupBy([VIEWS_CONFIG[this.name][TRT_ARM_FIELD]])
           .where(`${DOMAIN} = ae`).count().aggregate();
-        const subjNumberByArm = study.domains.dm.groupBy([VIEWS_CONFIG[this.name][TRT_ARM_FIELD]])
+        const subjNumberByArm = studies[this.studyId].domains.dm.groupBy([VIEWS_CONFIG[this.name][TRT_ARM_FIELD]])
           .uniqueCount(SUBJECT_ID).aggregate();
         const aeNumByArmDict = {};
         for (let i = 0; i < aeNumberByArm.rowCount; i++) {
@@ -277,8 +276,8 @@ export class TimelinesView extends ClinicalCaseViewBase {
           let addInfoString = '';
           const index = this.resultTables.get('rowNum', item);
           addDomainInfo.fields.forEach((it) => {
-            if (study.domains[domain].columns.names().includes(it))
-              addInfoString += `${study.domains[domain].get(it, index)} `;
+            if (studies[this.studyId].domains[domain].columns.names().includes(it))
+              addInfoString += `${studies[this.studyId].domains[domain].get(it, index)} `;
           });
           const eventName = String(getNullOrValue(this.resultTables, 'event', item)).toLowerCase();
           const fullEventName =

@@ -1,0 +1,51 @@
+.cdd-vault-search-sketcher-div {
+    position: relative;
+    height: 100px;
+    width: 200px;
+}
+
+.cdd-vault-search-similarity-limit {
+    visibility: hidden;
+    padding-left: 15px;
+}
+
+.cdd-vault-similarity-search .cdd-vault-search-similarity-limit {
+    visibility: visible;
+}
+
+.cdd-vault-search-res-div {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.cdd-vault-search-res-div .d4-grid {
+    width: 100%!important;
+    height: 100%!important;
+}
+
+.cdd-vault-search-sketcher-root {
+    align-content: center;
+}
+
+.cdd-vault-run-search-button {
+    width: 100px;
+}
+
+.cdd-protocol-in-not-in-input {
+    width: 100px;
+    padding-right: 15px;
+}
+
+.cdd-protocol-cond-input {
+    width: 120px;
+    padding-right: 15px;
+}
+
+.cdd-protocol-list-input {
+    width: 300px;
+}
+
+.cdd-molecule-input {
+    margin-top: 20px;
+}

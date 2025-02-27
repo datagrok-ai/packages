@@ -2,18 +2,13 @@ const path = require('path');
 const packageName = path.parse(require('./package.json').name).name.toLowerCase().replace(/-/g, '');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
   entry: {
     test: {filename: 'package-test.js', library: {type: 'var', name: `${packageName}_test`}, import: './src/package-test.ts'},
     package: './src/package.ts',
   },
   resolve: {
-    extensions: ['.wasm', '.mjs', '.ts', '.tsx', '.js', '.json'],
-    // Needed for rxjs test scheduler to work properly
-    alias: {
-      'rxjs': path.resolve('node_modules/rxjs'),
-      'rxjs/operator': path.resolve('node_modules/rxjs/operator'),
-    },
+    extensions: ['.wasm', '.ts', '.tsx', '.mjs', '.js', '.jsx',  '.json'],
   },
   module: {
     rules: [
@@ -26,7 +21,7 @@ module.exports = {
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
       {
-        test: /\.(js|mjs|jsx|ts|tsx)$/,
+        test: /\.(ts|tsx|mjs|js|jsx)$/,
         enforce: 'pre',
         use: ['source-map-loader'],
       },
@@ -54,4 +49,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
+  optimization: {
+    usedExports: true,
+    concatenateModules: false,
+  }
 };

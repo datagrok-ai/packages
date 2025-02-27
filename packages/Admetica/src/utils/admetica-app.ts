@@ -16,6 +16,7 @@ export class AdmeticaViewApp extends BaseViewApp {
     this.setFunction = () => this.performAdmetica();
     this.browseView.path = 'browse/apps/Admetica';
     this.filePath = 'System:AppData/Admetica/demo_files/mol1K-demo-app.csv';
+    this.tableName = 'Admetica';
   }
 
   protected async processFileData(): Promise<void> {

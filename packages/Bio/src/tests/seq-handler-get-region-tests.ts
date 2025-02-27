@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 
@@ -68,7 +69,7 @@ PEPTIDE1{N.T.[dE].[Thr_PO3H2]}$$$$
 PEPTIDE1{[Cys_SEt].T.[dK].[Thr_PO3H2]}$$$$
 PEPTIDE1{[Cys_SEt].T.*.*}$$$$`,
       units: NOTATION.HELM,
-      alphabet: null,
+      alphabet: ALPHABET.UN,
 
       positionNames: {tag: null, start: '4', end: '7'}
     }

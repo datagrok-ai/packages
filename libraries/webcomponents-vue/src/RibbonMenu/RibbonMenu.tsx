@@ -10,6 +10,10 @@ export const RibbonMenu = Vue.defineComponent({
       type: String,
       required: true,
     },
+    view: {
+      type: DG.ViewBase,
+      required: true,
+    },
   },
   slots: Object as Vue.SlotsType<{
     default?: Vue.VNode[],
@@ -17,19 +21,17 @@ export const RibbonMenu = Vue.defineComponent({
   setup(props, {slots}) {
     const elements = Vue.reactive(new Map<number, HTMLElement>);
 
-    Vue.watch(elements, async () => {
-      await Vue.nextTick();
+    const currentView = Vue.computed(() => Vue.markRaw(props.view));
 
-      const currentView = grok.shell.v;
-
+    Vue.watch(elements, () => {
       const elementsArray = [...elements.values()];
-      currentView.ribbonMenu
+      currentView.value.ribbonMenu
         .group(props.groupName)
         .clear();
 
-      currentView.ribbonMenu
+      currentView.value.ribbonMenu
         .group(props.groupName).items(elementsArray, () => {});
-    });
+    }, {flush: 'post'});
 
     const addElement = (el: Element | null | any, idx: number) => {
       const content = el;
@@ -38,13 +40,11 @@ export const RibbonMenu = Vue.defineComponent({
     };
 
     Vue.onUnmounted(() => {
-      const currentView = grok.shell.v;
-
-      currentView.ribbonMenu
+      currentView.value.ribbonMenu
         .group(props.groupName)
         .clear();
 
-      currentView.ribbonMenu.remove(props.groupName);
+      currentView.value.ribbonMenu.remove(props.groupName);
     });
 
     Vue.onBeforeUpdate(() => {

@@ -41,18 +41,18 @@ export function getData(searchType: SEARCH_TYPE, smiles: string, score: number |
     const chemblId = molecule.getElementsByTagName(ELEMENTS.CHEMBL_ID)[0];
     if (typeof chemblId === 'undefined')
       break;
-    let col = df.columns.getOrCreate(ELEMENTS.CHEMBL_ID, DG.TYPE.STRING, rowCount);
+    let col = df.columns.getOrCreate(ELEMENTS.CHEMBL_ID, DG.TYPE.STRING);
     grok.log.debug(`Chembl ID: ${chemblId}`);
     col.set(i, chemblId.textContent);
 
     const smiles = molecule.getElementsByTagName(ELEMENTS.SMILES)[0];
-    col = df.columns.getOrCreate(ELEMENTS.SMILES, DG.TYPE.STRING, rowCount);
+    col = df.columns.getOrCreate(ELEMENTS.SMILES, DG.TYPE.STRING);
     grok.log.debug(`SMILES: ${smiles}`);
     col.set(i, smiles.textContent);
 
     if (searchType === SEARCH_TYPE.SIMILARITY) {
       const similarity = molecule.getElementsByTagName(ELEMENTS.SIMILARITY)[0];
-      col = df.columns.getOrCreate(ELEMENTS.SIMILARITY, DG.TYPE.FLOAT, rowCount);
+      col = df.columns.getOrCreate(ELEMENTS.SIMILARITY, DG.TYPE.FLOAT);
       grok.log.debug(`Similarity: ${similarity}`);
       col.set(i, parseInt(similarity.textContent ?? '0') / 100);
     }
@@ -149,12 +149,10 @@ export async function chemblSearchWidget(mol: string, substructure: boolean = fa
 
     for (let i = 0; i < molCount; i++) {
       const molHost = ui.divV([]);
-      grok.functions.call('Chem:drawMolecule', {'molStr': moleculeCol.get(i), 'w': WIDTH, 'h': HEIGHT, 'popupMenu': true})
-        .then((res: HTMLElement) => {
-          molHost.append(res);
-          if (!substructure)
-            molHost.append(ui.divText(`Score: ${table.getCol(ELEMENTS.SIMILARITY).get(i)?.toFixed(2)}`));
-        });
+      const res = grok.chem.drawMolecule(moleculeCol.get(i), WIDTH, HEIGHT, true);
+      molHost.append(res);
+      if (!substructure)
+        molHost.append(ui.divText(`Score: ${table.getCol(ELEMENTS.SIMILARITY).get(i)?.toFixed(2)}`));
 
       ui.tooltip.bind(molHost,
         () => ui.divText(`ChEMBL ID: ${chemblIdCol.get(i)}\nClick to open in ChEMBL Database`));

@@ -15,9 +15,16 @@ export enum SummaryColumnColoringType {
   Values = 'Values'
 }
 
+export enum NormalizationType {
+  Row = 'Row',
+  Column = 'Column',
+  Global = 'Global'
+}
+
 export interface SummarySettingsBase {
   columnNames: string[];
   colorCode: SummaryColumnColoringType;
+  normalization: NormalizationType;
 }
 
 
@@ -56,6 +63,29 @@ export function distance(p1: DG.Point, p2: DG.Point): number {
   return Math.sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
 }
 
+export function getScaledNumber(cols: DG.Column[], row: number, activeColumn: DG.Column, settings: {normalization: NormalizationType, zeroScale?: boolean}): number {
+  const normalization = settings.normalization;
+  const zeroScale = settings.zeroScale ?? false;
+  const colMins: number[] = cols.map((c: DG.Column) => c?.min).filter((c) => c !== null) as number[];
+  const colMaxs: number[] = cols.map((c: DG.Column) => c?.max).filter((c) => c !== null) as number[];
+  const colNumbers: number[] = cols.map((c: DG.Column) => c?.getNumber(row)).filter((c) => c !== null) as number[];
+  const gmin = zeroScale ? 0 : normalization === NormalizationType.Global ? Math.min(...colMins) :
+    normalization === NormalizationType.Row ? Math.min(...colNumbers) : 0;
+  const gmax = normalization === NormalizationType.Global ? Math.max(...colMaxs) :
+    normalization === NormalizationType.Row ? Math.max(...colNumbers) : 0;
+  return (normalization === NormalizationType.Row || normalization === NormalizationType.Global) ?
+    (gmax === gmin ? 0 : activeColumn ? (activeColumn.getNumber(row) - gmin) / (gmax - gmin) : 0) : activeColumn.scale(row);
+}
+
+export function getSparklinesContextPanel(gridCell: DG.GridCell, colNames: string[]): HTMLDivElement {
+  const df = gridCell.grid.dataFrame;
+  const row = gridCell.cell.row.idx;
+  const cols = df.columns.byNames(colNames).filter((c) => c !== null);
+  const columnName = ui.div(gridCell.gridColumn.name, {style: {textAlign: 'center', marginBottom: '10px'}});
+  const values = ui.divV(cols.map((col) => ui.divText(col.name + ': ' + col.getString(row))), { style: { marginTop: '20px' } });
+  return ui.div([columnName, DG.GridCellWidget.fromGridCell(gridCell).root, values]);
+}
+
 export class Hit {
   activeColumn: number = -1;
   cols: DG.Column[] = [];
@@ -71,19 +101,37 @@ export function createTooltip(cols: DG.Column[], activeColumn: number, row: numb
     if (cols[i] === null) continue;
 
     const isActive = activeColumn === i;
-    keysDiv.appendChild(ui.divText(`${cols[i].name}`, { 
-      style: { fontWeight: isActive ? 'bold' : 'normal' } 
+    keysDiv.appendChild(ui.divText(`${cols[i].name}`, {
+      style: { fontWeight: isActive ? 'bold' : 'normal' }
     }));
-    valuesDiv.appendChild(ui.divText(`${Math.floor(cols[i].getNumber(row) * 100) / 100}`, { 
-      style: { fontWeight: isActive ? 'bold' : 'normal' } 
+    valuesDiv.appendChild(ui.divText(`${Math.floor(cols[i].getNumber(row) * 100) / 100}`, {
+      style: { fontWeight: isActive ? 'bold' : 'normal' }
     }));
   }
 
   return ui.divH([keysDiv, valuesDiv], { style: { display: 'flex' } });
 }
 
-export function createBaseInputs(gridColumn: DG.GridColumn, settings: SummarySettingsBase): DG.InputBase[] {
+export function createBaseInputs(gridColumn: DG.GridColumn, settings: SummarySettingsBase, isSmartForm: boolean = false): DG.InputBase[] {
   const columnNames = settings?.columnNames ?? names(gridColumn.grid.dataFrame.columns.numerical);
+  const inputs = [];
+  if (!isSmartForm)
+    inputs[inputs.length] = ui.input.choice<NormalizationType>('Normalization', {
+      value: settings.normalization,
+      items: [NormalizationType.Row, NormalizationType.Column, NormalizationType.Global],
+      onValueChanged: (value) => {
+        settings.normalization = value;
+        gridColumn.grid.invalidate();
+      },
+      tooltipText: 'Defines how values are scaled:<br>' +
+        '- ROW: Scales each row individually (row minimum to row maximum). Use for comparing values within a row.<br>' +
+        '- COLUMN: Scales each column individually (column minimum to column maximum).' +
+        'Use when columns have different units.<br>' +
+        '- GLOBAL: Applies a single scale across all values.' +
+        'Use for comparing values across columns with the same units (e.g., tracking changes over time).',
+      nullable: false
+    });
+
   return [
     ui.input.columns('Columns', {
       value: gridColumn.grid.dataFrame.columns.byNames(columnNames),
@@ -94,6 +142,7 @@ export function createBaseInputs(gridColumn: DG.GridColumn, settings: SummarySet
       },
       available: names(gridColumn.grid.dataFrame.columns.numerical)
     }),
+    ...inputs,
     ui.input.choice<SummaryColumnColoringType>('Color Code', {
       value: settings.colorCode,
       items: [SummaryColumnColoringType.Off, SummaryColumnColoringType.Bins, SummaryColumnColoringType.Values],

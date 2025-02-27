@@ -97,6 +97,8 @@ export class DuplicateMonomerManager {
       DuplicateMonomerManager._instance = new DuplicateMonomerManager();
       await DuplicateMonomerManager._instance.refresh();
       const libManager = await MonomerLibManager.getInstance();
+      // reason: subscription happens only once, and is needed throught the lifetime of the app
+      // eslint-disable-next-line rxjs/no-async-subscribe, rxjs/no-ignored-subscription
       libManager.getMonomerLib().onChanged.subscribe(async () => await DuplicateMonomerManager._instance.refresh());
     }
     DuplicateMonomerManager._instance.refresh();

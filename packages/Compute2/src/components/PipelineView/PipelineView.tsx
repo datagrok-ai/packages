@@ -2,7 +2,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import * as Vue from 'vue';
-import {DockManager, FunctionCard, IconFA, MarkDown, RibbonMenu, tooltip} from '@datagrok-libraries/webcomponents-vue';
+import {DockManager, IconFA, MarkDown, RibbonMenu, tooltip} from '@datagrok-libraries/webcomponents-vue';
 import * as Utils from '@datagrok-libraries/compute-utils/shared-utils/utils';
 import {History} from '../History/History';
 import {hasAddControls, PipelineWithAdd} from '../../utils';
@@ -34,6 +34,10 @@ export const PipelineView = Vue.defineComponent({
     buttonActions: {
       type: Object as Vue.PropType<ViewAction[]>,
     },
+    view: {
+      type: DG.ViewBase,
+      required: true,
+    },
   },
   emits: {
     'update:funcCall': (call: DG.FuncCall) => call,
@@ -52,6 +56,7 @@ export const PipelineView = Vue.defineComponent({
     const menuActions = Vue.computed(() => props.menuActions);
     const buttonActions = Vue.computed(() => props.buttonActions);
     const menuIconStyle = {width: '15px', display: 'inline-block', textAlign: 'center'};
+    const currentView = Vue.shallowRef(props.view);
 
     const hoveredFunc = Vue.shallowRef(null as DG.Func | null);
 
@@ -154,7 +159,7 @@ export const PipelineView = Vue.defineComponent({
           </div>
           }
           { menuActions.value && Object.entries(menuActions.value).map(([category, actions]) =>
-            <RibbonMenu groupName={category}>
+            <RibbonMenu groupName={category} view={currentView.value}>
               {
                 actions.map((action) => Vue.withDirectives(
                   <span onClick={() => emit('actionRequested', action.uuid)}>

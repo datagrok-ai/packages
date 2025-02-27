@@ -1,5 +1,9 @@
 # LibTests changelog
 
+## 1.5.0 (2025-02-19)
+
+- Release for 1.24.0
+
 ## 1.4.3 (2025-01-29)
 
 - Deps update

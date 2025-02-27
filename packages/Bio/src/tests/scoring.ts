@@ -21,8 +21,8 @@ category('Scoring', () => {
   /* eslint-disable max-len */
   const table = DG.DataFrame.fromCsv(`${sequence},${expectedSimilarity},${expectedIdentity}
 PEPTIDE1{Aca.Orn.gGlu.Pqa.D-His_1Bn.dH.hHis.4Abz.D-Tic.D-Dap.Y.Iva.meS.F.P.F.D-1Nal}$$$$,1.0,1.0
-PEPTIDE1{Iva.Gly_allyl.gGlu.Pqa.D-Dip.dH.hHis.4Abz.D-aHyp.D-Dap.Y.Iva.I.Tyr_26diMe.P.Asu.meC}$$$$,0.68,0.53
-PEPTIDE1{[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal]}$$$$V2.0,0.34,0.0`
+PEPTIDE1{Iva.Gly_allyl.gGlu.Pqa.D-Dip.dH.hHis.4Abz.D-aHyp.D-Dap.Y.Iva.I.Tyr_26diMe.P.Asu.meC}$$$$,0.691,0.53
+PEPTIDE1{[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal].[1Nal]}$$$$V2.0,0.37,0.0`
   );
   const seqCol: DG.Column<string> = table.getCol(sequence);
   seqCol.meta.units = NOTATION.HELM;

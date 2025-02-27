@@ -1,5 +1,24 @@
 # Diff Studio changelog
 
+## 1.2.4 (2025-02-20)
+
+* Implemented the use of Diff Grok library
+* Updated compute-utils
+
+## 1.2.3 (2025-02-12)
+
+* Fixed the Open model menu
+* Updated performance info
+
+## 1.2.2 (2025-02-10)
+
+* Implemented the use of Diff Studio Lib solvers
+* Added correctness tests
+
+## 1.2.1 (2025-02-01)
+
+Added facet grid plot
+
 ## 1.2.0 (2024-12-01)
 
 UI/UX updates:

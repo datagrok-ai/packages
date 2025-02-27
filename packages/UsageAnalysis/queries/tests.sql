@@ -78,7 +78,7 @@ Select distinct on ((r.params::json->'batchName')::varchar(255))
 from tests t full join builds b on 1 = 1
 left join test_runs r on r.test_name = t.name and r.build_name = b.name   
 where t.type = 'manual' 
-  and (r.params::json->>'uid')::varchar(255) = @uid 
+  and (r.params::json->>'uid')::varchar(255) = @uid::varchar
   and (r.params::json->>'version')::varchar(255) =  @version
   and (r.params::json->>'start')::varchar(255) = @start
 order by (r.params::json->'batchName')::varchar(255), r.date_time 

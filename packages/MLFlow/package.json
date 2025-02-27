@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/mlflow",
   "friendlyName": "MLFlow",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MLFlow Integration package",
   "author": {
     "name": "Konstantin Amelichev",

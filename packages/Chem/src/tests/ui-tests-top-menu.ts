@@ -3,9 +3,8 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import {category, before, after, expect, test, delay, awaitCheck} from '@datagrok-libraries/utils/src/test';
 import {isColumnPresent, returnDialog, setDialogInputValue} from './gui-utils';
-import {readDataframe} from './utils';
+import {ensureContainersRunning, readDataframe} from './utils';
 import {ScaffoldTreeViewer} from '../widgets/scaffold-tree';
-
 
 category('UI top menu', () => {
   let v: DG.TableView;
@@ -14,6 +13,7 @@ category('UI top menu', () => {
   before(async () => {
     grok.shell.closeAll();
     grok.shell.windows.showProperties = true;
+    await ensureContainersRunning();
   });
 
   test('similarity search', async () => {
@@ -73,6 +73,7 @@ category('UI top menu', () => {
     const dialog = DG.Dialog.getOpenDialogs()[0];
     await awaitCheck(() => dialog.inputs.length === 4, 'cannot load Mutate dialog', 1000);
     expect(dialog.input('Molecule').stringValue, 'CN1C(CC(O)C1=O)C1=CN=CC=C1');
+    await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
     const okButton = document.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton!.click();
     await awaitCheck(() => grok.shell.t.name === 'mutations', 'cannot find mutations table', 20000);
@@ -94,6 +95,7 @@ category('UI top menu', () => {
     const dialog = returnDialog('Curate');
     await awaitCheck(() => dialog?.input('Kekulization') !== undefined, 'cannot open curate dialog', 2000);
     setDialogInputValue('Curate', 'Kekulization', true);
+    await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
     const okButton = dialog!.root.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
     await awaitCheck(() => smiles.columns.names().includes('curated_molecule'), 'curated molecule hasn\'t been added', 10000);
@@ -110,6 +112,7 @@ category('UI top menu', () => {
 
     await callDialog();
     setDialogInputValue('Chem Map Identifiers', 'To Source', 'inchi');
+    await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
     let okButton = document.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton!.click();
     await awaitCheck(() => grok.shell.t.columns.contains('inchi'), 'cannot find inchi column', 15000);
@@ -118,18 +121,21 @@ category('UI top menu', () => {
     if (chemblPackInstalled) {
       await callDialog();
       setDialogInputValue('Chem Map Identifiers', 'To Source', 'mcule');
+      await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
       okButton = document.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
       okButton!.click();
       await awaitCheck(() => grok.shell.t.columns.contains('mcule'), 'cannot find mcule column', 15000);
 
       await callDialog();
       setDialogInputValue('Chem Map Identifiers', 'To Source', 'chembl');
+      await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
       okButton = document.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
       okButton!.click();
       await awaitCheck(() => grok.shell.t.columns.contains('chembl'), 'cannot find chembl column', 15000);
 
       await callDialog();
       setDialogInputValue('Chem Map Identifiers', 'To Source', 'pubchem');
+      await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
       okButton = document.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
       okButton!.click();
       await awaitCheck(() => grok.shell.t.columns.contains('pubchem'), 'cannot find pubchem column', 15000);
@@ -173,9 +179,13 @@ category('UI top menu', () => {
     const lipinski = Array.from(dialog.querySelectorAll('.d4-tree-view-group-label'))
       .find((el) => el.textContent === 'Lipinski')!.previousSibling as HTMLElement;
     lipinski.click();
+    await awaitCheck(() => {
+      const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled');
+      return okButton && okButton.length > 0;
+    }, 'element columns haven\'t been added', 5000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
-    await awaitCheck(() => smiles.columns.length === 20, 'columns length != 20', 3000);
+    await awaitCheck(() => smiles.columns.length === 27, `expected 25 descriptors, got ${smiles.columns.length - 2}`, 3000);
     isColumnPresent(smiles.columns, 'FractionCSP3');
     isColumnPresent(smiles.columns, 'NumAromaticCarbocycles');
     isColumnPresent(smiles.columns, 'NumHAcceptors');
@@ -205,6 +215,7 @@ category('UI top menu', () => {
     const mcsButton = dialog.getElementsByClassName('chem-mcs-button')[0] as HTMLElement;
     mcsButton?.click();
     await delay(2000);
+    await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
     await awaitCheck(() => smiles.columns.names().filter((cname) => !cname.startsWith('~')).length === 6,
@@ -234,6 +245,7 @@ category('UI top menu', () => {
     grok.shell.topMenu.find('Chem').group('Analyze').find('Chemical Space...').click();
     await awaitCheck(() => DG.Dialog.getOpenDialogs().length > 0, 'cannot open chemical space dialog', 2000);
     const dialog = DG.Dialog.getOpenDialogs()[0].root;
+    await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
     await awaitCheck(() => {
@@ -262,6 +274,7 @@ category('UI top menu', () => {
     grok.shell.topMenu.find('Chem').group('Analyze').find('Activity Cliffs...').click();
     await awaitCheck(() => DG.Dialog.getOpenDialogs().length > 0, 'cannot open activity cliffs dialog', 2000);
     const dialog = DG.Dialog.getOpenDialogs()[0].root;
+    await awaitCheck(() => document.getElementsByClassName('ui-btn ui-btn-ok enabled').length > 0, 'cannot find dialog OK button', 1000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
     await awaitCheck(() =>
@@ -288,6 +301,10 @@ category('UI top menu', () => {
     grok.shell.topMenu.find('Chem').group('Analyze').find('Elemental Analysis...').click();
     await awaitCheck(() => DG.Dialog.getOpenDialogs().length > 0, 'cannot open elemental analysis dialog', 2000);
     const dialog = DG.Dialog.getOpenDialogs()[0].root;
+    await awaitCheck(() => {
+      const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled');
+      return okButton && okButton.length > 0;
+    }, 'element columns haven\'t been added', 5000);
     const okButton = dialog.getElementsByClassName('ui-btn ui-btn-ok enabled')[0] as HTMLElement;
     okButton?.click();
     await awaitCheck(() => smiles.columns.length === 11, 'element columns haven\'t been added', 5000);

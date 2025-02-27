@@ -1,0 +1,956 @@
+{
+  "#type": "ViewInfo",
+  "table": {
+    "id": "94e609e4-b5b7-437e-b91f-01da1ff73b17"
+  },
+  "type": "TableView",
+  "viewStateMap": {
+    "containerType": "horizontal",
+    "state": {
+      "width": 1068,
+      "height": 927
+    },
+    "children": [
+      {
+        "containerType": "panel",
+        "state": {
+          "width": 195,
+          "height": 927,
+          "element": {
+            "id": "21bdefd0-c210-11ef-954f-4d790ee1b10d",
+            "type": "Filters",
+            "look": {
+              "#type": "FiltersLook",
+              "filters": [
+                {
+                  "type": "hierarchical",
+                  "column": null,
+                  "active": true,
+                  "colNames": [
+                    "~test_0",
+                    "~test_1",
+                    "~test_2",
+                    "~test_3",
+                    "~test_4"
+                  ],
+                  "allEnabled": true,
+                  "splittingSeparator": ":",
+                  "splitColumnName": "test",
+                  "columnless-filter-identifier": "~test_0,~test_1,~test_2,~test_3,~test_4",
+                  "boolInput": null
+                },
+                {
+                  "type": "categorical",
+                  "column": "owner",
+                  "active": true,
+                  "boolInput": null
+                },
+                {
+                  "type": "bool-columns",
+                  "column": null,
+                  "active": true,
+                  "mode": "OR",
+                  "true": [
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true
+                  ],
+                  "false": [
+                    true,
+                    true,
+                    true,
+                    true,
+                    true,
+                    true
+                  ],
+                  "columnless-filter-identifier": "2 first(flaking),3 first(flaking),4 first(flaking),5 first(flaking),1 first(flaking),has_suspicious",
+                  "boolInput": null
+                }
+              ]
+            },
+            "title": "Filters"
+          }
+        },
+        "children": []
+      },
+      {
+        "containerType": "vertical",
+        "state": {
+          "width": 872,
+          "height": 927
+        },
+        "children": [
+          {
+            "containerType": "fill",
+            "state": {
+              "width": 872,
+              "height": 602,
+              "documentManager": true
+            },
+            "children": [
+              {
+                "containerType": "panel",
+                "state": {
+                  "width": 872,
+                  "height": 602,
+                  "element": {
+                    "id": "21be3df0-c210-11ef-b365-b3a90e87fd79",
+                    "type": "Grid",
+                    "look": {
+                      "#type": "GridLook",
+                      "showAddNewRowIcon": true,
+                      "addNewRowOnLastRowEdit": true,
+                      "showColumnLabels": false,
+                      "colHeaderHeight": 69,
+                      "rowHeight": 42,
+                      "sortByColumnNames": [
+                        "has_suspicious"
+                      ],
+                      "sortTypes": [
+                        false
+                      ],
+                      "topLevelDefaultMenu": true,
+                      "allowColumnMenu": true,
+                      "colLabelsOrientation": "Vert",
+                      "columns": [
+                        {
+                          "width": 20.21593341260405,
+                          "backgroundColor": 4294440951,
+                          "customName": "",
+                          "cellType": "row header",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 259.2062623860487,
+                          "columnName": "test",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          },
+                          "settings": {
+                            "isPinned": false,
+                            "idxPinned": -1
+                          }
+                        },
+                        {
+                          "width": 71.55215219976218,
+                          "columnName": "owner",
+                          "cellType": "User",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          },
+                          "settings": {
+                            "isPinned": false,
+                            "idxPinned": -1
+                          }
+                        },
+                        {
+                          "width": 115,
+                          "columnName": "has_suspicious",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 82,
+                          "columnName": "min",
+                          "cellType": "number",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 82,
+                          "columnName": "max",
+                          "cellType": "number",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 78.56646848989297,
+                          "columnName": "1 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 18.384225128814904,
+                          "columnName": "1 concat unique(status)",
+                          "tooltipColumns": [
+                            "1 avg(build_date)",
+                            "1 concat unique(result)"
+                          ],
+                          "tooltipType": "Columns",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 19.384225128814904,
+                          "columnName": "2 concat unique(status)",
+                          "tooltipColumns": [
+                            "2 avg(build_date)",
+                            "2 concat unique(result)"
+                          ],
+                          "tooltipType": "Columns",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 19.128973444312333,
+                          "columnName": "3 concat unique(status)",
+                          "tooltipColumns": [
+                            "3 avg(build_date)",
+                            "3 concat unique(result)"
+                          ],
+                          "tooltipType": "Columns",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 18.384225128814904,
+                          "columnName": "4 concat unique(status)",
+                          "tooltipColumns": [
+                            "4 avg(build_date)",
+                            "4 concat unique(result)"
+                          ],
+                          "tooltipType": "Columns",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 19.128973444312333,
+                          "columnName": "5 concat unique(status)",
+                          "tooltipColumns": [
+                            "5 avg(build_date)",
+                            "5 concat unique(result)"
+                          ],
+                          "tooltipType": "Columns",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 77.64651162790692,
+                          "customName": "sparkline",
+                          "cellType": "sparkline",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          },
+                          "settings": {
+                            "sparkline": {
+                              "columnNames": [
+                                "1 avg(duration)",
+                                "2 avg(duration)",
+                                "3 avg(duration)",
+                                "4 avg(duration)",
+                                "5 avg(duration)"
+                              ],
+                              "normalization": "Row",
+                              "colorCode": "Values"
+                            }
+                          }
+                        },
+                        {
+                          "width": 113.84225128814906,
+                          "columnName": "1 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 120.27459373761394,
+                          "columnName": "2 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 114.55695600475622,
+                          "columnName": "4 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 110.98343242172018,
+                          "columnName": "3 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 110.26872770511298,
+                          "columnName": "5 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 183.781212841855,
+                          "columnName": "1 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 78.56646848989297,
+                          "columnName": "2 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 183.781212841855,
+                          "columnName": "2 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 78.56646848989297,
+                          "columnName": "3 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 183.781212841855,
+                          "columnName": "3 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 78.56646848989297,
+                          "columnName": "4 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 183.781212841855,
+                          "columnName": "4 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 78.56646848989297,
+                          "columnName": "5 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 183.781212841855,
+                          "columnName": "5 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 77.9028141101863,
+                          "columnName": "1 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 77.9028141101863,
+                          "columnName": "2 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 77.9028141101863,
+                          "columnName": "3 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 77.9028141101863,
+                          "columnName": "4 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 77.9028141101863,
+                          "columnName": "5 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        }
+                      ]
+                    },
+                    "title": "Grid",
+                    "default": true
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "containerType": "horizontal",
+            "state": {
+              "width": 872,
+              "height": 324
+            },
+            "children": [
+              {
+                "containerType": "panel",
+                "state": {
+                  "width": 728,
+                  "height": 324,
+                  "element": {
+                    "id": "21be6500-c210-11ef-a020-4f13162946ea",
+                    "type": "Bar chart",
+                    "look": {
+                      "#type": "BarChartLook",
+                      "rowSource": "All",
+                      "onClick": "Filter",
+                      "valueColumnName": "test",
+                      "valueAggrType": "count",
+                      "barSortType": "by value",
+                      "barSortOrder": "desc",
+                      "splitColumnName": "~test_0",
+                      "stackColumnName": "failing",
+                      "colorColumnName": "",
+                      "maxCategoryWidth": 100,
+                      "minTextHeight": 14,
+                      "legendVisibility": "Never",
+                      "legendPosition": "Right"
+                    },
+                    "title": "Bar chart"
+                  }
+                },
+                "children": []
+              },
+              {
+                "containerType": "panel",
+                "state": {
+                  "width": 143,
+                  "height": 324,
+                  "element": {
+                    "id": "21beb320-c210-11ef-b1b1-8d895067a28c",
+                    "type": "Heat map",
+                    "look": {
+                      "#type": "GridLook",
+                      "colHeaderHeight": 43,
+                      "rowHeight": 160,
+                      "topLevelDefaultMenu": true,
+                      "allowColumnMenu": true,
+                      "colorCoding": "None",
+                      "heatmapHorzScroll": [
+                        150,
+                        0,
+                        150
+                      ],
+                      "heatmapVertScroll": [
+                        108,
+                        0,
+                        108
+                      ],
+                      "colorScheme": [
+                        4292072403,
+                        4294901760
+                      ],
+                      "columns": [
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "backgroundColor": 4294440951,
+                          "customName": "",
+                          "cellType": "row header",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "test",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "owner",
+                          "cellType": "User",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "1 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "1 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 30,
+                          "columnName": "1 concat unique(status)",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "1 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "2 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "2 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 30,
+                          "columnName": "2 concat unique(status)",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "2 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "3 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "3 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 30,
+                          "columnName": "3 concat unique(status)",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "3 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "4 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "4 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 30,
+                          "columnName": "4 concat unique(status)",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "4 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "5 avg(duration)",
+                          "customFormat": "int",
+                          "cellType": "number",
+                          "format": "int",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "5 avg(build_date)",
+                          "customFormat": "M/d/yyyy HH:mm:ss.fff",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 30,
+                          "columnName": "5 concat unique(status)",
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "failed": 4292224808,
+                            "passed": 4288208778,
+                            "skipped": 4292467161
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "5 concat unique(result)",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "1 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "2 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "3 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "4 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "5 first(flaking)",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "min",
+                          "cellType": "number",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "max",
+                          "cellType": "number",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "visible": false,
+                          "width": 30,
+                          "columnName": "has_suspicious",
+                          "cellType": "bool",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        }
+                      ]
+                    },
+                    "title": "Heat map"
+                  }
+                },
+                "children": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "floating": [],
+    "tableId": "94e609e4-b5b7-437e-b91f-01da1ff73b17",
+    "tableName": "Benchmarks"
+  },
+  "userData": {
+    "TABLE_ROW_HEIGHT_KEY": null
+  },
+  "id": "a48f3baf-ce4a-5588-86f9-16cfd84f9845",
+  "name": "Benchmarks",
+  "friendlyName": "Benchmarks"
+}

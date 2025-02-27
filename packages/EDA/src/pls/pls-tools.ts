@@ -7,7 +7,7 @@ import * as DG from 'datagrok-api/dg';
 import {PLS_ANALYSIS, ERROR_MSG, TITLE, HINT, LINK, COMPONENTS, INT, TIMEOUT,
   RESULT_NAMES, WASM_OUTPUT_IDX, RADIUS, LINE_WIDTH, COLOR, X_COORD, Y_COORD,
   DEMO_INTRO_MD, DEMO_RESULTS_MD, DEMO_RESULTS} from './pls-constants';
-import {checkWasmDimensionReducerInputs, checkColumnType, checkMissingVals} from '../utils';
+import {checkWasmDimensionReducerInputs, checkColumnType, checkMissingVals, describeElements} from '../utils';
 import {_partialLeastSquareRegressionInWebWorker} from '../../wasm/EDAAPI';
 import {carsDataframe} from '../data-generators';
 
@@ -168,8 +168,6 @@ async function performMVA(input: PlsInput, analysisType: PLS_ANALYSIS): Promise<
     help: LINK.MODEL,
   }));
 
-  console.log(input.names?.name);
-
   if ((input.names !== undefined) && (input.names !== null))
     predictVsReferScatter.setOptions({labelColumnNames: [input.names?.name]});
 
@@ -275,18 +273,14 @@ async function performMVA(input: PlsInput, analysisType: PLS_ANALYSIS): Promise<
   }));
 
   // emphasize viewers in the demo case
-  if (analysisType === PLS_ANALYSIS.DEMO) {
-    const pages = [predictVsReferScatter, scoresScatter, loadingsScatter, regrCoeffsBar, explVarsBar]
-      .map((viewer, idx) => {
-        return {
-          text: DEMO_RESULTS[idx].text,
-          showNextTo: viewer.root,
-        };
-      });
-
-    const wizard = ui.hints.addTextHint({title: TITLE.EXPLORE, pages: pages});
-    wizard.helpUrl = LINK.MVA;
+  if (analysisType === PLS_ANALYSIS.DEMO) {    
     grok.shell.windows.help.showHelp(ui.markdown(DEMO_RESULTS_MD));
+
+    describeElements(
+      [predictVsReferScatter, scoresScatter, loadingsScatter, regrCoeffsBar, explVarsBar].map((v) => v.root),
+      DEMO_RESULTS.map((info) => `<b>${info.caption}</b>\n\n${info.text}`),
+      ['left', 'left', 'right', 'right', 'left'],
+    );
   }
 } // performMVA
 
@@ -399,8 +393,6 @@ export async function runMVA(analysisType: PLS_ANALYSIS): Promise<void> {
     .add(ui.form([predictInput, featuresInput, componentsInput, namesInputs]))
     .addButton(TITLE.RUN, async () => {
       dlg.close();
-
-      console.log(names);
 
       await performMVA({
         table: table,

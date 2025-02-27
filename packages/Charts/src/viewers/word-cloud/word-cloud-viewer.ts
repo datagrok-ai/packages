@@ -72,7 +72,6 @@ export class WordCloudViewer extends DG.JsViewer {
   }
 
   onTableAttached() {
-    this.subs.push(DG.debounce(this.dataFrame.selection.onChanged, 50).subscribe((_) => this.render()));
     this.subs.push(DG.debounce(this.dataFrame.filter.onChanged, 50).subscribe((_) => this.render()));
     this.subs.push(DG.debounce(ui.onSizeChanged(this.root), 50).subscribe((_) => this.render()));
 
@@ -178,7 +177,7 @@ export class WordCloudViewer extends DG.JsViewer {
     this.chart
       .on('mouseover', (d: any) => ui.tooltip.showRowGroup(table, (i) => {
         return d.name === strColumn.get(i);
-      }, 10, 10))
+      }, d.event.event.x + 10, d.event.event.y + 10))
       .on('mouseout', () => ui.tooltip.hide())
       .on('mousedown', (d: any) => {
         table.selection.handleClick((i) => {

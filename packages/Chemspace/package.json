@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/chemspace",
   "friendlyName": "Enamine ChemSpace",
-  "version": "1.1.4",
+  "version": "1.1.6",
   "author": {
     "name": "Maria Dolotova",
     "email": "mdolotova@datagrok.ai"
@@ -28,7 +28,8 @@
     "typescript": "^5.6.3",
     "datagrok-tools": "latest",
     "webpack": "^5.95.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "@datagrok/chem": "^1.13.0"
   },
   "scripts": {
     "link-api": "npm link datagrok-api",

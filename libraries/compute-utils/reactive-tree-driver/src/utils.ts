@@ -54,11 +54,6 @@ export function makeValidationResult(payload?: ValidationPayload): ValidationRes
   };
 }
 
-export async function makeModel(provider: string) {
-  return DG.Func.byName('Compute2:TreeWizardEditor')
-    .prepare({call: DG.Func.byName(provider).prepare()}).call();
-}
-
 export function pathToUUID(
   rnode: TreeNode<StateTreeNode>,
   path: readonly NodeAddressSegment[] | readonly NodePathSegment[],

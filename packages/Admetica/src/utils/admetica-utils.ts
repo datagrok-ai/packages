@@ -53,16 +53,25 @@ export async function runAdmetica(csvString: string, queryParams: string, addPro
 
   const path = `/predict?models=${queryParams}&probability=${addProbability}`;
   const response: AdmeticaResponse | null = await sendRequestToContainer(admeticaContainer.id, path, params);
-  if (!response?.success) {
-    grok.shell.error('Prediction attempt failed.');
-    _package.logger.error(response?.error);
-    return null;
+  
+  if (!response && !admeticaContainer.status.startsWith('started') && !admeticaContainer.status.startsWith('checking')) {
+    throwError('Container failed to start.');
   }
-  return await convertLD50(response.result!, DG.Column.fromStrings('smiles', csvString.split('\n').slice(1)));
+  
+  if (!response?.success) {
+    _package.logger.error(response?.error);
+    throwError('Prediction attempt failed.');
+  }
+  return await convertLD50(response.result!, DG.DataFrame.fromCsv(csvString));
 }
 
-export async function convertLD50(response: string, smilesCol: DG.Column): Promise<string> {
-  const df = DG.DataFrame.fromCsv(response);
+function throwError(message: string): never {
+  grok.shell.error(message);
+  throw new Error(message);
+}
+
+export async function convertLD50(response: string, df: DG.DataFrame): Promise<string> {
+  const smilesCol = df.columns.bySemType(DG.SEMTYPE.MOLECULE);
   if (!df.columns.names().includes('LD50')) return response;
 
   const ldCol = df.getCol('LD50');
@@ -453,6 +462,7 @@ export async function getModelsSingle(smiles: string, semValue: DG.SemanticValue
       }
       result.appendChild(ui.tableFromMap(map));
     } catch (e) {
+      ui.empty(result);
       result.appendChild(ui.divText('Couldn\'t analyze properties'));
       //console.log(e);
     }
@@ -514,6 +524,12 @@ export function createDynamicForm(viewTable: DG.DataFrame, updatedModelNames: st
   const generator = new FormStateGenerator(viewTable.name, mapping, molColName, addPiechart);
   const formState = generator.generateFormState();
   form.form.state = JSON.stringify(formState);
+
+  ui.onSizeChanged(form.root).subscribe(() => {
+    const containerWidth = form.root.clientWidth;
+    const updatedFormState = generator.generateFormState(containerWidth);
+    form.form.state = JSON.stringify(updatedFormState);
+  });
   return form;
 }
 

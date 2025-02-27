@@ -631,7 +631,6 @@ category('ComputeUtils: Driver links matching', async () => {
         {
           id: 'step3',
           nqName: 'LibTests:TestDiv2',
-
         },
       ],
       links: [{
@@ -649,4 +648,51 @@ category('ComputeUtils: Driver links matching', async () => {
     const matchInfos = links.map((link) => matchLink(tree, [], link));
     await snapshotCompare(matchInfos, 'Links not matching');
   });
+
+  test('Links optional matching', async () => {
+    const config: PipelineConfiguration = {
+      id: 'pipeline1',
+      type: 'static',
+      steps: [
+        {
+          id: 'pipelinePar',
+          type: 'parallel',
+          stepTypes: [
+            {
+              id: 'stepAdd',
+              nqName: 'LibTests:TestAdd2',
+            },
+            {
+              id: 'stepMul',
+              nqName: 'LibTests:TestMul2',
+            },
+          ],
+          initialSteps: [
+            {
+              id: 'stepAdd',
+            },
+          ],
+        },
+        {
+          id: 'step3',
+          nqName: 'LibTests:TestMul2',
+        },
+      ],
+      links: [{
+        id: 'link1',
+        from: ['in1:pipelinePar/stepAdd/res', 'in2(optional):pipelinePar/stepMul/res'],
+        to: ['out1:step3/a'],
+        handler({controller}) {
+          controller.setAll('out', 1);
+        }
+      }],
+    };
+    const pconf = await getProcessedConfig(config);
+    const tree = StateTree.fromPipelineConfig({config: pconf});
+    await tree.init().toPromise();
+    const links = (tree.nodeTree.root.getItem().config as PipelineConfigurationStaticProcessed).links!;
+    const matchInfos = links.map((link) => matchLink(tree, [], link));
+    await snapshotCompare(matchInfos, 'Links optional matching');
+  });
+
 });

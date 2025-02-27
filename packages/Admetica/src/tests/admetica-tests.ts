@@ -14,18 +14,24 @@ category('Admetica', () => {
   before(async () => {
     grok.shell.closeAll();
     grok.shell.windows.showProperties = false;
-    if (!admeticaContainer)
-      admeticaContainer = await grok.dapi.docker.dockerContainers.filter('admetica').first();
-    if (admeticaContainer.status !== 'started')
-      await fetchWrapper(() => healthCheck());
-    await setProperties();
-  });
+  
+    admeticaContainer = await grok.dapi.docker.dockerContainers.filter('admetica').first();
+    await Promise.all([
+      (async () => {
+        if (!admeticaContainer.status.startsWith('started')) {
+          await grok.dapi.docker.dockerContainers.run(admeticaContainer.id, true);
+        }
+      })(),
+      setProperties(),
+      delay(1000)
+    ]);
+  });  
 
   test('Container. Post request', async () => {
     const smiles = `smiles
     O=C1Nc2ccccc2C(C2CCCCC2)=NC1`;
-    const bbbResults = await fetchWrapper(() => runAdmetica(smiles, 'PPBR,VDss', 'false'));
-    expect(bbbResults != null, true);
+    const distributionResults = await fetchWrapper(() => runAdmetica(smiles, 'PPBR,VDss', 'false'));
+    expect(distributionResults != null, true);
   }, {timeout: 25000});
 
   test('Calculate dialog. UI', async () => {
@@ -67,45 +73,38 @@ category('Admetica', () => {
   test('Calculate. For single cell', async () => {
     const molecules = grok.data.demo.molecules(20);
     const v = grok.shell.addTableView(molecules);
-    await awaitCheck(() => document.querySelector('canvas') !== null, 'Cannot load table', 3000);
+    await awaitCheck(() => document.querySelector('canvas') !== null, 'Table failed to load', 3000);
+    
     grok.shell.windows.showProperties = true;
   
     const table = v.dataFrame;
     table.currentCell = table.cell(0, 'smiles');
-    await delay(1000);
+    await delay(3000);
   
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
     await awaitPanel(pp, 'Biology', 6000);
   
-    const biologyPanel = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
-      .find((el) => el.textContent === 'Biology') as HTMLElement;
-    if (biologyPanel && !biologyPanel.classList.contains('expanded')) {
-      biologyPanel.click();
-    }
-    
-    await delay(2000);
+    const expandPanel = async (panelTitle: string, timeout = 3000) => {
+      const panel = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
+        .find((el) => el.textContent === panelTitle) as HTMLElement;
+  
+      if (!panel) throw new Error(`Panel "${panelTitle}" not found`);
+      
+      if (!panel.classList.contains('expanded')) {
+        panel.click();
+        await awaitCheck(() => panel.classList.contains('expanded'), `Failed to expand "${panelTitle}"`, timeout);
+      }
+    };
+  
+    await expandPanel('Biology');
+    await expandPanel('Admetica');
+    await expandPanel('Distribution');
   
     const admePanel = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
       .find((el) => el.textContent === 'Admetica') as HTMLElement;
-    if (admePanel && !admePanel.classList.contains('expanded')) {
-      admePanel.click();
-    }
-  
-    await delay(2000);
-    
-    const distribution = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
-      .find((el) => el.textContent === 'Distribution') as HTMLElement;
-    if (distribution && !distribution.classList.contains('expanded')) {
-      distribution.click();
-    }
-  
-    await delay(1000);
-  
-    await awaitCheck(() => 
-      (admePanel?.parentElement?.getElementsByClassName('d4-table d4-item-table d4-info-table')[0] as HTMLElement)?.innerText.trim() !== '',
-      'Properties weren’t calculated',
-      8000
-    );
+      
+    const propertiesTable = admePanel?.parentElement?.querySelector('.d4-table.d4-item-table.d4-info-table') as HTMLElement;
+    await awaitCheck(() => propertiesTable?.innerText.trim() !== '', 'Properties weren’t calculated', 8000);
   }, { timeout: 100000 });  
 
   test('Calculate.Benchmark column', async () => {

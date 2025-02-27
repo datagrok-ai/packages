@@ -4,9 +4,8 @@ import * as OCL from 'openchemlib/full';
 
 import {errInfo} from '@datagrok-libraries/bio/src/utils/err-info';
 import {RDModule, RDMol} from '@datagrok-libraries/chem-meta/src/rdkit-api';
-import {IMonomerLib, IMonomerLibBase} from '@datagrok-libraries/bio/src/types/index';
-import {IMonomerLibHelper} from '@datagrok-libraries/bio/src/monomer-works/monomer-utils';
-import {getHelmHelper, IHelmHelper} from '@datagrok-libraries/bio/src/helm/helm-helper';
+import {IMonomerLibBase} from '@datagrok-libraries/bio/src/types/index';
+import {IHelmHelper} from '@datagrok-libraries/bio/src/helm/helm-helper';
 import {MolfileWithMap, MonomerMap} from '@datagrok-libraries/bio/src/monomer-works/types';
 
 import {Polymer} from './polymer';
@@ -14,9 +13,10 @@ import {GlobalMonomerPositionHandler} from './position-handler';
 
 import {_package} from '../../../package';
 import {getUnusedColName} from '@datagrok-libraries/bio/src/monomer-works/utils';
+import {IHelmToMolfileConverter} from '@datagrok-libraries/bio/src/utils/seq-helper';
 
 
-export class HelmToMolfileConverter {
+export class HelmToMolfileConverter implements IHelmToMolfileConverter {
   constructor(
     private readonly helmHelper: IHelmHelper,
     private readonly rdKitModule: RDModule,
@@ -41,6 +41,20 @@ export class HelmToMolfileConverter {
     return smiles;
   }
 
+  public molV3KtoMolV3KOCL(molV3k: string): string {
+    try {
+      if (!molV3k)
+        return '';
+      const oclMolecule = OCL.Molecule.fromMolfile(molV3k);
+      const molV3000 = oclMolecule.toMolfileV3();
+      return molV3000.replace('STERAC1', 'STEABS');
+    } catch (err) {
+      const [errMsg, errStack] = errInfo(err);
+      _package.logger.error(errMsg, undefined, errStack);
+      return '';
+    }
+  }
+
   public getMolV3000ViaOCL(beautifiedMols: (RDMol | null)[], columnName: string): DG.Column<string> {
     const beautifiedMolV2000 = beautifiedMols.map((mol) => {
       if (mol === null)
@@ -52,9 +66,7 @@ export class HelmToMolfileConverter {
     const molv3000Arr = new Array<string>(beautifiedMolV2000.length);
     const chiralityPb = DG.TaskBarProgressIndicator.create(`Handling chirality...`);
     for (let i = 0; i < beautifiedMolV2000.length; i++) {
-      const oclMolecule = OCL.Molecule.fromMolfile(beautifiedMolV2000[i]);
-      const molV3000 = oclMolecule.toMolfileV3();
-      molv3000Arr[i] = molV3000.replace('STERAC1', 'STEABS');
+      molv3000Arr[i] = this.molV3KtoMolV3KOCL(beautifiedMolV2000[i]);
       const progress = i / beautifiedMolV2000.length * 100;
       chiralityPb.update(progress, `${progress?.toFixed(2)}% of molecules completed`);
     }
@@ -136,9 +148,9 @@ export class HelmToMolfileConverter {
     const woGapsRes = this.helmHelper.removeGaps(helm);
     const woGapsHelm = woGapsRes.resHelm;
     const woGapsReverseMap = new Map<number, number>();
-    for (const [orgPosIdx, woGapsPosIdx] of (woGapsRes.monomerMap?.entries() ?? [])) {
+    for (const [orgPosIdx, woGapsPosIdx] of (woGapsRes.monomerMap?.entries() ?? []))
       woGapsReverseMap.set(woGapsPosIdx, orgPosIdx);
-    }
+
     const pseudoMolfile = this.helmHelper.getMolfiles([woGapsHelm])[0];
     const globalPositionHandler = new GlobalMonomerPositionHandler(pseudoMolfile);
     const woGapsPolymer = new Polymer(woGapsHelm, this.rdKitModule, this.monomerLib);

@@ -1,0 +1,100 @@
+{
+  "#type": "ViewLayout",
+  "viewStateMap": {
+    "containerType": "fill",
+    "state": {
+      "width": 1093,
+      "height": 801,
+      "documentManager": true
+    },
+    "children": [
+      {
+        "containerType": "panel",
+        "state": {
+          "width": 1093,
+          "height": 801,
+          "element": {
+            "id": "ab1945e0-e920-11ef-dbac-91e9a8a6567b",
+            "type": "Grid",
+            "look": {
+              "#type": "GridLook",
+              "showAddNewRowIcon": true,
+              "addNewRowOnLastRowEdit": true,
+              "rowHeight": 155,
+              "topLevelDefaultMenu": true,
+              "allowColumnMenu": true,
+              "columns": [
+                {
+                  "width": 36,
+                  "backgroundColor": 4294440951,
+                  "customName": "",
+                  "cellType": "row header",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 80,
+                  "columnName": "Cmpd_ID",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 200,
+                  "columnName": "SMILES",
+                  "cellType": "Molecule",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 300,
+                  "columnName": "pdb",
+                  "cellType": "Molecule3D",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "isColorCoded": true,
+                  "isTextColorCoded": true,
+                  "width": 128,
+                  "columnName": "confidence_score",
+                  "customFormat": "0.000",
+                  "cellType": "number",
+                  "format": "0.000",
+                  "colorCodingType": "Linear",
+                  "colorCodingLinear": [
+                    4294901760,
+                    4278255360
+                  ],
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                }
+              ]
+            },
+            "title": "Grid",
+            "default": true
+          }
+        },
+        "children": []
+      }
+    ],
+    "floating": [],
+    "tableId": "99d54270-e920-11ef-e05f-d1d260aa2d72",
+    "tableName": "Table (4)"
+  },
+  "name": "Table4",
+  "friendlyName": "Table (4)",
+  "author": {
+    "id": "0509abe0-c210-11ef-8c95-ed39bc031fc6"
+  },
+  "createdOn": "2025-02-17T09:07:52.765Z"
+}

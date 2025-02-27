@@ -1,0 +1,122 @@
+{
+  "#type": "ViewLayout",
+  "viewStateMap": {
+    "containerType": "fill",
+    "state": {
+      "width": 1462,
+      "height": 801,
+      "documentManager": true
+    },
+    "children": [
+      {
+        "containerType": "panel",
+        "state": {
+          "width": 1462,
+          "height": 801,
+          "element": {
+            "id": "6718cad0-e920-11ef-983e-572e39c6ec0f",
+            "type": "Grid",
+            "look": {
+              "#type": "GridLook",
+              "showAddNewRowIcon": true,
+              "addNewRowOnLastRowEdit": true,
+              "rowHeight": 156,
+              "topLevelDefaultMenu": true,
+              "allowColumnMenu": true,
+              "columns": [
+                {
+                  "width": 20,
+                  "backgroundColor": 4294440951,
+                  "customName": "",
+                  "cellType": "row header",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 114,
+                  "columnName": "Entry",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 248.33333333333334,
+                  "columnName": "Sequence",
+                  "cellType": "sequence",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 276,
+                  "columnName": "ESMFold protein",
+                  "cellType": "Molecule3D",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "width": 368.00000000000006,
+                  "columnName": "Boltz1 protein",
+                  "cellType": "Molecule3D",
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                },
+                {
+                  "isColorCoded": true,
+                  "isTextColorCoded": true,
+                  "width": 216,
+                  "columnName": "Boltz1 confidence score",
+                  "customFormat": "0.000",
+                  "cellType": "number",
+                  "format": "0.000",
+                  "colorCodingType": "Linear",
+                  "colorCodingLinear": [
+                    4294901760,
+                    4278255360
+                  ],
+                  "headerCellStyle": {
+                    "vertAlign": "bottom",
+                    "textWrap": "words"
+                  }
+                }
+              ]
+            },
+            "title": "Grid",
+            "default": true
+          }
+        },
+        "children": []
+      }
+    ],
+    "floating": [],
+    "tableId": "5a7837c0-e920-11ef-a40e-bdea685b1374",
+    "tableName": "folding_demo"
+  },
+  "userData": {
+    ".columnTags": {
+      "ESMFold protein": {
+        ".%initialName": "Protein"
+      },
+      "Boltz1 protein": {
+        ".%initialName": "pdb"
+      },
+      "Boltz1 confidence score": {
+        ".%initialName": "confidence_score"
+      }
+    }
+  },
+  "name": "FoldingDemo",
+  "friendlyName": "folding_demo",
+  "author": {
+    "id": "ca82ee60-6280-11ee-df26-75193ba005c5"
+  },
+  "createdOn": "2025-02-20T08:55:15.705Z"
+}

@@ -54,7 +54,7 @@ export type PipelineLinkConfigurationBase<P> = {
   base?: P,
   actions?: P;
   dataFrameMutations?: boolean | string[];
-  defaultRestrictions?: Record<string, RestrictionType>;
+  defaultRestrictions?: Record<string, RestrictionType> | RestrictionType;
   nodePriority?: number;
 }
 

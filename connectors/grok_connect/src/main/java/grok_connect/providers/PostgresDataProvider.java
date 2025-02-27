@@ -1,5 +1,8 @@
 package grok_connect.providers;
 
+import java.sql.Array;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,9 +10,11 @@ import java.util.Properties;
 import grok_connect.connectors_info.DataConnection;
 import grok_connect.connectors_info.DataSource;
 import grok_connect.connectors_info.DbCredentials;
+import grok_connect.connectors_info.FuncParam;
 import grok_connect.table_query.AggrFunctionInfo;
 import grok_connect.table_query.Stats;
 import grok_connect.utils.Property;
+import org.postgresql.util.PGobject;
 import serialization.Types;
 
 public class PostgresDataProvider extends JdbcDataProvider {
@@ -98,5 +103,28 @@ public class PostgresDataProvider extends JdbcDataProvider {
     @Override
     protected String getRegexQuery(String columnName, String regexExpression) {
         return String.format("%s ~ '%s'", columnName, regexExpression);
+    }
+
+    @Override
+    protected void setUuid(PreparedStatement statement, int n, String value) throws SQLException {
+        PGobject uuid = new PGobject();
+        uuid.setType("uuid");
+        uuid.setValue(value);
+        statement.setObject(n, uuid);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected int setArrayParamValue(PreparedStatement statement, int n, FuncParam param) throws SQLException {
+        ArrayList<String> value = param.value == null ? null : (ArrayList<String>) param.value;
+        if (value == null)
+            statement.setNull(n, java.sql.Types.ARRAY);
+        else {
+            String type = value.isEmpty() || !value.stream().allMatch(s -> UUID_REGEX.matcher(s).matches())
+                    ? "TEXT" : "UUID";
+            Array array = statement.getConnection().createArrayOf(type, value.toArray());
+            statement.setArray(n, array);
+        }
+        return 0;
     }
 }

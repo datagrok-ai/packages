@@ -1,6 +1,7 @@
 ---
 title: "Hosting options"
 sidebar_position: 11
+unlisted: true
 ---
 
 Depending on the needs of your organizations, choose the option that works best for your organization.

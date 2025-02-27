@@ -2,6 +2,7 @@
 
 PubChemApi is a [package](https://datagrok.ai/help/develop/#packages) for the [Datagrok](https://datagrok.ai)
 platform that provides search capabilities in the [PubChem](https://pubchem.ncbi.nlm.nih.gov/) database.
+Note that package queries external source, the structure you are searching with is sent to PubChem as a query parameter.
 
 ## Features
 

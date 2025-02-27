@@ -56,7 +56,7 @@ export const GENERATIONS_GRID_HEADER_TOOLTIPS: {[key: string]: string} = {
   'Original activity': 'Initial activity value',
   'New activity': 'Activity value based on MMP rules (initial activity + mean difference)',
   '\u0394 activity': 'Activity difference',
-  'Prediction': 'Molecule exists in the initial dataset',
+  'Prediction': 'Molecule does not exists in the initial dataset',
 };
 
 export const columnsDescriptions: {[key: string]: string} = {
@@ -74,12 +74,13 @@ export enum TrellisAxis {From = 'From', To = 'To'};
 export enum TrellisSortByProp {Frequency = 'Frequency', MW = 'MW', None = 'None'};
 export enum TrellisSortType {Asc = 'Asc', Desc = 'Desc'};
 
-export const FRAGMENTS_GRID_TOOLTIP = `'Fragment Pairs' grid contains all fragments substitutions for the current molecule in the initial dataset. Molecule pairs with current substitution are shown below in 'Matched Molecular Pairs' grid. Change current row in 'Fragment Pairs' grid to search for molecule pairs with corresponding substitution.`;
-export const MATCHED_MOLECULAR_PAIRS_TOOLTIP_TRANS = `'Matched Molecular Pairs' grid contains all molecule pairs with current fragment substitution from 'Fragment Pairs' grid. Pinned row is a pair, containing current molecule from initial dataset. Click on any row to select rows with corresponding molecules in initial dataset, selected rows will be pinned on top.`;
-export const MATCHED_MOLECULAR_PAIRS_TOOLTIP_FRAGS = `Click on a non-empty cell in the trellis plot above to see molecule pairs with corresponding fragment substitution. Click on any row to select rows with corresponding molecules in initial dataset, selected rows will be pinned on top.`;
+export const FRAGMENTS_GRID_TOOLTIP = `'Fragment Pairs' grid contains all fragment substitutions found in the dataset. Change current row in 'Fragment Pairs' grid to search for molecule pairs with corresponding substitution.`;
+export const MATCHED_MOLECULAR_PAIRS_TOOLTIP_TRANS = `'Matched Molecular Pairs' grid shows all pairs of molecules associated with the
+  substitution from the upper table. Click on any row to pin corresponding molecules on top of initial dataset.`;
+export const MATCHED_MOLECULAR_PAIRS_TOOLTIP_FRAGS = `Click on a non-empty cell in the trellis plot above to filter molecule pairs with corresponding fragment substitution.`;
 export const MATCHED_MOLECULAR_PAIRS_TOOLTIP_CLIFFS = `Click on any row to zoom to corresponding pair on scatter plot`;
-export const FRAGMENTS_TAB_TOOLTIP = `Charts in trellis plot cells show mean difference for corresponding activities. Click on any non-empty cell on trellis plot to see molecule pairs with corresponding fragment substitution in 'Matched Molecular Pairs' grid below.`;
-export const CLIFFS_TAB_TOOLTIP = `2D map where similar molecules are close to each other. Lines connect matched molecular pairs. Arrow points to a molecule with a greater activity value. Use filters on the scatter plot to change activity difference cutoff or switch of/on the lines for any activity. Click on a line to see details in a context panel.`;
+export const FRAGMENTS_TAB_TOOLTIP = `Charts in trellis plot cells show mean difference for corresponding activities. Click on any non-empty cell on trellis plot to filter molecule pairs with corresponding fragment substitution in 'Matched Molecular Pairs' grid below.`;
+export const CLIFFS_TAB_TOOLTIP = `2D map where similar molecules are close to each other. Lines connect matched molecular pairs. Arrow points to a molecule with a greater activity value. Use filters on the scatter plot to change activity difference cutoff or switch of/on the lines for any activity. Click on a line to see molecule pair details in a context panel.`;
 export const GENERATIONS_TAB_TOOLTIP = `A generation of new molecules based on obtained rules. For each molecule from initial dataset and for each selected activity the most optimal substitution is shown with associated prediction results for all activities. We specify if initial or generated molecule is optimal. Open context panel to estimate generation model predictive ability on observed vs predicted plot.`;
 
 export const MMP_CONTEXT_PANE_CLASS = 'mmp-context-pane';

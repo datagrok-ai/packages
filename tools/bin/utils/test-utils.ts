@@ -21,9 +21,7 @@ export const defaultLaunchParameters: utils.Indexable = {
   args: [
     '--disable-dev-shm-usage',
     '--disable-features=site-per-process',
-    '--window-size=1920,1080',
-    '--no-sandbox', 
-    '--disable-setuid-sandbox'
+    '--window-size=1920,1080'
   ],
   ignoreHTTPSErrors: true,
   headless: 'new',
@@ -339,6 +337,8 @@ export async function runBrowser(testExecutionData: OrganizedTests[], browserOpt
         (<any>window).DG.Test.isReproducing = true;
       if (options.ciCd)
         (<any>window).DG.Test.isCiCd = true;
+      if (options.debug)
+        (<any>window).DG.Test.isInDebug = true;
 
       return new Promise<any>((resolve, reject) => {
         (<any>window).DG.Utils.executeTests(testData, options.stopOnTimeout)
@@ -414,7 +414,7 @@ export async function mergeBrowsersResults(browsersResults: ResultObject[]): Pro
 export interface BrowserOptions {
   path?: string, catchUnhandled?: boolean, core?: boolean,
   report?: boolean, record?: boolean, verbose?: boolean, benchmark?: boolean, platform?: boolean, category?: string, test?: string,
-  stressTest?: boolean, gui?: boolean, stopOnTimeout?: boolean, reproduce?: boolean, ciCd?: boolean,
+  stressTest?: boolean, gui?: boolean, stopOnTimeout?: boolean, reproduce?: boolean, ciCd?: boolean, debug?:boolean
 }
 
 export type ResultObject = {

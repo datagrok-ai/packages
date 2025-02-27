@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pandas as pd
 import subprocess
 import os
@@ -6,8 +7,11 @@ import sys
 import logging
 import json
 import shutil
+import toml
+import zipfile
 
 app = Flask(__name__)
+CORS(app)
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -23,20 +27,24 @@ def run_reinvent():
     Endpoint to run the REINVENT process and return processed results.
     """
     try:
-        request_data = request.data
-        json_data = json.loads(request_data)
+        file = request.files.get('folder')
+        if file:
+            file_path = os.path.join(file.filename)
+            file.save(file_path)
 
-        smiles_list = json_data.get('smiles', [])
+        # Extract the zip file to the specified folder
+        with zipfile.ZipFile(file_path, 'r') as zip_ref:
+            zip_ref.extractall()
+
+        logging.debug(f'Zip file saved and extracted at: {file_path}')
+
+        smiles_list = request.form.getlist('smiles')
         logging.debug(f'smiles list: {smiles_list}')
-        config_string = json_data.get('config', " ")
-        receptor_file_content = json_data.get('receptor', " ")
-        adme_config = json_data.get('admeConfig', " ")
-        steps = json_data.get('steps', 5)
 
         output_csv = "stage1_1.csv"
 
-        if not smiles_list or not config_string or not receptor_file_content or not adme_config:
-            return {"error": "Missing required inputs: 'smiles', 'config', or 'receptor' or 'adme config'"}, 400
+        if not smiles_list:
+            return {"error": "Missing required inputs: 'smiles'"}, 400
         
         # Write SMILES to .smi file
         smiles_filename = "smiles.smi"
@@ -44,24 +52,14 @@ def run_reinvent():
             smiles_file.write("\n".join(smiles_list))
         logging.info("SMILES file written: %s", smiles_filename)
 
-        # Write configuration string to .json file
-        config_filename = "kras_docking.json"
-        with open(config_filename, "w") as config_file:
-            config_file.write(config_string)
-        logging.info("Config file written: %s", config_filename)
-
-        # Write receptor content to .pdbqt file
-        receptor_filename = "kras_receptor.pdbqt"
-        with open(receptor_filename, "w") as receptor_file:
-            receptor_file.write(receptor_file_content)
-        logging.info("Receptor file written: %s", receptor_filename)
-
-        chemprop_data = json.loads(adme_config)
-        chemprop_configs = chemprop_data["chemprop_configs"]
-
         logging.info("Starting the REINVENT process...")
         current_directory = os.getcwd()
+
+        with open("config.toml", "r") as file:
+            config_dict = toml.load(file)
         
+        model_folder_map = {}
+
         files = [f for f in os.listdir(current_directory) if os.path.isfile(os.path.join(current_directory, f))]
         pt_files = [f for f in files if f.endswith('.pt')]
         logging.info("Pytorch models: %s", ', '.join(pt_files))
@@ -70,99 +68,38 @@ def run_reinvent():
             folder_path = os.path.join(current_directory, folder_name)
             os.makedirs(folder_path, exist_ok=True)
             shutil.move(os.path.join(current_directory, pt_file), os.path.join(folder_path, pt_file))
+            # Store the mapping from model name to folder path
+            model_folder_map[folder_name] = folder_path
         
+        # Update checkpoint dirs for models
+        for component in config_dict["stage"][0]["scoring"]["component"]:
+            if "ChemProp" in component:
+                for endpoint in component["ChemProp"]["endpoint"]:
+                    model_name = endpoint["name"]
+                    if model_name in model_folder_map:
+                        endpoint["params"]["checkpoint_dir"] = f'{model_folder_map[model_name]}/'
+        
+        # Update the prior_file and agent_file by adding the current directory
+        config_dict["parameters"]["prior_file"] = f"/{current_directory}/REINVENT4/priors/{config_dict['parameters']['prior_file']}"
+        config_dict["parameters"]["agent_file"] = f"/{current_directory}/REINVENT4/priors/{config_dict['parameters']['agent_file']}"
+
+        # Update smiles_file
+        config_dict["parameters"]["smiles_file"] = f"/{current_directory}/{smiles_filename}"
         python_path = sys.executable
 
-        # Define configurations
-        global_parameters = """
-        run_type = "staged_learning"
-        tb_logdir = "tb_stage1"
-        json_out_config = "_stage1.json"
-        device = "cpu"
-        """
-
-        prior_filename = f"/{current_directory}/REINVENT4/priors/mol2mol_similarity.prior"
-        parameters = f"""
-        [parameters]
-        prior_file = "{prior_filename}"
-        agent_file = "{prior_filename}"
-        summary_csv_prefix = "stage1"
-        sample_strategy = "multinomial"
-        smiles_file = "/{current_directory}/{smiles_filename}"
-
-        batch_size = 1
-
-        use_checkpoint = false
-        use_cuda = false
-        unique_sequences = true
-        randomize_smiles = true
-        """
-
-        learning_strategy = """
-        [learning_strategy]
-        type = "dap"
-        sigma = 128
-        rate = 0.0001
-        """
-
-        chemprop_template = ""
-        for config in chemprop_configs:
-            model_name = config["model_name"]
-            target_column = config["target_column"]
-            weight = config["weight"]
-            transform = config["transform"]
-            
-            chemprop_template += f"""
-            [[stage.scoring.component]]
-            [stage.scoring.component.ChemProp]
-            
-            [[stage.scoring.component.ChemProp.endpoint]]
-            name = "{model_name}"
-            weight = {weight}
-            
-            params.checkpoint_dir = "/{current_directory}/{model_name}"
-            params.rdkit_2d_normalized = true
-            params.target_column = "{target_column}"
-            
-            transform.type = "{transform["type"]}"
-            transform.high = {transform["high"]}
-            transform.low = {transform["low"]}
-            transform.k = {transform["k"]}
-            
-            """
-        
-        stages_template = f"""
-        [[stage]]
-        
-        max_score = 1.0
-        max_steps = {steps}
-        chkpt_file = 'stage1.chkpt'
-        
-        [stage.scoring]
-        type = "arithmetic_mean"
-        
-        [[stage.scoring.component]]
-        [stage.scoring.component.DockStream]
-        [[stage.scoring.component.DockStream.endpoint]]
-        name = "Docking with Dockstream"
-        weight = 1
-        params.configuration_path = "/{current_directory}/kras_docking.json"
-        params.docker_script_path = "/{current_directory}/DockStream/docker.py"
-        params.docker_python_path =   "/opt/conda/envs/DockStream/bin/python"
-        transform.type = "reverse_sigmoid"
-        transform.high = 0
-        transform.low = -10
-        transform.k = 0.5
-        """
-
-        # Combine configurations
-        config = global_parameters + parameters + learning_strategy + stages_template + chemprop_template
-
-        logging.debug("Generated configuration: %s", config)
+        # Iterate through the stage -> scoring -> component -> DockStream to update the paths
+        for component in config_dict["stage"][0]["scoring"]["component"]:
+            if "DockStream" in component:
+                for endpoint in component["DockStream"]["endpoint"]:
+                    endpoint["params"]["configuration_path"] = f"/{current_directory}/kras_docking.json"
+                    endpoint["params"]["docker_script_path"] = f"/{current_directory}/DockStream/docker.py"
+                    endpoint["params"]["docker_python_path"] = "/opt/conda/envs/DockStream/bin/python"
 
         # Write configuration to a TOML file
         toml_config_filename = "stage1.toml"
         with open(toml_config_filename, "w") as tf:
+            config = toml.dumps(config_dict)
+            logging.debug("Generated configuration: %s", config)
             tf.write(config)
         logging.info("Configuration written to %s", toml_config_filename)
 

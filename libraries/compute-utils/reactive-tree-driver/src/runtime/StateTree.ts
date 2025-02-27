@@ -399,6 +399,27 @@ export class StateTree {
       return action.exec(additionalParams);
   }
 
+  public updateFuncCall(uuid: string, call: DG.FuncCall) {
+    return this.mutateTree(() => {
+      const data = this.nodeTree.find((item) => item.uuid === uuid);
+      if (!data)
+        throw new Error(`No FuncCall node found ${uuid}`);
+      const [node, path] = data;
+      const ppath = path.slice(0, -1);
+      const idx = indexFromEnd(path)?.idx ?? 0;
+      const item = node.getItem();
+      if (!isFuncCallNode(item) || item.instancesWrapper.isReadonly)
+        throw new Error(`FuncCall writable node is expected on path ${JSON.stringify(path)}`);
+      const adapter = new FuncCallAdapter(call, false);
+      item.changeAdapter(adapter);
+      item.instancesWrapper.isOutputOutdated$.next(false);
+      return of([{
+        mutationRootPath: ppath,
+        addIdx: idx,
+      }] as const);
+    });
+  }
+
   public resetToConsistent(uuid: string, ioName: string) {
     return this.withTreeLock(() => {
       const data = this.nodeTree.find((item) => item.uuid === uuid);

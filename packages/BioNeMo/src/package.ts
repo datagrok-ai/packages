@@ -3,7 +3,6 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import { CONSTANTS, DiffDockModel } from './diffdock/diffdock-model';
-import { _demoDiffDockModel, _demoEsmFoldModel } from './demo/demo';
 
 export const _package = new DG.Package();
 
@@ -13,7 +12,6 @@ export function info() {
 }
 
 //name: MolMIMModel
-//top-menu: Chem | BioNeMo | MolMIM...
 //input: string algorithm = "CMA-ES"
 //input: int num_molecules = 30
 //input: string property_name = "QED"
@@ -29,7 +27,7 @@ export async function molMIMModel(algorithm: string, num_molecules: number, prop
 }
 
 //name: EsmFoldModel
-//top-menu: Bio | BioNeMo | EsmFold...
+//top-menu: Bio | Folding | EsmFold...
 //input: dataframe df 
 //input: column sequences {semType: Macromolecule}
 export async function esmFoldModel(df: DG.DataFrame, sequences: DG.Column) {
@@ -85,7 +83,7 @@ export async function diffDockModelScript(ligand: string, target: string, poses:
 }
 
 //name: DiffDockModel
-//top-menu: Chem | BioNeMo | DiffDock...
+//top-menu: Chem | Docking | DiffDock...
 //input: dataframe df
 //input: column ligands {semType: Molecule}
 //input: string target {choices: Bionemo: getTargetFiles}
@@ -147,18 +145,4 @@ async function handleRunClick(smiles: DG.SemanticValue, poses: number, target: s
 
 function getVirtualPosesColumnName(target: string, poses: number): string {
   return `${CONSTANTS.VIRTUAL_POSES_COLUMN_NAME}_${target}_${poses}`;
-}
-
-//name: Demo EsmFold
-//description: Demonstrates the use of ESMFold to predict the 3D structure of proteins from their amino acid sequences
-//meta.demoPath: Bioinformatics | Folding
-export async function demoEsmFoldModel(): Promise<void> {
-  await _demoEsmFoldModel();
-}
-
-//name: Demo DiffDock
-//description: Demonstrates the use of DiffDock to predict the 3D structure of how a molecule interacts with a protein
-//meta.demoPath: Bioinformatics | DiffDock
-export async function demoDiffDockModel(): Promise<void> {
-  await _demoDiffDockModel();
 }

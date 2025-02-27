@@ -167,6 +167,9 @@ async function getPolyToolEnumerateDialog(
         resDataRole = (resSeqValue.tags[PolyToolTags.dataRole] as PolyToolDataRole.template) ?? PolyToolDataRole.macromolecule;
       } else {
         const seqCol = DG.Column.fromList(DG.COLUMN_TYPE.STRING, 'seq', [PT_HELM_EXAMPLE]);
+        seqCol.semType = DG.SEMTYPE.MACROMOLECULE;
+        const _tempDf = DG.DataFrame.fromColumns([seqCol]);
+        
         seqCol.meta.units = NOTATION.HELM;
         const sh = seqHelper.getSeqHandler(seqCol);
         resSeqValue = sh.getValue(0);
@@ -184,7 +187,7 @@ async function getPolyToolEnumerateDialog(
     const warningsTextDiv = ui.divText('', {style: {color: 'red'}});
     // #### Inputs
     inputs = {
-      macromolecule: helmHelper.createHelmInput(
+      macromolecule: helmHelper.createHelmInput(                                                     
         'Macromolecule', {
           editable: false,
           editorOptions: {
@@ -192,9 +195,20 @@ async function getPolyToolEnumerateDialog(
               monomerNumbering: MonomerNumberingTypes.continuous,
               getMonomer: (a: HelmAtom | HelmType, name?: string): GetMonomerResType => {
                 const aa: HelmAtom = a as HelmAtom;
+
+
                 if (aa.T === 'ATOM') {
-                  const canonicalSymbol = seqValue.getSplitted().getCanonical(aa.bio!.continuousId - 1);
-                  return monomerLibFuncs.getMonomer(aa.bio!.type, canonicalSymbol);
+                  try {
+                    if (!seqValue.isDna() && !seqValue.isRna()) {
+                      const canonicalSymbol = seqValue.getSplitted().getCanonical(aa.bio!.continuousId - 1);
+                      return monomerLibFuncs.getMonomer(aa.bio!.type, canonicalSymbol);
+                    } else {
+                      const canonicalSymbol = seqValue.getSplittedWithSugarsAndPhosphates().getCanonical(aa.bio!.continuousId - 1);
+                      return monomerLibFuncs.getMonomer(aa.bio!.type, canonicalSymbol);
+                    }
+                  } catch (_) {
+                    return monomerLibFuncs.getMonomer(a, name);
+                  }
                 } else { return monomerLibFuncs.getMonomer(a, name); }
               },
             },
@@ -727,7 +741,7 @@ async function polyToolEnumerateSeq(
           toAtomicLevel.chiralityEngine, toAtomicLevel.highlightMonomers);
         enumeratorResDf.columns.add(talRes.molCol!, false);
         const resMolCol = talRes.molCol!;
-        buildMonomerHoverLink(resHelmCol, resMolCol, monomerLib, helmHelper.seqHelper, rdKitModule);
+        await buildMonomerHoverLink(resHelmCol, resMolCol, monomerLib, helmHelper.seqHelper, rdKitModule, true);
       } else if (dataRole === PolyToolDataRole.template) {
         const talRes = await polyToolConvert(enumCol,
           toAtomicLevel.generateHelm, false, toAtomicLevel.chiralityEngine, false, toAtomicLevel.rules);

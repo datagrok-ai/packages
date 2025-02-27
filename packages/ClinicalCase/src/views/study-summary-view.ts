@@ -1,18 +1,18 @@
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
-import {study} from '../clinical-study';
 import {cumulativeEnrollemntByDay} from '../data-preparation/data-preparation';
 import {CLINICAL_TRIAL_GOV_FIELDS} from '../constants/constants';
 import {CLIN_TRIAL_GOV_SEARCH, HttpService} from '../services/http.service';
 import {_package} from '../package';
-import {AGE, RACE, SEX, STUDY_ID, SUBJECT_ID, SUBJ_REF_STDT} from '../constants/columns-constants';
+import {AGE, RACE, SEX, SUBJECT_ID, SUBJ_REF_STDT} from '../constants/columns-constants';
 import {ClinicalCaseViewBase} from '../model/ClinicalCaseViewBase';
 import $ from 'cash-dom';
 import {checkDateFormat} from '../data-preparation/utils';
 import {updateDivInnerHTML} from '../utils/utils';
 import {TRT_ARM_FIELD, VIEWS_CONFIG} from '../views-config';
 import {checkColumnsAndCreateViewer} from '../utils/views-validation-utils';
+import {studies} from '../clinical-study';
 
 
 export class StudySummaryView extends ClinicalCaseViewBase {
@@ -34,36 +34,34 @@ export class StudySummaryView extends ClinicalCaseViewBase {
     },
   };
   test: any;
+  validationErrorLinkHandler;
 
-  constructor(name) {
-    super({});
+  constructor(name: string, studyId: string, errorLinkHandler?: () => void) {
+    super(name, studyId);
     this.name = name;
     this.helpUrl = `${_package.webRoot}/views_help/summary.md`;
     this.path = '/summary';
+    if (errorLinkHandler)
+      this.validationErrorLinkHandler = errorLinkHandler;
   }
 
   createView() {
-    this.studyId = study.domains.dm.get(STUDY_ID, 0);
-    const errorsMap = this.createErrorsMap();
-    if (errorsMap) {
-      this.errorsByDomain = errorsMap.withCount;
-      this.errorsByDomainWithLinks = errorsMap.withLinks;
-    }
-
+    this.errorsByDomain = studies[this.studyId].errorsByDomain;
+    this.errorsByDomainWithLinks = this.createErrorsMapWithLinks();
     this.buildView();
   }
 
   async buildView() {
     checkColumnsAndCreateViewer(
-      study.domains.dm,
+      studies[this.studyId].domains.dm,
       [SUBJ_REF_STDT],
       this.enrollmentChart,
       async () => {await this.createCumulativeEnrollmentChart(this.viewerTitle);},
       'Cumulative enrollment');
 
     const summary = ui.tableFromMap({
-      'subjects': study.subjectsCount,
-      'sites': study.sitesCount,
+      'subjects': studies[this.studyId].subjectsCount,
+      'sites': studies[this.studyId].sitesCount,
     });
 
 
@@ -81,41 +79,42 @@ export class StudySummaryView extends ClinicalCaseViewBase {
     };
 
     checkColumnsAndCreateViewer(
-      study.domains.dm,
+      studies[this.studyId].domains.dm,
       [VIEWS_CONFIG[this.name][TRT_ARM_FIELD]],
       this.armChart, () => {
-        const arm = DG.Viewer.barChart(study.domains.dm, {split: VIEWS_CONFIG[this.name][TRT_ARM_FIELD], //@ts-ignore
-          style: 'dashboard', barColor: DG.Color.lightBlue});
+        const arm = DG.Viewer.barChart(studies[this.studyId].domains.dm,
+          {split: VIEWS_CONFIG[this.name][TRT_ARM_FIELD], //@ts-ignore
+            style: 'dashboard', barColor: DG.Color.lightBlue});
         arm.root.prepend(ui.divText('Treatment arm', this.viewerTitle));
         updateDivInnerHTML(this.armChart, arm.root);
       },
       'Treatment arm');
 
     checkColumnsAndCreateViewer(
-      study.domains.dm,
+      studies[this.studyId].domains.dm,
       [SEX],
       this.sexChart, () => {//@ts-ignore
-        const sex = DG.Viewer.barChart(study.domains.dm, {split: SEX, style: 'dashboard'});
+        const sex = DG.Viewer.barChart(studies[this.studyId].domains.dm, {split: SEX, style: 'dashboard'});
         sex.root.prepend(ui.divText('Sex', this.viewerTitle));
         updateDivInnerHTML(this.sexChart, sex.root);
       },
       'Sex');
 
     checkColumnsAndCreateViewer(
-      study.domains.dm,
+      studies[this.studyId].domains.dm,
       [RACE],
       this.raceChart, () => {//@ts-ignore
-        const race = DG.Viewer.barChart(study.domains.dm, {split: RACE, style: 'dashboard'});
+        const race = DG.Viewer.barChart(studies[this.studyId].domains.dm, {split: RACE, style: 'dashboard'});
         race.root.prepend(ui.divText('Race', this.viewerTitle));
         updateDivInnerHTML(this.raceChart, race.root);
       },
       'Race');
 
     checkColumnsAndCreateViewer(
-      study.domains.dm,
+      studies[this.studyId].domains.dm,
       [AGE],
       this.ageChart, () => { //@ts-ignore
-        const age = DG.Viewer.histogram(study.domains.dm, {value: AGE, style: 'dashboard'});
+        const age = DG.Viewer.histogram(studies[this.studyId].domains.dm, {value: AGE, style: 'dashboard'});
         age.root.prepend(ui.divText('Age', this.viewerTitle));
         updateDivInnerHTML(this.ageChart, age.root);
       },
@@ -146,14 +145,16 @@ export class StudySummaryView extends ClinicalCaseViewBase {
   private async createCumulativeEnrollmentChart(viewerTitle: any) {
     const dateCol = SUBJ_REF_STDT;
     const cumulativeCol = 'CUMULATIVE_ENROLLMENT';
-    const incorrectDates = checkDateFormat(study.domains.dm.getCol(dateCol), study.domains.dm.rowCount);
+    const incorrectDates = checkDateFormat(studies[this.studyId].domains.dm.getCol(dateCol),
+      studies[this.studyId].domains.dm.rowCount);
     if (incorrectDates.length) {
-      const subjArray = incorrectDates.map((it) => study.domains.dm.get(SUBJECT_ID, it));
+      const subjArray = incorrectDates.map((it) => studies[this.studyId].domains.dm.get(SUBJECT_ID, it));
       const formatErrorMessage = ui.info(`Subjects #${subjArray.join(',')} have incorrect format of ${SUBJ_REF_STDT}`);
       updateDivInnerHTML(this.enrollmentChart, formatErrorMessage);
     } else {
       const subjsPerDay =
-        cumulativeEnrollemntByDay(study.domains.dm.clone(study.domains.dm.filter), dateCol, SUBJECT_ID, cumulativeCol);
+        cumulativeEnrollemntByDay(studies[this.studyId].domains.dm
+          .clone(studies[this.studyId].domains.dm.filter), dateCol, SUBJECT_ID, cumulativeCol);
       const refStartCol = subjsPerDay.col(dateCol);
       const lc = DG.Viewer.lineChart(subjsPerDay);
       lc.setOptions({x: `${dateCol}`, yColumnNames: [cumulativeCol]});
@@ -168,23 +169,22 @@ export class StudySummaryView extends ClinicalCaseViewBase {
     }
   }
 
-  private createErrorsMap() {
-    const errorsMap = {};
-    const errorsMapWithCount = {};
-    if (study.validationResults.rowCount) {
-      const validationSummary = study.validationResults.groupBy(['Domain']).count().aggregate();
-      for (let i = 0; i < validationSummary.rowCount; ++i) {
-        const domain = validationSummary.get('Domain', i);
-        const errorsCount = validationSummary.get('count', i);
-        const link = ui.link(errorsCount, {}, '', {id: domain});
+  private createErrorsMapWithLinks(): {[key: string]: HTMLAnchorElement} {
+    const errorsByDomain = studies[this.studyId].errorsByDomain;
+    if (errorsByDomain) {
+      const errorsByDomainWithLinks: {[key: string]: HTMLAnchorElement} = {};
+      Object.keys(errorsByDomain).forEach((domain) => {
+        const link = ui.link(errorsByDomain[domain].toString(), {}, '', {id: domain});
         link.addEventListener('click', (event) => {
-          grok.shell.v = this.validationView;
+          if (this.validationErrorLinkHandler)
+            this.validationErrorLinkHandler();
+          else
+            grok.shell.v = this.validationView;
           event.stopPropagation();
         });
-        errorsMap[domain] = link;
-        errorsMapWithCount[domain] = errorsCount;
-      }
-      return {withCount: errorsMapWithCount, withLinks: errorsMap};
+        errorsByDomainWithLinks[domain] = link;
+      });
+      return errorsByDomainWithLinks;
     }
     return null;
   }
@@ -219,7 +219,7 @@ export class StudySummaryView extends ClinicalCaseViewBase {
 
   updateGlobalFilter(): void {
     checkColumnsAndCreateViewer(
-      study.domains.dm,
+      studies[this.studyId].domains.dm,
       [SUBJ_REF_STDT],
       this.enrollmentChart,
       async () => {await this.createCumulativeEnrollmentChart(this.viewerTitle);},

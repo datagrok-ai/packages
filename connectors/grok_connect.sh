@@ -37,7 +37,7 @@ GROK_SRC="${GROK_SRC:=$current_dir/../../}"
 
 # Base project directory and executable
 GROK_CONNECT_DIR=grok_connect
-GROK_CONNECT=grok_connect-2.2.28.jar
+GROK_CONNECT=grok_connect-2.3.29.jar
 TARGET_DIR=${GROK_CONNECT_DIR}/target
 
 set -e

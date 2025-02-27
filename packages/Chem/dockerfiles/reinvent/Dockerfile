@@ -85,6 +85,10 @@ RUN /app/venv/bin/pip install Flask
 
 RUN /app/venv/bin/pip install descriptastorus
 
+RUN /app/venv/bin/pip install toml
+
+RUN /app/venv/bin/pip install flask_cors
+
 ENV PATH="/app/venv/bin:$PATH"
 
 EXPOSE 6666

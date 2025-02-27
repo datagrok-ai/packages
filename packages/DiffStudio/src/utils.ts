@@ -4,7 +4,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {MISC, INPUTS_DF, LOOKUP_DF_FAIL, LOOKUP_EXPR_FAIL, TITLE, PATH} from './ui-constants';
+import {MISC, INPUTS_DF, LOOKUP_DF_FAIL, LOOKUP_EXPR_FAIL, TITLE, PATH, UI_TIME} from './ui-constants';
 import {CONTROL_EXPR} from './constants';
 import {CONTROL_SEP, BRACE_OPEN, BRACE_CLOSE, BRACKET_OPEN, BRACKET_CLOSE, ANNOT_SEPAR} from './scripting-tools';
 
@@ -296,4 +296,46 @@ export function getCategoryWidget(category: string, inputs: DG.InputBase[]) {
     [chevronToOpen, chevronToClose, ui.label(category)],
     'diff-studio-inputs-category',
   );
+}
+
+/** Return max number of graphs in FacetGrid row */
+export function getMaxGraphsInFacetGridRow(funcsCount: number) {
+  switch (funcsCount) {
+  case 4:
+    return 2;
+
+  case 5:
+  case 10:
+  case 13:
+  case 14:
+  case 15:
+  case 19:
+  case 20:
+    return 5;
+
+  case 6:
+  case 9:
+    return 3;
+
+  case 17:
+  case 18:
+    return 6;
+
+  default:
+    return 4;
+  }
+}
+
+/** Remove title of dock node*/
+export function removeTitle(node: DG.DockNode) {
+  setTimeout(() => {
+    const head = node.container.containerElement.querySelector('div[class="panel-titlebar-text"]');
+    if (head)
+      head.textContent = '';
+  }, UI_TIME.TITLE_REMOVING);
+}
+
+/** No models message */
+export function noModels(): void {
+  grok.shell.info(`No models`);
 }

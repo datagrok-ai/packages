@@ -87,6 +87,8 @@ export enum TITLE {
   IS_CUST = 'Custom model',
   MY_MODELS = 'My Models',
   NO_MODELS = 'None',
+  MULTI_AXIS = 'Multiaxis',
+  FACET = 'Facet',
 }; // TITLE
 
 /** Titles of template models */
@@ -287,6 +289,8 @@ export enum UI_TIME {
   BROWSING = APP_RUN_SOLVING + 500,
   SWITCH_TO_FOLDER = 1,
   WGT_CLICK = 10,
+  FACET_DOCKING = 50,
+  TITLE_REMOVING = 500,
 };
 
 /** Numerical methods names */
@@ -324,3 +328,6 @@ export enum INPUTS_DF {
   INP_NAMES_IDX = 0,
   INPUT_SETS_COL_IDX = 0,
 };
+
+/** Max number of facet grid graphs count */
+export const MAX_FACET_GRAPHS_COUNT = 20;

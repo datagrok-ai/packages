@@ -2,7 +2,7 @@
   "name": "@datagrok/pubchem-api",
   "friendlyName": "PubChem",
   "description": "Integration with the PubChem web service.",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "author": {
     "name": "Maria Dolotova",
     "email": "mdolotova@datagrok.ai"
@@ -24,7 +24,8 @@
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",
     "eslint": "^8.57.1",
-    "eslint-config-google": "^0.14.0"
+    "eslint-config-google": "^0.14.0",
+    "@datagrok/chem": "^1.13.0"
   },
   "scripts": {
     "link-api": "npm link datagrok-api",

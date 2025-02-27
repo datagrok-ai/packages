@@ -94,7 +94,7 @@ category('ComputeUtils: Driver run steps sequence', async () => {
     fcnode3.getStateStore().setState('b', 3);
     fcnode4.getStateStore().setState('b', 2);
     await waitForMutations(tree);
-    await tree.runSequence(fcnode1.uuid).toPromise();
+    await tree.runSequence(tree.nodeTree.root.getItem().uuid).toPromise();
     await waitForMutations(tree);
     expectDeepEqual(fcnode4.getStateStore().getState('res'), 3);
   });
@@ -116,7 +116,7 @@ category('ComputeUtils: Driver run steps sequence', async () => {
     fcnode2.getStateStore().setState('b', 1);
     fcnode3.getStateStore().setState('b', 3);
     await waitForMutations(tree);
-    await tree.runSequence(fcnode1.uuid).toPromise();
+    await tree.runSequence(tree.nodeTree.root.getItem().uuid).toPromise();
     await waitForMutations(tree);
     expectDeepEqual(fcnode3.getStateStore().getState('res'), 6);
     expectDeepEqual(fcnode4.getStateStore().getState('res'), null);
@@ -143,7 +143,7 @@ category('ComputeUtils: Driver run steps sequence', async () => {
     await waitForMutations(tree);
     await fcnode2.getStateStore().run().toPromise();
     await waitForMutations(tree);
-    await tree.runSequence(fcnode1.uuid).toPromise();
+    await tree.runSequence(tree.nodeTree.root.getItem().uuid).toPromise();
     await waitForMutations(tree);
     expectDeepEqual(fcnode4.getStateStore().getState('res'), 13.5);
   });
@@ -169,7 +169,7 @@ category('ComputeUtils: Driver run steps sequence', async () => {
     await waitForMutations(tree);
     await fcnode2.getStateStore().run().toPromise();
     await waitForMutations(tree);
-    await tree.runSequence(fcnode1.uuid, true).toPromise();
+    await tree.runSequence(tree.nodeTree.root.getItem().uuid, true).toPromise();
     await waitForMutations(tree);
     expectDeepEqual(fcnode4.getStateStore().getState('res'), 3);
   });

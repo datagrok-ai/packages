@@ -194,7 +194,7 @@ export async function reduceDimensionality(): Promise<void> {
 export function GetMCLEditor(call: DG.FuncCall): void {
   try {
     const funcEditor = new MCLEditor();
-    ui.dialog('Markov clustering')
+    const dialog = ui.dialog('Markov clustering')
       .add(funcEditor.getEditor())
       .onOK(async () => {
         const params = funcEditor.params;
@@ -205,6 +205,7 @@ export function GetMCLEditor(call: DG.FuncCall): void {
           useWebGPU: params.useWebGPU, inflate: params.inflateFactor, minClusterSize: params.minClusterSize,
         }).call(true);
       }).show();
+    dialog.history(() => ({editorSettings: funcEditor.getStringInput()}), (x: any) => funcEditor.applyStringInput(x['editorSettings']));
   } catch (err: any) {
     const errMsg = err instanceof Error ? err.message : err.toString();
     const errStack = err instanceof Error ? err.stack : undefined;

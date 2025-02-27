@@ -262,8 +262,8 @@ function updateChainExtendingVariables(monomer: MolGraph, v: LoopVariables): voi
   v.bondShift += monomer.bonds.atomPairs.length + 1;
 
   v.nodeShift += monomer.atoms.atomTypes.length;
-  v.backbonePositionShift[0] += monomer.meta.backboneShift![0]; // todo: non-null check
-  v.backbonePositionShift[1] += v.flipFactor * monomer.meta.backboneShift![1];
+  v.backbonePositionShift[0] += monomer.meta.backboneShift?.[0] ?? 0; // todo: non-null check
+  v.backbonePositionShift[1] += v.flipFactor * (monomer.meta.backboneShift?.[1] ?? 0);
 }
 
 function updateBranchVariables(monomer: MolGraph, v: LoopVariables): void {

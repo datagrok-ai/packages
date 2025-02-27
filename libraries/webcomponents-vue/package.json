@@ -1,26 +1,28 @@
 {
   "name": "@datagrok-libraries/webcomponents-vue",
   "sideEffects": false,
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": {
-    "name": "Aufar Zakiev",
-    "email": "aufar.zakiev@softwarecountry.com"
+    "name": "Andrey Sharapov",
+    "email": "andrey.sharapov@softwarecountry.com"
   },
   "description": "Datagrok web components vue wrappers",
   "dependencies": {
-    "@datagrok-libraries/compute-utils": "^1.40.0",
-    "@datagrok-libraries/dock-spawn-dg": "^0.0.1",
-    "@datagrok-libraries/webcomponents": "^0.0.6",
+    "@datagrok-libraries/compute-utils": "^1.41.0",
+    "@datagrok-libraries/dock-spawn-dg": "^0.0.2",
+    "@datagrok-libraries/webcomponents": "^0.0.7",
     "@vueuse/core": "^10.11.1",
     "@vueuse/rxjs": "^11.0.3",
     "cash-dom": "^8.1.4",
-    "datagrok-api": "^1.18.6",
+    "datagrok-api": "^1.24.0",
     "dayjs": "=1.11.10",
     "rxjs": "^6.6.7",
+    "uuid": "^11.0.5",
     "vue": "^3.4.38",
     "wu": "^2.1.0"
   },
   "devDependencies": {
+    "@types/uuid": "^10.0.0",
     "@types/wu": "^2.1.0",
     "@typescript-eslint/eslint-plugin": "^8.8.1",
     "@typescript-eslint/parser": "^8.8.1",

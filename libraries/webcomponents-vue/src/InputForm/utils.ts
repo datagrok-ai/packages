@@ -67,7 +67,7 @@ function renderValidationResults(
         root.appendChild(ui.divV([
           ui.divH([
             icon,
-            ui.span([advice.description]),
+            ui.divText(advice.description),
           ]),
           ...(advice.actions ?? []).map(
             (action) => ui.link(
@@ -87,10 +87,10 @@ function renderValidationResults(
     root.appendChild(ui.divV([
       ui.divH([
         icon,
-        ui.span([`Current value is incosistent. Computed value was ${
+        ui.divText(`Current value is incosistent. Computed value was ${
           DG.TYPES_SCALAR.has(input.property.propertyType) ?
             consistentValue: 'different'
-        }`]),
+        }`),
       ]),
       ui.link(
         'Reset to consistent value',

@@ -31,11 +31,11 @@ category('Server cache', () => {
     await cleanCache(testConnections);
   });
 
-  test('Scalars cache test', async () => await basicCacheTest('PostgresqlScalarCacheTest', 2),{stressTest: true});
+  test('Scalars cache test', async () => await basicCacheTest('PostgresqlScalarCacheTest', 2));
 
-  test('TestNormal table cache test', async () => await basicCacheTest('PostgresqlTestCacheTableNormal', 1.2), {timeout: 120000, stressTest: true});
+  test('TestNormal table cache test', async () => await basicCacheTest('PostgresqlTestCacheTableNormal', 1.2), {timeout: 120000});
 
-  test('Connection cache test', async () => await basicCacheTest('PostgresqlCachedConnTest', 2), {timeout: 120000, stressTest: true});
+  test('Connection cache test', async () => await basicCacheTest('PostgresqlCachedConnTest', 2), {timeout: 120000});
 
   test('Connection cache invalidation test', async () => {
     await invalidationCacheTest('TestConnCache');
@@ -43,11 +43,11 @@ category('Server cache', () => {
 
   test('Query cache invalidation test', async () => {
     await invalidationCacheTest('PostgresqlCacheInvalidateQueryTest');
-  }, {stressTest: true});
+  });
 
   test('Scalars cache invalidation test', async () => {
     await invalidationCacheTest('PostgresqlScalarCacheInvalidationTest');
-  }, {timeout: 120000, stressTest: true});
+  }, {timeout: 120000});
 
   test('Cached conn DataFrame id diff', async () => {
     const connection = await grok.dapi.connections.filter(`name="${testConnections[1]}"`).first();

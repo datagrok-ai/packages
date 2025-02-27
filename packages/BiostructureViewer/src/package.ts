@@ -739,6 +739,7 @@ export function biostructureDataToJson(
 //output: widget result
 export function structure3D(molecule: DG.SemanticValue): DG.Widget {
   const widget = new DG.Widget(ui.div([]));
+  widget.root.append(ui.loader());
   const {dataFrame, column, rowIndex} = molecule.cell;
   const inBrowseView = grok.shell.v.type === DG.VIEW_TYPE.BROWSE;
   const tableView = inBrowseView ?
@@ -751,6 +752,7 @@ export function structure3D(molecule: DG.SemanticValue): DG.Widget {
   renderer.createViewer(gridCell, tableView).then(async ({tview, viewer}) => {
     if (tview && viewer) {
       viewer.root.classList.add('bsv-container-info-panel');
+      ui.empty(widget.root);
       widget.root.appendChild(viewer.root);
     }
   });

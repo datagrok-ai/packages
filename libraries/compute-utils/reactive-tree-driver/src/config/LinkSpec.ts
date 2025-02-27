@@ -5,8 +5,8 @@ import {IOType} from './config-processing-utils';
 
 const linkSpecGrammar = `
 Link ::= Name FlagList? (':' Segment)? ('/' Segment)*
-FlagList ::= WS* '(' WS* Flag WS* ('|' WS* Flag WS*)* ')' WS* {fragment=true}
-Flag ::= "call" | "io"
+FlagList ::= WS* '(' WS* Flag WS* (',' WS* Flag WS*)* ')' WS* {fragment=true}
+Flag ::= "call" | "optional"
 Segment ::=  WS* (Selector | TargetIds) WS* {fragment=true}
 Selector ::= SelectorType '(' SelectorArgs ')'
 SelectorArgs ::= ((RefArg ',' TargetIds) | TargetIds) (',' StopIds)? {fragment=true}
@@ -26,7 +26,7 @@ const linkParser = new Parser(Grammars.Custom.getRules(linkSpecGrammar));
 
 export type LinkRefSelectors = 'after+' | 'after*' | 'after' | 'before+' | 'before*' | 'before' | 'same';
 export type LinkNonRefSelectors = 'first' | 'last' | 'all' | 'expand';
-export type LinkFlags = 'call' | 'io';
+export type LinkFlags = 'call' | 'optional';
 export type LinkSelectors = LinkRefSelectors | LinkNonRefSelectors;
 
 export type LinkSegment = {

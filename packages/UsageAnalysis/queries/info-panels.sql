@@ -4,7 +4,7 @@
 --input: string id { semType: user_id }
 --connection: System:Datagrok
 select u.first_name, u.last_name from users u
-where id::varchar = @id
+where id = @id
 --end
 
 --name: userInfoByEmailPanel

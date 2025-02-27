@@ -1,4 +1,5 @@
 import * as DG from "datagrok-api/dg";
+import * as views from "./view-names-constants";
 
 export const ALT = 'ALT';
 export const AST = 'AST';
@@ -48,3 +49,8 @@ export const DOMAINS_COLOR_PALETTE = {
 };
 export const DOMAINS_WITH_EVENT_START_END_DAYS = ['ae', 'cm', 'ex'];
 export const TIMELINES_VIEWER = 'Timelines';
+
+export const StudyJsonName = 'study.json';
+export const demoStudyId = 'CDISCPILOT01';
+
+export const domainsToValidate = ['dm', 'ae'];

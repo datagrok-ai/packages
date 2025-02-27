@@ -1,5 +1,14 @@
 # Pyodide package changelog
 
+## 1.1.0 (2025-02-18)
+
+* Dependency: datagarok-api >= 1.24.0*
+
+### Features:
+
+* Enables usage statistic for script handlers
+
+
 ## 1.0.0 (2024-10-24)
 
 Initial release version. Requires datagarok-api >= 1.22.0*

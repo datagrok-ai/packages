@@ -1,0 +1,7 @@
+STUDYID,DOMAIN,ETCD,ELEMENT,TESTRL,TEENRL,TEDUR
+NIDA-CTN-0001,TE,FU1,FOLLOWUP 1,End of active dosing element,"30 days from start of active treatment or discontinuation, whichever comes first",P17D
+NIDA-CTN-0001,TE,FU2,FOLLOWUP 2,30 days from start active treatment,"91 days from start of active treatment or discontinuation, whichever comes first",P61D
+NIDA-CTN-0001,TE,FU3,FOLLOWUP 3,91 days from start of active treatment,"182 days from start of active treatment or discontinuation, whichever comes first",P91D
+NIDA-CTN-0001,TE,SCREEN,SCREENING,Informed consent,Subject is randomized,P14D
+NIDA-CTN-0001,TE,BUPNX,TREATMENT BUPRENORPHINE/NALOXONE,Randomized,"13 days of active treatment or early termination, whichever comes first",P13D
+NIDA-CTN-0001,TE,CLON,TREATMENT CLONIDINE,Randomized,"13 days of active treatment or early termination, whichever comes first",P13D

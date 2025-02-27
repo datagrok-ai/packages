@@ -4,7 +4,7 @@
 4. Select the **Visual analysis** checkbox
 5. Click the **OK** button.
 
-**Expected**: balloon `None R Groups were found` for 'smiles' dataset, trellis plot for 'sar-small' dataset
+**Expected**: balloon `No R Groups were found` for 'smiles' dataset, trellis plot for 'sar-small' dataset
 
 ***
 

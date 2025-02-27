@@ -15,6 +15,7 @@ category('sketcher testing', () => {
   before(async () => {
     rdkitModule = await grok.functions.call('Chem:getRdKitModule');
     funcs = DG.Func.find({tags: ['moleculeSketcher']});
+    await sketchersWarmUp(funcs);
     grok.shell.closeAll();
   });
 
@@ -116,7 +117,7 @@ async function testSmiles(rdkitModule: any, funcs: DG.Func[], input?: boolean, m
     chem.currentSketcherType = func.friendlyName;
     const s = new Sketcher(undefined, validationFunc);
     const d = ui.dialog().add(s).show();
-    await awaitCheck(() => s.sketcher !== null, `${chem.currentSketcherType} has not been created`, 20000);
+    await awaitCheck(() => s.sketcher?.isInitialized === true, `${chem.currentSketcherType} has not been created`, 20000);
     if (input) {
       setTimeout(() => {
         s.molInput.value = exampleSmiles;
@@ -149,7 +150,7 @@ async function testMolblock(rdkitModule: any, funcs: DG.Func[], ver: string, inp
     chem.currentSketcherType = func.friendlyName;
     const s = new Sketcher(undefined, validationFunc);
     const d = ui.dialog().add(s).show();
-    await awaitCheck(() => s.sketcher !== null, undefined, 5000);
+    await awaitCheck(() => s.sketcher?.isInitialized === true, undefined, 5000);
     if (input) {
       setTimeout(() => {
         let dT = null;
@@ -185,7 +186,7 @@ async function testInchi(rdkitModule: any, funcs: DG.Func[]) {
     chem.currentSketcherType = func.friendlyName;
     const s = new Sketcher();
     const d = ui.dialog().add(s).show();
-    await awaitCheck(() => s.sketcher !== null, undefined, 5000);
+    await awaitCheck(() => s.sketcher?.isInitialized === true, undefined, 5000);
     s.molInput.value = exampleInchi;
     s.molInput.dispatchEvent(new KeyboardEvent('keydown', {key: 'Enter'}));
     await awaitCheck(() => {
@@ -195,6 +196,17 @@ async function testInchi(rdkitModule: any, funcs: DG.Func[]) {
     d.close();
   }
   mol?.delete();
+}
+
+export async function sketchersWarmUp(funcs: DG.Func[]) {
+  for (const func of funcs) {
+    if (func.name === 'chemDrawSketcher')
+      continue;
+    chem.currentSketcherType = func.friendlyName;
+    const s = new Sketcher();
+    const d = ui.dialog().add(s).show();
+    await awaitCheck(() => s.sketcher?.isInitialized === true, 'sketcher hasn\'t been initialized', 10000);
+  }
 }
 
 const exampleSmiles = 'CC(C(=O)OCCCc1cccnc1)c2cccc(c2)C(=O)c3ccccc3';

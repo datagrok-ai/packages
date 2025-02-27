@@ -320,6 +320,7 @@ export class TestTrack extends DG.ViewBase {
       });
       const df = DG.DataFrame.fromObjects(list)!;
       df.getCol('status').meta.colors.setCategorical(colors);
+      df.getCol('reason').semType = "text";
       if (this.tableViewReport !== null)
         this.tableViewReport?.close();
       this.tableViewReport = grok.shell.addTableView(df);
@@ -831,7 +832,7 @@ export class TestTrack extends DG.ViewBase {
                          newTickets.every((ticket) => oldTickets.includes(ticket))
                                    ? newTickets : Array.from(combinedTickets);
     let nameColumn = DG.Column.fromStrings('name', ['Test Track: ' + params.category + ': ' + params.name]);
-    nameColumn.semType = 'test';
+    nameColumn.semType = 'autotest';
     grok.dapi.stickyMeta.getAllValues(testSchema, nameColumn).then((df) => {
       let tickets: string = df.col('tickets')?.get(0) ?? '';
       const ticketSet = new Set(tickets.split(','));

@@ -39,6 +39,7 @@
     "prefer-promise-reject-errors": "error",
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^(_|ui$|grok$|DG$)", "argsIgnorePattern": "^_"}],
+    "@typescript-eslint/require-array-sort-compare": "error",
     "array-bracket-newline": "off",
     "array-bracket-spacing": [
       "error",

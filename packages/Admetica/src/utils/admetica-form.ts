@@ -72,16 +72,17 @@ export class FormStateGenerator {
     };
   }
 
-  generateFormState() {
+  generateFormState(containerWidth?: number) {
     const elementStates = [];
     const leftOffset = 10;
-    const colWidth = 300;
+    const colWidth = 275;
     const headerHeight = 30;
     const rowHeight = 30;
     const columnGap = 70;
 
     let currentTopOffset = 180;
     let currentLeftOffset = leftOffset;
+    let currentColsNumber = 1;
     let piechartIndex = tablePieChartIndexMap.get(this.table);
 
     elementStates.push(
@@ -120,8 +121,16 @@ export class FormStateGenerator {
       const categoryHeight = headerHeight + columns.length * rowHeight;
 
       if (currentTopOffset + categoryHeight > this.maxHeight) {
-        currentLeftOffset += colWidth + columnGap;
-        currentTopOffset = 30;
+        currentColsNumber += 1;
+        if (containerWidth) {
+          const exceedsContainerWidth = colWidth * currentColsNumber - leftOffset > containerWidth;
+          if (!exceedsContainerWidth) {
+            currentLeftOffset += colWidth + columnGap;
+            currentTopOffset = 30;
+          } else {
+            currentColsNumber -= 1;
+          }
+        }
       }
 
       const header = this.createCategoryHeader(currentLeftOffset, currentTopOffset, category);

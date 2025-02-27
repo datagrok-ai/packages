@@ -1,6 +1,12 @@
 # Sequence Translator changelog
 
-## 1.6.5 (WIP)
+## 1.8.0 (2025-02-20)
+
+* Support for enumeration in all notations
+* fallback for polytool convert
+* Corrected highlighting
+
+## 1.6.5 (2024-12-01)
 
 ### New features
 

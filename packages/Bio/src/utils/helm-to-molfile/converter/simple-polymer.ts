@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import {HELM_MONOMER_TYPE, HELM_POLYMER_TYPE} from '@datagrok-libraries/bio/src/utils/const';
 import {cleanupHelmSymbol} from '@datagrok-libraries/bio/src/helm/utils';
 
@@ -5,8 +6,10 @@ import {Bond} from './types';
 
 /** Wrapper over simple polymer substring of HELM, like RNA1{d(A)p}  */
 export class SimplePolymer {
+  private isNucleotideSequence = false;
   constructor(private simplePolymer: string) {
     this.polymerType = this.getPolymerType();
+    this.isNucleotideSequence = this.polymerType === HELM_POLYMER_TYPE.RNA;
     this.idx = this.getIdx();
     const {monomers, monomerTypes} = this.getMonomerSymbolsAndTypes();
     this.monomers = monomers;
@@ -49,17 +52,23 @@ export class SimplePolymer {
     const monomerList: string[] = [];
     const monomerTypeList: HELM_MONOMER_TYPE[] = [];
     monomerGroups.forEach((monomerGroup) => {
-      // const splitted = monomerGroup.split(/\(|\)/).map((el) => el.replace(/[\[\]]/g, ''));
-      // monomerList.push(...splitted);
-      // WARNING: only the groups of the form r(A)p, as in RNA, are supported
+      if (!this.isNucleotideSequence) {
+        // const splitted = monomerGroup.split(/\(|\)/).map((el) => el.replace(/[\[\]]/g, ''));
+        // monomerList.push(...splitted);
+        // WARNING: only the groups of the form r(A)p, as in RNA, are supported
 
-      monomerList.push(cleanupHelmSymbol(monomerGroup));
-      // const monomerTypes = splitted.map(
-      //   (_, idx) => (idx % 2 === 0) ? HELM_MONOMER_TYPE.BACKBONE : HELM_MONOMER_TYPE.BRANCH
-      // );
+        monomerList.push(cleanupHelmSymbol(monomerGroup));
+        // const monomerTypes = splitted.map(
+        //   (_, idx) => (idx % 2 === 0) ? HELM_MONOMER_TYPE.BACKBONE : HELM_MONOMER_TYPE.BRANCH
+        // );
 
-      // monomerTypeList.push(...monomerTypes);
-      monomerTypeList.push(HELM_MONOMER_TYPE.BACKBONE);
+        // monomerTypeList.push(...monomerTypes);
+        monomerTypeList.push(HELM_MONOMER_TYPE.BACKBONE);
+      } else {
+        const splitted = monomerGroup.split(/\(|\)/).filter((el) => !!el).map((el) => cleanupHelmSymbol(el));
+        monomerList.push(...splitted);
+        splitted.forEach((_, i) => monomerTypeList.push(i % 3 === 1 ? HELM_MONOMER_TYPE.BRANCH : HELM_MONOMER_TYPE.BACKBONE));
+      }
     });
     return {monomers: monomerList, monomerTypes: monomerTypeList};
   }

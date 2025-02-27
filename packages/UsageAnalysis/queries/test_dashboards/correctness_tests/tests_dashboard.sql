@@ -1,6 +1,7 @@
 --name: TestsDashboard
 --friendlyName: UA | Tests | Tests
 --connection: System:Datagrok
+--input: string instanceFilter = '' {choices: ['', 'dev', 'release', 'public']}
 --input: int lastBuildsNum = 5
 --input: string packageFilter {nullable: true}
 --input: bool showNotRun = false {optional: true}
@@ -9,15 +10,19 @@
 --input: string versionFilter {nullable: true}
 
 WITH last_builds AS (
-    select name, build_date
+    select name, build_date, commit
     from builds b
     -- todo: filter builds with cicd not-stresstest runs
     -- todo: filter only success builds
-    where (SELECT count(*) from test_runs r where r.build_name = b.name and not r.stress_test) >= 100
+    where (SELECT count(*) from test_runs r where r.build_name = b.name
+                                              and not r.stress_test
+                                              and (@instanceFilter is null or r.instance like '%' || @instanceFilter || '%')
+                                              and r.benchmark = @showBenchmarks
+          ) >= 100
     order by b.build_date desc limit @lastBuildsNum
 ), last_builds_indexed AS (
-  select name, ROW_NUMBER() OVER (ORDER BY build_date DESC) AS build_index,
-         build_date
+  select name, ROW_NUMBER() OVER (ORDER BY build_date) AS build_index,
+         build_date, commit
   from last_builds b
 )
 select
@@ -27,6 +32,8 @@ select
   t.name as test,
   t.type, 
   r.date_time,
+  r.instance as instance,
+  b.commit as build_commit,
   case when r.passed is null then 'did not run' when r.skipped then 'skipped' when r.passed then 'passed' when not r.passed then 'failed' else 'unknown' end as status,
   COALESCE(r.params->>'flaking', 'false')::bool as flaking, 
   r.result,
@@ -45,6 +52,7 @@ and (@showNotRun or not r.passed is null)
 and r.benchmark = @showBenchmarks
 and (@packageFilter is null or @packageFilter = p.name)
 and (@versionFilter is null or @versionFilter = b.name)
+and (@instanceFilter is null or r.instance like '%' || @instanceFilter || '%')
 
-order by b.name, t.name
+order by b.build_index, t.name
 --end

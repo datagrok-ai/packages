@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/compute",
   "friendlyName": "Compute",
-  "version": "1.40.4",
+  "version": "1.41.1",
   "author": {
     "name": "Andrey Sharapov",
     "email": "andrey.sharapov@softwarecountry.com"
@@ -13,10 +13,10 @@
     "directory": "packages/Compute"
   },
   "dependencies": {
-    "@datagrok-libraries/compute-utils": "^1.40.4",
-    "@datagrok-libraries/utils": "^4.3.12",
+    "@datagrok-libraries/compute-utils": "^1.41.1",
+    "@datagrok-libraries/utils": "^4.4.1",
     "cash-dom": "^8.1.5",
-    "datagrok-api": "^1.23.0",
+    "datagrok-api": "^1.24.0",
     "dayjs": "=1.11.10",
     "exceljs": "^4.3.0",
     "rxjs": "^6.6.7",
@@ -62,7 +62,7 @@
   "canView": [
     "All users"
   ],
-  "category": "Machine Learning",
+  "category": "Compute",
   "meta": {
     "dartium": false
   }

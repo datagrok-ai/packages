@@ -32,7 +32,7 @@ export const errorSeverityLevelJiraNames : { [id: string]: string; } = {
 export const TicketPriorityLevel : { [id: string]: string; } = {
   [MINORFAIL]: 'Low',
   [CRITICALFAIL]: 'Medium',
-  [BLOCKFAIL]: 'Highest'
+  [BLOCKFAIL]: 'Blocker'
 }
 
 export async function loadFileAsText(name: string): Promise<string> {

@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/peptides",
   "friendlyName": "Peptides",
-  "version": "1.21.1",
+  "version": "1.21.2",
   "author": {
     "name": "Davit Rizhinashvili",
     "email": "drizhinashvili@datagrok.ai"
@@ -13,9 +13,9 @@
     "directory": "packages/Peptides"
   },
   "dependencies": {
-    "@datagrok-libraries/bio": "^5.46.1",
-    "@datagrok-libraries/math": "^1.2.4",
-    "@datagrok-libraries/ml": "^6.7.6",
+    "@datagrok-libraries/bio": "^5.48.2",
+    "@datagrok-libraries/math": "^1.2.5",
+    "@datagrok-libraries/ml": "^6.8.1",
     "@datagrok-libraries/statistics": "^1.2.12",
     "@datagrok-libraries/tutorials": "^1.4.2",
     "@datagrok-libraries/utils": "^4.4.0",

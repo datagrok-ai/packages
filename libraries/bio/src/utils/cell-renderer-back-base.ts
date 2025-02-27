@@ -64,6 +64,14 @@ export abstract class CellRendererBackBase<TValue> extends CellRendererBackStub 
       this.subs.push(this.tableCol.dataFrame.onDataChanged.subscribe(() => {
         this.dirty = true;
       }));
+
+      this.subs.push(this.tableCol.dataFrame.onColumnsRemoved.subscribe((_) => {
+        try {
+          // this way we can check if the column is still in the dataframe
+          if (!this.destroyed && this.tableCol && !this.tableCol.dataFrame)
+            this.destroy();
+        } catch (err) { this.logger.error(err); }
+      }));
     }
 
     if (this.tableCol) {

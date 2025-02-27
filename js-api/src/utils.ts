@@ -307,6 +307,12 @@ export class Utils {
       csv = resultDF.toCsv()       
     }
 
+    if ((<any>window).DG.Test.isInDebug)
+    {
+      console.log('on browser closing debug point');
+      debugger
+    }
+
     return {
       failed: failed,
       verbosePassed: verbosePassed,
@@ -530,7 +536,8 @@ export function _toJson(x: any) {
   return x === null ? null : JSON.stringify(x);
 }
 
-export function* range(length: number) {
+/** Generates [count] increasing integer numbers, starting with 0. */
+export function* range(length: number): IterableIterator<number> {
   for (let i = 0; i < length; i++)
     yield i;
 }
@@ -833,6 +840,7 @@ export namespace Test {
    * */
   export let isInBenchmark = false;
   export let isReproducing = false;
+  export let isInDebug = false;
   export let isCiCd = false;
 
   export function getTestDataGeneratorByType(type: string) {

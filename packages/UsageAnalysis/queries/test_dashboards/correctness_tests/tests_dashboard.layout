@@ -184,6 +184,11 @@
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
+                          },
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "false": 4288208778,
+                            "true": 4292224808
                           }
                         },
                         {
@@ -228,7 +233,7 @@
                         {
                           "visible": false,
                           "width": 78.56646848989297,
-                          "columnName": "1 avg(build_date)",
+                          "columnName": "1 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -240,10 +245,10 @@
                         {
                           "isColorCoded": true,
                           "width": 18.384225128814904,
-                          "columnName": "1 concat unique(status)",
+                          "columnName": "1",
                           "tooltipColumns": [
-                            "1 avg(build_date)",
-                            "1 concat unique(result)"
+                            "1 build_date",
+                            "1 result"
                           ],
                           "tooltipType": "Columns",
                           "colorCodingType": "Categorical",
@@ -260,10 +265,10 @@
                         {
                           "isColorCoded": true,
                           "width": 19.384225128814904,
-                          "columnName": "2 concat unique(status)",
+                          "columnName": "2",
                           "tooltipColumns": [
-                            "2 avg(build_date)",
-                            "2 concat unique(result)"
+                            "2 build_date",
+                            "2 result"
                           ],
                           "tooltipType": "Columns",
                           "colorCodingType": "Categorical",
@@ -280,10 +285,10 @@
                         {
                           "isColorCoded": true,
                           "width": 19.128973444312333,
-                          "columnName": "3 concat unique(status)",
+                          "columnName": "3",
                           "tooltipColumns": [
-                            "3 avg(build_date)",
-                            "3 concat unique(result)"
+                            "3 build_date",
+                            "3 result"
                           ],
                           "tooltipType": "Columns",
                           "colorCodingType": "Categorical",
@@ -300,10 +305,10 @@
                         {
                           "isColorCoded": true,
                           "width": 18.384225128814904,
-                          "columnName": "4 concat unique(status)",
+                          "columnName": "4",
                           "tooltipColumns": [
-                            "4 avg(build_date)",
-                            "4 concat unique(result)"
+                            "4 build_date",
+                            "4 result"
                           ],
                           "tooltipType": "Columns",
                           "colorCodingType": "Categorical",
@@ -320,10 +325,10 @@
                         {
                           "isColorCoded": true,
                           "width": 19.128973444312333,
-                          "columnName": "5 concat unique(status)",
+                          "columnName": "5",
                           "tooltipColumns": [
-                            "5 avg(build_date)",
-                            "5 concat unique(result)"
+                            "5 build_date",
+                            "5 result"
                           ],
                           "tooltipType": "Columns",
                           "colorCodingType": "Categorical",
@@ -416,7 +421,7 @@
                         },
                         {
                           "width": 183.781212841855,
-                          "columnName": "1 concat unique(result)",
+                          "columnName": "1 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -425,7 +430,7 @@
                         {
                           "visible": false,
                           "width": 78.56646848989297,
-                          "columnName": "2 avg(build_date)",
+                          "columnName": "2 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -436,7 +441,7 @@
                         },
                         {
                           "width": 183.781212841855,
-                          "columnName": "2 concat unique(result)",
+                          "columnName": "2 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -445,7 +450,7 @@
                         {
                           "visible": false,
                           "width": 78.56646848989297,
-                          "columnName": "3 avg(build_date)",
+                          "columnName": "3 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -456,7 +461,7 @@
                         },
                         {
                           "width": 183.781212841855,
-                          "columnName": "3 concat unique(result)",
+                          "columnName": "3 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -465,7 +470,7 @@
                         {
                           "visible": false,
                           "width": 78.56646848989297,
-                          "columnName": "4 avg(build_date)",
+                          "columnName": "4 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -476,7 +481,7 @@
                         },
                         {
                           "width": 112.38115543892732,
-                          "columnName": "4 concat unique(result)",
+                          "columnName": "4 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -485,7 +490,7 @@
                         {
                           "visible": false,
                           "width": 78.56646848989297,
-                          "columnName": "5 avg(build_date)",
+                          "columnName": "5 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -496,7 +501,7 @@
                         },
                         {
                           "width": 183.781212841855,
-                          "columnName": "5 concat unique(result)",
+                          "columnName": "5 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -586,7 +591,7 @@
                       "splitColumnName": "~test_0",
                       "showCategoryValues": false,
                       "showCategorySelector": false,
-                      "stackColumnName": "failing",
+                      "stackColumnName": "needs_attention",
                       "showStackSelector": false,
                       "colorColumnName": "",
                       "maxCategoryWidth": 100,
@@ -675,7 +680,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "1 avg(build_date)",
+                          "columnName": "1 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -687,7 +692,7 @@
                         {
                           "isColorCoded": true,
                           "width": 30,
-                          "columnName": "1 concat unique(status)",
+                          "columnName": "1",
                           "colorCodingType": "Categorical",
                           "colorCodingCategorical": {
                             "failed": 4292224808,
@@ -702,7 +707,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "1 concat unique(result)",
+                          "columnName": "1 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -723,7 +728,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "2 avg(build_date)",
+                          "columnName": "2 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -735,7 +740,7 @@
                         {
                           "isColorCoded": true,
                           "width": 30,
-                          "columnName": "2 concat unique(status)",
+                          "columnName": "2",
                           "colorCodingType": "Categorical",
                           "colorCodingCategorical": {
                             "failed": 4292224808,
@@ -750,7 +755,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "2 concat unique(result)",
+                          "columnName": "2 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -771,7 +776,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "3 avg(build_date)",
+                          "columnName": "3 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -783,7 +788,7 @@
                         {
                           "isColorCoded": true,
                           "width": 30,
-                          "columnName": "3 concat unique(status)",
+                          "columnName": "3",
                           "colorCodingType": "Categorical",
                           "colorCodingCategorical": {
                             "failed": 4292224808,
@@ -798,7 +803,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "3 concat unique(result)",
+                          "columnName": "3 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -819,7 +824,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "4 avg(build_date)",
+                          "columnName": "4 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -831,7 +836,7 @@
                         {
                           "isColorCoded": true,
                           "width": 30,
-                          "columnName": "4 concat unique(status)",
+                          "columnName": "4",
                           "colorCodingType": "Categorical",
                           "colorCodingCategorical": {
                             "failed": 4292224808,
@@ -846,7 +851,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "4 concat unique(result)",
+                          "columnName": "4 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -867,7 +872,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "5 avg(build_date)",
+                          "columnName": "5 build_date",
                           "customFormat": "M/d/yyyy HH:mm:ss.fff",
                           "cellType": "number",
                           "format": "M/d/yyyy HH:mm:ss.fff",
@@ -879,7 +884,7 @@
                         {
                           "isColorCoded": true,
                           "width": 30,
-                          "columnName": "5 concat unique(status)",
+                          "columnName": "5",
                           "colorCodingType": "Categorical",
                           "colorCodingCategorical": {
                             "failed": 4292224808,
@@ -894,7 +899,7 @@
                         {
                           "visible": false,
                           "width": 30,
-                          "columnName": "5 concat unique(result)",
+                          "columnName": "5 result",
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
@@ -992,6 +997,11 @@
                           "headerCellStyle": {
                             "vertAlign": "bottom",
                             "textWrap": "words"
+                          },
+                          "colorCodingType": "Categorical",
+                          "colorCodingCategorical": {
+                            "false": 4288208778,
+                            "true": 4292224808
                           }
                         },
                         {
@@ -1046,8 +1056,8 @@
     ],
     "floating": [],
     "tableId": "2d897490-9b00-11ef-bb56-cf322fcdda84",
-    "tableName": "0. Tests. Dashboard"
+    "tableName": "Tests"
   },
-  "name": "TestsDashboard",
-  "friendlyName": "0. Tests Dashboard"
+  "name": "Tests",
+  "friendlyName": "Tests"
 }

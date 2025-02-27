@@ -19,7 +19,7 @@ export class ViewHandler {
     this.view = new DG.MultiView({viewFactories: {}});
   }
 
-  async init(date?: string, groups?: string, packages?: string, path?: string): Promise<void> {
+  async init(date?: string, groups?: string, packages?: string, tags?: string, categories?: string,  path?: string): Promise<void> {
     this.view.parentCall = grok.functions.getCurrentCall();
     const toolbox = await UaToolbox.construct(this);
     const viewClasses: (typeof UaView)[] = [OverviewView, PackagesView, FunctionsView, EventsView, LogView];
@@ -30,16 +30,36 @@ export class ViewHandler {
         return currentView;
       }, false);
     }
+
+    let urlTab = 'Overview';
+
+    if (path != undefined && path.length > 1) {
+      const segments = path.split('/').filter((s) => s != '');
+      if (segments.length > 0) {
+        urlTab = segments[0];
+        urlTab = urlTab[0].toUpperCase() + urlTab.slice(1);
+      }
+    }
+
+    toolbox.toggleCategoriesInput(urlTab == 'Packages');
+    toolbox.toggleTagsInput(urlTab == 'Functions');
+
     const paramsHaveDate = date != undefined;
     const paramsHaveUsers = groups != undefined;
     const paramsHavePackages = packages != undefined;
-    if (paramsHaveDate || paramsHaveUsers || paramsHavePackages) {
+    const paramsHaveTags = tags != undefined;
+    const paramsHavePackagesCategories = categories != undefined;
+    if (paramsHaveDate || paramsHaveUsers || paramsHavePackages || paramsHavePackagesCategories) {
       if (paramsHaveDate)
         toolbox.setDate(date!);
       if (paramsHaveUsers)
         toolbox.setGroups(groups!);
       if (paramsHavePackages)
         toolbox.setPackages(packages!);
+      if (paramsHaveTags)
+        toolbox.setTags(tags!);
+      if (paramsHavePackagesCategories)
+        toolbox.setPackagesCategories(categories!);
       toolbox.applyFilter();
     }
     let helpShown = false;
@@ -91,6 +111,8 @@ export class ViewHandler {
 
     this.view.tabs.onTabChanged.subscribe((_) => {
       const view = this.view.currentView;
+      toolbox.toggleCategoriesInput(view.name === 'Packages');
+      toolbox.toggleTagsInput(view.name === 'Functions');
       // ViewHandler.UA.path = ViewHandler.UA.path.replace(/(UsageAnalysis\/)([a-zA-Z/]+)/, '$1' + view.name);
       this.updatePath();
       if (view instanceof UaView) {
@@ -125,15 +147,7 @@ export class ViewHandler {
     });
     this.view.name = ViewHandler.UA_NAME;
     this.view.box = true;
-    let urlTab = 'Overview';
 
-    if (path != undefined && path.length > 1) {
-      const segments = path.split('/').filter((s) => s != '');
-      if (segments.length > 0) {
-        urlTab = segments[0];
-        urlTab = urlTab[0].toUpperCase() + urlTab.slice(1);
-      }
-    }
     if (viewClasses.some((v) => v.name === `${urlTab}View`))
       this.changeTab(urlTab);
   }

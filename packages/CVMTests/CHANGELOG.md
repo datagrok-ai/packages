@@ -1,5 +1,10 @@
 # CVMTests changelog
 
+# 1.2.0
+
+* Test fixes
+* Dependency: datagarok-api >= 1.24.0*
+
 # 1.1.1
 
 * Test fixes

@@ -3,6 +3,7 @@ import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
 import {UiUtils} from "@datagrok-libraries/compute-utils";
 import '../css/demo.css';
+import { Subscription } from 'rxjs';
 
 interface ISplash {
   close: () => void;
@@ -28,9 +29,11 @@ export abstract class BaseViewApp {
   uploadCachedData?: () => Promise<HTMLElement>;
   sketched: number = 0;
   mode: string = 'sketch';
+  tableName: string = 'Admetica';
 
   sketcherValue: { [k: string]: string } = { 'aspirin': 'CC(Oc1ccccc1C(O)=O)=O' };
   runningProcesses: (() => Promise<void>)[] = [];
+  subs: Subscription[] = [];
 
   constructor(parentCall: DG.FuncCall) {
     this.parentCall = parentCall;
@@ -70,6 +73,7 @@ export abstract class BaseViewApp {
     }
 
     this.prepareTableView();
+    this.addSubs();
   }
   
   private async handleModeChange(tab: DG.TabPane): Promise<void> {
@@ -120,18 +124,23 @@ export abstract class BaseViewApp {
     const table = DG.DataFrame.create(1);
     this.tableView = DG.TableView.create(table, false);
     this.tableView.parentCall = this.parentCall;
-    this.tableView.dataFrame.name = 'Table';
+    this.tableView.dataFrame.name = this.tableName;
     
     setTimeout(async () => {
       this.tableView!._onAdded();
       this.tableView!.grid.root.style.visibility = 'hidden';
       await this.refresh(table, this.container, 0.99);
-      (grok.shell.view(DG.VIEW_TYPE.BROWSE) as DG.BrowseView).preview = this.tableView!;
+      const inBrowseView = grok.shell.v.type === DG.VIEW_TYPE.BROWSE;
+      if (inBrowseView)
+        (grok.shell.view(DG.VIEW_TYPE.BROWSE) as DG.BrowseView).preview = this.tableView!;
     }, 300);
   }
 
   private clearTable() {
-    if (this.tableView) this.tableView.dataFrame = DG.DataFrame.create(1);
+    if (this.tableView) {
+      this.tableView.dataFrame = DG.DataFrame.create(1);
+      this.tableView.dataFrame.name = this.tableName;
+    }
   }
 
   private clearForm() {
@@ -161,6 +170,7 @@ export abstract class BaseViewApp {
 
   private addNewProcess(smiles: string): () => Promise<void> {
     return async () => {
+      this.clearTable();
       const col = this.tableView?.dataFrame.columns.getOrCreate('smiles', 'string');
       if (!col) return;
       col!.semType = DG.SEMTYPE.MOLECULE;
@@ -233,7 +243,6 @@ export abstract class BaseViewApp {
     });
   }
   
-  
   private setupDragAndDrop(root: HTMLElement): void {
     const inputEditor = root.querySelector<HTMLElement>('.ui-input-editor');
     if (!inputEditor) return;
@@ -274,6 +283,7 @@ export abstract class BaseViewApp {
       const df = await openMoleculeDataset(this.filePath);
       await grok.data.detectSemanticTypes(df);
       this.tableView!.dataFrame = df;
+      this.tableView!.dataFrame.name = this.tableName;
       await this.processFileData();
     }
   }
@@ -291,6 +301,7 @@ export abstract class BaseViewApp {
     const table = DG.DataFrame.fromCsv(csvData);
     await grok.data.detectSemanticTypes(table);
     this.tableView!.dataFrame = table;
+    this.tableView!.dataFrame.name = this.tableName;
   
     const splashScreen = this.buildSplash(this.tableView!.grid.root, 'Calculating...');
     try {
@@ -321,6 +332,28 @@ export abstract class BaseViewApp {
     root.append(loaderEl);
     return { el: loaderEl, close: () => loaderEl.remove() };
   }
+
+  private addSubs() {
+    const root = this.tableView?.root;
+    if (!root) return;
+  
+    this.subs.push(
+      ui.onSizeChanged(root).subscribe(() => {
+        this.container.style.width = `${root.clientWidth}px`;
+  
+        const d4 = root.querySelector('.d4-root') as HTMLElement | null;
+        const splitter = root.querySelector('.splitter-container-column') as HTMLElement | null;
+  
+        if (d4) d4.style.width = '100%';
+        if (splitter) splitter.style.width = '100%';
+      })
+    );
+
+    this.subs.push(grok.events.onViewRemoved.subscribe((view) => {
+      if (view.id === this.tableView?.id)
+        this.subs.forEach((v) => v.unsubscribe());
+    }));
+  } 
 }
 
 async function openMoleculeDataset(name: string): Promise<DG.DataFrame> {

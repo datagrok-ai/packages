@@ -1,9 +1,6 @@
 /* Do not change these import lines to match external modules in webpack configuration */
 import * as grok from 'datagrok-api/grok';
-import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
-import * as constants from './app/constants';
-import { _package } from './package-test';
 import { loadProjectsList, loadIssues, loadIssueData, loadProjectData } from './api/data';
 import { JiraIssue, Project } from './api/objects';
 import { AuthCreds } from './api/objects';
@@ -13,7 +10,7 @@ import { JiraGridCellHandler } from './jira-grid-cell-handler';
 import '../css/jira_connect.css';
 import { LruCache } from "datagrok-api/dg";
 
-
+export let _package = new DG.Package();
 export const cache = new LruCache<string, JiraIssue>(100);
 export const queried = new Set<string>();
 
@@ -54,7 +51,7 @@ export async function projectData(projectKey: string): Promise<Project | null> {
 //input: string issueKey
 //output: object issue
 export async function issueData(issueKey: string): Promise<JiraIssue | null> {
-  if(!issueKey || issueKey?.length === 0)
+  if (!issueKey || issueKey?.length === 0)
     return null;
   if (cache.has(issueKey))
     return cache.get(issueKey)!;
@@ -122,4 +119,28 @@ export async function getJiraField(ticketColumn: DG.Column, field: string): Prom
     resultList.push(ticketsMap.get((ticket ?? '').trim()) ?? '');
 
   return DG.Column.fromStrings(field, resultList);
+}
+
+//name: getJiraTicketsByFilter 
+//input: object filter
+//output: object result
+export async function getJiraTicketsByFilter(filter?: object): Promise<JiraIssue[]> {
+  const jiraCreds = await getJiraCreds();
+  let result: JiraIssue[] = [];
+  let total = -1;
+  const chunkSize = 100;
+  let startAt = 0;
+  while (true) {
+    const loadedIssues = await loadIssues(jiraCreds.host, new AuthCreds(jiraCreds.userName, jiraCreds.authKey),
+    startAt, chunkSize, filter, undefined);
+    if (loadedIssues != null) {
+      total = loadedIssues.total;
+      result = [...result, ...loadedIssues.issues]
+    }
+
+    if (total <= startAt)
+      break;
+    startAt += chunkSize;
+  }
+  return result;
 }

@@ -191,7 +191,7 @@ export function rGroupAnalysis(col: DG.Column, demo = false): void {
             view.grid.col(res.highlightColName)!.visible = false;
           if (visualAnalysisCheck.value! && view) {
             if (!res.yAxisColName && !res.xAxisColName)
-              grok.shell.error('None R-Groups were found');
+              grok.shell.error('No R-Groups were found');
             else if (!res.yAxisColName || !res.xAxisColName)
               grok.shell.warning(`Not enough R group columns to create trellis plot`);
             else

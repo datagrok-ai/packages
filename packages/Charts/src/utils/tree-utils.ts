@@ -11,6 +11,7 @@ export class TreeUtils {
       includeNulls?: boolean, markSelected: boolean = true): Promise<TreeDataType> {
     const data: TreeDataType = {
       name: 'All',
+      collapsed: false,
       value: 0,
       path: null,
       label: {},
@@ -138,6 +139,7 @@ export class TreeUtils {
         const node: TreeDataType = {
           semType: columns[colIdx].semType,
           name: name,
+          collapsed: false,
           path: parentNode?.path == null ? name : parentNode.path + ' ||| ' + name,
           value: 0,
         };
@@ -227,6 +229,6 @@ export class TreeUtils {
   }
 }
 
-export type TreeDataType = { name: string, value: number, semType?: null | string, path?: null | string, label?: {}, children?: TreeDataType[],
+export type TreeDataType = { name: string, collapsed: boolean, value: number, semType?: null | string, path?: null | string, label?: {}, children?: TreeDataType[],
   itemStyle?: { color?: string }, [prop: string]: any };
 export type AggregationInfo = { type: DG.AggregationType, columnName: string, propertyName: string };

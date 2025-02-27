@@ -154,8 +154,10 @@ async function checkPermissions(authorId: string, groupIdList: string[]): Promis
       const user = await grok.dapi.groups.getUser(group);
       if (user?.id === userId)
         return true;
-    } else if (userGroupId && group.members.length > 0) {
-      if (group.members.some((memberGroup) => memberGroup.id === userGroupId))
+    } else if (userGroupId) {
+      if ((group.members?.length ?? 0) > 0 && group.members.some((memberGroup) => memberGroup.id === userGroupId))
+        return true;
+      if ((group.adminMembers?.length ?? 0) > 0 && group.adminMembers.some((memberGroup) => memberGroup.id === userGroupId))
         return true;
     }
   }
@@ -321,6 +323,19 @@ export function editableTableField(field: HTMLElement, options?: EditableFieldOp
   const container = ui.divH([field, editIcon], {style: {display: 'flex', alignItems: 'center'}});
   editIcon.style.marginLeft = '5px';
   return container;
+}
+
+export async function checkFileExists(path: string) {
+  if (!path || path.trim() === '') {
+    grok.shell.error('Path can not be empty');
+    return false;
+  }
+  const exists = await grok.dapi.files.exists(path);
+  if (!exists) {
+    grok.shell.error('Given folder does not exist');
+    return false;
+  }
+  return true;
 }
 
 

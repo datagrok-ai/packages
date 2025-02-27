@@ -1,6 +1,25 @@
 # Chem changelog
 
-## 1.13.1 (WIP)
+## 1.14.0 (2025-02-24)
+
+### Features
+
+* New improved MMP implementation
+* Integration with Reinvent
+* Copy molecule as image
+* Context actions for chemical columns
+
+### Bug fixes
+
+* GROK-17483: Chem: Structure filter is not reset on reseting the filtering in some cases
+* GROK-17461: Scaffold tree: Error when uploading the saved tree
+* GROK-17511: Chem | ChemProp: Error when training a model
+* GROK-17555: Filter Panel: Reset filter causes errors in some cases
+* GROK-17471: Chem: Incorrect filter UI when adding filter via 'Use as filter' or 'Add filter'
+* GROK-17555: Filter Panel: Reset filter causes errors in some cases
+* GROK-17597: Chem: Wrong filtering when opening the project
+
+## 1.13.1 (2025-01-06)
 
 ### Bug fixes
 

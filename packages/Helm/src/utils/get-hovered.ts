@@ -50,7 +50,13 @@ export function getHoveredMonomerFromEditorMol(
 
 export function getSeqMonomerFromHelmAtom(seqValue: SeqValueBase, atom: HelmAtom): ISeqMonomer {
   const pos: number = atom.bio!.continuousId - 1;
-  const canonicalSymbol = seqValue.getSplitted().getCanonical(pos);
+  let canonicalSymbol = atom.elem;
+  try { // for DNA/RNA, we might add phosphates and sugars
+    if (!seqValue.isDna() && !seqValue.isRna())
+      canonicalSymbol = seqValue.getSplitted().getCanonical(pos);
+    else
+      canonicalSymbol = seqValue.getSplittedWithSugarsAndPhosphates().getCanonical(pos);
+  } catch (_) {}
   // const canonicalSymbol = atom.elem === GapOriginals[NOTATION.HELM] ? GAP_SYMBOL : atom.elem;
   return {position: atom.bio!.continuousId - 1, symbol: canonicalSymbol, biotype: atom.bio!.type};
 }

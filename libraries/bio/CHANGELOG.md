@@ -1,5 +1,25 @@
 # bio changelog
 
+## 5.50.1 (2025-02-20)
+
+Remove helm dependency in toAtomicLevel for Linear sequences
+
+## 5.50.0 (2025-02-20)
+
+Support toAtomicLevel and POM conversion for all notations
+
+## 5.49.1 (2025-02-17)
+
+Fix helm splitter for marginal cases
+
+## 5.49.0 (2025-02-17)
+
+To-Tomic-level support for RNA/DNA sequences
+
+## 5.48.3 (2025-02-05)
+
+Remove healthCheck method from the IAutoDockService interface
+
 ## 5.48.2 (2025-01-22)
 
 Async renderer caching improvement

@@ -1,5 +1,15 @@
 # Chemspace changelog
 
+## 1.1.6 (2025-02-25)
+
+Updated README
+
+## 1.1.5 (2025-02-17)
+
+### Features
+
+* Updated tests
+
 ## 1.1.4 (2024-11-18)
 
 ### Features

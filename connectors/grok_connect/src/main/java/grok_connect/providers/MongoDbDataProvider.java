@@ -44,10 +44,10 @@ public class MongoDbDataProvider extends JdbcDataProvider {
             throws GrokConnectException, QueryCancelledByUser {
         DataQuery dataQuery = queryRun.func;
         try (Connection connection = getConnection(dataQuery.connection);
-             ResultSet resultSet = getResultSet(queryRun, connection, logger, 1)) {
+             ResultSet resultSet = getResultSet(queryRun, connection,1)) {
             ResultSetManager resultSetManager = getResultSetManager();
             resultSetManager.init(resultSet.getMetaData(), 100);
-            return getResultSetSubDf(queryRun, resultSet, resultSetManager,-1, 1, logger,
+            return getResultSetSubDf(queryRun, resultSet, resultSetManager,-1, 1,
                     0, false);
         } catch (SQLException e) {
             throw new GrokConnectException(e);
@@ -55,17 +55,17 @@ public class MongoDbDataProvider extends JdbcDataProvider {
     }
 
     @Override
-    public ResultSet getResultSet(FuncCall queryRun, Connection connection, Logger queryLogger, int fetchSize) throws SQLException {
+    public ResultSet getResultSet(FuncCall queryRun, Connection connection, int fetchSize) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(queryRun.func.query);
         return statement.executeQuery();
     }
 
     @Override
     public DataFrame getResultSetSubDf(FuncCall queryRun, ResultSet resultSet, ResultSetManager resultSetManager, int maxIterations, int columnCount,
-                                       Logger queryLogger, int operationNumber, boolean dryRun) throws SQLException {
+                                       int operationNumber, boolean dryRun) throws SQLException {
         while (resultSet.next()) {
             Object object = resultSet.getObject(OBJECT_INDEX);
-            resultSetManager.processValue(object, OBJECT_INDEX, queryLogger);
+            resultSetManager.processValue(object, OBJECT_INDEX);
         }
         resultSet.close();
         DataFrame dataFrame = new DataFrame();

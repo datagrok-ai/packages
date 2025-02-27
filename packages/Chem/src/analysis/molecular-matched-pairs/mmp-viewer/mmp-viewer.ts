@@ -337,7 +337,7 @@ export class MatchedMolecularPairsViewer extends DG.JsViewer {
 
     const trellisSortState: TrellisSorting = {
       [TrellisAxis.From]: {property: TrellisSortByProp.Frequency, type: TrellisSortType.Desc},
-      [TrellisAxis.To]: {property: TrellisSortByProp.None, type: TrellisSortType.Asc},
+      [TrellisAxis.To]: {property: TrellisSortByProp.Frequency, type: TrellisSortType.Desc},
     };
 
 
@@ -385,6 +385,7 @@ export class MatchedMolecularPairsViewer extends DG.JsViewer {
     });
 
     this.sortTrellis(TrellisAxis.From, trellisSortState[TrellisAxis.From], this.tp);
+    this.sortTrellis(TrellisAxis.To, trellisSortState[TrellisAxis.To], this.tp);
 
     const mmPairsRoot2 = this.createGridDiv(MMP_NAMES.PAIRS_GRID,
       this.pairedGrids!.mmpGridFrag, MATCHED_MOLECULAR_PAIRS_TOOLTIP_FRAGS, this.pairedGrids!.mmpGridFragMessage);

@@ -84,6 +84,8 @@ export class Tags {
 
   static Formula = 'formula';
 
+  static FormulaColumnType = '.%formula-column-type';
+
   /// JSON-encoded list of strings to be used in a cell editor.
   /// Applicable for string columns only.
   /// See also [AutoChoices].

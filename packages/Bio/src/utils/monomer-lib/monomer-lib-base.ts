@@ -177,13 +177,13 @@ export class MonomerLibBase implements IMonomerLibBase {
       // Symbol & Name
       const symbol = monomer[REQ.SYMBOL];
       const _name = monomer[REQ.NAME];
-
-      const htmlColor = wem.backgroundcolor;
+      const [color, backgroundColor, lineColor] =
+        wem ? [wem.textcolor, wem.backgroundcolor, wem.linecolor] : ['#202020', '#A0A0A0', '#202020'];
       res.append(ui.divH([
         ui.div([symbol], {
           style: {
             /* fontWeight: 'bolder', */ textWrap: 'nowrap', marginLeft: '4px', marginRight: '4px',
-            color: wem.textcolor, backgroundColor: wem.backgroundcolor, borderColor: wem.linecolor,
+            color: color, backgroundColor: backgroundColor, borderColor: lineColor,
             borderWidth: '1px', borderStyle: 'solid', borderRadius: '2px', padding: '3px',
             minWidth: '24px', textAlign: 'center',
           }
@@ -192,7 +192,7 @@ export class MonomerLibBase implements IMonomerLibBase {
       ], {style: {display: 'flex', flexDirection: 'row', justifyContent: 'left'}}));
 
       // Structure
-      const chemOptions = {autoCrop: true, autoCropMargin: 0, suppressChiralText: true};
+      //const chemOptions = {autoCrop: true, autoCropMargin: 0, suppressChiralText: true};
       let structureEl: HTMLElement;
       if (monomer.molfile)
         structureEl = drawMoleculeCall(monomer.molfile);

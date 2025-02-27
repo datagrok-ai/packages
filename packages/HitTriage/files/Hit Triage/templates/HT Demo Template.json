@@ -1,1 +1,28 @@
-{"name":"HT Demo Template","key":"HTD","campaignFields":[{"name":"Chemist","type":"String","required":true},{"name":"Deadline","type":"Date","required":false},{"name":"Scaffold","type":"Molecule","required":false}],"dataSourceType":"Query","compute":{"descriptors":{"enabled":true,"args":["MolWt"]},"functions":[{"name":"addChemRisksColumns","package":"Chem","args":{"mutagenicity":true,"tumorigenicity":true,"irritatingEffects":true,"reproductiveEffects":true}}],"scripts":[],"queries":[]},"queryFunctionName":"Demo Molecules variable"}
+{
+  "name": "HT Demo Template",
+  "key": "HTD",
+  "campaignFields": [
+    { "name": "Chemist", "type": "String", "required": true },
+    { "name": "Deadline", "type": "Date", "required": false },
+    { "name": "Scaffold", "type": "Molecule", "required": false }
+  ],
+  "dataSourceType": "Query",
+  "compute": {
+    "descriptors": { "enabled": true, "args": ["MolWt"] },
+    "functions": [
+      {
+        "name": "addChemRisksColumns",
+        "package": "Chem",
+        "args": {
+          "mutagenicity": true,
+          "tumorigenicity": true,
+          "irritatingEffects": true,
+          "reproductiveEffects": true
+        }
+      }
+    ],
+    "scripts": [],
+    "queries": []
+  },
+  "queryFunctionName": "Demo Molecules variable"
+}

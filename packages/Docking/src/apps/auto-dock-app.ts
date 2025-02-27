@@ -11,7 +11,6 @@ import {errInfo} from '@datagrok-libraries/bio/src/utils/err-info';
 
 import {_package, BINDING_ENERGY_COL, POSE_COL, ERROR_COL_NAME} from '../utils/constants';
 import {buildDefaultAutodockGpf} from '../utils/auto-dock-service';
-import {fetchWrapper} from '@datagrok-libraries/utils/src/fetch-utils';
 
 export type AutoDockDataType = {
   ligandDf: DG.DataFrame,

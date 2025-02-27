@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/pyodide",
   "friendlyName": "Pyodide",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Provides support of python scripting directly in browser using Pyodide (https://pyodide.org/)",
   "author": {
     "name": "Pavlo Polovyi",
@@ -10,7 +10,7 @@
   "dependencies": {
     "@datagrok-libraries/utils": "^4.4.0",
     "cash-dom": "^8.1.5",
-    "datagrok-api": "^1.23.0",
+    "datagrok-api": "^1.24.0",
     "dayjs": "^1.11.10",
     "uuid": "^10.0.0"
   },

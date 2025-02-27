@@ -96,17 +96,6 @@ export class AutoDockService implements IAutoDockService {
   }
 
   // -- Methods --
-
-  async healthCheck(): Promise<void> {
-    const path = '/health_check';
-    const params: RequestInit = {
-      method: 'GET',
-    }
-    const adRes = await this.fetchAndCheck(path, params);
-    if (!adRes)
-      throw new Error('Health check failed.');
-  }
-
   async checkOpenCl(): Promise<number> {
     const path = '/check_opencl';
     const params: RequestInit = {

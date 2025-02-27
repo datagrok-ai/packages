@@ -1,23 +1,27 @@
 {
   "name": "@datagrok/webcomponents",
   "friendlyName": "WebComponents",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "Andrey Sharapov",
     "email": "andrey.sharapov@softwarecountry.com"
   },
   "description": "WebComponents runtime code",
   "dependencies": {
-    "@datagrok-libraries/dock-spawn-dg": "^0.0.1",
-    "@datagrok-libraries/utils": "^4.3.12",
-    "@datagrok-libraries/webcomponents": "^0.0.6",
+    "@datagrok-libraries/dock-spawn-dg": "^0.0.2",
+    "@datagrok-libraries/utils": "^4.4.1",
+    "@datagrok-libraries/webcomponents": "^0.0.7",
     "cash-dom": "^8.1.4",
     "css-loader": "^7.1.2",
-    "datagrok-api": "^1.23.0",
+    "datagrok-api": "^1.24.0",
     "dayjs": "=1.11.10",
     "style-loader": "^4.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "@typescript-eslint/parser": "^8.8.1",
+    "eslint": "^8.57.1",
+    "eslint-config-google": "^0.14.0",
     "source-map-loader": "^5.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
@@ -30,6 +34,8 @@
     "release-webcomponents": "webpack && grok publish --release",
     "build-webcomponents": "webpack",
     "build": "webpack",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint-fix": "eslint . --ext .ts,.tsx --fix",
     "debug-webcomponents-dev": "webpack && grok publish dev",
     "release-webcomponents-dev": "webpack && grok publish dev --release",
     "debug-webcomponents-public": "webpack && grok publish public",
@@ -45,5 +51,9 @@
     "type": "git",
     "url": "git@github.com:datagrok-ai/public.git",
     "directory": "packages/WebComponents"
+  },
+  "category": "General",
+  "meta": {
+    "dartium": false
   }
 }

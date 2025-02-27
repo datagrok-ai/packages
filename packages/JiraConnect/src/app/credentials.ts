@@ -1,6 +1,6 @@
 
 import * as constants from './constants';
-import { _package } from '../package-test';
+import { _package } from '../package';
 
 interface JiraCredsData {
     authKey: string;
@@ -9,8 +9,6 @@ interface JiraCredsData {
 }
 
 export async function getJiraCreds(): Promise<JiraCredsData> {
-
-    return { authKey: '', userName: 'aparamonov@datagrok.ai', host: 'reddata.atlassian.net' };
     
     let credentialsParams = (await _package.getCredentials()).parameters;
     let authKey = credentialsParams[constants.AUTH_KEY];

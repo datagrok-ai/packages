@@ -26,7 +26,9 @@ export function getCompositionAnalysisWidget(
   const rowIdx = val.cell.rowIndex;
   const seqSS = sh.getSplitted(rowIdx);
   wu.count(0).take(seqSS.length).filter((posIdx) => !seqSS.isGap(posIdx)).forEach((posIdx) => {
-    const cm = seqSS.getCanonical(posIdx);
+    let cm = seqSS.getCanonical(posIdx);
+    if (biotype === HelmTypes.NUCLEOTIDE && sh.isHelm() && cm[1] === '(' && cm[cm.length - 2] === ')')
+      cm = cm.substring(2, cm.length - 2);
     const count = counts[cm] || 0;
     counts[cm] = count + 1;
   });

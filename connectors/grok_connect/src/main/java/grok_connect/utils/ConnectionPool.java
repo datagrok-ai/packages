@@ -64,7 +64,6 @@ public class ConnectionPool {
         config.setMaximumPoolSize(SettingsManager.getInstance().getSettings().connectionPoolMaximumPoolSize);
         config.setMinimumIdle(0);
         config.setIdleTimeout(SettingsManager.getInstance().getSettings().connectionPoolIdleTimeout);
-        config.setInitializationFailTimeout(0);
         config.setLeakDetectionThreshold(60 * 1000);
         return new HikariDataSource(config);
     }

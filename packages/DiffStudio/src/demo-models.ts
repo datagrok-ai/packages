@@ -4,7 +4,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {ros34prw} from './solver-tools/ros34prw-method';
+import {solveDefault} from './solver-tools';
 import '../css/app-styles.css';
 import {LINK} from './ui-constants';
 
@@ -113,7 +113,7 @@ export function getBioreactorSim(t0: number, t1: number, h: number, FFox: number
       'FKox(t)', 'MEA(t)', 'CO2(t)', 'yO2P(t)', 'CYST(t)', 'VL(t)'],
   }; // odes
 
-  return ros34prw(odes);
+  return solveDefault(odes);
 } // getBioreactorSim
 
 /** Return dataframe with the PK-PD simulation */
@@ -157,7 +157,7 @@ export function getPkPdSim(dose: number, count: number, interval: number, KA: nu
       solutionColNames: ['Depot', 'Central', 'Periferal', 'Effect'],
     }; // odes
 
-    return ros34prw(odes);
+    return solveDefault(odes);
   }; // oneStagePkPd
 
   // solution dataframe
@@ -307,7 +307,7 @@ function getBallFlightTable(t1: number, velocity: number, angle: number, dB: num
     solutionColNames: ['x', 'y', 'vx', 'vy'],
   };
 
-  return ros34prw(odes);
+  return solveDefault(odes);
 } // getBallFlightTable
 
 /** Clip numeric table by min value of the specified column */

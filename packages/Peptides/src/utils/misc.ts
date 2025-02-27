@@ -243,7 +243,8 @@ export function addExpandIconGen(dialogName: string,
     const fullScreenElement = onClickElementFunc();
     const fullScreenDialog = ui.dialog(dialogName);
     fullScreenDialog.add(fullScreenElement);
-    fullScreenDialog.showModal(true);
+    fullScreenDialog.show(
+      {resizable: true, modal: true, width: window.innerWidth - 60, x: 30, y: 30, height: window.innerHeight - 60});
   }, 'Expand to full screen');
   fullScreenIcon.style.marginLeft = 'auto';
   fullScreenIcon.style.marginRight = '15px';

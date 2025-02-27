@@ -1,6 +1,5 @@
 import * as DG from 'datagrok-api/dg';
 import * as grok from 'datagrok-api/grok';
-import {study} from '../clinical-study';
 import {AE_END_DATE, AE_SEVERITY, AE_START_DATE, AGE, RACE, SEX, SUBJECT_ID} from '../constants/columns-constants';
 import * as ui from 'datagrok-api/ui';
 import {dictToString, getNullOrValue} from '../data-preparation/utils';
@@ -9,6 +8,7 @@ import {SEVERITY_COLOR_DICT} from '../constants/constants';
 import {updateDivInnerHTML} from '../utils/utils';
 import {AE_END_DAY_FIELD, AE_START_DAY_FIELD, AE_TERM_FIELD, TRT_ARM_FIELD, VIEWS_CONFIG} from '../views-config';
 import {AE_BROWSER_VIEW_NAME} from '../constants/view-names-constants';
+import {studies} from '../clinical-study';
 
 export class AEBrowserHelper {
   domains = ['ae', 'ex', 'cm'];
@@ -23,21 +23,23 @@ export class AEBrowserHelper {
   currentAeDay: number;
   name = AE_BROWSER_VIEW_NAME;
   filterChanged = false;
+  studyId: string;
 
-  constructor(dataFrame: DG.DataFrame) {
+  constructor(dataFrame: DG.DataFrame, studyId: string) {
     const presentDomains = [];
+    this.studyId = studyId;
     this.aeToSelect = dataFrame;
-    study.domains.all().forEach((it) => {
-      if (!this.domainsToExclude.includes(it.name)) {
-        this[it.name] = study.domains[it.name].clone();
+    studies[studyId].domains.all().forEach((it) => {
+      if (it.name && !this.domainsToExclude.includes(it.name)) {
+        this[it.name] = studies[studyId].domains[it.name].clone();
         presentDomains.push(it.name);
         if (!this.domains.includes(it.name))
           this.additionalDomains.push(it.name);
       }
     });
     this.domains = this.domains.filter((it) => presentDomains.includes(it));
-    if (study.domains.dm) {
-      grok.data.linkTables(study.domains.dm, this.aeToSelect,
+    if (studies[studyId].domains.dm) {
+      grok.data.linkTables(studies[studyId].domains.dm, this.aeToSelect,
         [SUBJECT_ID], [SUBJECT_ID],
         [DG.SYNC_TYPE.FILTER_TO_FILTER]);
     }
@@ -45,19 +47,21 @@ export class AEBrowserHelper {
 
   updateDomains() {
     this.domains.concat(this.selectedAdditionalDomains).forEach((domain) => {
+      if (!this.currentSubjId)
+        return;
       const condition = this.domainsWithoutVisitDays.includes(domain) ?
         `${SUBJECT_ID} = ${this.currentSubjId}` :
         this.dyDomains.includes(domain) ?
-          study.domains[domain].col(`${domain.toUpperCase()}DY`) ?
+          studies[this.studyId].domains[domain].col(`${domain.toUpperCase()}DY`) ?
             `${SUBJECT_ID} = ${this.currentSubjId} and ${domain.toUpperCase()}DY < ${this.currentAeDay} and ${domain.toUpperCase()}DY > ${this.currentAeDay - this.daysPriorAe}` :
             null :
-          [`${domain.toUpperCase()}STDY`, `${domain.toUpperCase()}ENDY`].every((it) => study.domains[domain].col(it) !== null) ?
+          [`${domain.toUpperCase()}STDY`, `${domain.toUpperCase()}ENDY`].every((it) => studies[this.studyId].domains[domain].col(it) !== null) ?
             `${SUBJECT_ID} = ${this.currentSubjId} and ${domain.toUpperCase()}STDY < ${this.currentAeDay} and ${domain.toUpperCase()}ENDY > ${this.currentAeDay - this.daysPriorAe}` :
             null;
       if (condition) {
-        this[domain] = study.domains[domain]
+        this[domain] = studies[this.studyId].domains[domain]
           .clone()
-          .groupBy(study.domains[domain].columns.names())
+          .groupBy(studies[this.studyId].domains[domain].columns.names())
           .where(`${condition}`)
           .aggregate();
       } else
@@ -78,8 +82,11 @@ export class AEBrowserHelper {
 
     if (this.aeToSelect.currentRowIdx !== -1) {
       const subjId = this.aeToSelect.get(SUBJECT_ID, this.aeToSelect.currentRowIdx);
-      const title = ui.tooltip.bind(ui.label(subjId), dictToString(getSubjectDmData(subjId, [AGE, SEX, RACE, VIEWS_CONFIG[this.name][TRT_ARM_FIELD]])));
-      const description = ui.divH([ui.divText(String(this.aeToSelect.get(VIEWS_CONFIG[AE_BROWSER_VIEW_NAME][AE_TERM_FIELD], this.aeToSelect.currentRowIdx).toLowerCase()))]);
+      const title = ui.tooltip.bind(ui.label(subjId),
+        dictToString(getSubjectDmData(subjId, [AGE, SEX, RACE, VIEWS_CONFIG[this.name][TRT_ARM_FIELD]], this.studyId)));
+      const description = ui.divH([
+        ui.divText(String(this.aeToSelect.get(VIEWS_CONFIG[AE_BROWSER_VIEW_NAME][AE_TERM_FIELD],
+          this.aeToSelect.currentRowIdx).toLowerCase()))]);
 
       if (this.aeToSelect.columns.names().includes(AE_SEVERITY)) {
         const severity = this.aeToSelect.get(AE_SEVERITY, this.aeToSelect.currentRowIdx);
@@ -96,11 +103,14 @@ export class AEBrowserHelper {
       accae.addTitle(ui.span([accIcon, title]));
 
       const getAeDate = (col) => {
-        this.aeToSelect.col(col) ? getNullOrValue(this.aeToSelect, AE_START_DATE, this.aeToSelect.currentRowIdx) : 'null';
+        this.aeToSelect.col(col) ?
+          getNullOrValue(this.aeToSelect, AE_START_DATE, this.aeToSelect.currentRowIdx) : 'null';
       };
 
       const startEndDays = ui.tooltip.bind(
-        ui.label(`${getNullOrValue(this.aeToSelect, VIEWS_CONFIG[AE_BROWSER_VIEW_NAME][AE_START_DAY_FIELD], this.aeToSelect.currentRowIdx)} - ${getNullOrValue(this.aeToSelect, VIEWS_CONFIG[AE_BROWSER_VIEW_NAME][AE_END_DAY_FIELD], this.aeToSelect.currentRowIdx)}`),
+        ui.label(`${getNullOrValue(this.aeToSelect, VIEWS_CONFIG[AE_BROWSER_VIEW_NAME][AE_START_DAY_FIELD],
+          this.aeToSelect.currentRowIdx)} - ${getNullOrValue(this.aeToSelect,
+          VIEWS_CONFIG[AE_BROWSER_VIEW_NAME][AE_END_DAY_FIELD], this.aeToSelect.currentRowIdx)}`),
         `${getAeDate(AE_START_DATE)} - ${getAeDate(AE_END_DATE)}`);
 
 
@@ -173,7 +183,9 @@ export class AEBrowserHelper {
       };
 
       const addButton = ui.button(ui.icons.add(() => { }), () => {
-        const domainsMultiChoices = ui.input.multiChoice('', {value: this.selectedAdditionalDomains, items: this.additionalDomains});
+        const domainsMultiChoices = ui.input.multiChoice('', {
+          value: this.selectedAdditionalDomains, items: this.additionalDomains,
+        });
         ui.dialog({title: 'Select domains'})
           .add(ui.div([domainsMultiChoices]))
           .onOK(() => {

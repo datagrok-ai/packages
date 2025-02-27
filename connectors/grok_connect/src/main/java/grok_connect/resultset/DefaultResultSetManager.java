@@ -80,13 +80,13 @@ public class DefaultResultSetManager implements ResultSetManager {
     }
 
     @Override
-    public void processValue(Object o, int index, Logger queryLogger) {
+    public void processValue(Object o, int index) {
         if (isInit) {
             Column current = columns[index - 1];
             try {
                 setValue(o, index);
             } catch (RuntimeException e) {
-                queryLogger.error(EventType.ERROR.getMarker(),
+                logger.error(EventType.ERROR.getMarker(),
                         "Couldn't convert object to be applicable for column {} of type {}. StringColumn fallback will be used",
                         columnsMeta[index - 1].getColumnLabel(), columns[index - 1].getType(), e);
                 Column stringColumn = new StringColumn(columnsMeta[index - 1].getColumnSize());

@@ -16,6 +16,7 @@ import '../css/sens-analysis.css';
 import {CARD_VIEW_TYPE} from '../../shared-utils/consts';
 import {DOCK_RATIO, ROW_HEIGHT, STARTING_HELP} from './variance-based-analysis/constants';
 import {getLookupChoiceInput} from './shared/lookup-tools';
+import {getCategoryWidget} from './fitting/fitting-utils';
 
 const RUN_NAME_COL_LABEL = 'Run name' as const;
 const supportedInputTypes = [DG.TYPE.INT, DG.TYPE.BIG_INT, DG.TYPE.FLOAT, DG.TYPE.BOOL, DG.TYPE.DATA_FRAME];
@@ -68,6 +69,13 @@ type SensitivityConstStore = {
   lvl: 1,
 } & InputValues;
 
+export type RangeDescription = {
+  default?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
 type SensitivityStore = SensitivityNumericStore | SensitivityBoolStore | SensitivityConstStore;
 
 const getSwitchMock = () => ui.div([], 'sa-switch-input');
@@ -100,9 +108,19 @@ export class SensitivityAnalysisView {
     analysisInputs.analysisType.input.root.insertBefore(getSwitchMock(), analysisInputs.analysisType.input.captionLabel);
     analysisInputs.samplesCount.input.root.insertBefore(getSwitchMock(), analysisInputs.samplesCount.input.captionLabel);
 
-    const getInputValue = (input: DG.Property, key: string) => (
-      input.options[key] === undefined ? getDefaultValue(input) : Number(input.options[key])
-    );
+    const getInputValue = (input: DG.Property, key: keyof RangeDescription) => {
+      const range = this.options.ranges?.[input.name];
+      if (range?.[key] != undefined)
+        return range[key];
+      return input.options[key] === undefined ? getDefaultValue(input) : Number(input.options[key]);
+    }
+
+    const getInputDefaultValue = (input: DG.Property) => {
+      const range = this.options.ranges?.[input.name];
+      if (range?.default != undefined)
+        return range.default;
+      return getDefaultValue(input);
+    }
 
     const getSwitchElement = (defaultValue: boolean, f: (v: boolean) => any, isInput = true) => {
       const input = ui.input.toggle(' ', {value: defaultValue, onValueChanged: (value) => f(value)});
@@ -147,14 +165,14 @@ export class SensitivityAnalysisView {
             input:
             (() => {
               const inp = ui.input.float(inputProp.caption ?? inputProp.name, {
-                value: getDefaultValue(inputProp),
+                value: getInputDefaultValue(inputProp),
                 onValueChanged: (value) => ref.const.value = value,
               });
               inp.root.insertBefore(isChangingInputConst.root, inp.captionLabel);
               inp.addPostfix(inputProp.options['units']);
               return inp;
             })(),
-            value: getDefaultValue(inputProp),
+            value: getInputDefaultValue(inputProp),
           },
           min: {
             input:
@@ -244,7 +262,7 @@ export class SensitivityAnalysisView {
             input: (() => {
               const temp = ui.input.bool(`${inputProp.caption ?? inputProp.name}`,
                 {
-                  value: getDefaultValue(inputProp) ?? false,
+                  value: getInputDefaultValue(inputProp) ?? false,
                   onValueChanged: (value) => boolRef.const.value = value,
                 });
               temp.root.insertBefore(isChangingInputBoolConst.root, temp.captionLabel);
@@ -279,7 +297,7 @@ export class SensitivityAnalysisView {
 
             return temp;
           })(),
-          value: getDefaultValue(inputProp),
+          value: getInputDefaultValue(inputProp),
         };
         acc[inputProp.name] = {
           const: tempDefault,
@@ -415,10 +433,12 @@ export class SensitivityAnalysisView {
       parentView?: DG.View,
       parentCall?: DG.FuncCall,
       inputsLookup?: string,
+      ranges?: Record<string, RangeDescription>,
     } = {
       parentView: undefined,
       parentCall: undefined,
       inputsLookup: undefined,
+      ranges: undefined,
     },
   ) {
     const cardView = [...grok.shell.views].find((view) => view.type === CARD_VIEW_TYPE);
@@ -445,11 +465,13 @@ export class SensitivityAnalysisView {
       parentCall?: DG.FuncCall,
       configFunc?: undefined,
       inputsLookup?: string,
+      ranges?: Record<string, RangeDescription>,
     } = {
       parentView: undefined,
       parentCall: undefined,
       configFunc: undefined,
       inputsLookup: undefined,
+      ranges: undefined,
     },
   ) {
     this.runButton = ui.bigButton('Run', async () => await this.runAnalysis());
@@ -627,13 +649,14 @@ export class SensitivityAnalysisView {
     // add inputs to the main form (grouped by categories)
     if (inputsByCategories.size > 1) {
       if (topCategory !== null) {
-        form.append(ui.h2(topCategory));
-        form.append(...inputsByCategories.get(topCategory)!);
+        const roots = inputsByCategories.get(topCategory);
+        form.append(getCategoryWidget(topCategory, roots!));
+        form.append(...roots!);
       }
 
       inputsByCategories.forEach((roots, category) => {
         if ((category !== 'Misc') && (category !== topCategory)) {
-          form.append(ui.h2(category));
+          form.append(getCategoryWidget(category, roots));
           form.append(...roots);
         }
       });
@@ -642,8 +665,8 @@ export class SensitivityAnalysisView {
         const miscRoots = inputsByCategories.get('Misc');
 
         if (miscRoots!.length > 0) {
-          form.append(ui.h2('Misc'));
-          form.append(...inputsByCategories.get('Misc')!);
+          form.append(getCategoryWidget('Misc', miscRoots!));
+          form.append(...miscRoots!);
         }
       }
     } else

@@ -7,7 +7,7 @@ join events e on e.event_type_id = et.id
 join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.source = 'error'
 and et.friendly_name is not null
 and et.friendly_name != ''
@@ -32,7 +32,7 @@ e.error_message is not null
 and et.friendly_name is not null
 and et.friendly_name != ''
 and @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 group by e.error_message
 limit 50;
 --end
@@ -47,7 +47,7 @@ join events e on e.event_type_id = et.id
 join users_sessions s on e.session_id = s.id
 join users u on u.id = s.user_id
 where @date(e.event_time)
-and (u.login = any(@users) or @users = ARRAY['all']::varchar[])
+and (u.login = any(@users) or @users = ARRAY['all'])
 and et.source = 'error'
 and et.is_error = true
 group by et.error_source

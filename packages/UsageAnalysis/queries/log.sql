@@ -7,7 +7,7 @@
 --meta.cache.invalidateOn: 0 0 * * *
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id

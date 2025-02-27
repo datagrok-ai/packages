@@ -1,0 +1,13 @@
+.surechembl-add-all-patents-to-workspace-button {
+  color: #2083d5!important;
+  padding-bottom: 10px;
+}
+
+.surechembl-add-patents-to-workspace-button {
+  color: #2083d5!important;
+  visibility: hidden;
+}
+
+.d4-accordion-pane-header:hover .surechembl-add-patents-to-workspace-button {
+    visibility: visible;
+}

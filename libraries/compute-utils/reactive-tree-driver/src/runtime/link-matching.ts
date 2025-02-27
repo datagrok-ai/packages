@@ -85,7 +85,7 @@ function matchLinkInstance(
     const skipIO = (spec.type === 'pipeline' && kind === 'outputs') || (!!io.flags?.includes('call'));
     const useDescriptionsStore = (spec.type === 'selector' && kind === 'outputs');
     const paths = matchLinkIO(rnode, currentIO, io, skipIO, useDescriptionsStore);
-    if (paths.length == 0)
+    if (paths.length == 0 && !io.flags?.includes('optional'))
       return;
     if (currentIO[io.name] != null)
       throw new Error(`Duplicate io name ${io.name} in link ${rnode.getItem().config.id}`);

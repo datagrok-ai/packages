@@ -4,20 +4,27 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import $ from 'cash-dom';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import {RunComparisonView} from './run-comparison-view';
 import {combineLatest} from 'rxjs';
+import {take, filter} from 'rxjs/operators';
 import '../css/sens-analysis.css';
 import {CARD_VIEW_TYPE} from '../../shared-utils/consts';
-import {getPropViewers} from './shared/utils';
-import {STARTING_HELP, TITLE, GRID_SIZE, METHOD, methodTooltip, LOSS, lossTooltip, FITTING_UI} from './fitting/constants';
+import {getDefaultValue, getPropViewers} from './shared/utils';
+import {STARTING_HELP, TITLE, GRID_SIZE, METHOD, methodTooltip, LOSS, lossTooltip, FITTING_UI,
+  DIFF_STUDIO_OUTPUT_IDX} from './fitting/constants';
 import {getIndeces} from './fitting/fitting-utils';
 import {performNelderMeadOptimization} from './fitting/optimizer';
 
 import {nelderMeadSettingsVals, nelderMeadCaptions} from './fitting/optimizer-nelder-mead';
-import {getErrors} from './fitting/fitting-utils';
+import {getErrors, getCategoryWidget} from './fitting/fitting-utils';
 import {OptimizationResult, Extremum, distance} from './fitting/optimizer-misc';
 import {getLookupChoiceInput} from './shared/lookup-tools';
+
+import {IVP, IVP2WebWorker, getIvp2WebWorker} from '@datagrok/diff-grok';
+import {isWorkerApplicable} from './fitting/diff-studio/fitting-utils';
+
+import {getFittedParams} from './fitting/diff-studio/nelder-mead';
 
 const RUN_NAME_COL_LABEL = 'Run name' as const;
 const supportedOutputTypes = [DG.TYPE.INT, DG.TYPE.BIG_INT, DG.TYPE.FLOAT, DG.TYPE.DATA_FRAME];
@@ -55,6 +62,18 @@ type GoFViewer = {
   root: HTMLElement,
 };
 
+export type RangeDescription = {
+  default?: number;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+export type TargetDescription = {
+  default?: any;
+  argumentCol?: string;
+}
+
 type FittingInputsStore = FittingNumericStore | FittingBoolStore | FittingConstStore;
 
 const getSwitchMock = () => ui.div([], 'sa-switch-input');
@@ -63,9 +82,12 @@ const isValidForFitting = (prop: DG.Property) => ((prop.propertyType === DG.TYPE
 
 export class FittingView {
   generateInputFields = (func: DG.Func) => {
-    const getInputValue = (input: DG.Property, key: string) => (
-      input.options[key] === undefined ? input.defaultValue : Number(input.options[key])
-    );
+    const getInputValue = (input: DG.Property, key: keyof RangeDescription) => {
+      const range = this.options.ranges?.[input.name];
+      if (range?.[key] != undefined)
+        return range[key];
+      return input.options[key] === undefined ? getDefaultValue(input) : Number(input.options[key]);
+    }
 
     const getSwitchElement = (defaultValue: boolean, f: (v: boolean) => any, isInput: boolean = true) => {
       const input = ui.input.toggle(' ', {value: defaultValue, onValueChanged: (value) => f(value)});
@@ -239,6 +261,9 @@ export class FittingView {
             input.nullable = false;
             ui.tooltip.bind(input.captionLabel, (outputProp.propertyType === DG.TYPE.DATA_FRAME) ? 'Output dataframe' : 'Output scalar');
 
+            if (this.options.targets?.[outputProp.name]?.default != null)
+              setTimeout(() => input.value = this.options.targets?.[outputProp.name]?.default, 0);
+
             input.onChanged.subscribe((value) => {
               temp.target = input.value; // fixing the bug https://reddata.atlassian.net/browse/GROK-16642
 
@@ -252,7 +277,7 @@ export class FittingView {
                   }
 
                   temp.colNameInput.items = colNames;
-                  temp.colNameInput.value = colNames[0];
+                  temp.colNameInput.value = this.options.targets?.[outputProp.name]?.argumentCol ?? colNames[0];
                 } else {
                   temp.colNameInput.items = [null];
                   temp.colNameInput.value = null;
@@ -261,6 +286,7 @@ export class FittingView {
 
               this.updateApplicabilityState();
             });
+
 
             if (outputProp.propertyType === DG.TYPE.DATA_FRAME)
               (input.root.lastElementChild as HTMLDivElement).hidden = !this.toSetSwitched;
@@ -315,10 +341,39 @@ export class FittingView {
   };
 
   private readyToRun = false;
+  private isFittingRunning = false;
 
   private runIcon = ui.iconFA('play', async () => {
-    if (this.readyToRun)
+    if (this.readyToRun) {
+      this.isFittingRunning = true;
+      this.updateApplicabilityState();
+      this.updateRunIconDisabledTooltip('In progress...');
+
       await this.runOptimization();
+
+      this.isFittingRunning = false;
+      this.updateApplicabilityState();
+    }
+  });
+
+  private acceptIcon = ui.iconFA('ballot-check', async () => {
+    const choiceItems = Array.from({length: this.currentFuncCalls.length}, (_, i) => i + 1);
+    let chosenItem = -1;
+    const input = ui.input.choice('Select fitting', {items: choiceItems, onValueChanged: (x) => chosenItem = x})
+    const confirmed = await new Promise((resolve, _reject) => {
+      ui.dialog({title: 'Accept fitting'})
+        .add(ui.div([input]))
+        .onOK(() => resolve(true))
+        .onCancel(() => resolve(false))
+        .show({ modal: true, fullScreen: true, width: 600, height: 200, center: true })
+    });
+    if (!confirmed || chosenItem < 0) {
+      return;
+    }
+    this.acceptIcon.remove();
+    const chosenCall = this.currentFuncCalls[chosenItem-1];
+    this.isFittingAccepted = true;
+    this.acceptedFitting$.next(chosenCall);
   });
 
   private helpIcon = ui.iconFA('question', () => {
@@ -395,16 +450,31 @@ export class FittingView {
 
   private fittingSettingsDiv = ui.divV([]);
 
+  private ivp: IVP | undefined;
+  private ivpWW: IVP2WebWorker | undefined = undefined;
+
+  private currentFuncCalls: DG.FuncCall[] = [];
+  private isFittingAccepted = false;
+  public acceptedFitting$ = new Subject<DG.FuncCall | null>();
+
   static async fromEmpty(
     func: DG.Func,
     options: {
       parentView?: DG.View,
       parentCall?: DG.FuncCall,
       inputsLookup?: string,
+      ivp?: IVP,
+      ranges?: Record<string, RangeDescription>,
+      targets?: Record<string, TargetDescription>,
+      acceptMode?: boolean,
     } = {
       parentView: undefined,
       parentCall: undefined,
       inputsLookup: undefined,
+      ivp: undefined,
+      ranges: undefined,
+      targets: undefined,
+      acceptMode: false,
     },
   ) {
     const cardView = [...grok.shell.views].find((view) => view.type === CARD_VIEW_TYPE);
@@ -416,26 +486,34 @@ export class FittingView {
       });
     grok.shell.addView(v);
 
-    new this(
+    return new this(
       func,
       v,
       options,
     );
   }
 
-  constructor(
+  private constructor(
     public func: DG.Func,
-    baseView: DG.TableView,
+    baseView: RunComparisonView,
     public options: {
       parentView?: DG.View,
       parentCall?: DG.FuncCall,
       configFunc?: undefined,
       inputsLookup?: string,
+      ivp?: IVP,
+      ranges?: Record<string, RangeDescription>,
+      targets?: Record<string, TargetDescription>,
+      acceptMode?: boolean,
     } = {
       parentView: undefined,
       parentCall: undefined,
       configFunc: undefined,
       inputsLookup: undefined,
+      ivp: undefined,
+      ranges: undefined,
+      targets: undefined,
+      acceptMode: false,
     },
   ) {
     if (!this.isOptimizationApplicable(func)) {
@@ -443,6 +521,13 @@ export class FittingView {
       baseView.close();
       return;
     }
+
+    grok.events.onViewRemoved.pipe(filter(v => v.id === baseView.id), take(1)).subscribe(() => {
+      if (options.acceptMode && !this.isFittingAccepted) {
+        this.acceptedFitting$.next(null);
+        this.isFittingAccepted = true;
+      }
+    });
 
     this.buildForm(options.inputsLookup).then((form) => {
       this.comparisonView = baseView;
@@ -460,7 +545,7 @@ export class FittingView {
       nelderMeadSettingsVals.forEach((vals, key) => this.nelderMeadSettings.set(key, vals.default));
 
       const rbnPanels = this.comparisonView.getRibbonPanels();
-      rbnPanels.push([this.helpIcon, this.runIcon]);
+      rbnPanels.push([this.helpIcon, this.runIcon, ...(this.options.acceptMode ? [this.acceptIcon] : [])]);
       this.comparisonView.setRibbonPanels(rbnPanels);
       this.fittingSettingsDiv.hidden = true;
 
@@ -501,6 +586,11 @@ export class FittingView {
       this.updateRunIconDisabledTooltip('Select inputs for fitting');
       this.runIcon.classList.add('fas');
     });
+
+    this.ivp = options.ivp;
+
+    if (this.ivp !== undefined)
+      this.ivpWW = getIvp2WebWorker(this.ivp);
   } // constructor
 
   /** Check fiiting applicability to the function */
@@ -659,13 +749,14 @@ export class FittingView {
     // add inputs to the main form (grouped by categories)
     if (inputsByCategories.size > 1) {
       if (topCategory !== null) {
-        form.append(ui.h3(topCategory));
-        form.append(...inputsByCategories.get(topCategory)!);
+        const roots = inputsByCategories.get(topCategory);
+        form.append(getCategoryWidget(topCategory, roots!));
+        form.append(...roots!);
       }
 
       inputsByCategories.forEach((roots, category) => {
         if ((category !== 'Misc') && (category !== topCategory)) {
-          form.append(ui.h3(category));
+          form.append(getCategoryWidget(category, roots));
           form.append(...roots);
         }
       });
@@ -674,8 +765,9 @@ export class FittingView {
         const miscRoots = inputsByCategories.get('Misc');
 
         if (miscRoots!.length > 0) {
-          form.append(ui.h3('Misc'));
-          form.append(...inputsByCategories.get('Misc')!);
+          const roots = inputsByCategories.get('Misc')!;
+          form.append(getCategoryWidget('Misc', roots));
+          form.append(...roots);
         }
       }
     } else
@@ -765,7 +857,7 @@ export class FittingView {
 
   /** Check applicability of fitting */
   private updateApplicabilityState(): void {
-    this.readyToRun = this.canFittingBeRun();
+    this.readyToRun = this.canFittingBeRun() && (!this.isFittingRunning);
     this.updateRunIconStyle();
   } // updateApplicabilityState
 
@@ -1011,9 +1103,24 @@ export class FittingView {
       let optResult: OptimizationResult;
 
       // Perform optimization
-      if (this.method === METHOD.NELDER_MEAD)
-        optResult = await performNelderMeadOptimization(costFunc, minVals, maxVals, this.nelderMeadSettings, this.samplesCount);
-      else
+      if (this.method === METHOD.NELDER_MEAD) {
+        if (isWorkerApplicable(this.ivp, this.ivpWW)) {
+          optResult = await getFittedParams(
+            this.loss,
+            this.ivp!,
+            this.ivpWW!,
+            this.nelderMeadSettings,
+            variedInputNames,
+            minVals,
+            maxVals,
+            inputs,
+            outputsOfInterest[DIFF_STUDIO_OUTPUT_IDX].colName,
+            outputsOfInterest[DIFF_STUDIO_OUTPUT_IDX].target as DG.DataFrame,
+            this.samplesCount,
+          );
+        } else
+          optResult = await performNelderMeadOptimization(costFunc, minVals, maxVals, this.nelderMeadSettings, this.samplesCount);
+      } else
         throw new Error(`Not implemented the '${this.method}' method`);
 
       const allExtremums = optResult.extremums;
@@ -1083,6 +1190,8 @@ export class FittingView {
       const tooltips = new Map([[TITLE.LOSS as string, `The final loss obtained: ${costTooltip}`]]);
       let toAddGofCols = true;
       const outputColNames: string[] = [];
+
+      this.currentFuncCalls = calledFuncCalls;
 
       extremums.forEach(async (extr, idx) => {
         lossVals[idx] = extr.cost;

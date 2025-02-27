@@ -1,7 +1,7 @@
 {
   "name": "@datagrok/hit-triage",
   "friendlyName": "HitTriage",
-  "version": "1.4.0",
+  "version": "1.4.4",
   "author": {
     "name": "Davit Rizhinashvili",
     "email": "drizhinashvili@datagrok.ai"
@@ -63,7 +63,7 @@
   "properties": [
     {
       "name": "view",
-      "description": "The max length of monomer symbol displayed without shortening, 'long' to no limit",
+      "description": "Default User Groups for new campaigns for the 'View' permission",
       "propertyType": "string",
       "defaultValue": "",
       "inputType": "userGroups",
@@ -73,13 +73,22 @@
     },
     {
       "name": "edit",
-      "description": "The max length of monomer symbol displayed without shortening, 'long' to no limit",
+      "description": "Default User Groups for new campaigns for the 'Edit' permission",
       "propertyType": "string",
       "defaultValue": "",
       "inputType": "userGroups",
       "nullable": true,
       "category": "DefaultUserGroupsSharing",
       "friendlyName": "Edit"
+    },
+    {
+      "name": "defaultCampaignFolder",
+      "description": "Default storage folder for new campaigns",
+      "propertyType": "string",
+      "defaultValue": "System.AppData/HitTriage",
+      "nullable": true,
+      "category": "Storage",
+      "friendlyName": "Default Campaign Folder"
     }
   ]
 }

@@ -4,7 +4,7 @@
 
 async function postprocess() {
   let builds = result.col('build_index').categories;
-  let buildNames = result.col('build').categories.sort().reverse();
+  let buildNames = result.col('build').categories.sort();
 
   let pivot = result
     .groupBy(['test', 'owner'])
@@ -57,7 +57,7 @@ async function postprocess() {
 
   pivot.columns.byName('owner').semType = 'User';
   pivot.columns.byName('owner').setTag('cell.renderer', 'User');
-  pivot.columns.byName('test').semType = 'test';
+  pivot.columns.byName('test').semType = 'autotest';
 
   for (var i = 1; i <= builds.length; i++) {
     var buildName = buildNames[i - 1];

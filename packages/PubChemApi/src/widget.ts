@@ -163,7 +163,7 @@ export async function getSearchWidget(molString: string, searchType: pubChemSear
   const resultDf = DG.DataFrame.fromObjects(moleculesJson)!;
 
   let similarStructures: DG.DataFrame | null = null;
-  let moleculesCol = resultDf.getCol(COLUMN_NAMES.CANONICAL_SMILES);
+  const moleculesCol = resultDf.getCol(COLUMN_NAMES.CANONICAL_SMILES);
   let indexes = new Int32Array(0);
   let scoreCol: DG.Column<number> | null = null;
   let rowCount = resultDf.rowCount;
@@ -186,12 +186,10 @@ export async function getSearchWidget(molString: string, searchType: pubChemSear
   for (let idx = 0; idx < rowCount; idx++) {
     const piv = searchType === 'similarity' ? indexes[idx] : idx;
     const molHost = ui.divV([]);
-    grok.functions.call('Chem:drawMolecule', {'molStr': moleculesCol.get(idx), 'w': WIDTH, 'h': HEIGHT, 'popupMenu': true})
-      .then((res: HTMLElement) => {
-        molHost.append(res);
-        if (searchType === 'similarity' && scoreCol !== null)
-          molHost.append(ui.divText(`Score: ${scoreCol.get(idx)?.toFixed(2)}`));
-      });
+    const res = grok.chem.drawMolecule(moleculesCol.get(idx), WIDTH, HEIGHT, true);
+    molHost.append(res);
+    if (searchType === 'similarity' && scoreCol !== null)
+      molHost.append(ui.divText(`Score: ${scoreCol.get(idx)?.toFixed(2)}`));
 
     ui.tooltip.bind(molHost, () => ui.divText(`CID: ${cidCol.get(piv)}\nClick to open in PubChem`));
     molHost.addEventListener('click',

@@ -1,17 +1,7 @@
-// import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import * as grok from 'datagrok-api/grok';
-import {
-  createBaseInputs,
-  isSummarySettingsBase,
-  names,
-  SparklineType,
-  SummaryColumnColoringType
-} from "../sparklines/shared";
 import * as ui from "datagrok-api/ui";
-import {SparklinesNormalizationType} from "../sparklines/sparklines-lines";
-import {input} from "datagrok-api/ui";
-import grid = input.grid;
+import {names} from '../sparklines/shared';
 
 
 export interface TagsColumnSettings {

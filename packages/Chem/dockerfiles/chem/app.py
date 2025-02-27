@@ -77,7 +77,6 @@ def chem_inchi_to_smiles():
     result = parallelize(inchi_to_smiles, [inchi], [inchi], Settings.num_cores)
     return _make_response(json.dumps(result), headers=headers_app_json)
 
-
 def _make_response(data, headers=None):
     response = Response(data)
     response.headers = {

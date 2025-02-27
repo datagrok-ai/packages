@@ -9,6 +9,8 @@ import {ChoiceInputGroups} from './elements/choice-input-groups';
 import {ChoiceInputPackages} from './elements/choice-input-packages';
 import {UaView} from './tabs/ua';
 import $ from 'cash-dom';
+import {ChoiceInputTags} from "./elements/choice-input-tags";
+import {ChoiceInputPackagesCategories} from "./elements/choice-input-packages-categories";
 
 
 export class UaToolbox {
@@ -16,6 +18,9 @@ export class UaToolbox {
   dateInput: DG.InputBase;
   groupsInput: ChoiceInputGroups;
   packagesInput: ChoiceInputPackages;
+  tagsInput: ChoiceInputTags;
+  packagesCategoriesInput: ChoiceInputPackagesCategories;
+
   filterStream: BehaviorSubject<UaFilter>;
   dateFromDD: DG.InputBase = ui.input.string('From', {value: ''});
   dateToDD: DG.InputBase = ui.input.string('To', {value: ''});
@@ -39,35 +44,43 @@ export class UaToolbox {
 
   static async construct(viewHandler: ViewHandler) {
     const date = 'this week';
-    const packages = ['all'];
     const dateInput = ui.input.string('Date', {value: date});
     dateInput.addPatternMenu('datetime');
     dateInput.setTooltip('Set the date period');
     const groupsInput = await ChoiceInputGroups.construct();
     const packagesInput = await ChoiceInputPackages.construct();
-    const groups = groupsInput.allUsers;
+    const tagsInput = await ChoiceInputTags.construct();
+    const packagesCategoriesInput = await ChoiceInputPackagesCategories.construct();
     const filterStream = new BehaviorSubject(new UaFilter({
       date: date,
-      groups: groups,
-      packages: packages,
+      groups: [groupsInput.emptyLabel],
+      packages: [packagesInput.emptyLabel],
+      tags: [tagsInput.emptyLabel],
+      packagesCategories: [packagesCategoriesInput.emptyLabel]
     }));
-    return new UaToolbox(dateInput, groupsInput, packagesInput, filterStream, viewHandler);
+    return new UaToolbox(dateInput, groupsInput, packagesInput, tagsInput, packagesCategoriesInput, filterStream, viewHandler);
   }
 
   private constructor(dateInput: DG.InputBase, groupsInput: ChoiceInputGroups,
-    packagesInput: ChoiceInputPackages, filterStream: BehaviorSubject<UaFilter>, viewHandler: ViewHandler) {
+    packagesInput: ChoiceInputPackages, tagsInput: ChoiceInputTags, packagesCategoriesInput: ChoiceInputPackagesCategories, filterStream: BehaviorSubject<UaFilter>, viewHandler: ViewHandler) {
     this.rootAccordion = ui.accordion();
     this.formDD = ui.div();
     this.dateInput = dateInput;
     this.groupsInput = groupsInput;
     this.packagesInput = packagesInput;
+    this.tagsInput = tagsInput;
+    this.packagesCategoriesInput = packagesCategoriesInput;
     this.filterStream = filterStream;
     this.viewHandler = viewHandler;
+    this.toggleTagsInput(false);
+    this.toggleCategoriesInput(false);
     this.filters = this.rootAccordion.addPane('Filters', () => {
       const form = ui.narrowForm([
         dateInput,
         groupsInput.field,
         packagesInput.field,
+        tagsInput.field,
+        packagesCategoriesInput.field
       ]);
       const applyB = ui.bigButton('Apply', () => {
         applyB.disabled = true;
@@ -98,6 +111,7 @@ export class UaToolbox {
       this.formDD.append(this.backButton);
       this.formDD.prepend(closeButton);
       this.formDD.classList.add('ua-drilldown-form');
+      form.style.overflow = 'visible';
       return form;
     }, true);
     this.filters.root.before(this.formDD);
@@ -132,18 +146,27 @@ export class UaToolbox {
   }
 
   getFilter() {
-    return new UaFilter({
+    const filter = new UaFilter({
       date: this.dateInput.value,
-      groups: this.groupsInput.getSelectedGroups(),
-      packages: this.packagesInput.getSelectedPackages(),
+      groups: this.groupsInput.getSelectedItems(),
+      packages: this.packagesInput.getSelectedItems(),
     });
+    if (this.tagsInput.field.root.style.display !== 'none')
+      filter.tags = this.tagsInput.getSelectedItems();
+    if (this.packagesCategoriesInput.field.root.style.display !== 'none')
+      filter.packagesCategories = this.packagesCategoriesInput.getSelectedItems();
+    return filter;
   }
 
   applyFilter() {
     this.filterStream.next(this.getFilter());
     this.viewHandler.setUrlParam('date', this.dateInput.value, true);
-    this.viewHandler.setUrlParam('users', this.groupsInput.getSelectedGroups().join(','), true);
-    this.viewHandler.setUrlParam('packages', this.packagesInput.getSelectedPackages().join(','), true);
+    this.viewHandler.setUrlParam('users', this.groupsInput.getSelectedItems().join(','), true);
+    this.viewHandler.setUrlParam('packages', this.packagesInput.getSelectedItems().join(','), true);
+    if (this.tagsInput.field.root.style.display !== 'none')
+      this.viewHandler.setUrlParam('tags', this.tagsInput.getSelectedItems().join(','), false);
+    if (this.packagesCategoriesInput.field.root.style.display !== 'none')
+      this.viewHandler.setUrlParam('categories', this.packagesCategoriesInput.getSelectedItems().join(','), false);
   }
 
   setDate(value: string) {
@@ -156,5 +179,21 @@ export class UaToolbox {
 
   setPackages(value: string) {
     this.packagesInput.addItems(value.split(','));
+  }
+
+  setTags(value: string): void {
+    this.tagsInput.addItems(value.split(','));
+  }
+
+  setPackagesCategories(value: string): void {
+    this.packagesCategoriesInput.addItems(value.split(','));
+  }
+
+  toggleTagsInput(visible: boolean): void {
+    ui.setDisplay(this.tagsInput.field.root, visible);
+  }
+
+  toggleCategoriesInput(visible: boolean): void {
+    ui.setDisplay(this.packagesCategoriesInput.field.root, visible);
   }
 }

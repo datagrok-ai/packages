@@ -81,6 +81,8 @@ import {MolfileHandlerBase} from '@datagrok-libraries/chem-meta/src/parsing-util
 import {fetchWrapper} from '@datagrok-libraries/utils/src/fetch-utils';
 import {CHEM_PROP_MAP} from './open-chem/ocl-service/calculations';
 import {cutFragments} from './analysis/molecular-matched-pairs/mmp-viewer/mmp-react-toolkit';
+import { ReinventBaseEditor, TARGET_PATH } from './widgets/reinvent-editor';
+import { oclMol } from './utils/chem-common-ocl';
 
 const drawMoleculeToCanvas = chemCommonRdKit.drawMoleculeToCanvas;
 const SKETCHER_FUNCS_FRIENDLY_NAMES: {[key: string]: string} = {
@@ -119,9 +121,6 @@ export function getMolFileHandler(molString: string): MolfileHandlerBase {
 
 export const _package: DG.Package = new DG.Package();
 export let _properties: any;
-
-export const TARGET_PATH = 'System:AppData/Chem/targets';
-export const ADME_CONFIG_PATH = 'System:AppData/Chem/adme_configs';
 
 let _rdRenderer: RDKitCellRenderer;
 export let renderer: GridCellRendererProxy;
@@ -1257,12 +1256,18 @@ export function toxicity(smiles: DG.SemanticValue): DG.Widget {
 //output: column result
 export async function convertMoleculeNotation(molecule: DG.Column, targetNotation: DG.chem.Notation): Promise<DG.Column> {
   let col: DG.Column;
+  let newColName = `${molecule.name}_${targetNotation}`;
+  try {
+    if (!!molecule.dataFrame?.columns)
+      newColName = molecule.dataFrame.columns.getUnusedName(newColName);
+  } catch (e) {}
+
   try {
     const res = await convertNotationForColumn(molecule, targetNotation);
-    col = DG.Column.fromStrings(`${molecule.name}_${targetNotation}`, res);
+    col = DG.Column.fromStrings(newColName, res);
     col.semType = DG.SEMTYPE.MOLECULE;
   } catch (e: any) {
-    col = DG.Column.string(`${molecule.name}_${targetNotation}`, molecule.length).init((_) => e?.message);
+    col = DG.Column.string(newColName, molecule.length).init((_) => e?.message);
   }
   return col;
 }
@@ -1298,7 +1303,8 @@ export async function convertNotation(data: DG.DataFrame, molecules: DG.Column<s
       molecules.set(i, res[i], false);
     molecules.meta.units = units;
   } else {
-    const col = DG.Column.fromStrings(`${molecules.name}_${targetNotation}`, res);
+    const colName = data.columns.getUnusedName(`${molecules.name}_${targetNotation}`);
+    const col = DG.Column.fromStrings(colName, res);
     col.meta.units = units;
     col.semType = DG.SEMTYPE.MOLECULE;
     if (!join)
@@ -1306,6 +1312,16 @@ export async function convertNotation(data: DG.DataFrame, molecules: DG.Column<s
     data.columns.add(col);
   }
 }
+
+//name: Convert Notation...
+//meta.action: Convert Notation...
+//input: column col {semType: Molecule}
+export function convertMolNotationAction(col: DG.Column) {
+  const func = DG.Func.find({name: 'convertNotation', package: 'Chem'})[0];
+  if (!func || !col?.dataFrame)
+    return;
+  func.prepare({data: col.dataFrame, molecules: col}).edit();
+} 
 
 //tags: cellEditor
 //description: Molecule
@@ -1430,7 +1446,6 @@ export async function oclCellRenderer(): Promise<OCLCellRenderer> {
 
 //name: Sort by similarity
 //description: Sorts a molecular column by similarity
-//tags: exclude-actions-panel
 //meta.action: Sort by similarity
 //input: semantic_value value { semType: Molecule }
 export async function sortBySimilarity(value: DG.SemanticValue): Promise<void> {
@@ -1439,7 +1454,9 @@ export async function sortBySimilarity(value: DG.SemanticValue): Promise<void> {
   const dframe = molCol.dataFrame;
   const smiles = molCol.get(tableRowIdx);
 
-  const grid = value.viewer as DG.Grid;
+  const grid = value.viewer as DG.Grid ?? grok.shell.getTableView(dframe.name)?.grid;
+  if (!grid)
+    throw new Error('Cannnot access value grid');
   ui.setUpdateIndicator(grid.root, true);
   const progressBar = DG.TaskBarProgressIndicator.create('Sorting Structures...');
   progressBar.update(0, 'Installing ScaffoldGraph..: 0% completed');
@@ -1461,7 +1478,6 @@ export async function sortBySimilarity(value: DG.SemanticValue): Promise<void> {
 
 //name: Use as filter
 //description: Adds this structure as a substructure filter
-//tags: exclude-actions-panel
 //meta.action: Use as filter
 //input: semantic_value value { semType: Molecule }
 export function useAsSubstructureFilter(value: DG.SemanticValue): void {
@@ -1490,6 +1506,25 @@ export function useAsSubstructureFilter(value: DG.SemanticValue): void {
   }, false);
 }
 
+//name: Copy as...
+//description: Copies structure in different formats
+//meta.action: Copy as...
+//tags: exclude-current-value-menu
+//input: semantic_value value { semType: Molecule }
+export function copyAsAction(value: DG.SemanticValue) {
+  const formats = ['Smiles', 'MolfileV2000', 'MolfileV3000', 'Smarts'];
+  const menu = DG.Menu.popup();
+
+  formats.forEach((format) => {
+    const func = DG.Func.find({package: 'Chem', name: `copyAs${format}`})[0];
+    if (func)
+      menu.item(format, () => {
+        func.apply({value: value});
+      });
+  });
+  menu.show();
+}
+
 //name: Copy as SMILES
 //description: Copies structure as smiles
 //tags: exclude-actions-panel
@@ -1512,6 +1547,30 @@ export function copyAsMolfileV2000(value: DG.SemanticValue): void {
     _convertMolNotation(value.value, DG.chem.Notation.Unknown, DG.chem.Notation.MolBlock, getRdKitModule());
   navigator.clipboard.writeText(molfileV2000);
   grok.shell.info('Molfile V2000 copied to clipboard');
+}
+
+//name: Copy as MOLFILE V3000
+//description: Copies structure as molfile V3000
+//tags: exclude-actions-panel
+//meta.action: Copy as MOLFILE V3000
+//input: semantic_value value { semType: Molecule }
+export function copyAsMolfileV3000(value: DG.SemanticValue): void {
+  const molfileV3000 = DG.chem.isMolBlock(value.value) && value.value.includes('V3000') ? value.value :
+    _convertMolNotation(value.value, DG.chem.Notation.Unknown, DG.chem.Notation.V3KMolBlock, getRdKitModule());
+  navigator.clipboard.writeText(molfileV3000);
+  grok.shell.info('Molfile V3000 copied to clipboard');
+}
+
+//name: Copy as SMARTS
+//description: Copies structure as smarts
+//tags: exclude-actions-panel
+//meta.action: Copy as SMARTS
+//input: semantic_value value { semType: Molecule }
+export function copyAsSmarts(value: DG.SemanticValue): void {
+  const smarts = !DG.chem.isMolBlock(value.value) && _isSmarts(value.value) ? value.value :
+    _convertMolNotation(value.value, DG.chem.Notation.Unknown, DG.chem.Notation.Smarts, getRdKitModule());
+  navigator.clipboard.writeText(smarts);
+  grok.shell.info('Smarts copied to clipboard');
 }
 
 //name: Copy as IMAGE
@@ -1538,31 +1597,6 @@ export function copyAsImage(value: DG.SemanticValue): void {
       grok.shell.info('Image copied to clipboard');
     });
   });
-}
-
-
-//name: Copy as MOLFILE V3000
-//description: Copies structure as molfile V3000
-//tags: exclude-actions-panel
-//meta.action: Copy as MOLFILE V3000
-//input: semantic_value value { semType: Molecule }
-export function copyAsMolfileV3000(value: DG.SemanticValue): void {
-  const molfileV3000 = DG.chem.isMolBlock(value.value) && value.value.includes('V3000') ? value.value :
-    _convertMolNotation(value.value, DG.chem.Notation.Unknown, DG.chem.Notation.V3KMolBlock, getRdKitModule());
-  navigator.clipboard.writeText(molfileV3000);
-  grok.shell.info('Molfile V3000 copied to clipboard');
-}
-
-//name: Copy as SMARTS
-//description: Copies structure as smarts
-//tags: exclude-actions-panel
-//meta.action: Copy as SMARTS
-//input: semantic_value value { semType: Molecule }
-export function copyAsSmarts(value: DG.SemanticValue): void {
-  const smarts = !DG.chem.isMolBlock(value.value) && _isSmarts(value.value) ? value.value :
-    _convertMolNotation(value.value, DG.chem.Notation.Unknown, DG.chem.Notation.Smarts, getRdKitModule());
-  navigator.clipboard.writeText(smarts);
-  grok.shell.info('Smarts copied to clipboard');
 }
 
 //name: isSmiles
@@ -1860,7 +1894,6 @@ export async function demoScaffold(): Promise<void> {
   await _demoScaffoldTree();
 }
 
-
 //top-menu: Chem | Transform | Names To Smiles...
 //name: Names To Smiles
 //tags: Transform
@@ -1881,6 +1914,13 @@ export async function namesToSmiles(data: DG.DataFrame, names: DG.Column<string>
 //meta.role: canonicalizer
 export function canonicalize(molecule: string): string {
   return convertMolNotation(molecule, DG.chem.Notation.Unknown, DG.chem.Notation.Smiles);
+}
+
+//name: getMolecularFormula
+//input: string molecule { semType: molecule }
+//output: string molecularFormula
+export function getMolecularFormula(molecule: string): string {
+  return oclMol(molecule).getMolecularFormula().formula;
 }
 
 //name: validateMolecule
@@ -1927,8 +1967,11 @@ export async function trainModelChemprop(table: string, predict: string, paramet
     headers: {'Content-Type': 'application/json'},
   });
 
-  if (response.status !== 201)
+  if (response.status !== 201) {
+    if (!container.status.startsWith('started') && !container.status.startsWith('checking'))
+      throw new Error(`Failed to start container: ${container.friendlyName}`);
     throw new Error(`Error training model: ${response.statusText}`);
+  }
   return new Uint8Array(await response.arrayBuffer());
 }
 
@@ -1946,8 +1989,11 @@ export async function applyModelChemprop(modelBlob: Uint8Array, table: string): 
     headers: {'Content-Type': 'application/json'},
   });
 
-  if (response.status !== 201)
+  if (response.status !== 201) {
+    if (!container.status.startsWith('started') && !container.status.startsWith('checking'))
+      throw new Error(`Failed to start container: ${container.friendlyName}`);
     throw new Error(`Error applying model: ${response.statusText}`);
+  }
 
   const data = await response.json();
   return DG.Column.fromStrings('outcome', data['outcome'].map((v: any) => v?.toString()));
@@ -1988,7 +2034,7 @@ export async function trainChemprop(
   data_seed: number, split_sizes: any, split_type: string, activation: string, atom_messages: boolean, message_bias: boolean, ensemble_size: number,
   message_hidden_dim: number, depth: number, dropout: number, ffn_hidden_dim: number, ffn_num_layers: number, epochs: number, batch_size: number,
   warmup_epochs: number, init_lr: number, max_lr: number, final_lr: number, no_descriptor_scaling: boolean,
-): Promise<Uint8Array> {
+): Promise<Uint8Array | undefined> {
   const parameterValues = {
     'dataset_type': dataset_type,
     'metric': metric,
@@ -2015,12 +2061,16 @@ export async function trainChemprop(
     'warmup_epochs': warmup_epochs,
   };
   df.columns.add(predictColumn);
-  const modelBlob = await fetchWrapper(() => trainModelChemprop(df.toCsv(), predictColumn.name, parameterValues));
-  const zip = new JSZip();
-  const archive = await zip.loadAsync(modelBlob);
-  const file = archive.file('blob.bin');
-  const binBlob = await file?.async('uint8array')!;
-  return binBlob;
+  try {
+    const modelBlob = await trainModelChemprop(df.toCsv(), predictColumn.name, parameterValues);
+    const zip = new JSZip();
+    const archive = await zip.loadAsync(modelBlob);
+    const file = archive.file('blob.bin');
+    const binBlob = await file?.async('uint8array')!;
+    return binBlob;
+  } catch (error: any) {
+    grok.shell.error(error);
+  }
 }
 
 //name: applyChemprop
@@ -2030,8 +2080,12 @@ export async function trainChemprop(
 //input: dynamic model
 //output: dataframe data_out
 export async function applyChemprop(df: DG.DataFrame, model: Uint8Array) {
-  const column = await fetchWrapper(() => applyModelChemprop(model, df.toCsv()));
-  return DG.DataFrame.fromColumns([column]);
+  try {
+    const column = await applyModelChemprop(model, df.toCsv());
+    return DG.DataFrame.fromColumns([column]);
+  } catch (error: any) {
+    grok.shell.error(error);
+  }
 }
 
 //name: isApplicableNN
@@ -2068,54 +2122,59 @@ export async function deprotect(table: DG.DataFrame, molecules: DG.Column, fragm
   table.columns.add(col);
 }
 
-//name: getConfigFiles
-//output: list<string> configFiles
-export async function getConfigFiles(): Promise<string[]> {
-  const targetsFiles: DG.FileInfo[] = await grok.dapi.files.list(TARGET_PATH, true);
-  const directoriesWithJson = await Promise.all(
-    targetsFiles.filter((file) => file.isDirectory).map(async (dir) => {
-      const filesInDir = await grok.dapi.files.list(dir.fullPath, true);
-      return filesInDir.some((file) => file.path.endsWith('.json')) ? dir.name : null;
-    }),
-  );
-  return directoriesWithJson.filter((dir): dir is string => Boolean(dir));
+async function zipFolder(folder: DG.FileInfo[]): Promise<Blob> {
+  const zip = new JSZip();
+  folder.forEach(file => {
+    zip.file(file.name, file.readAsBytes());
+  });
+
+  const zipBlob = await zip.generateAsync({ type: 'blob' });
+  return zipBlob;
 }
 
-//name: getAdmeConfigFiles
-//output: list<string> configFiles
-export async function getAdmeConfigFiles(): Promise<string[]> {
-  const targetsFiles: DG.FileInfo[] = await grok.dapi.files.list(ADME_CONFIG_PATH, true);
-  return targetsFiles
-    .filter((file) => file.isFile && file.path.endsWith('.json'))
-    .map((file) => file.name.split('.')[0]);
+//name: getFolders
+//output: list<string> targetFiles
+export async function getFolders(): Promise<string[]> {
+  const targetsFiles: DG.FileInfo[] = await grok.dapi.files.list(TARGET_PATH, true);
+  return targetsFiles.filter((dir) =>  dir.isDirectory).map((dir) => dir.name);
+}
+
+//name: ReinventEditor
+//tags: editor
+//input: funccall call
+export function reinventEditor(call: DG.FuncCall): void {
+  const funcEditor = new ReinventBaseEditor();
+  ui.dialog({title: 'Reinvent'})
+    .add(funcEditor.getEditor())
+    .onOK(async () => {
+      const params = funcEditor.getParams();
+      call.func.prepare({
+        ligand: params.ligand,
+        optimize: params.optimize
+      }).call(true);
+    }).show();
 }
 
 //name: runReinvent
 //meta.cache: all
 //meta.cache.invalidateOn: 0 * * * *
 //input: string ligand {semType: Molecule}
-//input: string target {choices: Chem: getConfigFiles}
-//input: string optimize {choices: Chem: getAdmeConfigFiles}
-//input: int steps
+//input: string optimize
 //output: dataframe result
-export async function runReinvent(ligand: string, target: string, optimize: string, steps: number): Promise<DG.DataFrame> {
+export async function runReinvent(ligand: string, optimize: string): Promise<DG.DataFrame> {
   const container = await grok.dapi.docker.dockerContainers.filter('reinvent').first();
-  const isConfigFile = (file: DG.FileInfo): boolean => file.extension === 'json';
-  const configFile = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`, true)).find(isConfigFile)!;
-  const receptor = (await grok.dapi.files.list(`${TARGET_PATH}/${target}`)).find((file) => file.extension === 'pdbqt')!;
+  const files = (await grok.dapi.files.list(`${TARGET_PATH}/${optimize}`));
 
-  const body = {
-    smiles: [ligand],
-    config: await grok.dapi.files.readAsText(configFile.fullPath),
-    receptor: await grok.dapi.files.readAsText(receptor.fullPath),
-    admeConfig: await grok.dapi.files.readAsText(`${ADME_CONFIG_PATH}/${optimize}.json`),
-    steps: steps,
-  };
+  const zipBlob = await zipFolder(files);
+  const formData = new FormData();
+  formData.append('folder', zipBlob, 'folder.zip');
+  [ligand].forEach(smiles => {
+    formData.append('smiles', smiles);
+  });
 
   const response = await grok.dapi.docker.dockerContainers.fetchProxy(container.id, '/run_reinvent', {
     method: 'POST',
-    body: JSON.stringify(body),
-    headers: {'Content-Type': 'application/json'},
+    body: formData,
   });
 
   const resultDf = DG.DataFrame.fromJson(await response.text());
@@ -2125,28 +2184,21 @@ export async function runReinvent(ligand: string, target: string, optimize: stri
 //top-menu: Chem | Generate molecules...
 //name: Reinvent
 //tags: HitDesignerFunction
-//input: string ligand = "OC(CN1CCCC1)NC(CCC1)CC1Cl" {semType: Molecule; caption: Ligand seed} [Starting point for ligand generation]
-//input: string target {choices: Chem: getConfigFiles; caption: Dock into} [Folder with config files and macromolecule for docking]
-//input: string optimize {choices: Chem: getAdmeConfigFiles; caption: Optimize} [Optimization criteria for ADME properties]
-//input: int steps = 5 [Number of steps]
+//input: string ligand = "OC(CN1CCCC1)NC(CCC1)CC1Cl" {semType: Molecule}
+//input: string optimize {choices: Chem:getFolders}
+//editor: Chem: ReinventEditor
 //output: dataframe result
 export async function reinvent(
-  ligand: string,
-  target: string,
-  optimize: string,
-  steps: number
+  ligand: string, optimize: string
 ): Promise<DG.DataFrame> {
   const resultDfPromise = grok.functions.call('Chem:runReinvent', {
     ligand: ligand,
-    target: target,
-    optimize: optimize,
-    steps: steps,
+    optimize: optimize
   });
   const schemas = await grok.dapi.stickyMeta.getSchemas();
   const lineageSchema = schemas.find((s) => s.name === 'Lineage');
 
   const resultDf: DG.DataFrame = await resultDfPromise;
-  resultDf.columns.remove('Input_SMILES');
 
   if (lineageSchema) {
     const molCol = DG.Column.fromStrings('canonical_smiles', [ligand]);
@@ -2158,6 +2210,11 @@ export async function reinvent(
     const lineagePromise = grok.dapi.stickyMeta.setAllValues(lineageSchema, molCol, seedDf);
 
     const resultMolCol = resultDf.columns.byName('SMILES');
+    const initialMolCol = resultDf.columns.byName('Input_SMILES');
+    resultMolCol.semType = DG.SEMTYPE.MOLECULE;
+    initialMolCol.semType = DG.SEMTYPE.MOLECULE;
+    await grok.data.detectSemanticTypes(resultDf);
+
     if (resultMolCol) {
       const lineagePromises = resultMolCol.toList().map((smiles: string) => {
         const col = DG.Column.fromStrings('smiles', [smiles]);

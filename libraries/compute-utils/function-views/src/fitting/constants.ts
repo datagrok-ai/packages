@@ -108,3 +108,5 @@ It computes inputs minimizing deviation measured by [loss function](https://en.w
 
 * [Parameters optimization](https://datagrok.ai/help/compute/function-analysis#parameter-optimization)
 * [Nelder-Mead method](https://en.wikipedia.org/wiki/Nelder%E2%80%93Mead_method)`;
+
+export const DIFF_STUDIO_OUTPUT_IDX = 0;

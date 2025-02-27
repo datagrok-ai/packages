@@ -5,23 +5,23 @@
     "description": "Overview of CI/CD test results.",
     "tables": [
       {
-        "path": "0_Tests_Dashboard.csv",
-        "creationScript": "Result = UsageAnalysis:TestsDashboard(5,null,null,false,false,false)",
+        "path": "Tests.csv",
+        "creationScript": "Result = UsageAnalysis:TestsDashboard('dev',5,null,null,false,false,false)",
         "id": "2d897490-9b00-11ef-bb56-cf322fcdda84"
       },
       {
-        "path": "1_Benchmark_Dashboard.csv",
+        "path": "Benchmark.csv",
         "creationScript": "Result = UsageAnalysis:BenchmarksDashboard(5,false,true,false)",
         "id": "94e609e4-b5b7-437e-b91f-01da1ff73b17"
       },
       {
-        "path": "2_Stress_Tests_Dashboard.csv",
-        "creationScript": "Result = UsageAnalysis:StressTestsDashboard(5,false,false)",
+        "path": "Stress_Tests.csv",
+        "creationScript": "Result = UsageAnalysis:StressTestsDashboard(3)",
         "id": "48498f80-c210-11ef-9cb9-7bfcfe94b295"
       }, 
       {
-        "path": "3_Test_Track_Dashboard.csv",
-        "creationScript": "Result = UsageAnalysis:ManualTests(100)",
+        "path": "Test_Track.csv",
+        "creationScript": "Result = UsageAnalysis:ManualTests(3)",
         "id": "32a0d3c9-7b4b-420e-b06d-b05d021b8247"
       }
     ]

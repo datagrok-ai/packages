@@ -114,7 +114,7 @@ export class AddNewColumnDialog {
   previwDf?: DG.DataFrame; // Represents Preview Table.
   columnsDf?: DG.DataFrame; // Represents Columns Widget.
   gridPreview?: DG.Grid;
-  widgetColumns?: DG.Widget;
+  widgetColumns?: DG.ColumnGrid;
   widgetFunctions?: DG.Widget;
   resultColumnType?: string;
   dialogTitle: string = '';
@@ -164,6 +164,10 @@ export class AddNewColumnDialog {
 
 
     if (this.sourceDf) {
+      if (!this.sourceDf.rowCount) {
+        grok.shell.error('Column can not be added to empty dataframe');
+        return;
+      }
       this.columnNames = this.sourceDf.columns.names();
       this.columnNamesLowerCase = this.sourceDf.columns.names().map((it) => it.toLowerCase());
       this.hintDiv.append(ui.divText(DEFAULT_HINT));
@@ -208,14 +212,22 @@ export class AddNewColumnDialog {
     );
 
     this.codeMirror = this.initCodeMirror();
-    this.codeMirrorDiv.onkeydown = (e: KeyboardEvent) => {
+    this.codeMirrorDiv.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.code === 'Enter' && this.autocompleteEnter) { //do not close the dialog when autocompleting using Enter button
-        e.stopImmediatePropagation();
+        e.stopPropagation();
         this.autocompleteEnter = false;
+      } else if (e.key === 'Escape') //do not close the dialog if press Ecs over the codeMirror
+        e.stopPropagation();
+      else if (e.code === 'KeyA' && e.ctrlKey) {
+        e.stopPropagation();
+        this.codeMirror?.dispatch({
+          selection: {
+            anchor: 0,
+            head: this.codeMirror?.state.doc.length,
+          },
+        });
       }
-      if (e.key === 'Escape') //do not close the dialog if press Ecs over the codeMirror
-        e.stopImmediatePropagation();
-    }
+    });
 
     this.prepareForSeleniumTests();
     if (!this.call.getParamValue('expression'))
@@ -549,6 +561,7 @@ export class AddNewColumnDialog {
               this.errorDiv.append(ui.divText(this.error, 'cm-error-div'));
             //in case os syntax error we try to run expression to save string interpolation functionality
             this.updatePreviewEvent.next({expression: cmValue, changeName: false , error: !!this.error && this.error !== SYNTAX_ERROR});
+            this.uiDialog!.getButton('OK').disabled = !!this.error && this.error !== SYNTAX_ERROR;
           }),
         ],
       }),
@@ -904,10 +917,10 @@ export class AddNewColumnDialog {
 
   /** Creates and initializes the "Column List Widget". */
   async initUiColumns(): Promise<HTMLDivElement> {
-    this.widgetColumns = await DG.Func.byName('ColumnGridWidget').apply({df: this.sourceDf});
+    this.widgetColumns = DG.ColumnGrid.popup(this.sourceDf!, {widgetMode: true});
 
-    if (this.widgetColumns!.getProperties().filter((it => it.name === 'grid')).length) { //added check for grid property for backward compatibility
-      const columnsGrid = DG.toJs(this.widgetColumns!.props.grid) as DG.Grid;
+    if (this.widgetColumns!.grid) { //added check for grid property for backward compatibility
+      const columnsGrid = this.widgetColumns?.grid!;
       columnsGrid.autoSize(350, 345, undefined, undefined, true);
       columnsGrid.root.classList.add('add-new-column-columns-grid');
       ui.onSizeChanged(this.uiDialog!.root).subscribe(() => {
@@ -918,8 +931,8 @@ export class AddNewColumnDialog {
         }
       });
     }
-    
-    this.columnsDf = DG.toJs(this.widgetColumns!.props.dfColumns);
+
+    this.columnsDf = this.widgetColumns!.dfColumns;
     this.columnsDf?.onCurrentRowChanged.subscribe(() => {
       if (this.columnsDf && this.columnsDf!.currentRowIdx !== -1) {
         const colName = this.columnsDf!.get('name', this.columnsDf!.currentRowIdx);
@@ -931,7 +944,7 @@ export class AddNewColumnDialog {
           this.widgetFunctions!.props.sortByColType = null;
         }
       }
-    })
+    });
 
     const control = ui.box();
     control.append(this.widgetColumns!.root);

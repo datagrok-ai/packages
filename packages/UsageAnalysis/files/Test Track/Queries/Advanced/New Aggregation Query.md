@@ -2,7 +2,7 @@
 1. Go to **Browse** > **Databases**.
 2. Expand **PostgresDart** > **NorthwindTest** > **Schemas** > **public**. A list of tables opens.
 3. Right-click the **orders** DB table.
-4. Select **New Aggregation query...** from the context menu. 
+4. Select **New Visual Query...** from the context menu. 
 5. Add shipaddress column to **Pivot**.
 6. Add orderid column to **Group by**.
 7. Add avg(orderid) to **Aggregate**. Query result is previewed below Aggregation box.

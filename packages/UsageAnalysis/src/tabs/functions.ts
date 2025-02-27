@@ -57,16 +57,14 @@ export class FunctionsView extends UaView {
           t.selection.setAll(false);
           const rowValues = Array.from(t.currentRow.cells).map((c) => c.value);
           const row = Object.fromEntries(t.columns.names().map((k, i) => [k, rowValues[i]]));
-          row.time_start = row.time_start.a;
-          row.time_end = row.time_end.a;
-          const filter: Filter = {time_start: row.time_start / 1000, time_end: row.time_end / 1000,
+          const filter: Filter = {time_start: row.time_start.valueOf() / 1000, time_end: row.time_end.valueOf() / 1000,
             users: [row.uid], packages: [row.pid], functions: [row.function]};
           const cp = DG.Accordion.create();
           cp.addPane('Details', () => {
             return ui.tableFromMap({'User': ui.render(`#{x.${row.uid}}`),
               'Package': row.pid === this.systemId ? ui.label('Core') : ui.render(`#{x.${row.pid}}`),
-              'From': getTime(new Date(row.time_start)),
-              'To': getTime(new Date(row.time_end))});
+              'From': row.time_start.format('DD/MM/YYYY HH:mm:ss'),
+              'To': row.time_end.format('DD/MM/YYYY HH:mm:ss')});
           }, true);
           this.getFunctionPane(cp, filter, true);
           grok.shell.o = cp.root;
@@ -92,7 +90,8 @@ export class FunctionsView extends UaView {
     });
 
     const grid = DG.Viewer.grid(DG.DataFrame.create(0));
-    grid.autoSize(2000, 2000, 1000);
+    grid.root.style.maxWidth = '100%';
+    grid.root.style.minWidth = '100%';
     const typeAhead = ui.typeAhead('Function name', {
       source: {local: DG.Func.find().map((f) => f.name)},
       minLength: 1, limit: 30, hint: true, autoSelect: true, highlight: true, diacritics: true,
@@ -121,8 +120,9 @@ export class FunctionsView extends UaView {
 
     typeAhead.input.style.width = '300px';
     typeAhead.input.style.marginBottom = '15px';
-    this.functionsExecTime.append(ui.divV([typeAhead, grid]));
-
+    const d = ui.divV([typeAhead, grid]);
+    d.style.width = '100%';
+    this.functionsExecTime.append(d);
     this.viewers.push(functionsViewer);
     this.root.append(functionsViewer.root);
     this.root.append(this.functionsExecTime);

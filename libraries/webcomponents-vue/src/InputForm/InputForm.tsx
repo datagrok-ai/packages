@@ -26,6 +26,10 @@ export const InputForm = Vue.defineComponent({
       type: Object as Vue.PropType<DG.FuncCall>,
       required: true,
     },
+    skipInit: {
+      type: Boolean,
+      default: true,
+    },
     validationStates: {
       type: Object as Vue.PropType<Record<string, ValidationResult>>,
     },
@@ -41,14 +45,17 @@ export const InputForm = Vue.defineComponent({
   },
   emits: {
     formReplaced: (a: DG.InputForm | undefined) => a,
+    inputChanged: (a: DG.EventData<DG.InputArgs>) => a,
+    validationChanged: (a: boolean) => a,
     actionRequested: (actionUuid: string) => actionUuid,
     consistencyReset: (ioName: string) => ioName,
   },
   setup(props, {emit}) {
-    const currentCall = Vue.computed(() => props.funcCall);
+    const currentCall = Vue.computed(() => Vue.markRaw(props.funcCall));
     const validationStates = Vue.computed(() => props.validationStates);
     const consistencyStates = Vue.computed(() => props.consistencyStates);
     const isReadonly = Vue.computed(() => props.isReadonly);
+    const skipInit = Vue.computed(() => props.skipInit);
 
     const states = Vue.reactive({
       meta: {} as Record<string, any>,
@@ -64,7 +71,7 @@ export const InputForm = Vue.defineComponent({
       );
     });
 
-    const currentForm = Vue.ref(undefined as undefined | DG.InputForm);
+    const currentForm = Vue.shallowRef(undefined as undefined | DG.InputForm);
 
     Vue.watchEffect(() => {
       if (!currentForm.value) return;
@@ -98,6 +105,11 @@ export const InputForm = Vue.defineComponent({
           const paramItems = meta[param.property.name]?.['items'];
           if (paramItems && input.inputType === DG.InputType.Choice)
             (input as DG.ChoiceInput<any>).items = paramItems;
+          const rangeMeta = meta[param.property.name]?.['range'];
+          if (rangeMeta && (input.inputType === DG.InputType.Float || input.inputType === DG.InputType.Int)) {
+            // TODO: FormApi
+            console.log(rangeMeta);
+          }
         });
     });
 
@@ -106,9 +118,13 @@ export const InputForm = Vue.defineComponent({
       currentForm.value = event.detail;
     };
 
-    return () => <dg-input-form
-      funcCall={currentCall.value}
-      onFormReplaced={formReplacedCb}>
-    </dg-input-form>;
+    return () =>
+      <dg-input-form
+        skipInit={skipInit.value}
+        funcCall={currentCall.value}
+        onFormReplaced={formReplacedCb}
+        onInputChanged={(ev: CustomEvent<DG.EventData<DG.InputArgs>>) => emit('inputChanged', ev.detail)}
+        onValidationChanged={(ev: CustomEvent<boolean>) => emit('validationChanged', ev.detail)}>
+      </dg-input-form>;
   },
 });

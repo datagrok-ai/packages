@@ -14,7 +14,7 @@
 #argument: t, 1-st stage
   start = 0 {units: h; caption: initial; category: Misc} [Start of the process]
   stage1 = 60 {units: h; caption: 1-st stage; category: Durations; min: 20; max: 80} [Duration of the 1-st stage]
-  step = 0.1 {units: h; caption: step; category: Misc; min: 0.01; max: 1} [Time step of simlulation]
+  step = 0.1 {units: h; caption: step; category: Misc; min: 0.01; max: 1} [Time step of simulation]
 
 #update: 2-nd stage
   duration = overall - _t1

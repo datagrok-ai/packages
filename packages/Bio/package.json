@@ -5,7 +5,7 @@
     "name": "Leonid Stolbov",
     "email": "lstolbov@datagrok.ai"
   },
-  "version": "2.18.2",
+  "version": "2.19.0",
   "description": "Bioinformatics support (import/export of sequences, conversion, visualization, analysis). [See more](https://github.com/datagrok-ai/public/blob/master/packages/Bio/README.md) for details.",
   "repository": {
     "type": "git",
@@ -44,13 +44,13 @@
   ],
   "dependencies": {
     "@biowasm/aioli": "^3.1.0",
-    "@datagrok-libraries/bio": "^5.48.1",
+    "@datagrok-libraries/bio": "^5.50.1",
     "@datagrok-libraries/chem-meta": "^1.2.7",
     "@datagrok-libraries/math": "^1.2.4",
     "@datagrok-libraries/ml": "^6.7.6",
     "@datagrok-libraries/tutorials": "^1.4.3",
     "@datagrok-libraries/utils": "^4.4.0",
-    "datagrok-api": "^1.23.0",
+    "datagrok-api": "^1.24.0",
     "@webgpu/types": "^0.1.40",
     "ajv": "^8.12.0",
     "ajv-errors": "^3.0.0",

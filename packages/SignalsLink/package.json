@@ -1,0 +1,43 @@
+{
+  "name": "signalslink",
+  "friendlyName": "SignalsLink",
+  "version": "0.0.1",
+  "description": "",
+  "dependencies": {
+    "datagrok-api": "^1.21.3",
+    "cash-dom": "^8.1.5",
+    "dayjs": "^1.11.13",
+    "@datagrok-libraries/utils": "^4.3.6"
+  },
+  "devDependencies": {
+    "datagrok-tools": "latest",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "ts-loader": "latest",
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
+    "typescript": "latest"
+  },
+  "scripts": {
+    "link-all": "grok link",
+    "debug-signalslink": "webpack && grok publish",
+    "release-signalslink": "webpack && grok publish --release",
+    "build-signalslink": "webpack",
+    "build": "webpack",
+    "debug-signalslink-dev": "webpack && grok publish dev",
+    "release-signalslink-dev": "webpack && grok publish dev --release",
+    "debug-signalslink-public": "webpack && grok publish public",
+    "release-signalslink-public": "webpack && grok publish public --release"
+  },
+  "canEdit": [
+    "Developers"
+  ],
+  "canView": [
+    "All users"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datagrok-ai/public.git",
+    "directory": "packages/SignalsLink"
+  }
+}

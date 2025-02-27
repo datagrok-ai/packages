@@ -1,5 +1,16 @@
 # Usage Analysis changelog
 
+# 2.3.0 (2025-02-18)
+
+* Dependency: datagarok-api >= 1.24.0*
+
+### Features
+
+* Packages: Possibility to filter packages by category
+* Functions: Possibility to filter functions by tags
+* Improvements in usage queries and bug fixes
+* Tests Dashboard
+
 # 2.2.1 (2024-12-03)
 
 * Dependency: datagarok-api >= 1.22.0*

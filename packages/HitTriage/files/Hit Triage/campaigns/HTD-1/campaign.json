@@ -1,1 +1,81 @@
-{"name":"HTD-1","templateName":"HT Demo Template","filters":{},"ingest":{"type":"File","query":"System:AppData/HitTriage/Hit Triage/campaigns/HTD-1/enriched_table.csv","molColName":"smiles"},"status":"In Progress","createDate":"2024/10/17","campaignFields":{"Chemist":"Davit","Deadline":{"a":1759953600000,"b":false,"date":"2025-10-08T20:00:00.000Z"},"Scaffold":"c1cc2ccccc2cc1"},"columnSemTypes":{"smiles":"Molecule","LogD":null,"MolWt":null,"Mutagenicity":null,"Tumorigenicity":null,"Irritating effects":null,"Reproductive effects":null,"Selected hits":null,"~smiles.Pattern":null,"~smiles.canonicalSmiles":null},"rowCount":100,"filteredRowCount":100,"template":{"name":"HT Demo Template","key":"HTD","campaignFields":[{"name":"Chemist","type":"String","required":true},{"name":"Deadline","type":"Date","required":false},{"name":"Scaffold","type":"Molecule","required":false}],"dataSourceType":"Query","compute":{"descriptors":{"enabled":true,"args":["MolWt"]},"functions":[{"name":"addChemRisksColumns","package":"Chem","args":{"mutagenicity":true,"tumorigenicity":true,"irritatingEffects":true,"reproductiveEffects":true}}],"scripts":[],"queries":[]},"queryFunctionName":"Demo Molecules variable"},"columnTypes":{"smiles":"string","LogD":"qnum","MolWt":"double","Mutagenicity":"string","Tumorigenicity":"string","Irritating effects":"string","Reproductive effects":"string","Selected hits":"bool","~smiles.Pattern":"byte_array","~smiles.canonicalSmiles":"string"},"authorUserId":"e44f5f40-73f0-11ef-884d-c35bc9987eba","permissions":{"view":["a4b45840-9a50-11e6-9cc9-8546b8bf62e6"],"edit":["a4b45840-9a50-11e6-9cc9-8546b8bf62e6"]},"layout":"{\"containerType\":\"horizontal\",\"state\":{\"width\":1356,\"height\":869},\"children\":[{\"containerType\":\"panel\",\"state\":{\"width\":123,\"height\":869,\"element\":{\"id\":\"40cdc600-73f0-11ef-baec-5d0734bbb5b2\",\"type\":\"Filters\",\"look\":{\"#type\":\"FiltersLook\",\"filters\":[{\"type\":\"Chem:substructureFilter\",\"column\":\"smiles\",\"active\":true,\"columnName\":\"smiles\",\"molBlock\":\"\",\"searchType\":\"Contains\",\"simCutOff\":0.8,\"fp\":\"Morgan\",\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Mutagenicity\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Tumorigenicity\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Selected hits\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Irritating effects\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Reproductive effects\",\"active\":true,\"boolInput\":null},{\"type\":\"histogram\",\"column\":\"LogD\",\"active\":true,\"filterOutMissingValues\":false,\"showMissingValuesOnly\":false,\"showHistogram\":true,\"showSlider\":true,\"showMinMax\":false,\"boolInput\":null},{\"type\":\"histogram\",\"column\":\"MolWt\",\"active\":true,\"filterOutMissingValues\":false,\"showMissingValuesOnly\":false,\"showHistogram\":true,\"showSlider\":true,\"showMinMax\":false,\"boolInput\":null}]},\"title\":\"Filters\"}},\"children\":[]},{\"containerType\":\"vertical\",\"state\":{\"width\":652,\"height\":869},\"children\":[{\"containerType\":\"fill\",\"state\":{\"width\":652,\"height\":552,\"documentManager\":true},\"children\":[{\"containerType\":\"panel\",\"state\":{\"width\":652,\"height\":552,\"element\":{\"id\":\"40ce1420-73f0-11ef-e149-cfa7da300a5c\",\"type\":\"Grid\",\"look\":{\"#type\":\"GridLook\",\"showAddNewRowIcon\":true,\"addNewRowOnLastRowEdit\":true,\"rowHeight\":100,\"topLevelDefaultMenu\":true,\"allowColumnMenu\":true,\"columns\":[{\"width\":36,\"backgroundColor\":4294440951,\"customName\":\"\",\"cellType\":\"row header\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":200,\"columnName\":\"smiles\",\"cellType\":\"Molecule\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":59,\"columnName\":\"LogD\",\"cellType\":\"number\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":63,\"columnName\":\"MolWt\",\"cellType\":\"number\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":101,\"columnName\":\"Mutagenicity\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":113,\"columnName\":\"Tumorigenicity\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":120,\"columnName\":\"Irritating effects\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":147,\"columnName\":\"Reproductive effects\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":101,\"columnName\":\"Selected hits\",\"cellType\":\"bool\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"visible\":false,\"width\":0,\"columnName\":\"~smiles.Pattern\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"visible\":false,\"width\":0,\"columnName\":\"~smiles.canonicalSmiles\",\"headerCellStyle\":{\"textWrap\":\"words\"}}]},\"title\":\"Variable Molecules number\",\"default\":true}},\"children\":[]}]},{\"containerType\":\"panel\",\"state\":{\"width\":652,\"height\":316,\"element\":{\"id\":\"40ce1420-73f0-11ef-907b-1f636b264a43\",\"type\":\"Histogram\",\"look\":{\"#type\":\"HistogramLook\",\"valueColumnName\":\"MolWt\",\"showXAxis\":true,\"showYAxis\":true,\"binWidthRatio\":0.9,\"marginLeft\":5,\"marginRight\":5},\"title\":\"Histogram\"}},\"children\":[]}]},{\"containerType\":\"vertical\",\"state\":{\"width\":579,\"height\":869},\"children\":[{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":239,\"element\":{\"id\":\"40ce3b30-73f0-11ef-e099-e1bd6cccb6e9\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Mutagenicity\"},\"title\":\"Bar chart\"}},\"children\":[]},{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":216,\"element\":{\"id\":\"40ce3b30-73f0-11ef-fda4-af559d0f6b59\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Irritating effects\"},\"title\":\"Bar chart\"}},\"children\":[]},{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":216,\"element\":{\"id\":\"40ce3b30-73f0-11ef-8cd7-5f5c6c756235\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Reproductive effects\"},\"title\":\"Bar chart\"}},\"children\":[]},{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":195,\"element\":{\"id\":\"40ce6240-73f0-11ef-d8da-27625309edf0\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Tumorigenicity\"},\"title\":\"Bar chart\"}},\"children\":[]}]}],\"floating\":[],\"tableId\":\"0a2b1c10-73f0-11ef-9a73-496ef3e6e002\",\"tableName\":\"Variable Molecules number\"}"}
+{
+  "name": "HTD-1",
+  "templateName": "HT Demo Template",
+  "filters": {},
+  "ingest": {
+    "type": "File",
+    "query": "System:AppData/HitTriage/Hit Triage/campaigns/HTD-1/enriched_table.csv",
+    "molColName": "smiles"
+  },
+  "status": "In Progress",
+  "createDate": "2024/10/17",
+  "campaignFields": {
+    "Chemist": "Davit",
+    "Deadline": {
+      "a": 1759953600000,
+      "b": false,
+      "date": "2025-10-08T20:00:00.000Z"
+    },
+    "Scaffold": "c1cc2ccccc2cc1"
+  },
+  "columnSemTypes": {
+    "smiles": "Molecule",
+    "LogD": null,
+    "MolWt": null,
+    "Mutagenicity": null,
+    "Tumorigenicity": null,
+    "Irritating effects": null,
+    "Reproductive effects": null,
+    "Selected hits": null,
+    "~smiles.Pattern": null,
+    "~smiles.canonicalSmiles": null
+  },
+  "rowCount": 100,
+  "filteredRowCount": 100,
+  "template": {
+    "name": "HT Demo Template",
+    "key": "HTD",
+    "campaignFields": [
+      { "name": "Chemist", "type": "String", "required": true },
+      { "name": "Deadline", "type": "Date", "required": false },
+      { "name": "Scaffold", "type": "Molecule", "required": false }
+    ],
+    "dataSourceType": "Query",
+    "compute": {
+      "descriptors": { "enabled": true, "args": ["MolWt"] },
+      "functions": [
+        {
+          "name": "addChemRisksColumns",
+          "package": "Chem",
+          "args": {
+            "mutagenicity": true,
+            "tumorigenicity": true,
+            "irritatingEffects": true,
+            "reproductiveEffects": true
+          }
+        }
+      ],
+      "scripts": [],
+      "queries": []
+    },
+    "queryFunctionName": "Demo Molecules variable"
+  },
+  "columnTypes": {
+    "smiles": "string",
+    "LogD": "qnum",
+    "MolWt": "double",
+    "Mutagenicity": "string",
+    "Tumorigenicity": "string",
+    "Irritating effects": "string",
+    "Reproductive effects": "string",
+    "Selected hits": "bool",
+    "~smiles.Pattern": "byte_array",
+    "~smiles.canonicalSmiles": "string"
+  },
+  "authorUserId": "e44f5f40-73f0-11ef-884d-c35bc9987eba",
+  "permissions": {
+    "view": ["a4b45840-9a50-11e6-9cc9-8546b8bf62e6"],
+    "edit": ["a4b45840-9a50-11e6-9cc9-8546b8bf62e6"]
+  },
+  "layout": "{\"containerType\":\"horizontal\",\"state\":{\"width\":1356,\"height\":869},\"children\":[{\"containerType\":\"panel\",\"state\":{\"width\":123,\"height\":869,\"element\":{\"id\":\"40cdc600-73f0-11ef-baec-5d0734bbb5b2\",\"type\":\"Filters\",\"look\":{\"#type\":\"FiltersLook\",\"filters\":[{\"type\":\"Chem:substructureFilter\",\"column\":\"smiles\",\"active\":true,\"columnName\":\"smiles\",\"molBlock\":\"\",\"searchType\":\"Contains\",\"simCutOff\":0.8,\"fp\":\"Morgan\",\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Mutagenicity\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Tumorigenicity\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Selected hits\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Irritating effects\",\"active\":true,\"boolInput\":null},{\"type\":\"categorical\",\"column\":\"Reproductive effects\",\"active\":true,\"boolInput\":null},{\"type\":\"histogram\",\"column\":\"LogD\",\"active\":true,\"filterOutMissingValues\":false,\"showMissingValuesOnly\":false,\"showHistogram\":true,\"showSlider\":true,\"showMinMax\":false,\"boolInput\":null},{\"type\":\"histogram\",\"column\":\"MolWt\",\"active\":true,\"filterOutMissingValues\":false,\"showMissingValuesOnly\":false,\"showHistogram\":true,\"showSlider\":true,\"showMinMax\":false,\"boolInput\":null}]},\"title\":\"Filters\"}},\"children\":[]},{\"containerType\":\"vertical\",\"state\":{\"width\":652,\"height\":869},\"children\":[{\"containerType\":\"fill\",\"state\":{\"width\":652,\"height\":552,\"documentManager\":true},\"children\":[{\"containerType\":\"panel\",\"state\":{\"width\":652,\"height\":552,\"element\":{\"id\":\"40ce1420-73f0-11ef-e149-cfa7da300a5c\",\"type\":\"Grid\",\"look\":{\"#type\":\"GridLook\",\"showAddNewRowIcon\":true,\"addNewRowOnLastRowEdit\":true,\"rowHeight\":100,\"topLevelDefaultMenu\":true,\"allowColumnMenu\":true,\"columns\":[{\"width\":36,\"backgroundColor\":4294440951,\"customName\":\"\",\"cellType\":\"row header\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":200,\"columnName\":\"smiles\",\"cellType\":\"Molecule\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":59,\"columnName\":\"LogD\",\"cellType\":\"number\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":63,\"columnName\":\"MolWt\",\"cellType\":\"number\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":101,\"columnName\":\"Mutagenicity\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":113,\"columnName\":\"Tumorigenicity\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":120,\"columnName\":\"Irritating effects\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"isColorCoded\":true,\"width\":147,\"columnName\":\"Reproductive effects\",\"colorCodingType\":\"Categorical\",\"colorCodingCategorical\":{\"Unknown\":4278190080,\"None\":4278215680,\"Low\":4294944000,\"High\":4287299584},\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"width\":101,\"columnName\":\"Selected hits\",\"cellType\":\"bool\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"visible\":false,\"width\":0,\"columnName\":\"~smiles.Pattern\",\"headerCellStyle\":{\"textWrap\":\"words\"}},{\"visible\":false,\"width\":0,\"columnName\":\"~smiles.canonicalSmiles\",\"headerCellStyle\":{\"textWrap\":\"words\"}}]},\"title\":\"Variable Molecules number\",\"default\":true}},\"children\":[]}]},{\"containerType\":\"panel\",\"state\":{\"width\":652,\"height\":316,\"element\":{\"id\":\"40ce1420-73f0-11ef-907b-1f636b264a43\",\"type\":\"Histogram\",\"look\":{\"#type\":\"HistogramLook\",\"valueColumnName\":\"MolWt\",\"showXAxis\":true,\"showYAxis\":true,\"binWidthRatio\":0.9,\"marginLeft\":5,\"marginRight\":5},\"title\":\"Histogram\"}},\"children\":[]}]},{\"containerType\":\"vertical\",\"state\":{\"width\":579,\"height\":869},\"children\":[{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":239,\"element\":{\"id\":\"40ce3b30-73f0-11ef-e099-e1bd6cccb6e9\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Mutagenicity\"},\"title\":\"Bar chart\"}},\"children\":[]},{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":216,\"element\":{\"id\":\"40ce3b30-73f0-11ef-fda4-af559d0f6b59\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Irritating effects\"},\"title\":\"Bar chart\"}},\"children\":[]},{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":216,\"element\":{\"id\":\"40ce3b30-73f0-11ef-8cd7-5f5c6c756235\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Reproductive effects\"},\"title\":\"Bar chart\"}},\"children\":[]},{\"containerType\":\"panel\",\"state\":{\"width\":579,\"height\":195,\"element\":{\"id\":\"40ce6240-73f0-11ef-d8da-27625309edf0\",\"type\":\"Bar chart\",\"look\":{\"#type\":\"BarChartLook\",\"valueColumnName\":\"LogD\",\"valueAggrType\":\"count\",\"barSortType\":\"by value\",\"barSortOrder\":\"desc\",\"splitColumnName\":\"Tumorigenicity\"},\"title\":\"Bar chart\"}},\"children\":[]}]}],\"floating\":[],\"tableId\":\"0a2b1c10-73f0-11ef-9a73-496ef3e6e002\",\"tableName\":\"Variable Molecules number\"}"
+}

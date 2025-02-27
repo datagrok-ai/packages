@@ -3,7 +3,7 @@
   "viewStateMap": {
     "containerType": "fill",
     "state": {
-      "width": 1068,
+      "width": 1292,
       "height": 927,
       "documentManager": true
     },
@@ -11,10 +11,10 @@
       {
         "containerType": "panel",
         "state": {
-          "width": 1068,
+          "width": 1292,
           "height": 927,
           "element": {
-            "id": "298b98c0-c210-11ef-8d8e-4903fcf207e0",
+            "id": "65a61730-c210-11ef-8a17-17e38806e7ec",
             "type": "Grid",
             "look": {
               "#type": "GridLook",
@@ -44,13 +44,12 @@
                 },
                 {
                   "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "1",
+                  "width": 62,
+                  "columnName": "1 concat unique(status)",
                   "colorCodingType": "Categorical",
                   "colorCodingCategorical": {
                     "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
+                    "passed": 4288208778
                   },
                   "headerCellStyle": {
                     "vertAlign": "bottom",
@@ -59,13 +58,12 @@
                 },
                 {
                   "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "2",
+                  "width": 65,
+                  "columnName": "2 concat unique(status)",
                   "colorCodingType": "Categorical",
                   "colorCodingCategorical": {
                     "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
+                    "passed": 4288208778
                   },
                   "headerCellStyle": {
                     "vertAlign": "bottom",
@@ -74,13 +72,12 @@
                 },
                 {
                   "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "3",
+                  "width": 76,
+                  "columnName": "3 concat unique(status)",
                   "colorCodingType": "Categorical",
                   "colorCodingCategorical": {
                     "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
+                    "passed": 4288208778
                   },
                   "headerCellStyle": {
                     "vertAlign": "bottom",
@@ -88,1455 +85,120 @@
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "4",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "5",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "6",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "7",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "8",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "9",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "10",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "11",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "12",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "13",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "14",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "15",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "16",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "17",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "18",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "19",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "20",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "21",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "22",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "23",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "24",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "25",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "26",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "27",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "28",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "29",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "30",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "31",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "32",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "33",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "34",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "35",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "36",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "37",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "38",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "39",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "40",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "41",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "42",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "43",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "44",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "45",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "46",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "47",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "48",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "49",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "50",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "51",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "52",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "53",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "54",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "55",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "56",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "57",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "58",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "59",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "60",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "61",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "62",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "63",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "64",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "65",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "66",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "67",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "68",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "69",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "1 concat unique(result)",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "70",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "71",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "72",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "73",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "74",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "75",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "76",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "77",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "78",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "79",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "80",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "81",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "82",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "83",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "84",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "85",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "86",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
-                  "headerCellStyle": {
-                    "vertAlign": "bottom",
-                    "textWrap": "words"
-                  }
-                },
-                {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "87",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "2 concat unique(result)",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "88",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 119,
+                  "columnName": "3 concat unique(result)",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "89",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 0",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "90",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 1",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "91",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 2",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "92",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 3",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "93",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 4",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "94",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 318,
+                  "columnName": "ticket 5",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "95",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 6",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "96",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 7",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "97",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 8",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "98",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 9",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "99",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 310,
+                  "columnName": "ticket 10",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
                   }
                 },
                 {
-                  "isColorCoded": true,
-                  "width": 18,
-                  "columnName": "100",
-                  "colorCodingType": "Categorical",
-                  "colorCodingCategorical": {
-                    "failed": 4292224808,
-                    "passed": 4281114668,
-                    "skipped": 4292467161
-                  },
+                  "width": 71,
+                  "columnName": "severity",
                   "headerCellStyle": {
                     "vertAlign": "bottom",
                     "textWrap": "words"
@@ -1544,7 +206,7 @@
                 }
               ]
             },
-            "title": "result",
+            "title": "Grid",
             "default": true
           }
         },
@@ -1553,11 +215,11 @@
     ],
     "floating": [],
     "tableId": "32a0d3c9-7b4b-420e-b06d-b05d021b8247",
-    "tableName": "3_ Test_ Track_ Dashboard"
+    "tableName": "Test_ Track"
   },
   "userData": {
     "TABLE_ROW_HEIGHT_KEY": null
   },
   "name": "TestTrackDashboard",
-  "friendlyName": "3. Test Track Dashboard"
+  "friendlyName": "Test Track"
 }

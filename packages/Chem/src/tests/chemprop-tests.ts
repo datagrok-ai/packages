@@ -3,7 +3,7 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import {category, test, before, expect} from '@datagrok-libraries/utils/src/test';
 import {_package, getContainer, applyModelChemprop, trainModelChemprop} from '../package';
-import {readDataframe} from './utils';
+import {ensureContainersRunning, readDataframe} from './utils';
 import JSZip from 'jszip';
 import { fetchWrapper } from '@datagrok-libraries/utils/src/fetch-utils';
 
@@ -15,6 +15,7 @@ category('chemprop', () => {
   before(async () => {
     table = await readDataframe('tests/smiles_test.csv');
     container = await getContainer();
+    await ensureContainersRunning();
   });
 
   test('trainModel', async () => {
@@ -35,7 +36,7 @@ category('chemprop', () => {
     const column = await fetchWrapper(() => applyModelChemprop(binBlob, DG.DataFrame.fromColumns([smilesColumn]).toCsv()));
         
     expect(column.length, 30);
-  }, {stressTest: true});
+  });
 });
 
 function getParameterValues() {

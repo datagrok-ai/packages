@@ -90,11 +90,13 @@ export async function TestAnalysisReportForCurrentDay(date: any) {
 //input: string date {isOptional: true}
 //input: string groups {isOptional: true}
 //input: string packages {isOptional: true}
+//input: string tags {isOptional: true}
+//input: string categories {isOptional: true}
 //input: map params {isOptional: true}
 //output: view v
-export async function usageAnalysisApp(path?: string, date?: string, groups?: string, packages?: string): Promise<DG.ViewBase | null> {
+export async function usageAnalysisApp(path?: string, date?: string, groups?: string, packages?: string, tags?: string, categories?: string): Promise<DG.ViewBase | null> {
   const handler = new ViewHandler();
-  await handler.init(date, groups, packages, path);
+  await handler.init(date, groups, packages, tags, categories, path);
   return handler.view;
 }
 

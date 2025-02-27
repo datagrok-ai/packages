@@ -1,0 +1,382 @@
+{
+  "#type": "ViewLayout",
+  "table": {
+    "id": "48498f80-c210-11ef-9cb9-7bfcfe94b295"
+  },
+  "type": "TableView",
+  "viewStateMap": {
+    "containerType": "horizontal",
+    "state": {
+      "width": 2032,
+      "height": 1009
+    },
+    "children": [
+      {
+        "containerType": "vertical",
+        "state": {
+          "width": 815,
+          "height": 1009
+        },
+        "children": [
+          {
+            "containerType": "fill",
+            "state": {
+              "width": 815,
+              "height": 645,
+              "documentManager": true
+            },
+            "children": [
+              {
+                "containerType": "panel",
+                "state": {
+                  "width": 815,
+                  "height": 645,
+                  "element": {
+                    "id": "b02a15f0-e920-11ef-d702-21d0f7e167a1",
+                    "type": "Grid",
+                    "look": {
+                      "#type": "GridLook",
+                      "showAddNewRowIcon": true,
+                      "addNewRowOnLastRowEdit": true,
+                      "sortByColumnNames": [
+                        "test"
+                      ],
+                      "sortTypes": [
+                        false
+                      ],
+                      "topLevelDefaultMenu": true,
+                      "allowColumnMenu": true,
+                      "columns": [
+                        {
+                          "width": 48,
+                          "backgroundColor": 4294440951,
+                          "customName": "",
+                          "cellType": "row header",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "isColorCoded": true,
+                          "width": 58,
+                          "columnName": "backup",
+                          "colorCodingType": "Categorical",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 58,
+                          "columnName": "worker",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 57,
+                          "columnName": "browser",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 143,
+                          "columnName": "test",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 67,
+                          "columnName": "passed",
+                          "cellType": "bool",
+                          "colorCodingCategorical": {
+                            "false": 4292224808,
+                            "true": 4281114668
+                          },
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 82,
+                          "columnName": "duration",
+                          "cellType": "number",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 105,
+                          "columnName": "started",
+                          "cellType": "number",
+                          "format": "M/d/yyyy HH:mm:ss.fff",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 37,
+                          "columnName": "batch",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 80,
+                          "columnName": "category",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        },
+                        {
+                          "width": 68,
+                          "columnName": "package",
+                          "headerCellStyle": {
+                            "vertAlign": "bottom",
+                            "textWrap": "words"
+                          }
+                        }
+                      ]
+                    },
+                    "title": "result",
+                    "default": true
+                  }
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 815,
+              "height": 363,
+              "element": {
+                "id": "b02a3d00-e920-11ef-b123-c3cd77a6dc34",
+                "type": "Trellis plot",
+                "look": {
+                  "#type": "TrellisPlotLook",
+                  "xColumnNames": [
+                    "batch"
+                  ],
+                  "yColumnNames": [
+                    "backup"
+                  ],
+                  "allowViewerFullScreen": false,
+                  "innerViewerLook": {
+                    "#type": "PieChartLook",
+                    "categoryColumnName": "passed",
+                    "includeNulls": false,
+                    "segmentAngleColumnName": "started",
+                    "showInnerPercent": true,
+                    "autoLayout": false,
+                    "showInnerLabel": false,
+                    "showColumnSelector": false,
+                    "showMouseOverRowGroup": false,
+                    "marginLeft": 5,
+                    "marginTop": 5,
+                    "marginRight": 5,
+                    "marginBottom": 5,
+                    "legendVisibility": "Never",
+                    "table": "result",
+                    "legendPosition": "Auto"
+                  },
+                  "globalScale": true,
+                  "title": "Pass rate by backup size",
+                  "legendPosition": "Auto"
+                },
+                "title": "Pass rate by backup size"
+              }
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "containerType": "vertical",
+        "state": {
+          "width": 705,
+          "height": 1009
+        },
+        "children": [
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 705,
+              "height": 512,
+              "element": {
+                "id": "b02a3d00-e920-11ef-cd27-43f335123777",
+                "type": "Box plot",
+                "look": {
+                  "#type": "BoxPlotLook",
+                  "categoryColumnNames": [
+                    "batch",
+                    "backup"
+                  ],
+                  "valueColumnName": "duration",
+                  "markerColorColumnName": "backup",
+                  "markerSizeColumnName": "",
+                  "title": "Boxplot of duration grouped by backup size",
+                  "legendPosition": "Auto"
+                },
+                "title": "Boxplot of duration grouped by backup size"
+              }
+            },
+            "children": []
+          },
+          {
+            "containerType": "panel",
+            "state": {
+              "width": 705,
+              "height": 496,
+              "element": {
+                "id": "b02a3d00-e920-11ef-82ce-3d911a9a1ed3",
+                "type": "Trellis plot",
+                "look": {
+                  "#type": "TrellisPlotLook",
+                  "xColumnNames": [
+                    "category"
+                  ],
+                  "yColumnNames": [
+                    "batch",
+                    "backup"
+                  ],
+                  "innerViewerLook": {
+                    "#type": "PieChartLook",
+                    "categoryColumnName": "passed",
+                    "segmentAngleColumnName": "started",
+                    "showInnerPercent": true,
+                    "autoLayout": false,
+                    "showInnerLabel": false,
+                    "showColumnSelector": false,
+                    "showMouseOverRowGroup": false,
+                    "marginLeft": 5,
+                    "marginTop": 5,
+                    "marginRight": 5,
+                    "marginBottom": 5,
+                    "legendVisibility": "Never",
+                    "table": "result",
+                    "legendPosition": "Auto"
+                  },
+                  "title": "Pass rate by test category",
+                  "legendPosition": "Auto"
+                },
+                "title": "Pass rate by test category"
+              }
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "floating": [],
+    "tableId": "48498f80-c210-11ef-9cb9-7bfcfe94b295",
+    "tableName": "Stress tests"
+  },
+  "columns": [
+    {
+      "name": "duration",
+      "type": "int",
+      "id": "2fe4fd50-e920-11ef-8bcc-1f3094fee427",
+      "friendlyName": "Duration",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-b736-27a8e59a4578"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-e5f6-9f6d22a9de67"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "4",
+        ".id": "2fe4fd50-e920-11ef-8bcc-1f3094fee427"
+      }
+    },
+    {
+      "name": "backup",
+      "type": "string",
+      "id": "2fe4d640-e920-11ef-c979-0538253f314c",
+      "friendlyName": "Backup",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-d5bb-a9e65aac4199"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-a7fb-837d80afac38"
+        },
+        {
+          "tag": ".color-coding-type",
+          "id": "fe724d80-e920-11ef-c699-b7dc05b8d73e"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "3",
+        ".id": "2fe4d640-e920-11ef-c979-0538253f314c",
+        ".color-coding-type": "Categorical"
+      }
+    },
+    {
+      "name": "batch",
+      "type": "string",
+      "id": "2fe4d640-e920-11ef-d453-2950a77f5683",
+      "friendlyName": "Batch",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-d76d-8f4245287935"
+        },
+        {
+          "tag": "friendlyName",
+          "id": "fe724d80-e920-11ef-c229-05dc896e229d"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-f179-bfc11e9a495a"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "2",
+        "friendlyName": "#",
+        ".id": "2fe4d640-e920-11ef-d453-2950a77f5683"
+      }
+    },
+    {
+      "name": "category",
+      "type": "string",
+      "id": "2fe4fd50-e920-11ef-9260-b5c25ff46d2f",
+      "friendlyName": "Category",
+      "entityTags": [
+        {
+          "tag": ".semantic-detection-duration",
+          "id": "fe724d80-e920-11ef-e592-cbe3cd313e3c"
+        },
+        {
+          "tag": ".id",
+          "id": "fe724d80-e920-11ef-dbf0-89e956f64c50"
+        }
+      ],
+      "metaParams": {
+        ".semantic-detection-duration": "4",
+        ".id": "2fe4fd50-e920-11ef-9260-b5c25ff46d2f"
+      }
+    }
+  ],
+  "id": "dd21b252-f15e-4be8-aa5a-a49d60b488e9",
+  "name": "StressTests",
+  "friendlyName": "Stress tests"
+}

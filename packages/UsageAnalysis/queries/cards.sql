@@ -8,7 +8,7 @@
 --test: UniqueUsersCount(date='today', ['1ab8b38d-9c4e-4b1e-81c3-ae2bde3e12c5'], ['all'])
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id
@@ -36,7 +36,7 @@ inner join users_sessions s on e.session_id = s.id
 inner join users u on u.id = s.user_id
 inner join dates d on e.event_time between d.min_prev_date and d.max_date
 inner join selected_groups sg on u.group_id = sg.id
-where (coalesce(pp.name, pp1.name, pp2.name, 'Core') = any(@packages) or @packages = ARRAY['all']::varchar[])
+where (coalesce(pp.name, pp1.name, pp2.name, 'Core') = any(@packages) or @packages = ARRAY['all'])
 )
 select (select count(distinct res.uid) as count1 from res where period = 1),
 (select count(distinct res.uid) as count2 from res where period = 2)
@@ -52,7 +52,7 @@ select (select count(distinct res.uid) as count1 from res where period = 1),
 --test: NewUsersCount(date='today', ['1ab8b38d-9c4e-4b1e-81c3-ae2bde3e12c5'])
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id
@@ -83,7 +83,7 @@ select (select count(distinct res.uid) as count1 from res where period = 1),
 --test: SessionsCount(date='today', ['1ab8b38d-9c4e-4b1e-81c3-ae2bde3e12c5'])
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id
@@ -118,7 +118,7 @@ select (select count(distinct res.eid) as count1 from res where period = 1),
 --test1: ViewsCount(date='today', ['1ab8b38d-9c4e-4b1e-81c3-ae2bde3e12c5'])
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id
@@ -151,7 +151,7 @@ select (select count(distinct res.qid) as count1 from res where period = 1),
 --test: ConnectionsCount(date='today', ['1ab8b38d-9c4e-4b1e-81c3-ae2bde3e12c5'], ['all'])
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id
@@ -171,7 +171,7 @@ inner join users u on u.id = c.author_id
 inner join dates d on c.created_on between d.min_prev_date and d.max_date
 inner join selected_groups sg on u.group_id = sg.id
 where en.is_deleted = false
-and (coalesce(pp.name, 'Core') = any(@packages) or @packages = ARRAY['all']::varchar[])
+and (coalesce(pp.name, 'Core') = any(@packages) or @packages = ARRAY['all'])
 )
 select (select count(distinct res.cid) as count1 from res where period = 1),
 (select count(distinct res.cid) as count2 from res where period = 2)
@@ -188,7 +188,7 @@ select (select count(distinct res.cid) as count1 from res where period = 1),
 --test: QueriesCount(date='today', ['1ab8b38d-9c4e-4b1e-81c3-ae2bde3e12c5'], ['all'])
 with recursive selected_groups as (
   select id from groups
-  where id::varchar = any(@groups)
+  where id = any(@groups)
   union
   select gr.child_id as id from selected_groups sg
   join groups_relations gr on sg.id = gr.parent_id
@@ -208,7 +208,7 @@ inner join users u on u.id = q.author_id
 inner join dates d on q.created_on between d.min_prev_date and d.max_date
 inner join selected_groups sg on u.group_id = sg.id
 where en.is_deleted = false
-and (coalesce(pp.name, 'Core') = any(@packages) or @packages = ARRAY['all']::varchar[])
+and (coalesce(pp.name, 'Core') = any(@packages) or @packages = ARRAY['all'])
 )
 select (select count(distinct res.qid) as count1 from res where period = 1),
 (select count(distinct res.qid) as count2 from res where period = 2)

@@ -83,7 +83,7 @@
 #argument: t
   t0 = 0.0   {units: min; caption: Initial; category: Time}                       [Initial time of simulation]
   t1 = 1000  {units: min; caption: Final;   category: Time; min: 500; max: 1000}  [Final time of simulation]
-   h = 1     {units: min; caption: Step;    category: Time; min: 0.1; max: 2}     [Time step of simlulation]
+   h = 1     {units: min; caption: Step;    category: Time; min: 0.1; max: 2}     [Time step of simulation]
 
 #inits:  
   FFox     = 0.2   {units: mmol/L; category: Initial values; min: 0.15; max: 0.25; step: 0.01}  [FF oxidized]
@@ -99,22 +99,6 @@
   yO2P     = 0.209 {units: atm;    category: Initial values}                                    [Atm headspace]
   CYST     = 0     {units: mmol/L; category: Initial values}                                    [Cystamine]
   VL       = 7.2   {units: L;      category: Initial values}                                    [Liquid volume]
-
-#output:
-  t  
-  FFox     {caption: FFox(t)} 
-  KKox     {caption: KKox(t)}
-  FFred    {caption: FFred(t)}
-  KKred    {caption: KKred(t)}
-  Ffree    {caption: Ffree(t)}
-  Kfree    {caption: Kfree(t)}
-  FKred    {caption: FKred(t)}
-  FKox     {caption: FKox(t)}
-  MEAthiol {caption: MEAthiol(t)}
-  CO2      {caption: CO2(t)}
-  yO2P     {caption: yO2P(t)}
-  CYST     {caption: CYST(t)}
-  VL       {caption: VL(t)}
     
 #constants:
    VLinit = 7.2

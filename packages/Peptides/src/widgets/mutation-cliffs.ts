@@ -34,8 +34,32 @@ export function mutationCliffsWidget(
     addExpandIconGen('Mutation Cliffs pairs', aminoToInput.root, widgetRoot,
       () => {
         const parts = cliffsPairsWidgetParts(table, options);
-        return ui.divV([parts!.aminoToInput.root, parts!.pairsGrid.root, parts!.uniqueSequencesGrid.root],
+        const div = ui.divV([parts!.aminoToInput.root, parts!.pairsGrid.root, parts!.uniqueSequencesGrid.root],
           {style: {width: '100%', height: '100%'}});
+
+        setTimeout(() => {
+          if (document.contains(div)) {
+            const dW = div.offsetWidth;
+            const pairsGridParent = parts!.pairsGrid.canvas?.parentElement;
+            const uniqueSequencesGridParent = parts!.uniqueSequencesGrid.canvas?.parentElement;
+            if (pairsGridParent && uniqueSequencesGridParent) {
+              pairsGridParent.style.height = '100%';
+              uniqueSequencesGridParent.style.height = '100%';
+              uniqueSequencesGridParent.style.marginTop = '20px';
+              if (dW > 200) {
+                const macroMolWidth = Math.max(dW * 0.5, 200);
+                const mutationGridCol = parts!.pairsGrid.columns.byName('Mutation');
+                if (mutationGridCol)
+                  mutationGridCol.width = macroMolWidth;
+                const seqGridCol = parts!.uniqueSequencesGrid.columns.byName(options.sequenceColumnName);
+                if (seqGridCol)
+                  seqGridCol.width = macroMolWidth;
+              }
+            }
+          }
+        }, 500);
+
+        return div;
       });
   }
 
@@ -239,12 +263,14 @@ function cliffsPairsWidgetParts(table: DG.DataFrame, options: MutationCliffsOpti
   pairsGrid.root.style.width = '100% !important';
   uniqueSequencesGrid.root.style.width = '100% !important';
   setTimeout(() => {
+    pairsGrid.autoSize(window.innerWidth, 250, undefined, undefined, false);
+    uniqueSequencesGrid.autoSize(window.innerWidth, 250, undefined, undefined, false);
     pairsGrid.root.style.removeProperty('width');
     pairsGrid.root.style.setProperty('width', '100%');
     uniqueSequencesGrid.root.style.removeProperty('width');
     uniqueSequencesGrid.root.style.setProperty('width', '100%');
-    pairsGrid.root.style.minHeight = '200px';
-    uniqueSequencesGrid.root.style.minHeight = '200px';
+    pairsGrid.root.style.minHeight = '70px';// 4.02 5062, ANPK
+    uniqueSequencesGrid.root.style.minHeight = '100px';
     pairsGrid.root.style.height = 'unset';
     uniqueSequencesGrid.root.style.height = 'unset';
   }, 200);

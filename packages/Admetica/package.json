@@ -13,8 +13,8 @@
     "directory": "packages/Admetica"
   },
   "dependencies": {
-    "@datagrok-libraries/tutorials": "^1.5.2",
-    "@datagrok-libraries/utils": "^4.4.0",
+    "@datagrok-libraries/tutorials": "^1.5.4",
+    "@datagrok-libraries/utils": "^4.4.1",
     "cash-dom": "^8.1.5",
     "datagrok-api": "^1.23.0",
     "dayjs": "=1.11.10"

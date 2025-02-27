@@ -1,5 +1,9 @@
 # DBTests changelog
 
+## 1.1.3 (2025-02-18)
+
+* Test fixes
+
 ## 1.1.1 (2024-10-21)
 
 * Test fixes

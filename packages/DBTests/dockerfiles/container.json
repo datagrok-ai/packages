@@ -1,1 +1,1 @@
-{"on_demand": true, "timeout_minutes": 15}
+{"on_demand": true, "shutdown_timeout": 30}

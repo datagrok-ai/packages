@@ -328,11 +328,12 @@ export class FitGridCellHandler extends DG.ObjectHandler {
           const seriesStatistics = calculateSeriesStats(series, i, chartLogOptions, gridCell);
   
           const color = getSeriesColor(series, i, ColorType.FIT_LINE);
+          const seriesName = series.name ?? 'series ' + i;
           host.appendChild(ui.panel([
-            ui.h1(series.name ?? 'series ' + i, {style: {color: color}}),
+            ui.h1(seriesName, {style: {color: color}}),
             ui.input.form(seriesStatistics, statisticsProperties, {
               onCreated: (input) => input.root.appendChild(ui.iconFA('plus', async () => {
-                  const funcParams = {df: gridCell.cell.dataFrame, colName: gridCell.gridColumn.name, propName: input.property.name, seriesName: series.name, seriesNumber: i};
+                  const funcParams = {df: gridCell.cell.dataFrame, colName: gridCell.gridColumn.name, propName: input.property.name, seriesName: seriesName, seriesNumber: i};
                   await DG.Func.find({name: 'addStatisticsColumn'})[0].prepare(funcParams).call(undefined, undefined, {processed: false});
                 }, `Calculate ${input.property.name} for the whole column`))
             })

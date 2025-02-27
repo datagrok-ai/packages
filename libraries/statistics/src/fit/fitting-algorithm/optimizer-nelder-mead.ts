@@ -15,7 +15,7 @@ export type NelderMeadSettings = {
 /** Default values for the Nelder-Mead method */
 export enum NELDER_MEAD_DEFAULTS {
   TOLERANCE = 0.01,
-  MAX_ITER = 20,
+  MAX_ITER = 30,
   NON_ZERO_PARAM = 0.0001,
   INITIAL_SCALE = 0.02,
   SCALE_REFLECTION = 1,

@@ -1,5 +1,5 @@
 export {FunctionView, ComputationView, PipelineView, RichFunctionView, RunComparisonView,
-  SensitivityAnalysisView} from './function-views';
+  SensitivityAnalysisView, CustomFunctionView} from './function-views';
 export {historyUtils} from './history-utils/src/history-utils';
 export {UiUtils} from './shared-components';
 export {

@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as DG from 'datagrok-api/dg';
 
 import wu from 'wu';
@@ -5,7 +7,7 @@ import wu from 'wu';
 /* eslint-disable max-len */
 import {ALIGNMENT, ALPHABET, candidateAlphabets, getSplitterWithSeparator, NOTATION, positionSeparator, splitterAsFasta, splitterAsHelm, TAGS} from '@datagrok-libraries/bio/src/utils/macromolecule/index';
 import {INotationProvider, ISeqSplitted, SeqColStats, SplitterFunc,} from '@datagrok-libraries/bio/src/utils/macromolecule/types';
-import {detectAlphabet, splitterAsFastaSimple, StringListSeqSplitted} from '@datagrok-libraries/bio/src/utils/macromolecule/utils';
+import {detectAlphabet, detectHelmAlphabet, splitterAsFastaSimple, StringListSeqSplitted} from '@datagrok-libraries/bio/src/utils/macromolecule/utils';
 import {mmDistanceFunctions, MmDistanceFunctionsNames} from '@datagrok-libraries/ml/src/macromolecule-distance-functions';
 import {mmDistanceFunctionType} from '@datagrok-libraries/ml/src/macromolecule-distance-functions/types';
 import {getMonomerLibHelper, IMonomerLibHelper} from '@datagrok-libraries/bio/src/monomer-works/monomer-utils';
@@ -122,6 +124,12 @@ export class SeqHandler implements ISeqHandler {
         const alphabetIsMultichar = Object.keys(uh.stats.freq).some((m) => m.length > 1);
         uh.column.setTag(TAGS.alphabetSize, alphabetSize.toString());
         uh.column.setTag(TAGS.alphabetIsMultichar, alphabetIsMultichar ? 'true' : 'false');
+      }
+    } else if (units === NOTATION.HELM) {
+      let alphabet = uh.column.getTag(TAGS.alphabet);
+      if (alphabet === null) {
+        alphabet = detectHelmAlphabet(uh.stats.freq, candidateAlphabets, uh.defaultGapOriginal);
+        uh.column.setTag(TAGS.alphabet, alphabet);
       }
     }
   }
@@ -539,6 +547,7 @@ export class SeqHandler implements ISeqHandler {
     // convert the peptides list to a set for faster lookup
     const peptidesSet = new Set(peptides);
     // get splitter for given separator and check if all monomers are in the lib
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const splitterFunc = getSplitterWithSeparator(this.separator!);
     // iterate over the columns, split them and check if all monomers are in the lib
     //TODO maybe add missing threshold so that if there are not too many missing monomers
@@ -596,12 +605,12 @@ export class SeqHandler implements ISeqHandler {
 
     const isNucleotide = srcSeq.startsWith('RNA');
     // items can be monomers or helms
-    const helmItemsArray = this.splitter(srcSeq);
+    const helmItemsArray = splitterAsHelm(srcSeq);
     const tgtMonomersArray: string[] = [];
     for (let posIdx = 0; posIdx < helmItemsArray.length; ++posIdx) {
       let om: string = helmItemsArray.getOriginal(posIdx);
       if (isNucleotide)
-        om = om.replace(HELM_WRAPPERS_REGEXP, '');
+        om = om.replace(HELM_WRAPPERS_REGEXP, '$1');
       if (om === GapOriginals[NOTATION.HELM])
         tgtMonomersArray.push(tgtGapOriginal);
       else if (this.toFasta(tgtNotation as NOTATION) && om.length > 1) {

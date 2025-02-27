@@ -200,16 +200,5 @@ def admetica_predict():
       "result": None
     }), 500
 
-@app.route('/health_check', methods=['GET'])
-def health_check():
-  try:
-    return jsonify({"success": True, "error": None, "result": "Service is up and running"}), 200
-  except Exception as e:
-    return jsonify({
-      "success": False,
-      "error": str(e),
-      "result": None
-    }), 500
-
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=6678, debug=False)

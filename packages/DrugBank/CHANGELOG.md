@@ -1,5 +1,9 @@
 # DrugBank changelog
 
+## 1.1.1 (2025-02-25)
+
+Refactoring
+
 ## 1.0.17 (2024-05-28)
 
 Update of @datagrok-libraries/utils

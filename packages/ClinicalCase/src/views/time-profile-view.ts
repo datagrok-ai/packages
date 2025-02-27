@@ -1,15 +1,17 @@
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
-import {study} from '../clinical-study';
-import {addDataFromDmDomain, createPivotedDataframeAvg, getUniqueValues, getVisitNamesAndDays} from '../data-preparation/utils';
-import {ETHNIC, LAB_RES_N, LAB_TEST, VISIT_DAY, VISIT_NAME, RACE, SEX, SUBJECT_ID, VS_TEST, VS_RES_N} from '../constants/columns-constants';
+import {addDataFromDmDomain, createPivotedDataframeAvg,
+  getUniqueValues, getVisitNamesAndDays} from '../data-preparation/utils';
+import {ETHNIC, LAB_RES_N, LAB_TEST, VISIT_DAY, VISIT_NAME, RACE, SEX,
+  SUBJECT_ID, VS_TEST, VS_RES_N} from '../constants/columns-constants';
 import {dynamicComparedToBaseline} from '../data-preparation/data-preparation';
 import {updateDivInnerHTML} from '../utils/utils';
 import {_package} from '../package';
 import {ClinicalCaseViewBase} from '../model/ClinicalCaseViewBase';
 import {TRT_ARM_FIELD, VIEWS_CONFIG} from '../views-config';
 import {TIME_PROFILE_VIEW_NAME} from '../constants/view-names-constants';
+import {studies} from '../clinical-study';
 
 
 export class TimeProfileView extends ClinicalCaseViewBase {
@@ -35,21 +37,26 @@ export class TimeProfileView extends ClinicalCaseViewBase {
   linechart: any;
   selectedDomain: string;
 
-  constructor(name) {
-    super({});
+  constructor(name, studyId) {
+    super(name, studyId);
     this.name = name;
     this.helpUrl = `${_package.webRoot}/views_help/time_profile.md`;
   }
 
   createView(): void {
-    this.splitBy = [VIEWS_CONFIG[TIME_PROFILE_VIEW_NAME][TRT_ARM_FIELD], SEX, RACE, ETHNIC].filter((it) => study.domains.dm && study.domains.dm.columns.names().includes(it));
-    this.domains = this.domains.filter((it) => study.domains[it] !== null && !this.optDomainsWithMissingCols.includes(it));
+    this.splitBy = [VIEWS_CONFIG[TIME_PROFILE_VIEW_NAME][TRT_ARM_FIELD], SEX, RACE, ETHNIC]
+      .filter((it) => studies[this.studyId].domains.dm &&
+      studies[this.studyId].domains.dm.columns.names().includes(it));
+    this.domains = this.domains.filter((it) =>
+      studies[this.studyId].domains[it] !== null && !this.optDomainsWithMissingCols.includes(it));
     this.selectedDomain = this.domains[0];
-    this.uniqueLabValues = Array.from(getUniqueValues(study.domains[this.selectedDomain], this.domainFields[this.selectedDomain]['test']));
-    this.uniqueVisits = Array.from(getUniqueValues(study.domains[this.selectedDomain], VISIT_NAME));
+    this.uniqueLabValues = Array.from(getUniqueValues(studies[this.studyId].domains[this.selectedDomain],
+      this.domainFields[this.selectedDomain]['test']));
+    this.uniqueVisits = Array.from(getUniqueValues(studies[this.studyId].domains[this.selectedDomain], VISIT_NAME));
     this.selectedLabValue = this.uniqueLabValues[0] as string;
     this.selectedType = this.types[0];
-    this.visitNamesAndDays = getVisitNamesAndDays(study.domains[this.selectedDomain], VISIT_NAME, VISIT_DAY);
+    this.visitNamesAndDays = getVisitNamesAndDays(studies[this.studyId].domains[this.selectedDomain],
+      VISIT_NAME, VISIT_DAY);
     this.bl = this.visitNamesAndDays[0].name;
     this.ep = this.visitNamesAndDays[this.visitNamesAndDays.length-1].name;
     this.createLaboratoryDataframe();
@@ -57,10 +64,12 @@ export class TimeProfileView extends ClinicalCaseViewBase {
     const domainChoices = ui.input.choice('', {value: this.selectedDomain, items: this.domains});
     domainChoices.onChanged.subscribe((value) => {
       this.selectedDomain = value;
-      this.uniqueLabValues = Array.from(getUniqueValues(study.domains[this.selectedDomain], this.domainFields[this.selectedDomain]['test']));
-      this.uniqueVisits = Array.from(getUniqueValues(study.domains[this.selectedDomain], VISIT_NAME));
+      this.uniqueLabValues = Array.from(getUniqueValues(studies[this.studyId].domains[this.selectedDomain],
+        this.domainFields[this.selectedDomain]['test']));
+      this.uniqueVisits = Array.from(getUniqueValues(studies[this.studyId].domains[this.selectedDomain], VISIT_NAME));
       this.selectedLabValue = this.uniqueLabValues[0] as string;
-      this.visitNamesAndDays = getVisitNamesAndDays(study.domains[this.selectedDomain], VISIT_NAME, VISIT_DAY);
+      this.visitNamesAndDays = getVisitNamesAndDays(studies[this.studyId].domains[this.selectedDomain],
+        VISIT_NAME, VISIT_DAY);
       if (this.visitNamesAndDays.findIndex((it) => it.name === this.bl) === -1)
         this.bl = this.visitNamesAndDays[0].name;
 
@@ -86,8 +95,8 @@ export class TimeProfileView extends ClinicalCaseViewBase {
       yColumnNames: [`${this.selectedLabValue} avg(${this.domainFields[this.selectedDomain]['res']})`],
       whiskersType: 'Med | Q1, Q3',
     });
-    if (study.domains.dm) {
-      grok.data.linkTables(study.domains.dm, this.linechart.dataFrame,
+    if (studies[this.studyId].domains.dm) {
+      grok.data.linkTables(studies[this.studyId].domains.dm, this.linechart.dataFrame,
         [SUBJECT_ID], [SUBJECT_ID],
         [DG.SYNC_TYPE.FILTER_TO_FILTER]);
     }
@@ -129,8 +138,8 @@ export class TimeProfileView extends ClinicalCaseViewBase {
       break;
     }
     }
-    if (study.domains.dm) {
-      grok.data.linkTables(study.domains.dm, this.linechart.dataFrame,
+    if (studies[this.studyId].domains.dm) {
+      grok.data.linkTables(studies[this.studyId].domains.dm, this.linechart.dataFrame,
         [SUBJECT_ID], [SUBJECT_ID],
         [DG.SYNC_TYPE.FILTER_TO_FILTER]);
     }
@@ -176,20 +185,28 @@ export class TimeProfileView extends ClinicalCaseViewBase {
   }
 
   private createLaboratoryDataframe() {
-    let df = this.filterDataFrameByDays(study.domains[this.selectedDomain].clone());
-    if (this.splitBy.length)
-      df = addDataFromDmDomain(df, study.domains.dm, [SUBJECT_ID, VISIT_DAY, VISIT_NAME].concat(Object.values(this.domainFields[this.selectedDomain])), this.splitBy);
+    let df = this.filterDataFrameByDays(studies[this.studyId].domains[this.selectedDomain].clone());
+    if (this.splitBy.length) {
+      df = addDataFromDmDomain(df, studies[this.studyId].domains.dm,
+        [SUBJECT_ID, VISIT_DAY, VISIT_NAME].concat(Object.values(this.domainFields[this.selectedDomain])),
+        this.splitBy);
+    }
 
-    this.laboratoryDataFrame = createPivotedDataframeAvg(df, [SUBJECT_ID, VISIT_DAY], this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res'], this.splitBy);
+    this.laboratoryDataFrame = createPivotedDataframeAvg(df, [SUBJECT_ID, VISIT_DAY],
+      this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res'], this.splitBy);
   }
 
   private createrelativeChangeFromBlDataframe() {
-    let df = this.filterDataFrameByDays(study.domains[this.selectedDomain].clone());
-    dynamicComparedToBaseline(df, this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res'], this.bl, VISIT_NAME, 'LAB_DYNAMIC_BL', true);
-    if (this.splitBy.length)
-      df = addDataFromDmDomain(df, study.domains.dm, [SUBJECT_ID, VISIT_DAY, VISIT_NAME, this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res']], this.splitBy);
+    let df = this.filterDataFrameByDays(studies[this.studyId].domains[this.selectedDomain].clone());
+    dynamicComparedToBaseline(df, this.domainFields[this.selectedDomain]['test'],
+      this.domainFields[this.selectedDomain]['res'], this.bl, VISIT_NAME, 'LAB_DYNAMIC_BL', true);
+    if (this.splitBy.length) {
+      df = addDataFromDmDomain(df, studies[this.studyId].domains.dm, [SUBJECT_ID, VISIT_DAY, VISIT_NAME,
+        this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res']], this.splitBy);
+    }
 
-    this.relativeChangeFromBlDataFrame = createPivotedDataframeAvg(df, [SUBJECT_ID, VISIT_DAY], this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res'], this.splitBy);
+    this.relativeChangeFromBlDataFrame = createPivotedDataframeAvg(df, [SUBJECT_ID, VISIT_DAY],
+      this.domainFields[this.selectedDomain]['test'], this.domainFields[this.selectedDomain]['res'], this.splitBy);
   }
 
 

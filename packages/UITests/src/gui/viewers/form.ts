@@ -91,7 +91,7 @@ category('Viewers: Form', () => {
   });
 
   after(async () => {
-    tv.close();
+    tv?.close();
     grok.shell.closeTable(demog);
   }); 
 }, { owner: 'dkovalyov@datagrok.ai' });

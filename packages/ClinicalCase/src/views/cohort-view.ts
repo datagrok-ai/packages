@@ -1,13 +1,12 @@
 import * as grok from 'datagrok-api/grok';
 import * as DG from 'datagrok-api/dg';
 import * as ui from 'datagrok-api/ui';
-import {study} from '../clinical-study';
 import {updateDivInnerHTML} from '../utils/utils';
-import {_package} from '../package';
 import {ClinicalCaseViewBase} from '../model/ClinicalCaseViewBase';
 import {filetrValueFromDf} from '../data-preparation/utils';
 import {InclusionCriterion} from '../model/InclusionCriteria';
 import {DOMAIN, SUBJECT_ID} from '../constants/columns-constants';
+import {studies} from '../clinical-study';
 
 
 export class CohortView extends ClinicalCaseViewBase {
@@ -42,7 +41,8 @@ export class CohortView extends ClinicalCaseViewBase {
     },
     'Operator': {
       type: DG.TYPE.STRING,
-      categories: ['in', 'not in', 'less than', 'less or equal', 'more than', 'more or equal', 'between', 'not between'],
+      categories: ['in', 'not in', 'less than', 'less or equal',
+        'more than', 'more or equal', 'between', 'not between'],
       inclCrit: true,
     },
     'Value': {
@@ -91,15 +91,15 @@ export class CohortView extends ClinicalCaseViewBase {
   applyChangesDiv = ui.div();
   cohortsChanged = false;
 
-  constructor(name) {
-    super({});
+  constructor(name, studyId) {
+    super(name, studyId);
     this.name = name;
   }
 
   loaded = false;
 
   createView(): void {
-    this.domains = study.domains.all().map((it) => it.name);
+    this.domains = studies[this.studyId].domains.all().map((it) => it.name);
     this.columnsMeta['Domain'].categories = this.domains;
     this.savedCohorts = this.createSavedDataDf('cohort');
     this.cohortsGrid = this.createGrid(this.savedCohorts);
@@ -150,7 +150,7 @@ export class CohortView extends ClinicalCaseViewBase {
         if (this.savedInclCriteria.currentCol.name === 'Domain') {
           const selectedDomain = this.savedInclCriteria.get('Domain', this.savedInclCriteria.currentRowIdx);
           this.savedInclCriteria.getCol('Event').meta.choices = selectedDomain ?
-            study.domains[selectedDomain].columns.names().filter((it) => it !== DOMAIN) : [];
+            studies[this.studyId].domains[selectedDomain].columns.names().filter((it) => it !== DOMAIN) : [];
 
           setTimeout(() => {
             this.savedInclCriteria.set('Event', this.savedInclCriteria.currentRowIdx, '');
@@ -258,7 +258,6 @@ export class CohortView extends ClinicalCaseViewBase {
         grid.columns.byName(name).cellType = 'html';
     });
 
-    const self = this;
     grid.onCellPrepare((gc) => {
       if (gc.isTableCell) {
         if (gc.tableColumn.name === 'Delete') {
@@ -299,12 +298,14 @@ export class CohortView extends ClinicalCaseViewBase {
       .groupBy(this.savedInclCriteria.columns.names())
       .where({'Cohort': `${cohortName}`})
       .aggregate();
-    let subjByCrit = DG.DataFrame.fromColumns([study.domains.dm.col(SUBJECT_ID)]);
+    let subjByCrit = DG.DataFrame.fromColumns([studies[this.studyId].domains.dm.col(SUBJECT_ID)]);
     for (let i = 0; i < inclCrit.rowCount; i++) {
-      const condition = this.getConditionQuery(inclCrit.get('event', i), inclCrit.get('operator', i), inclCrit.get('value', i));
+      const condition = this.getConditionQuery(inclCrit.get('event', i),
+        inclCrit.get('operator', i), inclCrit.get('value', i));
       const min = inclCrit.col('Min').isNone(i) ? null : inclCrit.get('min', i);
       const max = inclCrit.col('Max').isNone(i) ? null : inclCrit.get('max', i);
-      const subjectsWithCrit = this.getSubjectIds(i, inclCrit.get('domain', i), inclCrit.get('event', i), condition, min, max);
+      const subjectsWithCrit = this.getSubjectIds(i, inclCrit.get('domain', i),
+        inclCrit.get('event', i), condition, min, max);
       subjByCrit = grok.data.joinTables(subjByCrit,
         subjectsWithCrit,
         [SUBJECT_ID],
@@ -316,11 +317,12 @@ export class CohortView extends ClinicalCaseViewBase {
     }
     this.createTotalCritNumberCol(subjByCrit);
     grok.shell.addTableView(subjByCrit);
-    this.createCohortCol(study.domains.dm, cohortName, subjByCrit, minReqCrit);
+    this.createCohortCol(studies[this.studyId].domains.dm, cohortName, subjByCrit, minReqCrit);
   }
 
-  private getSubjectIds(critNumber: number, domain: string, event: string, condition: string, min?: number, max?: number) {
-    let subjects = study.domains[domain]
+  private getSubjectIds(critNumber: number, domain: string, event: string,
+    condition: string, min?: number, max?: number) {
+    let subjects = studies[this.studyId].domains[domain]
       .groupBy([SUBJECT_ID, event])
       .where(condition)
       .count()

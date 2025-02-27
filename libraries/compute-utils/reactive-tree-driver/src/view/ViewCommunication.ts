@@ -1,3 +1,6 @@
+import * as grok from 'datagrok-api/grok';
+import * as ui from 'datagrok-api/ui';
+import * as DG from 'datagrok-api/dg';
 import {PipelineConfigurationProcessed} from '../config/config-processing-utils';
 import {ItemId, NqName} from '../data/common-types';
 
@@ -86,4 +89,10 @@ export interface ResetToConsistent {
   ioName: string;
 }
 
-export type ViewConfigCommands = AddDynamicItem | LoadDynamicItem | SaveDynamicItem | RemoveDynamicItem | MoveDynamicItem | RunStep | RunAction | RunSequence | SavePipeline | LoadPipeline | InitPipeline | ResetToConsistent;
+export interface UpdateFuncCall {
+  event: 'updateFuncCall',
+  stepUuid: string;
+  funcCall: DG.FuncCall,
+}
+
+export type ViewConfigCommands = AddDynamicItem | LoadDynamicItem | SaveDynamicItem | RemoveDynamicItem | MoveDynamicItem | RunStep | RunAction | RunSequence | SavePipeline | LoadPipeline | InitPipeline | ResetToConsistent | UpdateFuncCall;

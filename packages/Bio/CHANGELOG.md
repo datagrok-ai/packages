@@ -1,5 +1,19 @@
 # Bio changelog
 
+## 2.19.0 (2025-02-20)
+
+* Correct conversion and highlighting of toAtomicLevel
+* Added context actions
+
+## 2.18.4 (2025-02-17)
+
+* ToAtomicLevel support for DNA/RNA
+* Monomer manager: Fix correcting R-group lines
+
+## 2.18.3 (2025-02-10)
+
+Correct molblock conversion in monomer library extraction
+
 ## 2.18.2 (2025-01-22)
 
 Improve grid cell renderer

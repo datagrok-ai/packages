@@ -24,7 +24,7 @@ export const Viewer = Vue.defineComponent({
     viewerChanged: (v: DG.Viewer<any> | undefined) => v,
   },
   setup(props, {emit}) {
-    const currentDf = Vue.computed(() => props.dataFrame);
+    const currentDf = Vue.computed(() => props.dataFrame ? Vue.markRaw(props.dataFrame) : undefined);
     const viewerChangedCb = (event: any) => {
       emit('viewerChanged', event.detail);
     };

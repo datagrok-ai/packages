@@ -37,3 +37,7 @@ export interface JiraIssuesList {
     total:number;
     issues: JiraIssue[];
 } 
+
+export interface ErrorMessageResponse {
+    errorMessages: string
+}

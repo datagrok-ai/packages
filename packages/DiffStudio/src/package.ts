@@ -4,14 +4,14 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {initMatrOperApi} from '../wasm/matrix-operations-api';
-import {solveDefault, solveIVP} from './solver';
-import {ODEs, SolverOptions} from './solver-tools/solver-defs';
+import {solveDefault, solveIVP} from './solver-tools';
 import {DiffStudio} from './app';
 import {getIVP, IVP, getScriptLines, getScriptParams} from './scripting-tools';
 
 import {getBioreactorSim, getPkPdSim, showBioHelpPanel, showPkPdHelpPanel, getBallFlightSim} from './demo-models';
 import {DF_NAME} from './constants';
+
+import {ODEs, SolverOptions} from '@datagrok/diff-grok';
 
 export const _package = new DG.Package();
 
@@ -21,9 +21,7 @@ export function info() {
 }
 
 //tags: init
-export async function init() {
-  await initMatrOperApi();
-}
+export async function init() {}
 
 //name: solve
 //input: object problem

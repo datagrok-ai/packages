@@ -70,7 +70,7 @@ export class SequenceSearchBaseViewer extends DG.JsViewer {
     this.render();
   }
 
-  /** For tests */ public computeRequested: boolean;
+  /** For tests */ public computeRequested: boolean = false;
   public renderPromise: Promise<void> = Promise.resolve();
 
   protected render(computeData = true): void {

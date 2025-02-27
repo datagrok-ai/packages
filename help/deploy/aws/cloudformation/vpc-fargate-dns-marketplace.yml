@@ -42,6 +42,9 @@ Mappings:
     GrokConnect:
       domain: 709825985650.dkr.ecr.us-east-1.amazonaws.com
       repo: datagrok/grok_connect
+    GrokPipe:
+      domain: 709825985650.dkr.ecr.us-east-1.amazonaws.com
+      repo: datagrok/grok_pipe
     GrokSpawner:
       domain: 709825985650.dkr.ecr.us-east-1.amazonaws.com
       repo: datagrok/grok_spawner
@@ -55,6 +58,9 @@ Mappings:
       domain: 709825985650.dkr.ecr.us-east-1.amazonaws.com
       repo: datagrok/kaniko
       version: v1.12.1
+    Rabbitmq:
+      domain: 709825985650.dkr.ecr.us-east-1.amazonaws.com
+      repo: datagrok/rabbitmq
     Searchdomain:
       domain: 709825985650.dkr.ecr.us-east-1.amazonaws.com
       repo: datagrok/ecs-searchdomain-sidecar
@@ -95,6 +101,8 @@ Metadata:
       Parameters:
       - DatagrokVersion
       - GrokConnectVersion
+      - GrokPipeVersion
+      - RabbitmqVersion
       - GrokSpawnerVersion
       - JKGVersion
       - JNVersion
@@ -125,6 +133,8 @@ Metadata:
         default: Datagrok Version
       GrokConnectVersion:
         default: Grok Connect Version
+      GrokPipeVersion:
+        default: Grok Pipe Version
       GrokSpawnerVersion:
         default: Grok Spawner Version
       InternetIngressAccess:
@@ -139,6 +149,8 @@ Metadata:
         default: Jupyter Kernel Gateway Version
       JNVersion:
         default: Jupyter Notebook Version
+      RabbitmqVersion:
+        default: RabbitMQ Version
   cfn-lint:
     config:
       ignore_checks:
@@ -215,13 +227,18 @@ Parameters:
     Type: AWS::EC2::VPC::Id
   DatagrokVersion:
     AllowedPattern: ([0-9]+\.[0-9]+\.[0-9]+)|latest|stable|bleeding-edge
-    Default: 1.23.0
+    Default: 1.24.0
     Description: Enter Datagrok docker image version.
     Type: String
   GrokConnectVersion:
     AllowedPattern: ([0-9]+\.[0-9]+\.[0-9]+)|latest|bleeding-edge
-    Default: 2.1.23
+    Default: 2.3.29
     Description: Enter Grok Connect docker image version.
+    Type: String
+  GrokPipeVersion:
+    AllowedPattern: ([0-9]+\.[0-9]+\.[0-9]+)|latest|bleeding-edge
+    Default: bleeding-edge
+    Description: Enter Grok Pipe docker image version.
     Type: String
   GrokSpawnerVersion:
     AllowedPattern: ([0-9]+\.[0-9]+\.[0-9]+)|latest|bleeding-edge
@@ -256,13 +273,17 @@ Parameters:
     Type: String
   JKGVersion:
     AllowedPattern: ([0-9]+\.[0-9]+\.[0-9]+)|latest|bleeding-edge
-    Default: 1.12.0
+    Default: bleeding-edge
     Description: Enter Datagrok Jupyter Kernel Gateway docker image version.
     Type: String
   JNVersion:
     AllowedPattern: ([0-9]+\.[0-9]+\.[0-9]+)|latest|bleeding-edge
     Default: 1.1.1
     Description: Enter Datagrok Jupyter Notebook docker image version.
+    Type: String
+  RabbitmqVersion:
+    Default: 4.0.5-management
+    Description: Enter rabbitmq docker image version.
     Type: String
 Resources:
   Cvm443Ingress:
@@ -793,6 +814,13 @@ Resources:
           Ref: CvmSecurityGroup
         ToPort: 8080
       - Description:
+          Fn::Sub: ${AWS::StackName} Allow internal connections from CVM to Grok Pipe
+        FromPort: 3000
+        IpProtocol: TCP
+        SourceSecurityGroupId:
+          Ref: CvmSecurityGroup
+        ToPort: 3000
+      - Description:
           Fn::Sub: ${AWS::StackName} Allow internal connections from Datagrok to Datagrok
         FromPort: 8080
         IpProtocol: TCP
@@ -815,6 +843,21 @@ Resources:
         SourceSecurityGroupId:
           Ref: DatagrokSecurityGroup
         ToPort: 8000
+      - Description:
+          Fn::Sub: ${AWS::StackName} Allow internal connections from Datagrok to Grok
+            Pipe
+        FromPort: 3000
+        IpProtocol: TCP
+        SourceSecurityGroupId:
+          Ref: DatagrokSecurityGroup
+        ToPort: 3000
+      - Description:
+          Fn::Sub: ${AWS::StackName} Allow internal connections from Datagrok to Rabbitmq
+        FromPort: 5672
+        IpProtocol: TCP
+        SourceSecurityGroupId:
+          Ref: DatagrokSecurityGroup
+        ToPort: 5672
       Tags:
       - Key: Name
         Value:
@@ -894,7 +937,7 @@ Resources:
       DeletionProtection: false
       EnableIAMDatabaseAuthentication: true
       Engine: postgres
-      EngineVersion: '12.15'
+      EngineVersion: '17'
       MasterUserPassword:
         Fn::Sub:
         - '{{resolve:secretsmanager:${secret}:SecretString:password}}'
@@ -1117,34 +1160,24 @@ Resources:
         - Name: GROK_PARAMETERS
           Value:
             Fn::Sub:
-            - '{"capabilities": ["jupyter"], "datlasApiUrl": "${datlasEndpoint}",
-              "db":"datagrok", "dbLogin": "${dbLogin}", "dbPassword":"${dbPassword}","dbPort":${dbPort},"dbServer":"${dbServer}",
-              "jupyterToken":"4b8ed936cf61a1c5e37a8b3a845599941c272de6e29330a0"}'
-            - datlasEndpoint:
-                Fn::Sub:
-                - http://${dns}:8080/api
-                - dns:
-                    Fn::GetAtt:
-                    - DatagrokLoadBalancerInt
-                    - DNSName
-              dbLogin:
-                Fn::Sub:
-                - '{{resolve:secretsmanager:${secret}:SecretString:user}}'
-                - secret:
-                    Ref: DatagrokDbUser
-              dbPassword:
+            - '{"capabilities": ["jupyter"], "jupyterToken":"4b8ed936cf61a1c5e37a8b3a845599941c272de6e29330a0",
+              "isolatesCount": 4, "queuePluginSettings":{ "amqpHost":"${amqpHost}",
+              "amqpPort": 5672, "amqpUser":"guest", "amqpPassword":"${amqpPassword}",
+              "pipeHost":"${pipeHost}", "pipeKey":"${grokPipeApiKey}" }}'
+            - amqpHost:
+                Fn::Sub: rabbit.${AWS::StackName}.datagrok.${AWS::Region}.lb.internal
+              amqpPassword:
                 Fn::Sub:
                 - '{{resolve:secretsmanager:${secret}:SecretString:password}}'
                 - secret:
-                    Ref: DatagrokDbUser
-              dbPort:
-                Fn::GetAtt:
-                - DatagrokDB
-                - Endpoint.Port
-              dbServer:
-                Fn::GetAtt:
-                - DatagrokDB
-                - Endpoint.Address
+                    Ref: RabbitMQPassword
+              grokPipeApiKey:
+                Fn::Sub:
+                - '{{resolve:secretsmanager:${secret}:SecretString:apikey}}'
+                - secret:
+                    Ref: GrokPipeApiKeySecret
+              pipeHost:
+                Fn::Sub: pipe.${AWS::StackName}.datagrok.${AWS::Region}.lb.internal
         Essential: true
         Image:
           Fn::Sub:
@@ -2218,7 +2251,9 @@ Resources:
               "dbLogin": "${dbLogin}", "dbPassword": "${dbPassword}", "dbAdminLogin":
               "${dbAdminLogin}", "dbAdminPassword": "${dbAdminPassword}", "dbSsl":
               false, "deployDemo": false, "deployTestDemo": false, "adminPassword":
-              "${adminPassword}", "adminDevKey": "${adminDevKey}" }'
+              "${adminPassword}", "adminDevKey": "${adminDevKey}", "queuePluginSettings":{
+              "amqpHost":"${amqpHost}", "amqpPort": 5672, "amqpUser":"guest", "amqpPassword":"${amqpPassword}",
+              "pipeHost":"${pipeHost}", "pipeKey":"${grokPipeApiKey}" } }'
             - adminDevKey:
                 Fn::Sub:
                 - '{{resolve:secretsmanager:${secret}:SecretString:password}}'
@@ -2229,6 +2264,13 @@ Resources:
                 - '{{resolve:secretsmanager:${secret}:SecretString:password}}'
                 - secret:
                     Ref: DatagrokAdminPassword
+              amqpHost:
+                Fn::Sub: rabbit.${AWS::StackName}.datagrok.${AWS::Region}.lb.internal
+              amqpPassword:
+                Fn::Sub:
+                - '{{resolve:secretsmanager:${secret}:SecretString:password}}'
+                - secret:
+                    Ref: RabbitMQPassword
               bucket:
                 Ref: DatagrokS3
               dbAdminLogin:
@@ -2259,6 +2301,13 @@ Resources:
                 Fn::GetAtt:
                 - DatagrokDB
                 - Endpoint.Address
+              grokPipeApiKey:
+                Fn::Sub:
+                - '{{resolve:secretsmanager:${secret}:SecretString:apikey}}'
+                - secret:
+                    Ref: GrokPipeApiKeySecret
+              pipeHost:
+                Fn::Sub: pipe.${AWS::StackName}.datagrok.${AWS::Region}.lb.internal
         Essential: true
         Image:
           Fn::Sub:
@@ -2528,6 +2577,221 @@ Resources:
         - Arn
       Family:
         Fn::Sub: ${AWS::StackName}-datagrok-grok_connect
+      Memory: '2048'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
+  GrokPipeApiKeySecret:
+    Properties:
+      Description: Automatically generated API key for Datagrok
+      GenerateSecretString:
+        ExcludeCharacters: '"@/\!#$%^&*()-_=+[]{}|;:,.<>?`~'
+        GenerateStringKey: apikey
+        PasswordLength: 32
+        SecretStringTemplate: '{"apikey": ""}'
+      Name:
+        Fn::Sub: ${AWS::StackName}-GrokPipeApiKey
+    Type: AWS::SecretsManager::Secret
+  GrokPipePrivateDNS:
+    Properties:
+      AliasTarget:
+        DNSName:
+          Fn::GetAtt:
+          - DatagrokLoadBalancerInt
+          - DNSName
+        HostedZoneId:
+          Fn::GetAtt:
+          - DatagrokLoadBalancerInt
+          - CanonicalHostedZoneID
+      Comment:
+        Fn::Sub: ${AWS::StackName} Private Datagrok grok pipe DNS for internal routing
+      HostedZoneId:
+        Ref: DatagrokPrivateDNSZone
+      Name:
+        Fn::Sub: pipe.${AWS::StackName}.datagrok.${AWS::Region}.lb.internal.
+      Type: A
+    Type: AWS::Route53::RecordSet
+  GrokPipeService:
+    DependsOn:
+    - GrokPipeTCP3000IntListener
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - DatagrokCluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      LoadBalancers:
+      - ContainerName: grok_pipe
+        ContainerPort: 3000
+        TargetGroupArn:
+          Ref: GrokPipeTCP3000IntTargetGroup
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+          - Ref: DatagrokSecurityGroup
+          Subnets:
+          - Ref: DatagrokPrivateSubnet1
+          - Ref: DatagrokPrivateSubnet2
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - GrokPipeServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: datagrok.component
+        Value: datagrok
+      - Key: datagrok.service
+        Value: grok_pipe
+      TaskDefinition:
+        Ref: GrokPipeTaskDefinition
+    Type: AWS::ECS::Service
+  GrokPipeServiceDiscoveryEntry:
+    Properties:
+      Description:
+        Fn::Sub: ${AWS::StackName} Datagrok grok_pipe service discovery entry in Cloud
+          Map
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: grok_pipe
+      NamespaceId:
+        Ref: DatagrokCloudMap
+    Type: AWS::ServiceDiscovery::Service
+  GrokPipeTCP3000IntListener:
+    Properties:
+      DefaultActions:
+      - ForwardConfig:
+          TargetGroups:
+          - TargetGroupArn:
+              Ref: GrokPipeTCP3000IntTargetGroup
+        Type: forward
+      LoadBalancerArn:
+        Ref: DatagrokLoadBalancerInt
+      Port: 3000
+      Protocol: HTTP
+    Type: AWS::ElasticLoadBalancingV2::Listener
+  GrokPipeTCP3000IntTargetGroup:
+    Properties:
+      HealthCheckIntervalSeconds: 60
+      HealthCheckPath: /info
+      Matcher:
+        HttpCode: 200
+      Name:
+        Fn::Sub: ${AWS::StackName}-gpipe-i
+      Port: 3000
+      Protocol: HTTP
+      Tags:
+      - Key: datagrok.component
+        Value: datagrok
+      TargetType: ip
+      UnhealthyThresholdCount: 5
+      VpcId:
+        Ref: DatagrokVPC
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  GrokPipeTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - Fn::Sub: ${AWS::Region}.compute.internal
+        - Fn::Sub: ${AWS::StackName}.datagrok.${AWS::Region}.lb.internal
+        - Fn::Sub: ${AWS::StackName}.datagrok.${AWS::Region}.cm.internal
+        Essential: false
+        Image:
+          Fn::Sub:
+          - ${domain}/${repo}:${tag}
+          - domain:
+              Fn::FindInMap:
+              - Images
+              - Searchdomain
+              - domain
+            repo:
+              Fn::FindInMap:
+              - Images
+              - Searchdomain
+              - repo
+            tag:
+              Fn::FindInMap:
+              - Images
+              - Searchdomain
+              - version
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: DatagrokLogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: grok_pipe
+        MemoryReservation: 100
+        Name: ResolvConf
+        ReadonlyRootFilesystem: true
+      - DependsOn:
+        - Condition: SUCCESS
+          ContainerName: ResolvConf
+        Environment:
+        - Name: API_KEY
+          Value:
+            Fn::Sub:
+            - ${apiKey}
+            - apiKey:
+                Fn::Sub:
+                - '{{resolve:secretsmanager:${secret}:SecretString:apikey}}'
+                - secret:
+                    Ref: GrokPipeApiKeySecret
+        Essential: true
+        Image:
+          Fn::Sub:
+          - ${domain}/${repo}:${tag}
+          - domain:
+              Fn::FindInMap:
+              - Images
+              - GrokPipe
+              - domain
+            repo:
+              Fn::FindInMap:
+              - Images
+              - GrokPipe
+              - repo
+            tag:
+              Ref: GrokPipeVersion
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: DatagrokLogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: grok_pipe
+        MemoryReservation: 1024
+        Name: grok_pipe
+        PortMappings:
+        - ContainerPort: 3000
+          HostPort: 3000
+          Protocol: tcp
+        ReadonlyRootFilesystem: true
+      Cpu: '1024'
+      ExecutionRoleArn:
+        Fn::GetAtt:
+        - DatagrokTaskExecutionRole
+        - Arn
+      Family:
+        Fn::Sub: ${AWS::StackName}-datagrok-grok_pipe
       Memory: '2048'
       NetworkMode: awsvpc
       RequiresCompatibilities:
@@ -2945,6 +3209,284 @@ Resources:
       - Key: datagrok.service
         Value: grok_spawner
     Type: AWS::IAM::Role
+  RabbitMQPassword:
+    Properties:
+      Description: Automatically generated RabbitMQ password
+      GenerateSecretString:
+        ExcludeCharacters: '"@/\!#$%^&*()-_=+[]{}|;:,.<>?`~'
+        GenerateStringKey: password
+        PasswordLength: 16
+        SecretStringTemplate: '{"password": "password"}'
+    Type: AWS::SecretsManager::Secret
+  RabbitMQSecurityGroup:
+    Properties:
+      GroupDescription:
+        Fn::Sub: ${AWS::StackName} Datagrok Security Group
+      SecurityGroupEgress:
+      - CidrIp: 0.0.0.0/0
+        Description: Allow all outbound traffic
+        IpProtocol: '-1'
+      SecurityGroupIngress:
+      - CidrIp:
+          Ref: CIDR
+        Description: Allow AMQP traffic from VPC
+        FromPort: 5672
+        IpProtocol: tcp
+        ToPort: 5672
+      - CidrIp:
+          Ref: CIDR
+        Description: Allow RabbitMQ Management UI (HTTP 15672) from VPC
+        FromPort: 15672
+        IpProtocol: tcp
+        ToPort: 15672
+      Tags:
+      - Key: Name
+        Value:
+          Fn::Sub: ${AWS::StackName}-datagrok
+      - Key: datagrok.component
+        Value: datagrok
+      VpcId:
+        Ref: DatagrokVPC
+    Type: AWS::EC2::SecurityGroup
+  RabbitmqNLB:
+    Properties:
+      Name:
+        Fn::Sub: ${AWS::StackName}-RabbitMQ-NLB
+      Scheme: internal
+      SecurityGroups:
+      - Ref: RabbitmqSecurityGroup
+      Subnets:
+      - Ref: DatagrokPrivateSubnet1
+      - Ref: DatagrokPrivateSubnet2
+      Type: network
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+  RabbitmqPrivateDNS:
+    Properties:
+      AliasTarget:
+        DNSName:
+          Fn::GetAtt:
+          - RabbitmqNLB
+          - DNSName
+        HostedZoneId:
+          Fn::GetAtt:
+          - RabbitmqNLB
+          - CanonicalHostedZoneID
+      Comment:
+        Fn::Sub: ${AWS::StackName} Private Datagrok grok pipe DNS for internal routing
+      HostedZoneId:
+        Ref: DatagrokPrivateDNSZone
+      Name:
+        Fn::Sub: rabbit.${AWS::StackName}.datagrok.${AWS::Region}.lb.internal.
+      Type: A
+    Type: AWS::Route53::RecordSet
+  RabbitmqSecurityGroup:
+    Properties:
+      GroupDescription: Security Group for RabbitMQ
+      SecurityGroupIngress:
+      - Description:
+          Fn::Sub: ${AWS::StackName} Allow internal connections from Datagrok to Rabbitmq
+        FromPort: 5672
+        IpProtocol: TCP
+        SourceSecurityGroupId:
+          Ref: DatagrokSecurityGroup
+        ToPort: 5672
+      - Description:
+          Fn::Sub: ${AWS::StackName} Allow internal connections from CVM to Rabbitmq
+        FromPort: 5672
+        IpProtocol: TCP
+        SourceSecurityGroupId:
+          Ref: CvmSecurityGroup
+        ToPort: 5672
+      VpcId:
+        Ref: DatagrokVPC
+    Type: AWS::EC2::SecurityGroup
+  RabbitmqService:
+    DependsOn:
+    - RabbitmqTCP5672Listener
+    Properties:
+      Cluster:
+        Fn::GetAtt:
+        - DatagrokCluster
+        - Arn
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 100
+      DeploymentController:
+        Type: ECS
+      DesiredCount: 1
+      LaunchType: FARGATE
+      LoadBalancers:
+      - ContainerName: rabbitmq
+        ContainerPort: 5672
+        TargetGroupArn:
+          Ref: RabbitmqTCP5672TargetGroup
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups:
+          - Ref: RabbitMQSecurityGroup
+          Subnets:
+          - Ref: DatagrokPrivateSubnet1
+          - Ref: DatagrokPrivateSubnet2
+      PlatformVersion: 1.4.0
+      PropagateTags: SERVICE
+      SchedulingStrategy: REPLICA
+      ServiceRegistries:
+      - RegistryArn:
+          Fn::GetAtt:
+          - RabbitmqServiceDiscoveryEntry
+          - Arn
+      Tags:
+      - Key: datagrok.component
+        Value: datagrok
+      - Key: datagrok.service
+        Value: rabbitmq
+      TaskDefinition:
+        Ref: RabbitmqTaskDefinition
+    Type: AWS::ECS::Service
+  RabbitmqServiceDiscoveryEntry:
+    Properties:
+      Description:
+        Fn::Sub: ${AWS::StackName} Datagrok rabbitmq service discovery entry in Cloud
+          Map
+      DnsConfig:
+        DnsRecords:
+        - TTL: 60
+          Type: A
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: rabbitmq
+      NamespaceId:
+        Ref: DatagrokCloudMap
+    Type: AWS::ServiceDiscovery::Service
+  RabbitmqTCP5672Listener:
+    Properties:
+      DefaultActions:
+      - TargetGroupArn:
+          Ref: RabbitmqTCP5672TargetGroup
+        Type: forward
+      LoadBalancerArn:
+        Ref: RabbitmqNLB
+      Port: 5672
+      Protocol: TCP
+    Type: AWS::ElasticLoadBalancingV2::Listener
+  RabbitmqTCP5672TargetGroup:
+    Properties:
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPort: 5672
+      HealthCheckProtocol: TCP
+      HealthyThresholdCount: 3
+      Name:
+        Fn::Sub: ${AWS::StackName}-RabbitMQ-5672
+      Port: 5672
+      Protocol: TCP
+      TargetType: ip
+      UnhealthyThresholdCount: 3
+      VpcId:
+        Ref: DatagrokVPC
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+  RabbitmqTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+      - Command:
+        - Fn::Sub: ${AWS::Region}.compute.internal
+        - Fn::Sub: ${AWS::StackName}.datagrok.${AWS::Region}.lb.internal
+        - Fn::Sub: ${AWS::StackName}.datagrok.${AWS::Region}.cm.internal
+        Essential: false
+        Image:
+          Fn::Sub:
+          - ${domain}/${repo}:${tag}
+          - domain:
+              Fn::FindInMap:
+              - Images
+              - Searchdomain
+              - domain
+            repo:
+              Fn::FindInMap:
+              - Images
+              - Searchdomain
+              - repo
+            tag:
+              Fn::FindInMap:
+              - Images
+              - Searchdomain
+              - version
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: DatagrokLogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: rabbitmq
+        MemoryReservation: 100
+        Name: ResolvConf
+        ReadonlyRootFilesystem: true
+      - DependsOn:
+        - Condition: SUCCESS
+          ContainerName: ResolvConf
+        Environment:
+        - Name: RABBITMQ_DEFAULT_USER
+          Value: guest
+        - Name: RABBITMQ_DEFAULT_PASS
+          Value:
+            Fn::Sub:
+            - ${amqpPassword}
+            - amqpPassword:
+                Fn::Sub:
+                - '{{resolve:secretsmanager:${secret}:SecretString:password}}'
+                - secret:
+                    Ref: RabbitMQPassword
+        Essential: true
+        Image:
+          Fn::Sub:
+          - ${domain}/${repo}:${tag}
+          - domain:
+              Fn::FindInMap:
+              - Images
+              - Rabbitmq
+              - domain
+            repo:
+              Fn::FindInMap:
+              - Images
+              - Rabbitmq
+              - repo
+            tag:
+              Ref: RabbitmqVersion
+        LinuxParameters: {}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group:
+              Ref: DatagrokLogGroup
+            awslogs-region:
+              Ref: AWS::Region
+            awslogs-stream-prefix: rabbitmq
+        MemoryReservation: 1024
+        Name: rabbitmq
+        PortMappings:
+        - ContainerPort: 5672
+          HostPort: 5672
+          Protocol: tcp
+        - ContainerPort: 15672
+          HostPort: 15672
+          Protocol: tcp
+        ReadonlyRootFilesystem: true
+      Cpu: '1024'
+      EphemeralStorage:
+        SizeInGiB: 21
+      ExecutionRoleArn:
+        Fn::GetAtt:
+        - DatagrokTaskExecutionRole
+        - Arn
+      Family:
+        Fn::Sub: ${AWS::StackName}-datagrok-rabbitmq
+      Memory: '2048'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
 Rules:
   InternetIngressAccess:
     Assertions:

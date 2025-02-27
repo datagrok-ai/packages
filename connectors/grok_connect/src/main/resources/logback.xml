@@ -5,6 +5,8 @@
         </encoder>
     </appender>
 
+    <appender name="SESSION" class="grok_connect.log.QueryStreamAppender"/>
+
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <appender-ref ref="STDOUT" />
         <discardingThreshold>0</discardingThreshold>
@@ -14,6 +16,7 @@
     </appender>
 
     <root level="debug">
+        <appender-ref ref="SESSION" />
         <appender-ref ref="ASYNC" />
     </root>
 

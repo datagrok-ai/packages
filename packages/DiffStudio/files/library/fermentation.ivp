@@ -11,7 +11,7 @@
 #argument: t
   initial = 0 {units: d; caption: Initial; category: Time; min: 0; max: 10} [Initial time of simulation]
   final = 70 {units: d; caption: Final; category: Time; min: 15; max: 100} [Final time of simulation]
-  step = 0.01 {units: d; caption: Step; category: Time; min: 0.01; max: 1} [Time step of simlulation]
+  step = 0.01 {units: d; caption: Step; category: Time; min: 0.01; max: 1} [Time step of simulation]
 
 #inits:  
   P = 4.276 {units: ml/ml; caption: ethanol, P; category: Initials; min: 3; max: 6} [Concentration of ethanol]

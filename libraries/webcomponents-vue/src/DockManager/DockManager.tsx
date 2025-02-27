@@ -3,9 +3,9 @@ import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 import * as Vue from 'vue';
 
-import type {DockSpawnTsWebcomponent} from '@datagrok-libraries/dock-spawn-dg/lib';
-import type {IState} from '@datagrok-libraries/dock-spawn-dg/lib/interfaces/IState';
-
+import type {IState} from '@datagrok-libraries/dock-spawn-dg/src/interfaces/IState';
+// cannot use DockSpawnTsWebcomponent typings in strict mode
+type DockSpawnTsWebcomponent = any
 
 declare global {
   namespace JSX {
@@ -43,7 +43,7 @@ export const DockManager = Vue.defineComponent({
 
         const slots = dockSpawnRef.value!.shadowRoot!
           .querySelectorAll(`slot`);
-        slots.forEach((slot) => {
+        slots.forEach((slot: any) => {
           const content = (slot.assignedElements() as HTMLElement[])
             .find((el) => el.getAttribute('dock-spawn-title') && el.getAttribute('dock-spawn-title') === state.element);
           if (content) aimSlot = slot;

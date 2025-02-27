@@ -422,7 +422,7 @@ export function getRegion(
     start ?? null, end ?? null, name ?? null);
 }
 
-//top-menu: Bio | Convert | Get Region...
+//top-menu: Bio | Calculate | Get Region...
 //name: Get Region Top Menu
 //description: Get sequences for a region specified from a Macromolecule
 //input: dataframe table                           [Input data table]
@@ -607,14 +607,13 @@ export async function sequenceSpaceTopMenu(table: DG.DataFrame, molecules: DG.Co
   return res;
 }
 
-//top-menu: Bio | Convert | To Atomic Level...
+//top-menu: Bio | Transform | To Atomic Level...
 //name: To Atomic Level
 //description: Converts sequences to molblocks
 //input: dataframe table [Input data table]
 //input: column seqCol {caption: Sequence; semType: Macromolecule}
 //input: bool nonlinear =false {caption: Non-linear; description: Slower mode for cycling/branching HELM structures}
 //input: bool highlight =false {caption: Highlight monomers; description: Highlight monomers' substructures of the molecule }
-//output:
 export async function toAtomicLevel(
   table: DG.DataFrame, seqCol: DG.Column, nonlinear: boolean, highlight: boolean = false
 ): Promise<void> {
@@ -628,6 +627,17 @@ export async function toAtomicLevel(
   } finally {
     pi.close();
   }
+}
+
+//name: To Atomic Level...
+//input: column seqCol {semType: Macromolecule}
+//meta.action: to atomic level
+export async function toAtomicLevelAction(seqCol: DG.Column) {
+  if (!seqCol?.dataFrame)
+    throw new Error('Sequence column is not found or its data frame is not empty');
+  const func = DG.Func.find({name: 'toAtomicLevel', package: 'Bio'})[0];
+  if (!func) throw new Error('To Atomic level Function not found');
+  func.prepare({table: seqCol.dataFrame, seqCol: seqCol}).edit();
 }
 
 //top-menu: Bio | Analyze | MSA...
@@ -743,37 +753,19 @@ export function importBam(fileContent: string): DG.DataFrame [] {
   return [];
 }
 
-//top-menu: Bio | Convert | Notation...
+//top-menu: Bio | Transform | Convert Notation...
 //name: convertDialog
 export function convertDialog() {
   const col: DG.Column<string> | undefined = getMacromoleculeColumns()[0];
   convert(col, _package.seqHelper);
 }
 
-//top-menu: Bio | Convert | TestConvert
-//name: convertSeqNotation
-//description: RDKit-based conversion for SMILES, SMARTS, InChi, Molfile V2000 and Molfile V3000
-//input: string sequence {semType: Macromolecule}
-//input: string targetNotation
-//input: string separator
-//output: string result
-export async function convertSeqNotation(sequence: string, targetNotation: NOTATION, separator?: string): Promise<string | undefined | null> {
-  try {
-    const col = DG.Column.fromStrings('sequence', [sequence]);
-    const _df = DG.DataFrame.fromColumns([col]);
-    const semType = await grok.functions.call('Bio:detectMacromolecule', {col: col});
-    if (semType)
-      col.semType = semType;
-    const converterSh = _package.seqHelper.getSeqHandler(col);
-    const newColumn = converterSh.convert(targetNotation, separator);
-    return newColumn.get(0);
-  } catch (err: any) {
-    const [errMsg, errStack] = errInfo(err);
-    _package.logger.error(errMsg, undefined, errStack);
-    throw err;
-  }
+//name: Convert Notation...
+//input: column col {semType: Macromolecule}
+//meta.action: Convert Notation...
+export function convertColumnAction(col: DG.Column) {
+  convert(col, _package.seqHelper);
 }
-
 
 //name: monomerCellRenderer
 //tags: cellRenderer
@@ -835,7 +827,7 @@ export async function testDetectMacromolecule(path: string): Promise<DG.DataFram
   return resDf;
 }
 
-//top-menu: Bio | Convert | Split to Monomers...
+//top-menu: Bio | Transform | Split to Monomers...
 //name: Split to Monomers
 //input: dataframe table
 //input: column sequence { semType: Macromolecule }
@@ -979,7 +971,8 @@ export async function manageLibrariesApp(): Promise<DG.View> {
 export async function manageLibrariesAppTreeBrowser(treeNode: DG.TreeViewGroup, browseView: DG.BrowseView) {
   const libraries = (await (await MonomerLibManager.getInstance()).getFileManager()).getValidLibraryPaths();
   libraries.forEach((libName) => {
-    const libNode = treeNode.item(libName);
+    const nodeName = libName.endsWith('.json') ? libName.substring(0, libName.length - 5) : libName;
+    const libNode = treeNode.item(nodeName);
     // eslint-disable-next-line rxjs/no-ignored-subscription, rxjs/no-async-subscribe
     libNode.onSelected.subscribe(async () => {
       const monomerManager = await MonomerManager.getNewInstance();

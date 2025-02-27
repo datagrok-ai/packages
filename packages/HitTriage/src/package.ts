@@ -16,6 +16,8 @@ export class HTPackage extends DG.Package {
   molToSmilesLruCache = new DG.LruCache<string, string>(2000);
 
   convertToSmiles(mol: string): string {
+    if (!mol)
+      return '';
     return this.molToSmilesLruCache.getOrCreate(mol,
       (mol) => grok.chem.convert(mol, grok.chem.Notation.Unknown, grok.chem.Notation.Smiles),
     );
@@ -34,7 +36,9 @@ async function hitAppTB(treeNode: DG.TreeViewGroup, browseView: any, name: AppNa
     const savePath = 'ingest' in camp ? camp.ingest.query : camp.savePath;
     if (!savePath || !(await grok.dapi.files.exists(savePath)))
       continue;
-    const node = treeNode.item(camp.friendlyName ?? camp.name);
+    const templateName = camp.templateName ?? camp.template?.name;
+    const templateGroup = templateName ? treeNode.getOrCreateGroup(templateName) : treeNode;
+    const node = templateGroup.item(camp.friendlyName ?? camp.name);
     node.onSelected.subscribe(async (_) => {
       try {
         const df = await grok.dapi.files.readCsv(savePath);

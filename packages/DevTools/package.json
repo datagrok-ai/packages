@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@datagrok-libraries/compute-api": "^0.3.2",
-    "@datagrok-libraries/utils": "^4.4.0",
+    "@datagrok-libraries/utils": "../../libraries/utils",
     "codemirror": "^5.65.15",
-    "datagrok-api": "^1.23.0",
+    "datagrok-api": "../../js-api",
     "rxjs": "^6.5.5"
   },
   "devDependencies": {

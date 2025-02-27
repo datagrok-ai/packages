@@ -32,13 +32,15 @@ export async function link(args: LinkArgs) {
     devMode = args.dev;
   collectPackagesData(curDir);
   await linkPackages();
-  
+
   console.log('Package linked')
   return true;
 }
 
 function collectPackagesData(packagePath: string = curDir): string[] {
   const packageJsonPath = path.join(packagePath, 'package.json');
+  if (!fs.existsSync(packageJsonPath))
+    return [];
   const json = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'));
   let result: string[] = [];
   result = result.concat(collectPacakgeDataFromJsonObject(json.dependencies));
@@ -47,7 +49,7 @@ function collectPackagesData(packagePath: string = curDir): string[] {
   return result;
 }
 
-function collectPacakgeDataFromJsonObject(object: any): string[] { 
+function collectPacakgeDataFromJsonObject(object: any): string[] {
   let result: string[] = [];
   for (let dependencyName of Object.keys(object)) {
     let nameSplitted = dependencyName.split('/');
@@ -56,7 +58,7 @@ function collectPacakgeDataFromJsonObject(object: any): string[] {
     else if (dependencyName.includes(libName))
       result = result.concat(parsePackageDependencies(dependencyName, path.join(libDir, nameSplitted[nameSplitted.length - 1])));
     else if (dependencyName.includes(packageName))
-      result = result.concat(parsePackageDependencies(dependencyName, path.join(packageDir, toCamelCase(nameSplitted[nameSplitted.length - 1])))); 
+      result = result.concat(parsePackageDependencies(dependencyName, path.join(packageDir, toCamelCase(nameSplitted[nameSplitted.length - 1]))));
   }
   return result;
 }

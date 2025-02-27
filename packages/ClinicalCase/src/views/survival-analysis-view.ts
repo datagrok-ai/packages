@@ -1,7 +1,6 @@
 import * as DG from 'datagrok-api/dg';
 import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
-import {study} from '../clinical-study';
 import {AE_CAUSALITY, AE_REQ_HOSP, AE_SEQ, AE_SEVERITY, AGE, DEATH_DATE, RACE, SEX,
   SUBJECT_ID, SUBJ_REF_ENDT} from '../constants/columns-constants';
 import {SURVIVAL_ANALYSIS_GUIDE} from '../constants/constants';
@@ -12,6 +11,7 @@ import {_package} from '../package';
 import {SURVIVAL_ANALYSIS_VIEW_NAME} from '../constants/view-names-constants';
 import {AE_START_DAY_FIELD, TRT_ARM_FIELD, VIEWS_CONFIG} from '../views-config';
 import {updateDivInnerHTML} from '../utils/utils';
+import {studies} from '../clinical-study';
 
 const MIN_STRATA_VAL_COUNT = 5;
 export class SurvivalAnalysisView extends ClinicalCaseViewBase {
@@ -44,8 +44,8 @@ export class SurvivalAnalysisView extends ClinicalCaseViewBase {
   filterChanged = false;
   colsRequiredForEndpoints: any;
 
-  constructor(name) {
-    super({});
+  constructor(name, studyId) {
+    super(name, studyId);
     this.name = name;
     this.helpUrl = `${_package.webRoot}/views_help/survival_analysis.md`;
   }
@@ -54,7 +54,7 @@ export class SurvivalAnalysisView extends ClinicalCaseViewBase {
     this.colsRequiredForEndpoints = this.getColsRequiredForEndpoints();
     this.updateEndpointOptions();
     this.covariatesOptions = [AGE, SEX, RACE, VIEWS_CONFIG[SURVIVAL_ANALYSIS_VIEW_NAME][TRT_ARM_FIELD]]
-      .filter((it) => study.domains.dm.columns.names().includes(it));
+      .filter((it) => studies[this.studyId].domains.dm.columns.names().includes(it));
     this.endpoint = Object.keys(this.endpointOptions)[0];
     this.endpointChoices = ui.input.choice('Endpoint',
       {value: Object.keys(this.endpointOptions)[0], items: Object.keys(this.endpointOptions)});
@@ -159,7 +159,7 @@ export class SurvivalAnalysisView extends ClinicalCaseViewBase {
       const domains = Object.keys(this.colsRequiredForEndpoints[key]);
       domains.forEach((dom) => {
         this.colsRequiredForEndpoints[key][dom].map((it) => {
-          if (!study.domains[dom] || !study.domains[dom].columns.names().includes(it))
+          if (!studies[this.studyId].domains[dom] || !studies[this.studyId].domains[dom].columns.names().includes(it))
             missingCols = true;
         });
         if (!missingCols) {
@@ -263,8 +263,9 @@ export class SurvivalAnalysisView extends ClinicalCaseViewBase {
   }
 
   private refreshDataframe() {
-    this.survivalDataframe = createSurvivalData(study.domains.dm.clone(study.domains.dm.filter),
-      study.domains.ae ?? null, this.endpoint, this.endpointOptions[this.endpoint], this.covariates);
+    this.survivalDataframe = createSurvivalData(
+      studies[this.studyId].domains.dm.clone(studies[this.studyId].domains.dm.filter),
+      studies[this.studyId].domains.ae ?? null, this.endpoint, this.endpointOptions[this.endpoint], this.covariates);
     this.survivalColumns = this.survivalDataframe.columns.names();
     this.survivalOptions = [''].concat(this.survivalColumns
       .filter((it) => it !== 'time' && it !== 'status' && it !== SUBJECT_ID));
