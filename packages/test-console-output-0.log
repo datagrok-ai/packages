@@ -1,0 +1,416 @@
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/images/ribbon/project.svg
+CONSOLE LOG REQUEST: 404, https://dev.datagrok.ai/api/packages/published/files/Curves/vhlushchenko/HxeeF6aV7ONyLHGibvQKLyea7BxPoY6q/1/detectors.js
+CONSOLE LOG ENTRY: Failed to load resource: the server responded with a status of 404 ()
+CONSOLE LOG ENTRY: Refused to execute script from 'https://dev.datagrok.ai/api/packages/published/files/Curves/vhlushchenko/HxeeF6aV7ONyLHGibvQKLyea7BxPoY6q/1/detectors.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/ApiTests/1.9.0.X/HEhLG4GTEN1HGSDIx30zIHxjPRfQSFcS/35/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/BiostructureViewer/vhlushchenko/757qhBXTO2ujMXPXiWOZIC4lJzkV6mju/1/detectors.js
+CONSOLE LOG REQUEST: 404, https://dev.datagrok.ai/api/packages/published/files/Chembl/vhlushchenko/TZ2Vpdb7y14Hqjo6KMVlhJAhVJOmxxXM/1/detectors.js
+CONSOLE LOG ENTRY: Failed to load resource: the server responded with a status of 404 ()
+CONSOLE LOG ENTRY: Refused to execute script from 'https://dev.datagrok.ai/api/packages/published/files/Chembl/vhlushchenko/TZ2Vpdb7y14Hqjo6KMVlhJAhVJOmxxXM/1/detectors.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Gis/1.2.0/X5oM5vlVCY9DLTYoFZEiqDS0BcJkJKpW/2/detectors.js
+CONSOLE LOG REQUEST: 404, https://dev.datagrok.ai/api/packages/published/files/Charts/vhlushchenko/RpP1XgU2jWPoiLdgmM3D3Dwg3RtnxhoE/1/detectors.js
+CONSOLE LOG ENTRY: Failed to load resource: the server responded with a status of 404 ()
+CONSOLE LOG ENTRY: Refused to execute script from 'https://dev.datagrok.ai/api/packages/published/files/Charts/vhlushchenko/RpP1XgU2jWPoiLdgmM3D3Dwg3RtnxhoE/1/detectors.js' because its MIME type ('text/plain') is not executable, and strict MIME type checking is enabled.
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/PowerGrid/1.5.4.X/9E5WzZ0v4RA63mqZL5zKomRCVjfsEK4h/26/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/PowerPack/1.3.0.X/4tsuu1PZyEk8Ev15g8cDASjOxQAPmhXI/33/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/d1694ff0-8990-11ee-f346-ad2dc84283a4?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/help/datagrok/datagrok.md
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/iconfont/icomoon.ttf?emtv9m
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/Roboto-Regular.woff2
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/images/chevron.svg
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/PowerPack/1.3.0.X/4tsuu1PZyEk8Ev15g8cDASjOxQAPmhXI/33/css/power-pack.css
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/UsageAnalysis/2.3.0.X/TBq5N1XL3NbpId8du1bcz5xiYgGjbK2h/9/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Bio/2.19.0.X/LZZIQyoNzfSKc5GPTP46jFpJaUpwOpAb/5/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/Roboto-Bold.woff2
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/Roboto-Light.woff2
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Chem/1.13.0.X/A89J2TUAuX4GxfEjKEYng3gpR3owsWNh/21/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/font-awesome/webfonts/fa-light-300.woff2
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/d1694ff0-8990-11ee-f346-ad2dc84283a4?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/ApiTests/1.9.0.X/HEhLG4GTEN1HGSDIx30zIHxjPRfQSFcS/35/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/font-awesome/webfonts/fa-regular-400.woff2
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/font/Roboto-LightItalic.woff2
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/ApiTests/1.9.0.X/HEhLG4GTEN1HGSDIx30zIHxjPRfQSFcS/35/dist/package-test.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?text&include=shares.connection&file=true&order=name
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/PowerPack/1.3.0.X/4tsuu1PZyEk8Ev15g8cDASjOxQAPmhXI/33/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Jiraconnect/0.0.1.X-f43a7255/T3jnY1LQqBYjhnwLebPgZ8zBKkBTXAmz/1/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/SequenceTranslator/1.8.0.X/6RqXowdcetmAQMlmXNITFBvPK32HV1mF/5/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/js/common/codemirror/codemirror.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?text=name%253D%2522Datagrok%2522&limit=1
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Helm/2.8.0.X/44iuB3HkpTCfmybbroqVGyiu6kgg19F7/3/detectors.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Arrow/1.2.0.X/e32xoZ1d3PGWra2UbfZAVUdZ6EsDh1Ay/14/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/PowerGrid/1.5.4.X/9E5WzZ0v4RA63mqZL5zKomRCVjfsEK4h/26/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Jiraconnect/0.0.1.X-f43a7255/T3jnY1LQqBYjhnwLebPgZ8zBKkBTXAmz/1/dist/1c6b2c88cdf173f007cc.png
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Jiraconnect/0.0.1.X-f43a7255/T3jnY1LQqBYjhnwLebPgZ8zBKkBTXAmz/1/dist/2687550222d9f7b56ceb.png
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Jiraconnect/0.0.1.X-f43a7255/T3jnY1LQqBYjhnwLebPgZ8zBKkBTXAmz/1/dist/7e505dae909e20381529.png
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Jiraconnect/0.0.1.X-f43a7255/T3jnY1LQqBYjhnwLebPgZ8zBKkBTXAmz/1/dist/9f08ee9adf26bda60227.png
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/js/common/codemirror/codemirror.css
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/UsageAnalysis/2.3.0.X/TBq5N1XL3NbpId8du1bcz5xiYgGjbK2h/9/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/PowerPack%2Fdb-explorer%2Fdb-explorer-config.json?&&flag=158254
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/js/common/openchemlib-full.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?text=name%253D%2522Datagrok%2522&limit=1
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/properties/schemas?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/DevTools/1.5.1.X/YKe145BeTwGC9CFwZ4tn6m46Bb2ElWQ0/26/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/c981b88d-0202-5b27-a48f-975b6384e263/schema/columns?schema=public
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs?text=package.id%2520%253D%2520%252239a499f0-c210-11ef-dd06-1792b9848f1a%2522
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Chem/1.13.0.X/A89J2TUAuX4GxfEjKEYng3gpR3owsWNh/21/dist/package.js
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Arrow/1.2.0.X/e32xoZ1d3PGWra2UbfZAVUdZ6EsDh1Ay/14/dist/parquet_wasm_bg.wasm
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: entities: smart search category
+CONSOLE LOG ENTRY: Started Dapi: entities: smart search groups
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/c981b88d-0202-5b27-a48f-975b6384e263/schema/relations?schema=public
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups?text=develop&include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG ENTRY: Datagrok user object handlers registered
+CONSOLE LOG ENTRY: JSHandle@error
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/ebfa5860-d7b0-11ee-ced4-cb1f59aec389?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/projects/recent?limit=5
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/files/Chem/1.13.0.X/A89J2TUAuX4GxfEjKEYng3gpR3owsWNh/21//dist/RDKit_minimal_1.2.23.wasm
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/proxy?url=https://reddata.atlassian.net/rest/api/3/project
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/proxy?url=https://community.datagrok.ai/latest.json
+CONSOLE LOG ENTRY: RDKit module package instance was initialized
+CONSOLE LOG ENTRY: Finished Dapi: entities: smart search groups for 1992 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/reports?limit=20&page=1&include=reporter
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: entities: smart search category
+CONSOLE LOG ENTRY: Started Dapi: entities: smart search users
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/users?text=firstName%2520%253D%2520%2522admin%2522
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/users?text=status%2520%253D%2520%2522active%2522&limit=5
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/users?text=id%2520%253D%2520%2522878c42b0-9a50-11e6-c537-6bf8e9ab02ee%2522
+CONSOLE LOG ENTRY: Finished Dapi: entities: smart search users for 342 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Functions: General category
+CONSOLE LOG ENTRY: Started Functions: General eval
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fdatasets%2Fdemog.csv?&format=d42&flag=158270
+CONSOLE LOG ENTRY: Finished Functions: General eval for 3057 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: groups category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG ENTRY: Started Dapi: groups find group
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups?text=unexisting%2520group&limit=1&include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG ENTRY: Finished Dapi: groups find group for 92 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/59f91140-e920-11ef-e053-d53531747d2e?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: entities: smart search category
+CONSOLE LOG ENTRY: Started Dapi: entities: smart search packages
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published?text=name%253D%2522Api%2520Tests%2522%2520%2526%2520author.login%253D%2522system%2522&limit=3
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published?text=name%253D%2522Api%2520Tests%2522%2520%2526%2520version%2520%253D%2520%25221.9.0.X%2522&limit=5
+CONSOLE LOG ENTRY: Finished Dapi: entities: smart search packages for 281 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files exists
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Finished Dapi: files exists for 67 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Packages: Docker category
+CONSOLE LOG ENTRY: Started Packages: Docker Get container logs
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/docker/containers?text=Apitests-docker-test1&limit=1
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/docker/containers/247bbcba-c284-5e98-bb12-f01bcbe3c881/logs?limit=10000
+CONSOLE LOG ENTRY: Finished Packages: Docker Get container logs for 2574 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: groups category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG ENTRY: Started Dapi: groups create subgroup
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/5eebda20-e920-11ef-b0a3-b7f009eefa46?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG ENTRY: Finished Dapi: groups create subgroup for 64 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/5edf2ff0-e920-11ef-e0b8-19f73412c3fe?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: connection category
+CONSOLE LOG ENTRY: Started Dapi: connection Create, save, delete, share
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/credentials?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/5fbfcbf0-e920-11ef-d426-057dc85ac8c4?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/credentials?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/credentials/for/5fbfcbf0-e920-11ef-d426-057dc85ac8c4?includeEntity=true
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/credentials?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/5fbfcbf0-e920-11ef-d426-057dc85ac8c4?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/5fbfcbf0-e920-11ef-d426-057dc85ac8c4?
+CONSOLE LOG ENTRY: Finished Dapi: connection Create, save, delete, share for 872 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?text=name%253D%2522Local%2520DG%2520Test%2522
+CONSOLE LOG ENTRY: Started Dapi: connection cache category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections?text=shortName%253D%2522AppData%2522&limit=1
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/67cf69df-1ee5-5179-bd60-8f2e7ecbd51b/cache
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: fetch category
+CONSOLE LOG ENTRY: Started Dapi: fetch get
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/proxy?url=https://dev.datagrok.ai/demo/demog.csv
+CONSOLE LOG ENTRY: Finished Dapi: fetch get for 334 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: functions calls category
+CONSOLE LOG ENTRY: Started Dapi: functions calls save
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/calls?
+CONSOLE LOG ENTRY: Finished Dapi: functions calls save for 130 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: sticky meta category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/properties/schemas?
+CONSOLE LOG ENTRY: Started Dapi: sticky meta save values
+CONSOLE LOG ENTRY: Couldn't detect type from column
+CONSOLE LOG ENTRY: Finished Dapi: sticky meta save values for 1 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: groups category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG ENTRY: Started Dapi: groups include member
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/users?text=login%2520%253D%2520%2522admin%2522&limit=1
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=true
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups?text=js-api-test-group1&limit=1&include=children.child%2C%2Cparents.parent%2C%2Cchildren.child%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/647f4fd0-e920-11ef-bbec-b76fafbb4a9e?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/64893ae0-e920-11ef-90ed-976f69bdbac2?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG ENTRY: Finished Dapi: groups include member for 425 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/6472a5a0-e920-11ef-b7fe-090cd3d092a8?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files search
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/files/ApiTests?showFiles=true&onlyCache=false&ext=js-api-testTextFile&recursive=false&flag=158336
+CONSOLE LOG ENTRY: Finished Dapi: files search for 53 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: users category
+CONSOLE LOG ENTRY: Started Dapi: users current session
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/users/sessions/current?
+CONSOLE LOG ENTRY: Finished Dapi: users current session for 43 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: groups category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG ENTRY: Started Dapi: groups create group
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/66ff43f0-e920-11ef-8397-876a1d772e9f?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG ENTRY: Finished Dapi: groups create group for 178 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/66ef6570-e920-11ef-8f40-a5fd9a920f41?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: functions calls category
+CONSOLE LOG ENTRY: Started Dapi: functions calls save options
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/calls?
+CONSOLE LOG ENTRY: Finished Dapi: functions calls save options for 447 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started UserSettingsStorage category
+CONSOLE LOG ENTRY: Started UserSettingsStorage delete
+CONSOLE LOG ENTRY: Finished UserSettingsStorage delete for 0 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: functions calls category
+CONSOLE LOG ENTRY: Started Dapi: functions calls save with DF
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/tables?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/tables?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/calls?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/calls/6a822920-e920-11ef-e34b-f9613e5c2d8c?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/tables/699cf940-e920-11ef-e393-0d62cdbe3981/data?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/tables/699cf940-e920-11ef-e393-0d62cdbe3981/data?
+CONSOLE LOG ENTRY: Finished Dapi: functions calls save with DF for 1936 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: users category
+CONSOLE LOG ENTRY: Started Dapi: users current
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/users/current?
+CONSOLE LOG ENTRY: Finished Dapi: users current for 83 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: sticky meta category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/properties/schemas?
+CONSOLE LOG ENTRY: Started Dapi: sticky meta get values
+CONSOLE LOG ENTRY: JSHandle@error
+CONSOLE LOG ENTRY: Finished Dapi: sticky meta get values for 149 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Functions: General category
+CONSOLE LOG ENTRY: Started Functions: General call
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fdatasets%2Fdemog.csv?&format=d42&flag=158337
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/user_settings_storage/js-api-storage-name4?currentUser=true
+CONSOLE LOG ENTRY: Finished Functions: General call for 1433 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Packages: Docker category
+CONSOLE LOG ENTRY: Started Packages: Docker Get build logs
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/docker/images?text=Apitests-docker-test1&limit=1
+CONSOLE LOG ENTRY: Finished Packages: Docker Get build logs for 79 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files readAsText
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/files/ApiTests%2Fdatasets?showFiles=true&onlyCache=false&ext=demog.csv&recursive=true
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fdatasets%2Fdemog.csv?&&flag=158392
+CONSOLE LOG ENTRY: Finished Dapi: files readAsText for 524 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Packages: Docker category
+CONSOLE LOG ENTRY: Started Packages: Docker Get response
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/docker/containers?text=Apitests-docker-test1&limit=1
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/docker/containers/proxy/247bbcba-c284-5e98-bb12-f01bcbe3c881/square?number=4
+CONSOLE LOG ENTRY: Finished Packages: Docker Get response for 666 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files readBinaryDataFrames
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fdatasets%2Fcountry-languages.d42?&format=d42&flag=158394
+CONSOLE LOG ENTRY: Finished Dapi: files readBinaryDataFrames for 79 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: tables category
+CONSOLE LOG ENTRY: Started Dapi: tables create and upload table
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/tables?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/tables/72544430-e920-11ef-b5ac-791429b5f4c3/data?
+CONSOLE LOG ENTRY: Finished Dapi: tables create and upload table for 353 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: groups category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG ENTRY: Started Dapi: groups delete group
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/?saveRelations=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups?text=js-api-test-group1&limit=1&include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/73466c60-e920-11ef-8c61-bf63320d3a69?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG ENTRY: Finished Dapi: groups delete group for 485 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/groups/733666d0-e920-11ef-af86-c968a686f652?include=children.child%2C%2Cparents.parent%2C
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: layouts category
+CONSOLE LOG ENTRY: Started Dapi: layouts get applicable
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/layouts/suggestions
+CONSOLE LOG ENTRY: Finished Dapi: layouts get applicable for 2547 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files delete
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20delete.txt?&
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG REQUEST: 404, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20delete.txt?&
+CONSOLE LOG ENTRY: Failed to load resource: the server responded with a status of 404 ()
+CONSOLE LOG REQUEST: 404, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20delete.txt?&
+CONSOLE LOG ENTRY: Failed to load resource: the server responded with a status of 404 ()
+CONSOLE LOG ENTRY: Finished Dapi: files delete for 455 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: fetch category
+CONSOLE LOG ENTRY: Started Dapi: fetch post
+CONSOLE LOG REQUEST: 201, https://dev.datagrok.ai/api/connectors/proxy
+CONSOLE LOG ENTRY: Finished Dapi: fetch post for 580 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: functions calls category
+CONSOLE LOG ENTRY: Started Dapi: functions calls save with fileInfo
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/files/data/78bae860-e920-11ef-ede2-a3a31566c84a
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/calls?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/funcs/calls/78c74470-e920-11ef-a729-29878431a125?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/files/data/78bae860-e920-11ef-ede2-a3a31566c84a
+CONSOLE LOG ENTRY: Finished Dapi: functions calls save with fileInfo for 348 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: packages category
+CONSOLE LOG ENTRY: Started Dapi: packages find
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/39a499f0-c210-11ef-dd06-1792b9848f1a?
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published/00000?
+CONSOLE LOG ENTRY: Finished Dapi: packages find for 233 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: packages category
+CONSOLE LOG ENTRY: Started Dapi: packages list
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/packages/published?
+CONSOLE LOG ENTRY: Finished Dapi: packages list for 540 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files package files
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/files/ApiTests%2Fdatasets?showFiles=true&onlyCache=false&ext=csv&recursive=false&flag=158464
+CONSOLE LOG ENTRY: Finished Dapi: files package files for 64 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files write/read blob
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20write%2C%20read%20blob.txt?&
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20write%2C%20read%20blob.txt?&&flag=158467
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Finished Dapi: files write/read blob for 247 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG ENTRY: Running tests
+CONSOLE LOG ENTRY: Started Dapi: files category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2Fjs-api-testTextFile?&
+CONSOLE LOG ENTRY: Started Dapi: files write/read text
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20write%2C%20read%20text.txt?&
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/file/ApiTests%2FDapi.%20files%20-%20write%2C%20read%20text.txt?&&flag=158474
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Finished Dapi: files write/read text for 230 ms
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/connectors/connections/System.AppData/delete_files/
+CONSOLE LOG ENTRY: Started Dapi: files: formats category
+CONSOLE LOG ENTRY: Started Dapi: files: list category
+CONSOLE LOG REQUEST: 200, https://dev.datagrok.ai/api/log/tests/package?benchmark=false&ciCd=false
