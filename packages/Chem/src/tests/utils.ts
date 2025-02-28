@@ -4,7 +4,7 @@ import {awaitCheck, expect} from '@datagrok-libraries/utils/src/test';
 import {_package} from '../package-test';
 import {searchSubstructure} from '../package';
 
-export const CONTAINER_TIMEOUT = 900000;
+export const CONTAINER_TIMEOUT = 300000;
 
 export async function loadFileAsText(name: string): Promise<string> {
   return await _package.files.readAsText(name);
@@ -91,6 +91,11 @@ export async function ensureContainersRunning() {
 
 export async function ensureContainerRunning(containerName: string) {
   const container = await grok.dapi.docker.dockerContainers.filter(containerName).first();
+  const all = await grok.dapi.docker.dockerContainers.filter(containerName);
+  (await all.list()).forEach((cont) => {
+    console.log(`############## ${cont.name}`);
+    console.log(`############## ${cont.status}`);
+  })
   console.log(`*********************** ${container.name}`);
   console.log(`*********************** ${container.status}`);
   const time1 = performance.now();
