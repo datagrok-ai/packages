@@ -1,4 +1,4 @@
-// Worker for optimization of parameters of Diff Studio model: the basic case (no loops, updates & outputs)
+// Worker for optimization of parameters of Diff Studio model
 
 import {Extremum} from '../../optimizer-misc';
 import {fit} from '../fitting-utils';

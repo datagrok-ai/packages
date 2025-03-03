@@ -19,13 +19,3 @@ molregno,canonical_smiles,NumSaturatedHeterocycles,NumAliphaticHeterocycles,NumA
 1480031,OC(COc1ccc(Cl)cc1)CN2CCC(CC2)Oc3ccc(cc3)C(F)(F)F,1,1,0,4,1,2,1,3,7,0,0,8,1,0.42857,29,2,4,1
 1480032,OC(COc1ccc(Br)cc1)CN2CCC(CC2)Oc3ccc(cc3)C(F)(F)F,1,1,0,4,1,2,1,3,7,0,0,8,1,0.42857,29,2,4,1
 1480033,COC(=O)c1ccccc1OCC(O)CN2CCC(CC2)Oc3ccc(cc3)C(F)(F)F,1,1,0,6,1,2,1,3,8,0,0,9,1,0.43478,32,2,6,1
-1480063,CCC1(CC)CC(CCNC(=O)c2ccc(OC)cc2)OC1=O,1,1,0,5,1,1,1,2,7,0,0,5,1,0.55556,23,1,4,1
-1480034,COc1ccc(cc1)N(Cc2ccccc2)Cc3ccc(OC)c(O)c3,0,0,0,4,0,3,1,3,7,0,0,4,0,0.18182,26,3,4,1
-1480035,COc1ccc(cc1)N(Cc2ccc(Br)cc2)Cc3ccc(OC)c(O)c3,0,0,0,4,0,3,1,3,7,0,0,5,0,0.18182,27,3,4,1
-1480036,COc1ccc(cc1)N(Cc2ccc(F)cc2)Cc3ccc(OC)c(O)c3,0,0,0,4,0,3,1,3,7,0,0,5,0,0.18182,27,3,4,1
-1480037,COc1ccc(cc1)N(Cc2ccc(Cl)cc2)Cc3ccc(OC)c(O)c3,0,0,0,4,0,3,1,3,7,0,0,5,0,0.18182,27,3,4,1
-1480068,CCCOC(=O)C1=C(C)NC(=C(C1c2csc(n2)c3ccc(Cl)cc3)C(=O)OCCC)C,0,1,0,6,0,1,1,3,8,1,0,8,1,0.37500,32,2,7,1
-1480038,COc1ccc(CN(CCc2ccc(Br)cc2)Cc3ccc(Cl)cc3Cl)cc1O,0,0,0,3,0,3,1,3,8,0,0,6,0,0.21739,29,3,3,1
-1480039,COc1ccc(CN(Cc2ccccc2)Cc3ccc(Br)cc3)cc1O,0,0,0,3,0,3,1,3,7,0,0,4,0,0.18182,26,3,3,1
-1480040,COc1ccc(CN(CCc2ccccc2)Cc3ccccc3)cc1O,0,0,0,3,0,3,1,3,8,0,0,3,0,0.21739,26,3,3,1
-1480040,COc1ccc(CN(CCc2ccccc2)Cc3ccccc3)cc1O,0,0,0,3,0,3,1,3,8,0,0,3,0,0.21739,26,3,3,1

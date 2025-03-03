@@ -1,7 +1,7 @@
 /* eslint-disable valid-jsdoc */
 import * as DG from 'datagrok-api/dg';
 
-import {IVP, IVP2WebWorker} from '@datagrok/diff-grok';
+import {IVP, IVP2WebWorker, PipelineCreator, getOutputNames} from '@datagrok/diff-grok';
 import {LOSS} from '../constants';
 import {ARG_IDX, DEFAULT_SET_VAL, MIN_TARGET_COLS_COUNT, MIN_WORKERS_COUNT, NO_ERRORS,
   RESULT_CODE, WORKERS_COUNT_DOWNSHIFT} from './defs';
@@ -36,6 +36,7 @@ export async function getFittedParams(
   loss: LOSS,
   ivp: IVP,
   ivp2ww: IVP2WebWorker,
+  pipelineCreator: PipelineCreator,
   settings: Map<string, number>,
   variedInputNames: string[],
   minVals: Float32Array,
@@ -108,6 +109,8 @@ export async function getFittedParams(
   const warnings: string[] = [];
   const pointBatches = getBatches(startingPoints, nThreads);
 
+  const pipeline = pipelineCreator.getPipeline(new Float64Array(10));
+
   // Run optimization
   const promises = workers.map((w, idx) => {
     return new Promise<void>((resolve, reject) => {
@@ -117,6 +120,7 @@ export async function getFittedParams(
           settingVals: settingVals,
           loss: loss,
           ivp2ww: ivp2ww,
+          pipeline: pipeline,
           nonParamNames: nonParamNames,
           fixedInputsNames: fixedInputsNames,
           fixedInputsVals: fixedInputsVals,
@@ -127,6 +131,7 @@ export async function getFittedParams(
           targetVals: targetVals,
           scaleVals: scaleVals,
           samplesCount: samplesCount,
+          outputNames: getOutputNames(ivp),
         },
         startPoints: pointBatches[idx],
       });

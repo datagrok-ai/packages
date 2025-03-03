@@ -820,7 +820,7 @@ export const deepCopy = (call: DG.FuncCall) => {
   call.options.forEach((key: string) => deepClone.options[key] = call.options[key]);
 
   const definedOutputs = wu(deepClone.outputParams.values())
-    .filter((output) => !!call.outputs[output.name]);
+    .filter((output) => call.outputs[output.name] != null);
   for (const output of definedOutputs) {
     if (output.property.propertyType === DG.TYPE.DATA_FRAME)
       deepClone.outputs[output.name] = call.outputs[output.name].clone();
@@ -829,7 +829,7 @@ export const deepCopy = (call: DG.FuncCall) => {
   }
 
   const definedInputs = wu(deepClone.inputParams.values())
-    .filter((input) => !!call.inputs[input.name]);
+    .filter((input) => call.inputs[input.name] != null);
   for (const input of definedInputs) {
     if (input.property.propertyType === DG.TYPE.DATA_FRAME)
       deepClone.inputs[input.name] = call.inputs[input.name].clone();

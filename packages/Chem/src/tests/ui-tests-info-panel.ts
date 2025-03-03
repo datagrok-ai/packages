@@ -212,12 +212,13 @@ category('UI info panel', () => {
   });
 
   test('structural alerts', async () => {
-    smiles = grok.data.demo.molecules(20);
-    smiles.rows.removeAt(0, 2);
+    grok.shell.o = ui.div();
+    const csv = `smiles
+    O=C1OC(=O)C2=C1SCCS2`
+    smiles = DG.DataFrame.fromCsv(csv);
     await grok.data.detectSemanticTypes(smiles);
     v = grok.shell.addTableView(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
-    await delay(1000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
     const bp = await awaitPanel(pp, 'Biology');
     (bp as HTMLElement)?.click();

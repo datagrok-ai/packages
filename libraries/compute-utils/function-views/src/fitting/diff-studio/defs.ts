@@ -1,4 +1,4 @@
-import {IVP2WebWorker} from '@datagrok/diff-grok';
+import {IVP2WebWorker, Pipeline} from '@datagrok/diff-grok';
 
 export const ARG_IDX = 0;
 export const NO_ERRORS = 'Success';
@@ -22,6 +22,7 @@ export type NelderMeadInput = {
   settingVals: number[],
   loss: string,
   ivp2ww: IVP2WebWorker,
+  pipeline: Pipeline,
   nonParamNames: string[],
   fixedInputsNames: string[],
   fixedInputsVals: number[],
@@ -32,4 +33,5 @@ export type NelderMeadInput = {
   targetVals: Array<Float64Array>,
   scaleVals: Float64Array,
   samplesCount: number,
+  outputNames: string[],
 };

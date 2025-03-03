@@ -145,7 +145,7 @@ export const RFVApp = Vue.defineComponent({
     return () => (
       <div class='w-full h-full flex'>
         <RibbonPanel view={currentView.value}>
-          {isRunningOnInput.value && !currentCallState.value.isOutputOutdated &&
+          {!isRunningOnInput.value && !currentCallState.value.isOutputOutdated &&
             <IconFA
               name='save'
               tooltip={'Save'}

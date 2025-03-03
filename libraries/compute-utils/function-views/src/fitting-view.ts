@@ -21,9 +21,7 @@ import {getErrors, getCategoryWidget} from './fitting/fitting-utils';
 import {OptimizationResult, Extremum, distance} from './fitting/optimizer-misc';
 import {getLookupChoiceInput} from './shared/lookup-tools';
 
-import {IVP, IVP2WebWorker, getIvp2WebWorker} from '@datagrok/diff-grok';
-import {isWorkerApplicable} from './fitting/diff-studio/fitting-utils';
-
+import {IVP, IVP2WebWorker, PipelineCreator} from '@datagrok/diff-grok';
 import {getFittedParams} from './fitting/diff-studio/nelder-mead';
 
 const RUN_NAME_COL_LABEL = 'Run name' as const;
@@ -76,6 +74,12 @@ export type TargetDescription = {
 
 type FittingInputsStore = FittingNumericStore | FittingBoolStore | FittingConstStore;
 
+export type DiffGrok = {
+  ivp: IVP,
+  ivpWW: IVP2WebWorker,
+  pipelineCreator: PipelineCreator,
+};
+
 const getSwitchMock = () => ui.div([], 'sa-switch-input');
 
 const isValidForFitting = (prop: DG.Property) => ((prop.propertyType === DG.TYPE.INT) || (prop.propertyType === DG.TYPE.FLOAT) || (prop.propertyType === DG.TYPE.DATA_FRAME));
@@ -87,7 +91,7 @@ export class FittingView {
       if (range?.[key] != undefined)
         return range[key];
       return input.options[key] === undefined ? getDefaultValue(input) : Number(input.options[key]);
-    }
+    };
 
     const getSwitchElement = (defaultValue: boolean, f: (v: boolean) => any, isInput: boolean = true) => {
       const input = ui.input.toggle(' ', {value: defaultValue, onValueChanged: (value) => f(value)});
@@ -359,17 +363,17 @@ export class FittingView {
   private acceptIcon = ui.iconFA('ballot-check', async () => {
     const choiceItems = Array.from({length: this.currentFuncCalls.length}, (_, i) => i + 1);
     let chosenItem = -1;
-    const input = ui.input.choice('Select fitting', {items: choiceItems, onValueChanged: (x) => chosenItem = x})
+    const input = ui.input.choice('Select fitting', {items: choiceItems, onValueChanged: (x) => chosenItem = x});
     const confirmed = await new Promise((resolve, _reject) => {
       ui.dialog({title: 'Accept fitting'})
         .add(ui.div([input]))
         .onOK(() => resolve(true))
         .onCancel(() => resolve(false))
-        .show({ modal: true, fullScreen: true, width: 600, height: 200, center: true })
+        .show({modal: true, fullScreen: true, width: 600, height: 200, center: true});
     });
-    if (!confirmed || chosenItem < 0) {
+    if (!confirmed || chosenItem < 0)
       return;
-    }
+
     this.acceptIcon.remove();
     const chosenCall = this.currentFuncCalls[chosenItem-1];
     this.isFittingAccepted = true;
@@ -450,8 +454,7 @@ export class FittingView {
 
   private fittingSettingsDiv = ui.divV([]);
 
-  private ivp: IVP | undefined;
-  private ivpWW: IVP2WebWorker | undefined = undefined;
+  private diffGrok: DiffGrok | undefined = undefined;
 
   private currentFuncCalls: DG.FuncCall[] = [];
   private isFittingAccepted = false;
@@ -463,18 +466,18 @@ export class FittingView {
       parentView?: DG.View,
       parentCall?: DG.FuncCall,
       inputsLookup?: string,
-      ivp?: IVP,
       ranges?: Record<string, RangeDescription>,
       targets?: Record<string, TargetDescription>,
       acceptMode?: boolean,
+      diffGrok?: DiffGrok,
     } = {
       parentView: undefined,
       parentCall: undefined,
       inputsLookup: undefined,
-      ivp: undefined,
       ranges: undefined,
       targets: undefined,
       acceptMode: false,
+      diffGrok: undefined,
     },
   ) {
     const cardView = [...grok.shell.views].find((view) => view.type === CARD_VIEW_TYPE);
@@ -501,19 +504,19 @@ export class FittingView {
       parentCall?: DG.FuncCall,
       configFunc?: undefined,
       inputsLookup?: string,
-      ivp?: IVP,
       ranges?: Record<string, RangeDescription>,
       targets?: Record<string, TargetDescription>,
       acceptMode?: boolean,
+      diffGrok?: DiffGrok,
     } = {
       parentView: undefined,
       parentCall: undefined,
       configFunc: undefined,
       inputsLookup: undefined,
-      ivp: undefined,
       ranges: undefined,
       targets: undefined,
       acceptMode: false,
+      diffGrok: undefined,
     },
   ) {
     if (!this.isOptimizationApplicable(func)) {
@@ -522,7 +525,7 @@ export class FittingView {
       return;
     }
 
-    grok.events.onViewRemoved.pipe(filter(v => v.id === baseView.id), take(1)).subscribe(() => {
+    grok.events.onViewRemoved.pipe(filter((v) => v.id === baseView.id), take(1)).subscribe(() => {
       if (options.acceptMode && !this.isFittingAccepted) {
         this.acceptedFitting$.next(null);
         this.isFittingAccepted = true;
@@ -587,10 +590,7 @@ export class FittingView {
       this.runIcon.classList.add('fas');
     });
 
-    this.ivp = options.ivp;
-
-    if (this.ivp !== undefined)
-      this.ivpWW = getIvp2WebWorker(this.ivp);
+    this.diffGrok = options.diffGrok;
   } // constructor
 
   /** Check fiiting applicability to the function */
@@ -1104,11 +1104,12 @@ export class FittingView {
 
       // Perform optimization
       if (this.method === METHOD.NELDER_MEAD) {
-        if (isWorkerApplicable(this.ivp, this.ivpWW)) {
+        if (this.diffGrok !== undefined) {
           optResult = await getFittedParams(
             this.loss,
-            this.ivp!,
-            this.ivpWW!,
+            this.diffGrok.ivp,
+            this.diffGrok.ivpWW,
+            this.diffGrok.pipelineCreator,
             this.nelderMeadSettings,
             variedInputNames,
             minVals,
