@@ -17,9 +17,12 @@ let rdKitModule: RDModule | null = null;
 const NO_HIGHLIGHT = 0;
 
 export async function getStructuralAlerts(molecule: string): Promise<number[]> {
+  console.log(`Entered getStructuralAlerts, alertsDf: ${alertsDf}`);
   if (alertsDf == null)
     await loadSADataset();
   rdKitModule ??= getRdKitModule();
+
+  console.log(`Loaded alertsDf: ${alertsDf?.rowCount}`);
 
   const alerts: number[] = [];
   let mol: RDMol | null = null;
@@ -29,12 +32,17 @@ export async function getStructuralAlerts(molecule: string): Promise<number[]> {
     // const lib = new _structuralAlertsRdKitModule.SubstructLibrary();
     // lib.add_smiles(smiles);
     const smartsCol = alertsDf!.getCol('smarts');
+    console.log(`smartsCol: ${smartsCol.length}`);
+    console.log(`smartsCol, 0: ${smartsCol.get(0)}`);
+    console.log(`smartsCol, 1: ${smartsCol.get(1)}`);
     for (let i = 0; i < smartsCol.length; i++) {
       const subMol = _smartsMap.get(smartsCol.get(i));
       // lib.count_matches(subMol);
       const matches = mol.get_substruct_matches(subMol!);
-      if (matches !== '{}')
+      if (matches !== '{}') {
         alerts.push(i);
+        console.log(`********* alert: ${i}`);
+      }
     }
   } finally {
     mol?.delete();
@@ -59,6 +67,7 @@ export async function structuralAlertsWidget(molecule: string): Promise<DG.Widge
   rdKitModule ??= getRdKitModule();
   let alerts = [];
   try {
+    console.log(`Entered structuralAlertsWidget, molecule: ${molecule}`);
     alerts = await getStructuralAlerts(molecule);
   } catch (e) {
     console.warn(e);
