@@ -214,7 +214,9 @@ category('UI info panel', () => {
 
   test('structural alerts', async () => {
     grok.shell.closeAll();
+    grok.shell.windows.context.visible = false; 
     await delay(1000);
+    grok.shell.windows.context.visible = true; 
     const csv = `smiles
     O=C1OC(=O)C2=C1SCCS2`;
     smiles = DG.DataFrame.fromCsv(csv);
