@@ -34,10 +34,8 @@ import grok_connect.handlers.QueryHandler;
 import spark.Response;
 
 public class GrokConnect {
-    private static final int DEFAULT_PORT = 1234;
     private static final String VERSION = "version";
     private static final String NAME = "artifactId";
-    private static final String DEFAULT_URI = String.format("http://localhost:%s", DEFAULT_PORT);
     private static final String DEFAULT_LOG_EXCEPTION_MESSAGE = "An exception was thrown";
     private static final Logger PARENT_LOGGER = (Logger) LoggerFactory.getLogger(GrokConnect.class);
     private static final String LOG_LEVEL_PREFIX = "LogLevel";
@@ -58,10 +56,18 @@ public class GrokConnect {
         threadPool = Executors.newCachedThreadPool();
         PARENT_LOGGER.info(getStringLogMemory());
         providerManager = new ProviderManager();
-        port(DEFAULT_PORT);
+
+        Map<String, String> env = System.getenv();
+        SettingsManager.getInstance().initSettings(
+                Integer.parseInt(env.getOrDefault("CONNECTION_POOL_MAXIMUM_SIZE", "50")),
+                Integer.parseInt(env.getOrDefault("CONNECTION_POOL_IDLE_TIMEOUT", "300000"))
+        );
+        int appPort =  Integer.parseInt(env.getOrDefault("GROK_CONNECT_PORT", "1234"));
+
+        port(appPort);
         connectorsModule();
         PARENT_LOGGER.info("grok_connect with Hikari pool");
-        PARENT_LOGGER.info("grok_connect: Running on {}", DEFAULT_URI);
+        PARENT_LOGGER.info("grok_connect: Running on {}", String.format("http://localhost:%s", appPort));
         PARENT_LOGGER.info("grok_connect: Connectors: {}", providerManager.getAllProvidersTypes());
     }
 
@@ -243,13 +249,6 @@ public class GrokConnect {
             FuncCall call = gson.fromJson(request.body(), FuncCall.class);
             QueryMonitor.getInstance().cancelStatement(call.id);
             QueryMonitor.getInstance().addCancelledResultSet(call.id);
-            response.status(HttpURLConnection.HTTP_OK);
-            return response;
-        });
-
-        post("/set_settings", (request, response) -> {
-            Settings settings = gson.fromJson(request.body(), Settings.class);
-            SettingsManager.getInstance().setSettings(settings);
             response.status(HttpURLConnection.HTTP_OK);
             return response;
         });

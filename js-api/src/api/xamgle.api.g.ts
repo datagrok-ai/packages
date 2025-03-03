@@ -118,15 +118,6 @@ export interface SettingsInterface {
   /// If not empty, will be used to load package.js instead of the Datagrok backend
   webpackDevUrl: string;
 
-  /// CVM URL.
-  cvmUrl: string;
-
-  /// Datlas API URL.
-  apiUrl: string;
-
-  /// Jupyter Notebook instance token.
-  jupyterNotebookToken: string;
-
   clientFuncCacheEnabled: boolean;
 
   clientFilesCacheEnabled: boolean;

@@ -42,6 +42,7 @@ FROM datagrok/openjdk:8 as main
 ARG HOME_DIR
 ARG GROK_CONNECT_DIR
 ENV GROK_CONNECT_DIR=${GROK_CONNECT_DIR}
+ENV GROK_CONNECT_PORT=1234
 
 RUN groupadd --gid 2001 grok ; \
     useradd --system --create-home --home ${HOME_DIR} --gid grok --uid 1001 grok
@@ -55,7 +56,7 @@ USER grok:grok
 WORKDIR ${GROK_CONNECT_DIR}
 
 # GrokConnect
-EXPOSE 1234
+EXPOSE ${GROK_CONNECT_PORT}
 
 ENTRYPOINT ["java", "-Xmx4g", "-classpath", "grok_connect.jar:lib/*", "grok_connect.GrokConnect"]
 

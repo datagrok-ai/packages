@@ -1,3 +1,27 @@
+networks:
+  datagrok:
+
+volumes:
+  datagrok_db:
+  datagrok_data:
+  datagrok_cfg:
+  datagrok_demo_postgres_northwind:
+  datagrok_demo_postgres_chembl:
+  datagrok_demo_postgres_starbucks:
+  datagrok_demo_postgres_world:
+  datagrok_demo_postgres_unichem:
+  datagrok_postgres_rdkit:
+  datagrok_mlflow_artifact:
+  datagrok_mlflow_backend:
+  datagrok_mlflow_prom:
+
+x-env-common: &env-common
+  RABBITMQ_USER: guest
+  RABBITMQ_PASS: guest
+
+
+
+
 services:
   rabbitmq:
     image: rabbitmq:4.0.5-management
@@ -45,7 +69,10 @@ services:
           "adminPassword": "admin",
           "adminDevKey": "admin",
           "isolatesCount": 2,
-          "queuePluginSettings": {"amqpHost": "rabbitmq", "pipeHost": "grok_pipe", "pipeKey": "test-key"}
+          "queueSettings": {"amqpHost": "rabbitmq", "amqpUser": "guest", "amqpPassword": "guest", "amqpPort": 5672, "pipeHost": "grok_pipe", "pipePort": 3000, "pipeKey": "test-key"},
+          "dockerSettings": {"grokSpawnerApiKey": "test-x-api-key", "grokSpawnerHost": "grok_spawner", "grokSpawnerPort": 8000, "imageBuildTimeoutMinutes": 30, "proxyRequestTimeout": 60000},
+          "connectorsSettings": {"grokConnectHost": "grok_connect", "grokConnectPort": 1234, "externalDataFrameCompress": true, "sambaVersion": "3.0", "sambaSpaceEscape": "none", "dataframeParsingMode": "New Process", "windowsSharesProxy": "", "localFileSystemAccess": false},
+          "notebookSettings": {"cvmUrl": "http://cvm:8090", "cvmUrlClient": "http://localhost:8090", "apiUrl": "http://datagrok:8080/api", "jupyterNotebookToken": "77974bcd14909e7ee29330ac3657edc1e8d4ac39de425210"}
         }
     ports:
       - "${DATAGROK_PORT:-8080}:8080/tcp"
@@ -71,7 +98,8 @@ services:
     environment:
       X_API_KEY: test-x-api-key
       GROK_SPAWNER_ENVIRONMENT: ${COMPOSE_PROJECT_NAME:-localhost}
-      GROK_SPAWNER_CORE_MODE: ${GROK_SPAWNER_CORE_MODE:-true}
+      GROK_SPAWNER_CORE_MODE: ${GROK_SPAWNER_CORE_MODE:-false}
+      GROK_SPAWNER_PORT: 8000
     ports:
       - "${GROK_SPAWNER_PORT:-8000}:8000/tcp"
     networks:
@@ -85,6 +113,10 @@ services:
 
   grok_connect:
     image: datagrok/grok_connect:${GROK_CONNECT_VERSION:-bleeding-edge}
+    environment:
+      GROK_CONNECT_PORT: 1234
+      CONNECTION_POOL_MAXIMUM_SIZE: 50
+      CONNECTION_POOL_IDLE_TIMEOUT: 300000
     networks:
       datagrok:
         aliases:
@@ -124,10 +156,8 @@ services:
     environment:
       GROK_PARAMETERS: |
         {
-          "isolatesCount": 1,
           "jupyterToken": "4b8ed936cf61a1c5e37a8b3a845599941c272de6e29330a0",
-          "capabilities": ["jupyter"],
-          "queuePluginSettings": {"amqpHost": "rabbitmq", "pipeHost": "grok_pipe", "pipeKey": "test-key", "maxConcurrentCalls": 6}
+          "queueSettings": {"amqpHost": "rabbitmq", "amqpUser": "guest", "amqpPassword": "guest", "amqpPort": 5672, "pipeHost": "grok_pipe", "pipePort": 3000, "pipeKey": "test-key", "maxConcurrentCalls": 6}
         }
     restart: unless-stopped
     depends_on:
@@ -277,20 +307,3 @@ services:
     restart: on-failure
     platform: linux/amd64
     profiles: [ "ml", "mlflow" ]
-
-volumes:
-  datagrok_db:
-  datagrok_data:
-  datagrok_cfg:
-  datagrok_demo_postgres_northwind:
-  datagrok_demo_postgres_chembl:
-  datagrok_demo_postgres_starbucks:
-  datagrok_demo_postgres_world:
-  datagrok_demo_postgres_unichem:
-  datagrok_postgres_rdkit:
-  datagrok_mlflow_artifact:
-  datagrok_mlflow_backend:
-  datagrok_mlflow_prom:
-
-networks:
-  datagrok:
