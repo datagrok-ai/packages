@@ -212,7 +212,8 @@ category('UI info panel', () => {
   });
 
   test('structural alerts', async () => {
-    grok.shell.o = ui.div();
+    grok.shell.closeAll();
+    await delay(1000);
     const csv = `smiles
     O=C1OC(=O)C2=C1SCCS2`;
     smiles = DG.DataFrame.fromCsv(csv);
