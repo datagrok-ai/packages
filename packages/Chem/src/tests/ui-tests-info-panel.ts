@@ -224,7 +224,17 @@ category('UI info panel', () => {
     await grok.data.detectSemanticTypes(smiles);
     v = grok.shell.addTableView(smiles);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
+
+
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
+
+    //open structure panel to see the molecule
+    const sp = await awaitPanel(pp, 'Structure', 3000);
+    (sp as HTMLElement)?.click();
+    const s2d = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
+      .find((el) => el.textContent === '2D Structure') as HTMLElement;
+    if (!s2d.classList.contains('expanded')) s2d?.click();
+
     const bp = await awaitPanel(pp, 'Biology');
     (bp as HTMLElement)?.click();
     await delay(1000);
