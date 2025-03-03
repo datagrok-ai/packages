@@ -217,15 +217,16 @@ category('UI info panel', () => {
     grok.shell.closeAll();
     grok.shell.windows.showContextPanel = false; 
     await delay(1000);
-    grok.shell.windows.showContextPanel = true; 
     const csv = `smiles
     O=C1OC(=O)C2=C1SCCS2`;
     smiles = DG.DataFrame.fromCsv(csv);
     await grok.data.detectSemanticTypes(smiles);
     v = grok.shell.addTableView(smiles);
+    await delay(1000);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
 
 
+    grok.shell.windows.showContextPanel = true; 
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
 
     //open structure panel to see the molecule
