@@ -18,6 +18,7 @@ category('UI info panel', () => {
     grok.shell.closeAll();
     grok.shell.windows.showProperties = true;
     console.log(`************ UI info panel category before`);
+    grok.shell.o = ui.div();
   });
 
 
@@ -213,30 +214,14 @@ category('UI info panel', () => {
   });
 
   test('structural alerts', async () => {
-    grok.shell.info('Started structural alerts tests');
-    grok.shell.closeAll();
-    grok.shell.windows.showContextPanel = false; 
-    await delay(1000);
     const csv = `smiles
     O=C1OC(=O)C2=C1SCCS2`;
     const df = DG.DataFrame.fromCsv(csv)
     await grok.data.detectSemanticTypes(df);
     const tv = grok.shell.addTableView(df);
-    await delay(1000);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
-
-
-    grok.shell.windows.showContextPanel = true; 
+    await delay(2000);
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
-
-    await delay(3000);
-    //open structure panel to see the molecule
-    const sp = await awaitPanel(pp, 'Structure', 3000);
-    (sp as HTMLElement)?.click();
-    const s2d = Array.from(pp.querySelectorAll('div.d4-accordion-pane-header'))
-      .find((el) => el.textContent === '2D Structure') as HTMLElement;
-    if (!s2d.classList.contains('expanded')) s2d?.click();
-
     const bp = await awaitPanel(pp, 'Biology');
     (bp as HTMLElement)?.click();
     await delay(1000);
