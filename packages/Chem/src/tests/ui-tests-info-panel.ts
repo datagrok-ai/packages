@@ -219,9 +219,9 @@ category('UI info panel', () => {
     await delay(1000);
     const csv = `smiles
     O=C1OC(=O)C2=C1SCCS2`;
-    smiles = DG.DataFrame.fromCsv(csv);
-    await grok.data.detectSemanticTypes(smiles);
-    v = grok.shell.addTableView(smiles);
+    const df = DG.DataFrame.fromCsv(csv)
+    await grok.data.detectSemanticTypes(df);
+    const tv = grok.shell.addTableView(df);
     await delay(1000);
     await awaitCheck(() => document.querySelector('canvas') !== null, 'cannot load table', 3000);
 
@@ -251,7 +251,7 @@ category('UI info panel', () => {
     },
     'number of displayed canvases with molecules does not match the expected', 10000);
     sa?.click(); await delay(10);
-    v?.close();
+    tv?.close();
     (bp as HTMLElement)?.click();
     grok.shell.o = ui.div();
   });
