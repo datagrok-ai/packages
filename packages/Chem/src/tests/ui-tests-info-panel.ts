@@ -213,10 +213,11 @@ category('UI info panel', () => {
   });
 
   test('structural alerts', async () => {
+    grok.shell.info('Started structural alerts tests');
     grok.shell.closeAll();
-    grok.shell.windows.context.visible = false; 
+    grok.shell.windows.showContextPanel = false; 
     await delay(1000);
-    grok.shell.windows.context.visible = true; 
+    grok.shell.windows.showContextPanel = true; 
     const csv = `smiles
     O=C1OC(=O)C2=C1SCCS2`;
     smiles = DG.DataFrame.fromCsv(csv);
