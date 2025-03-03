@@ -229,6 +229,7 @@ category('UI info panel', () => {
     grok.shell.windows.showContextPanel = true; 
     const pp = document.querySelector('.grok-prop-panel') as HTMLElement;
 
+    await delay(3000);
     //open structure panel to see the molecule
     const sp = await awaitPanel(pp, 'Structure', 3000);
     (sp as HTMLElement)?.click();
