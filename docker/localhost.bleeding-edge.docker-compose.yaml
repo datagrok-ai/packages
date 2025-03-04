@@ -1,3 +1,5 @@
+version: '3.8'
+
 networks:
   datagrok:
 
@@ -15,13 +17,6 @@ volumes:
   datagrok_mlflow_backend:
   datagrok_mlflow_prom:
 
-x-env-common: &env-common
-  RABBITMQ_USER: guest
-  RABBITMQ_PASS: guest
-
-
-
-
 services:
   rabbitmq:
     image: rabbitmq:4.0.5-management
@@ -33,9 +28,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     networks:
-      datagrok:
-        aliases:
-          - rabbitmq
+      - datagrok
     restart: unless-stopped
     profiles: [ "all", "rabbitmq", "scripting", "jupyter_kernel_gateway", "jkg" ]
 
@@ -47,9 +40,7 @@ services:
     environment:
       API_KEY: test-key
     networks:
-      datagrok:
-        aliases:
-          - grok_pipe
+      - datagrok
     restart: unless-stopped
     profiles: [ "all", "scripting", "jupyter_kernel_gateway", "jkg" ]
 
@@ -77,13 +68,10 @@ services:
     ports:
       - "${DATAGROK_PORT:-8080}:8080/tcp"
     networks:
-      datagrok:
-        aliases:
-          - datagrok
+      - datagrok
     depends_on:
       db:
         condition: service_healthy
-        restart: false
       rabbitmq:
         condition: service_started
     volumes:
@@ -103,9 +91,7 @@ services:
     ports:
       - "${GROK_SPAWNER_PORT:-8000}:8000/tcp"
     networks:
-      datagrok:
-        aliases:
-          - grok_spawner
+      - datagrok
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
@@ -118,9 +104,7 @@ services:
       CONNECTION_POOL_MAXIMUM_SIZE: 50
       CONNECTION_POOL_IDLE_TIMEOUT: 300000
     networks:
-      datagrok:
-        aliases:
-          - grok_connect
+      - datagrok
     ports:
       - "${GROK_CONNECT_PORT:-1234}:1234/tcp"
     restart: unless-stopped
@@ -131,28 +115,21 @@ services:
     ports:
       - "${DATAGROK_CVM_PORT:-8090}:8090/tcp"
     networks:
-      datagrok:
-        aliases:
-          - cvm
-          - nginx_cvm
+      - datagrok
     restart: unless-stopped
     profiles: [ "all", "nginx", "cvm", "jupyter_notebook", "notebook" ]
 
   jupyter_notebook:
     image: datagrok/jupyter_notebook:${GROK_JUPYTER_NOTEBOOK_VERSION:-bleeding-edge}
     networks:
-      datagrok:
-        aliases:
-          - jupyter_notebook
+      - datagrok
     restart: unless-stopped
     profiles: [ "all", "cvm", "jupyter_notebook", "notebook" ]
 
   jupyter_kernel_gateway:
     image: datagrok/jupyter_kernel_gateway:${GROK_JUPYTER_KERNEL_GATEWAY_VERSION:-bleeding-edge}
     networks:
-      datagrok:
-        aliases:
-          - jupyter_kernel_gateway
+      - datagrok
     environment:
       GROK_PARAMETERS: |
         {
@@ -173,9 +150,7 @@ services:
     ports:
       - "${DATAGROK_DB_PORT:-5432}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - database
+      - datagrok
     volumes:
       - datagrok_db:/var/lib/postgresql/data
     command: postgres -c 'max_connections=1000'
@@ -195,9 +170,7 @@ services:
     ports:
       - "${DATAGROK_DB_RDKIT_PORT:-54329}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - pgsql_rdkit
+      - datagrok
     volumes:
       - datagrok_postgres_rdkit:/var/lib/postgresql/data
     command: postgres -c 'max_connections=1000'
@@ -211,9 +184,7 @@ services:
     ports:
       - "${DATAGROK_DEMO_POSTGRES_NORTHWIND_PORT:-5433}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - northwind
+      - datagrok
     volumes:
       - datagrok_demo_postgres_northwind:/var/lib/postgresql/data
     restart: on-failure
@@ -226,9 +197,7 @@ services:
     ports:
       - "${DATAGROK_DEMO_POSTGRES_CHEMBL_PORT:-5434}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - chembl
+      - datagrok
     volumes:
       - datagrok_demo_postgres_chembl:/var/lib/postgresql/data
     restart: on-failure
@@ -241,9 +210,7 @@ services:
     ports:
       - "${DATAGROK_DEMO_POSTGRES_UNICHEM_PORT:-5435}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - unichem
+      - datagrok
     volumes:
       - datagrok_demo_postgres_unichem:/var/lib/postgresql/data
     restart: on-failure
@@ -256,9 +223,7 @@ services:
     ports:
       - "${DATAGROK_DEMO_POSTGRES_STARBUCKS_PORT:-5436}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - starbucks
+      - datagrok
     volumes:
       - datagrok_demo_postgres_starbucks:/var/lib/postgresql/data
     restart: on-failure
@@ -271,9 +236,7 @@ services:
     ports:
       - "${DATAGROK_DEMO_POSTGRES_WORLD_PORT:-5437}:5432/tcp"
     networks:
-      datagrok:
-        aliases:
-          - world
+      - datagrok
     volumes:
       - datagrok_demo_postgres_world:/var/lib/postgresql/data
     restart: on-failure
@@ -295,15 +258,8 @@ services:
       - datagrok_mlflow_prom:/data/mlflow_metrics
     ports:
       - "${DATAGROK_MLFLOW_PORT:-5555}:5000/tcp"
-    #    --backend-store-uri postgresql://postgres:postgres@database:5432/mlflow
-    #    depends_on:
-    #      db:
-    #        condition: service_healthy
-    #        restart: false
     networks:
-      datagrok:
-        aliases:
-          - mlflow
+      - datagrok
     restart: on-failure
     platform: linux/amd64
     profiles: [ "ml", "mlflow" ]
