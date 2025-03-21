@@ -1,0 +1,99 @@
+{
+  "name": "@datagrok/genome-browser",
+  "friendlyName": "GenomeBrowser",
+  "version": "0.0.1",
+  "description": "",
+  "overrides": {
+    "@jbrowse/react-linear-genome-view": {
+      "react": "^19.0.0",
+      "react-dom": "^19.0.0"
+    },
+    "@datagrok-libraries/utils": {
+      "rxjs": "^7.8.2"
+    },
+    "datagrok-tools": {
+      "rxjs": "^7.8.2"
+    },
+    "datagrok-api": {
+      "rxjs": "^7.8.2"
+    }
+  },
+  "dependencies": {
+    "@datagrok-libraries/utils": "^4.3.6",
+    "@jbrowse/react-linear-genome-view": "^3.0.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.4",
+    "buffer": "^6.0.3",
+    "cash-dom": "^8.1.5",
+    "datagrok-api": "^1.21.3",
+    "dayjs": "^1.11.13",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/plugin-proposal-class-properties": "7.18.6",
+    "@babel/plugin-transform-runtime": "7.26.9",
+    "@babel/preset-env": "7.16.4",
+    "@babel/preset-react": "7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@babel/traverse": "7.23.7",
+    "@eslint/js": "^9.21.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "datagrok-tools": "latest",
+    "eslint": "^9.21.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "fork-ts-checker-webpack-plugin": "^9.0.2",
+    "globals": "^15.15.0",
+    "html-webpack-plugin": "^5.6.3",
+    "style-loader": "^4.0.0",
+    "ts-loader": "latest",
+    "typescript": "latest",
+    "typescript-eslint": "^8.24.1",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
+  },
+  "scripts": {
+    "link-all": "grok link",
+    "debug-genomefilebrowse": "webpack && grok publish",
+    "release-genomefilebrowse": "webpack && grok publish --release",
+    "build-genomefilebrowse": "webpack",
+    "build": "webpack",
+    "debug-genomefilebrowse-public": "webpack && grok publish public",
+    "release-genomefilebrowse-public": "webpack && grok publish public --release",
+    "debug-genomefilebrowse-local": "webpack && grok publish local",
+    "release-genomefilebrowse-local": "webpack && grok publish local --release",
+    "debug-genomefilebrowse-release": "webpack && grok publish release",
+    "release-genomefilebrowse-release": "webpack && grok publish release --release",
+    "debug-genomefilebrowse-release-ec2.datagrok.ai": "webpack && grok publish release-ec2.datagrok.ai",
+    "release-genomefilebrowse-release-ec2.datagrok.ai": "webpack && grok publish release-ec2.datagrok.ai --release",
+    "debug-genomefilebrowse-core": "webpack && grok publish core",
+    "release-genomefilebrowse-core": "webpack && grok publish core --release",
+    "debug-genomefilebrowse-ec2": "webpack && grok publish ec2",
+    "release-genomefilebrowse-ec2": "webpack && grok publish ec2 --release",
+    "debug-genomefilebrowse-test": "webpack && grok publish test",
+    "release-genomefilebrowse-test": "webpack && grok publish test --release",
+    "debug-genomefilebrowse-localDocker": "webpack && grok publish localDocker",
+    "release-genomefilebrowse-localDocker": "webpack && grok publish localDocker --release"
+  },
+  "canEdit": [
+    "Developers"
+  ],
+  "canView": [
+    "All users"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datagrok-ai/public.git",
+    "directory": "packages/GenomeFileBrowse"
+  },
+  "sideEffects": [
+    "rxjs/operators"
+  ]
+}
