@@ -255,35 +255,6 @@ services:
           - nginx_cvm
     logging: *default-logging
 
-  jupyter_notebook:
-    image: datagrok/jupyter_notebook:latest
-    stop_grace_period: 2m
-    deploy:
-      replicas: 1
-      mode: replicated
-      endpoint_mode: dnsrr
-      placement: *cvm-placement
-      update_config:
-        <<: *update-config
-        order: start-first
-      restart_policy:
-        <<: *restart-policy
-      rollback_config:
-        <<: *rollback-config
-        order: start-first
-      resources:
-        reservations:
-          cpus: '0.125'
-          memory: 100M
-    healthcheck:
-      <<: *healthcheck
-      test: ["CMD", "wget", "-SqO", "-", "http://localhost:5005/notebook/helper/info"]
-    networks:
-      datagrok:
-        aliases:
-          - jupyter_notebook
-    logging: *default-logging
-
   jupyter_kernel_gateway:
     image: datagrok/jupyter_kernel_gateway:latest
     stop_grace_period: 2m

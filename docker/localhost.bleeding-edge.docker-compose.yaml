@@ -131,16 +131,7 @@ services:
           - cvm
           - nginx_cvm
     restart: unless-stopped
-    profiles: [ "all", "nginx", "cvm", "jupyter_notebook", "notebook" ]
-
-  jupyter_notebook:
-    image: datagrok/jupyter_notebook:${GROK_JUPYTER_NOTEBOOK_VERSION:-bleeding-edge}
-    networks:
-      datagrok:
-        aliases:
-          - jupyter_notebook
-    restart: unless-stopped
-    profiles: [ "all", "cvm", "jupyter_notebook", "notebook" ]
+    profiles: [ "all", "nginx", "cvm" ]
 
   jupyter_kernel_gateway:
     image: datagrok/jupyter_kernel_gateway:${GROK_JUPYTER_KERNEL_GATEWAY_VERSION:-bleeding-edge-cuda}

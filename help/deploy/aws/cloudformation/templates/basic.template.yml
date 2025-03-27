@@ -20,9 +20,6 @@ Mappings:
     JKG:
       domain: "docker.io"
       repo: "datagrok/jupyter_kernel_gateway"
-    JN:
-      domain: "docker.io"
-      repo: "datagrok/jupyter_notebook"
     Kaniko:
       domain: "gcr.io"
       repo: "kaniko-project/executor"

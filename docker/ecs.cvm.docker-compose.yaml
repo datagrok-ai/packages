@@ -7,47 +7,7 @@ networks:
 
 services:
 
-  grok_compute:
-    image: datagrok/grok_compute:latest
-    environment:
-      GROK_COMPUTE_NUM_CORES: 2
-    networks:
-      - cvm
-    ports:
-      - 80:80
-      - target: 5005
-        x-aws-protocol: http
-        protocol: tcp
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 200M
 
-  jupyter_notebook:
-    image: datagrok/jupyter_notebook:latest
-    networks:
-      - cvm
-    ports:
-      - target: 5005
-        x-aws-protocol: http
-        protocol: tcp
-      - target: 8889
-        x-aws-protocol: http
-        protocol: tcp
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.25'
-          memory: 200M
 
   jupyter_kernel_gateway:
     image: datagrok/jupyter_kernel_gateway:latest
