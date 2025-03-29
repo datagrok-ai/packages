@@ -45,7 +45,31 @@ services:
           "adminPassword": "admin",
           "adminDevKey": "admin",
           "isolatesCount": 2,
-          "queuePluginSettings": {"useQueue": true, "amqpHost": "rabbitmq", "amqpUser": "guest", "amqpPassword": "guest", "amqpPort": 5672, "pipeHost": "grok_pipe", "pipePort": 3000, "pipeKey": "test-key"}
+          "connectorsSettings": {
+            "dataframeParsingMode":"New Process",
+            "externalDataFrameCompress":true,
+            "grokConnectHost":"grok_connect",
+            "grokConnectPort":1234,
+            "localFileSystemAccess":false,
+            "sambaSpaceEscape":"none",
+            "sambaVersion":"3.0"
+            },
+          "dockerSettings": {
+            "grokSpawnerApiKey": "test-x-api-key",
+            "grokSpawnerHost": "grok_spawner",
+            "grokSpawnerPort": 8000,
+            "imageBuildTimeoutMinutes": 30,
+            "proxyRequestTimeout": 60000
+           },
+          "queueSettings": {
+            "amqpHost": "rabbitmq",
+             "amqpUser": "guest",
+             "amqpPassword": "guest",
+             "amqpPort": 5672, 
+             "pipeHost": "grok_pipe", 
+             "pipePort": 3000, 
+             "pipeKey": "test-key"
+             }
         }
     ports:
       - "${DATAGROK_PORT:-8080}:8080/tcp"
