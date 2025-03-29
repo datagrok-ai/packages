@@ -38,7 +38,7 @@ More information about Datagrok design and components:
 ## Deploy Datagrok components
 
 1. Download Terraform
-   Template: [link](https://github.com/datagrok-ai/public/blob/master/help/develop/admin/deploy/terraform/terraform.tf)
+   Template: [link](https://github.com/datagrok-ai/public/blob/master/help/deploy/aws/terraform/terraform.tf)
    .
 
 2. Replace the placeholders in the template with the actual values
