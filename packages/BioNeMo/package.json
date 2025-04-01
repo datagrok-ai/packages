@@ -9,7 +9,7 @@
   },
   "description": "Advanced models for protein structure prediction and molecular docking",
   "dependencies": {
-    "@datagrok-libraries/utils": "^4.5.0",
+    "@datagrok-libraries/utils": "^4.4.0",
     "axios": "^1.7.4",
     "cash-dom": "^8.1.5",
     "datagrok-api": "^1.25.0",
