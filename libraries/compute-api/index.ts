@@ -8,43 +8,12 @@ type ConstructorTypeOf<T> = new (...args:any[]) => T;
 declare global {
   interface Window {
     compute: {
-      fileInput: typeof UiUtils.fileInput,
-      historyInput: typeof UiUtils.historyInput,
-      historyInputJSON: typeof UiUtils.historyInputJSON,
-      historyPanel: typeof UiUtils.historyPanel,
-      testPipeline: typeof testPipeline,
-
-      CompView: ConstructorTypeOf<ComputationView>,
-      RFV: ConstructorTypeOf<RichFunctionView>,
-      Pipeline: ConstructorTypeOf<PipelineView>,
-      CFV: ConstructorTypeOf<CustomFunctionView>,
-
-      makeValidationResult: typeof makeValidationResult,
-      makeAdvice: typeof makeAdvice,
-      makeRevalidation: typeof makeRevalidation,
-      mergeValidationResults: typeof mergeValidationResults,
-
       makeValidationResult2: typeof makeValidationResult2,
       makeAdvice2: typeof makeAdvice2,
       mergeValidationResults2: typeof mergeValidationResults2,
     },
   }
 }
-
-import {testPipeline} from './src/utils';
-export {testPipeline};
-
-import * as UiUtils from './src/ui-utils';
-export {UiUtils};
-
-import {
-  makeValidationResult, makeAdvice, makeRevalidation, mergeValidationResults,
-  ValidationInfo,
-} from './src/validation';
-export {
-  makeValidationResult, makeAdvice, makeRevalidation, mergeValidationResults,
-  ValidationInfo,
-};
 
 import {
   makeValidationResult2, makeAdvice2, mergeValidationResults2,
@@ -54,15 +23,6 @@ export {
 };
 
 export type * from '@datagrok-libraries/compute-utils/reactive-tree-driver/index';
-
-import {
-  ComputationView, RichFunctionView, PipelineView, CustomFunctionView,
-  createCompView, createRFV, createPipeline, createCFV
-} from './src/views';
-export {
-  ComputationView, RichFunctionView, PipelineView, CustomFunctionView,
-  createCompView, createRFV, createPipeline, createCFV
-};
 
 export async function initComputeApi() {
   const initFunc = DG.Func.find({package: 'Compute', name: 'init'})[0];

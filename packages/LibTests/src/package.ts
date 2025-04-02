@@ -3,14 +3,7 @@ import * as grok from 'datagrok-api/grok';
 import * as ui from 'datagrok-api/ui';
 import * as DG from 'datagrok-api/dg';
 
-import {FuncCallInput} from '@datagrok-libraries/compute-utils/shared-utils/input-wrappers';
-import {BehaviorSubject} from 'rxjs';
-import {distinctUntilChanged} from 'rxjs/operators';
-import equal from 'deep-equal';
-import {
-  PipelineConfiguration,
-  ValidationInfo, makeAdvice, makeRevalidation, makeValidationResult,
-} from '@datagrok-libraries/compute-utils';
+import {PipelineConfiguration} from '@datagrok-libraries/compute-utils';
 import type {ViewerT, InputFormT} from '@datagrok-libraries/webcomponents';
 
 export const _package = new DG.Package();
@@ -24,108 +17,6 @@ export async function init() {
 // Validators manual testing
 //
 
-class InputMock implements FuncCallInput {
-  _value = new BehaviorSubject<any>(null);
-  notify = true;
-  enabled = true;
-  root = ui.div('', {style: {width: '100%'}});
-  // fake input
-  input = ui.input.toggle('test', {value: true});
-
-  constructor() {
-    this.root.append(this.input.root);
-  }
-
-  set value(v: any) {
-    const nv = v ? JSON.parse(v) : '';
-    this._value.next(nv);
-  }
-
-  get value() {
-    if (!this._value.value)
-      return '';
-
-    return JSON.stringify(this._value.value);
-  }
-
-  onInput(fn: Function) {
-    return this._value.pipe(distinctUntilChanged(equal)).subscribe(() => {
-      if (this.notify)
-        fn(this.value);
-    });
-  }
-}
-
-//name: CustomInputMock
-//input: object params
-//output: object input
-export async function CustomInputMock(params: any): Promise<FuncCallInput> {
-  console.log(params);
-  return new InputMock();
-}
-
-//name: RangeValidatorFactory
-//input: object params
-//output: object validator
-export function RangeValidatorFactory(params: any) {
-  const {min, max} = params;
-  return (val: number) => {
-    if (val < min || val > max)
-      return makeValidationResult({errors: [`Out of range [${min}, ${max}] value: ${val}`]});
-  };
-}
-
-//name: AsyncValidatorDemoFactory
-//input: object params
-//output: object validator
-export function AsyncValidatorDemoFactory(params: any) {
-  return async (val: number) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    if (val === 0)
-      return makeValidationResult({warnings: [`Try non-null value`]});
-  };
-}
-
-//name: GlobalValidatorDemoFactory
-//input: object params
-//output: object validator
-export function GlobalValidatorDemoFactory(params: any) {
-  const {max} = params;
-  return async (_val: number, info: ValidationInfo) => {
-    if (info.isRevalidation) {
-      if (info.context?.isOk)
-        return makeValidationResult();
-      return makeValidationResult({warnings: [`Try lowering a value as well`]});
-    }
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    const {a, b, c} = info.funcCall.inputs;
-    const s = a + b + c;
-    const isOk = s <= max;
-    const valRes = isOk ? makeValidationResult() : makeValidationResult({warnings: [`Try lowering a value`]});
-    const fields = ['a', 'b', 'c'].filter((p) => p !== info.param);
-    return makeRevalidation(fields, {isOk}, valRes);
-  };
-}
-
-//name: ValidatorActionsDemoFactory
-//input: object params
-//output: object validator
-export function ValidatorActionsDemoFactory(params: any) {
-  return async (_val: number, info: ValidationInfo) => {
-    const notifications = [makeAdvice('Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', [
-      {actionName: 'First action', action: () => grok.shell.info('First action')},
-      {actionName: 'Another action', action: () => {
-        ui.dialog({title: 'Another action'}).show({center: true, fullScreen: true});
-      }},
-    ])];
-    if (info.lastCall && info.funcCall.inputs.x !== info.lastCall.inputs.x) {
-      const delta = info.funcCall.inputs.x - info.lastCall.inputs.x;
-      const warnings = [makeAdvice(`Param delta change ${delta}`)];
-      return makeValidationResult({warnings, notifications});
-    }
-    return makeValidationResult({notifications});
-  };
-}
 
 //tags: test
 export async function TestViewerComponent() {

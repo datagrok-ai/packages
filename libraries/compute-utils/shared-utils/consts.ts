@@ -37,51 +37,15 @@ export const CARD_VIEW_TYPE = 'JsCardView' as const;
 export const SCRIPTS_VIEW_TYPE = 'scripts' as const;
 export const FUNCTIONS_VIEW_TYPE = 'functions' as const;
 export const VIEWER_PATH = 'viewer' as const;
-export const RESTRICTED_PATH = 'restrictedValues' as const;
-export const EDIT_STATE_PATH = 'editState' as const;
-export enum DIRECTION {
-  INPUT = 'Input',
-  OUTPUT = 'Output'
-};
 
 export const EXPERIMENTAL_TAG = 'experimental';
 export const RUN_NAME_COL_LABEL = 'Run name' as const;
 export const RUN_ID_COL_LABEL = 'RunId' as const;
-export enum VISIBILITY_STATE {
-  HIDDEN = 'hidden',
-  VISIBLE = 'visible',
-}
 
-export enum ABILITY_STATE {
-  ENABLED = 'enabled',
-  DISABLED = 'disabled',
-}
-
-export type INPUT_STATE = 'disabled' | 'restricted' | 'restricted unlocked' | 'inconsistent' | 'user input';
-
-export type VIEW_STATE = 'inconsistent' | 'consistent';
-
-export enum SYNC_FIELD {
-  INPUTS = 'inputs',
-  OUTPUTS = 'outputs'
-}
-
-export interface ValidationRequestPayload {
-  field?: string,
-  isRevalidation: boolean,
-  isNewOutput?: boolean,
-  context?: any,
-}
-
-
-export type SyncFields = SYNC_FIELD.INPUTS | SYNC_FIELD.OUTPUTS;
-export const syncParams = {
-  [SYNC_FIELD.INPUTS]: 'inputParams',
-  [SYNC_FIELD.OUTPUTS]: 'outputParams',
-} as const;
 
 export const storageName = `ModelStorage`;
 
+export const ID_COLUMN_NAME = 'ID';
 export const EXP_COLUMN_NAME = 'Source';
 export const FAVORITE_COLUMN_NAME = 'Is favorite';
 export const COMPLETE_COLUMN_NAME = 'Is complete';
