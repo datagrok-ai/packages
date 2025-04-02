@@ -22,6 +22,68 @@ See also:
 - [Docker-Compose](../docker-compose/docker-compose.md)
 
 
+## 2025-03-28 Datagrok 1.25.0 release
+
+The Datagrok 1.25.0 release focuses on enhancing user experience and workflow efficiency
+
+### Main updates
+ * **New Browse UX**: three new tabs—Toolbox, Dashboards, and Favorites—make navigation more intuitive and organized
+* **Content-specific file viewers** automatically recognize scientific data formats and open the appropriate viewer for analysis, e.g. [plate reader](https://github.com/datagrok-ai/public/tree/master/packages/Curves#plate-readers)
+* **Harmonized server settings**: we removed unchanged settings (hosts, ports, credentials), eliminated empty entries, and standardized service configurations
+* **Mini-legend** icon now appears when the viewer window is too small to display the full legend. Hovering over the icon reveals the complete legend, ensuring clarity without taking up extra space
+
+
+ ### Viewers
+
+* [#2303](https://github.com/datagrok-ai/public/issues/2303): Provided 3-point-color scheme for gradient colors 
+* [Box plot](../../visualize/viewers/box-plot.md):  [#3292](https://github.com/datagrok-ai/public/issues/3292): Implemented zoom persistence for visualizations in layouts
+* Pivot table: [#3199](https://github.com/datagrok-ai/public/issues/3199): Added the ability to open data in new workspace
+* [Trellis plot](../../visualize/viewers/trellis-plot.md): Enabled filter on cell click
+* [PC plot](../../visualize/viewers/pc-plot.md): Now features legend and column coloring
+* [ Pie chart](../../visualize/viewers/pie-chart.md): Added max pie circle size property
+* Fixed for [Line Chart](../../visualize/viewers/line-chart.md):
+   * [#3288](https://github.com/datagrok-ai/public/issues/3288): Added more detailed explanation for “to many categories” 
+   * [#3289](https://github.com/datagrok-ai/public/issues/3289): If the column in the legend has too many categories, the legend is not displayed
+
+
+#### [Grid](../../visualize/viewers/grid.md)
+
+*  Image Url columns now support links to images using Datagrok paths
+* [#3077](https://github.com/datagrok-ai/public/issues/3077): Added the ability to define colors for the linear coloring (min, max, inflection point)
+* [#3285](https://github.com/datagrok-ai/public/issues/3285): Сalculated columns now show unique columns in the error message
+* Fixed [#3243](https://github.com/datagrok-ai/public/issues/3243): Columns coloring via Edit Column Properties 
+#### [Scatterplot](../../visualize/viewers/scatter-plot.md)
+
+* Improved the jittering function. For details, see [Jittering function in scatterplot](https://community.datagrok.ai/t/jittering-fucntion-in-scatter-plot/904/4?u=oahadzhanian.datagrok.ai)
+* Fixed [#3193](https://github.com/datagrok-ai/public/issues/3193): The color by expression dialog now retains the last entered formula
+
+### Packages
+
+#### [Chem:](https://github.com/datagrok-ai/public/tree/master/packages/Chem/CHANGELOG.md)
+
+*  [#3273](https://github.com/datagrok-ai/public/issues/3273): Scaffold tree: Added the ability to apply scaffold tree colors to scatterplot or other viewers
+
+#### [Charts:](https://github.com/datagrok-ai/public/tree/master/packages/Charts/CHANGELOG.md)
+
+* [#3249](https://github.com/datagrok-ai/public/issues/3249): Tree viewer: Added cross-viewer selection
+* Fixed [#3307](https://github.com/datagrok-ai/public/issues/3307): Tree viewer not clickable upper node 
+
+#### [Power Grid](https://github.com/datagrok-ai/public/blob/master/packages/PowerGrid/CHANGELOG.md)
+
+* Fixed [#3242](https://github.com/datagrok-ai/public/issues/3242): Pinned columns: Long column name is not visible when column is pinned  
+
+
+#### [Usage analysis](https://github.com/datagrok-ai/public/blob/master/packages/UsageAnalysis/CHANGELOG.md)
+
+ *  Implemented the ability to filter functions usage by function tag
+ *  [#3213](https://github.com/datagrok-ai/public/issues/3213): Added a new Projects tab (beta)
+
+#### [Diff studio](https://github.com/datagrok-ai/public/blob/master/packages/DiffStudio/CHANGELOG.md)
+
+ *  Implemented in-webworker solving equations
+ *  Introduced the use of DS lib
+
+
 ## 2025-02-18 Datagrok 1.24.0 release
 
 The Datagrok 1.24.0 release includes stability, visualization, and UX improvements
