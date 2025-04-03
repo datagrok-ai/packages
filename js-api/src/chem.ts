@@ -62,6 +62,8 @@ export namespace chem {
 
   export let currentSketcherType = DEFAULT_SKETCHER;
 
+  export const sketcherTypeChangedOutsideSketcher = new Subject();
+
   export function isMolBlock(s: string | null) {
     return s != null && s.includes('M  END');
   }
@@ -351,6 +353,7 @@ export namespace chem {
         grok.userSettings.add(FILTER_KEY, CHEM_FILTER_HIGHLIGHT, this.highlightInput!.value ? 'true' : 'false');
         this.onHighlightChanged.next(this.highlightInput!.value);
       });
+      this.subs.push(sketcherTypeChangedOutsideSketcher.subscribe(() => this.sketcherType = currentSketcherType));
       setTimeout(() => this.createSketcher(), 100);
     }
 

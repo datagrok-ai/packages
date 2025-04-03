@@ -149,6 +149,7 @@ async function initChemInt(): Promise<void> {
 
     DG.chem.currentSketcherType = DG.DEFAULT_SKETCHER;
   }
+  DG.chem.sketcherTypeChangedOutsideSketcher.next();
   _renderers = new Map();
 }
 
