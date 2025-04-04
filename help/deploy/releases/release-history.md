@@ -76,7 +76,7 @@ The Datagrok 1.25.0 release focuses on enhancing user experience and workflow ef
 #### [Usage analysis](https://github.com/datagrok-ai/public/blob/master/packages/UsageAnalysis/CHANGELOG.md)
 
  *  Implemented the ability to filter functions usage by function tag
- *  [#3213](https://github.com/datagrok-ai/public/issues/3213): Added a new Projects tab (beta)
+ *  [#3213](https://github.com/datagrok-ai/public/issues/3213): Added a new Projects tab (beta). For details, see [User logs concerning opening projects](https://community.datagrok.ai/t/user-logs-concerning-opening-projects/901/5?u=oahadzhanian.datagrok.ai)
 
 #### [Diff studio](https://github.com/datagrok-ai/public/blob/master/packages/DiffStudio/CHANGELOG.md)
 
